@@ -36,21 +36,28 @@ gen_dens_sel_simulation <- function( min, mean_min, sd_min, doy, mean_doy, sd_do
       psel_doy = dnorm(doy,mean= mean_doy, sd = sd_doy, log=log_)/max(abs(dens_doy)),
       psel = dplyr::case_when(log_~ exp( psel_tod + psel_doy),
                        !log_~ psel_tod * psel_doy),
-      psel_scaled = psel/max(psel))
+      psel_scaled = psel/max(psel),
+      date = ymd("2022-01-01") + doy)
 
   if(isTRUE(return_dat))(return(all))
+  ggplot2::theme_set(ggplot2::theme_minimal(base_size = 14, base_family = "Roboto Condensed"))
 
-  p1 <- ggplot2::ggplot(all, aes(doy, psel_doy)) + geom_line()
-  p2 <- ggplot2::ggplot(all, aes(min, psel_tod)) + geom_line()
+  p1 <- ggplot2::ggplot(all, aes(date, psel_doy)) + geom_line() +
+    ggplot2::labs(x="Date", y = "Selection probability (date)")
+  p2 <- ggplot2::ggplot(all, aes(min, psel_tod)) + geom_line() +
+    ggplot2::labs(x="Time to sun event", y = "Selection probability (time)")
   p3 <- ggplot2::ggplot(all,
-               aes(doy,
+               aes(date,
                    min,
                    fill =
                      psel_scaled
                )
   ) +
     ggplot2::geom_tile() +
-    ggplot2::scale_fill_viridis_c()
+    ggplot2::scale_fill_viridis_c() +
+    ggplot2::labs(x="Date", y = "Time",
+        fill = "Prob\nselection")
+
 
 
   (p1 + p2) / p3

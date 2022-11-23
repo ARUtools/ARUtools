@@ -62,19 +62,24 @@ fun_aru_samp <- function(df, N, os, seed, strat_, selprob_id, x, y, ...) {
   list2env(list(...), envir = environment())
 
   print(c(mindis, maxtry, DesignID))
+  # browser()
   if(length(N)==1){
   Stratdsgn <- rep(N, length(arus))
-  n_os <-  round(N*os)
-  names(Stratdsgn) <- arus
-  if(n_os==0) n_os <- NULL
+  if(length(os)==1){
+    if(os==0) n_os <- NULL
+    else n_os <-  rep(round(N*os), length(arus))
+  } else{n_os <- os}
+  if(!is.null(n_os))names(Stratdsgn) <- names(n_os) <- arus
+  else names(Stratdsgn)  <- arus
+
   } else if ( all(arus %in% names(N)) ){
     Stratdsgn <- N
     if(length(os)==1){
     if(n_os==0){ n_os <- NULL
-    } else  n_os <- lapply(FUN = function(x) x * os, X = N )
-    } else if ( all(arus %in% names(N)) ){
+    } else  n_os <- lapply(FUN = function(x) x * os, X = Stratdsgn )
+    } else if (!is_null(names(N)) & all(arus %in% names(N)) ){
       n_os <- os
-      } else{simpleError("OS should either be single value or list with all strata ID. Not all Strata found in OS and OS has length >1")}
+    } else {simpleError("OS should either be single value or list with all strata ID. Not all Strata found in OS and OS has length >1")}
   } else {simpleError("N should either be single value or list with all strata ID. Not all Strata found in N and N has length >1")}
 
 
