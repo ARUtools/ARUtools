@@ -91,6 +91,22 @@ link_gps_locs <- function(gps_locations, wav_names_log){
     "Not all SiteID from wave_names_log are in GPS log" =
       all(wav_names_log$SiteID %in% gps_locations$SiteID)
   )
+  if("hh_mm_ss" %in% names(gps_locations)){
+    # Messy fix here for having hh_mm_ss instead of just hh_mm
+    g <- gps_locations |> #filter(SiteID == sites[[i]]) |>
+      dplyr::rowwise() %>% {if(lubridate::is.Date(.$dd_mm_yy)){
+        dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm_ss, sep = " "), tz = tz))
+      } else{
+        dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(dd_mm_yy, hh_mm_ss, sep = " "), tz = tz))
+      }
+      } |>
+      dplyr::ungroup() |>
+      dplyr::arrange(SiteID,dategps) |>
+      dplyr::mutate(
+        gr = dplyr::row_number())
+
+  } else if("hh_mm" %in% names(gps_locations)){
+
   g <- gps_locations |> #filter(SiteID == sites[[i]]) |>
     dplyr::rowwise() %>% {if(lubridate::is.Date(.$dd_mm_yy)){
     dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm, sep = " "), tz = tz))
@@ -102,6 +118,7 @@ link_gps_locs <- function(gps_locations, wav_names_log){
     dplyr::arrange(SiteID,dategps) |>
     dplyr::mutate(
       gr = dplyr::row_number())
+  } else{rlang::abort("Need date (dd_mm_yy) and time (hh_mm or hh_mm_ss) in gps_locations")}
   wav_with_gps <-
     wav_names_log |>
     # filter(SiteID == sites[[i]]) |>
