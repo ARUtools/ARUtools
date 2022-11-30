@@ -4,22 +4,10 @@
 \alias{parse_datetimes}
 \title{Parse file names of wave files for dates and times.}
 \usage{
-parse_datetimes(
-  list_waves,
-  site_in_filename,
-  site_pattern = "[P|Q]\\\\d+_\\\\d",
-  filename_separator = "T|\\\\-|\\\\_|\\\\.",
-  tz_loc = "America/Toronto"
-)
+parse_datetimes(wav_names_log, tz_loc = "America/Toronto")
 }
 \arguments{
-\item{list_waves}{list of wav files to be parsed}
-
-\item{site_pattern}{pattern  in grep to pull site id from path.
-Default is "[P|Q]\\d+_\\d"}
-
-\item{filename_separator}{pattern in grep to separate out WaveFileName.
-Default is "T|\\-|\\_|\\."}
+\item{wav_names_log}{data frame passed from clean_metadata. must include yyyymmdd and hhmmss}
 
 \item{tz_loc}{Time zone for location. Default to "America/Toronto"}
 }

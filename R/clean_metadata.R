@@ -211,10 +211,8 @@ clean_metadata <- function(type,
       gps_locations <- gps_locations_SM
     } else{abort("Error combining gps locations. Check ARU type")}
     # if(length(unique(gps_locations$tz ))>1) browser()
-    wav_names_log <- parse_datetimes(list_waves,filename_separator = file_split_pattern,
-                                           site_in_filename = site_in_filename,
-                                           site_pattern =site_pattern,
-                                           tz_loc = unique(gps_locations$tz ))
+    wav_names_log <- parse_datetimes(wav_names_log,
+                                     tz_loc = unique(gps_locations$tz ))
 
     rec_log_ss <- prep_sunrise_sunset(gps_locations = gps_locations,
                                             wav_names_log = wav_names_log)

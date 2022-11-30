@@ -9,8 +9,8 @@ calc_sel_pr(
   ARU_ID_col,
   min_col,
   day_col,
-  parms = list(min_range = c(-60, 300), doy_range = c(150, 180), mean_min = 30, sd_min
-    = 30, mean_doy = 0, sd_doy = 10, off = 0, log_ = FALSE, fun = "norm")
+  parms = list(min_range = c(-60, 300), doy_range = c(150, 180), mean_min = 30, sd_min =
+    30, mean_doy = 0, sd_doy = 10, off = 0, log_ = FALSE, fun = "norm")
 )
 }
 \arguments{

@@ -11,6 +11,9 @@ clean_metadata(
   gps_locations = NULL,
   file_split_pattern = "T|\\\\-|\\\\_|\\\\.",
   site_pattern = "[P|Q]\\\\d+_\\\\d",
+  list_files = NULL,
+  folder_names = NULL,
+  WaveFileName_Strings = NULL,
   ...
 )
 }

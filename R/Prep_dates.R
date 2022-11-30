@@ -1,22 +1,19 @@
 #' Parse file names of wave files for dates and times.
 #'
-#' @param list_waves list of wav files to be parsed
-#' @param site_pattern pattern  in grep to pull site id from path.
-#'                  Default is "[P|Q]\\d+_\\d"
-#' @param filename_separator pattern in grep to separate out WaveFileName.
-#'                Default is "T|\\-|\\_|\\."
+#' @param wav_names_log data frame passed from clean_metadata. must include yyyymmdd and hhmmss
 #' @param tz_loc Time zone for location. Default to "America/Toronto"
 #'
 #' @return Returns a data frame with filenames parsed to date & time.
 parse_datetimes <- function(wav_names_log,
-    list_waves,
-                                  site_in_filename,
-                                  site_pattern = "[P|Q]\\d+_\\d",
-                                  filename_separator ="T|\\-|\\_|\\.",
-                                  tz_loc = "America/Toronto"){
+                            tz_loc = "America/Toronto"){
 
-  if(any(is.na(wav_names_log[['yyyymmdd']]) | nchar(wav_names_log[['yyyymmdd']])!=8) ){
+  if(!"yyyymmdd" %in% names(wav_names_log) |
+    any(is.na(wav_names_log[['yyyymmdd']]) | nchar(wav_names_log[['yyyymmdd']])!=8) ){
     abort("Date extraction failed. Check parsing settings and try again.")
+  }
+  if(!"hhmmss" %in% names(wav_names_log) |
+    any(is.na(wav_names_log[['hhmmss']]) | nchar(wav_names_log[['hhmmss']])!=6) ){
+    abort("Time extraction failed. Check parsing settings and try again.")
   }
 
   wav_names_log_with_dates <- wav_names_log |>
@@ -38,19 +35,19 @@ parse_datetimes <- function(wav_names_log,
 
     )
 
-  if(any(sum(is.na(wav_names_log$time))==length(list_waves),
-         sum(is.na(wav_names_log$date))==length(list_waves) )|
-     all(is.na(wav_names_log$SiteID))
-         ){browser()
+  if(any(sum(is.na(wav_names_log_with_dates$time))==nrow(wav_names_log),
+         sum(is.na(wav_names_log_with_dates$date))==nrow(wav_names_log) )|
+     all(is.na(wav_names_log_with_dates$SiteID))
+         ){#browser()
     rlang::abort(c("File parsing failed.",
                    "x" = "Folder structure not parsed",
                    "i" = "Check folder structure and use file_split_pattern to modify parsing. "))
 
   }
-  if(any(is.na(wav_names_log$time))) rlang::warn(c("Some time parsing failed",
+  if(any(is.na(wav_names_log_with_dates$time))) rlang::warn(c("Some time parsing failed",
                                                    "i" = "Check output"))
 
-  return(wav_names_log)
+  return(wav_names_log_with_dates)
 
 
 }
