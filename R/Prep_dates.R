@@ -8,41 +8,19 @@
 #' @param tz_loc Time zone for location. Default to "America/Toronto"
 #'
 #' @return Returns a data frame with filenames parsed to date & time.
-parse_datetimes <- function(list_waves,
+parse_datetimes <- function(wav_names_log,
+    list_waves,
                                   site_in_filename,
                                   site_pattern = "[P|Q]\\d+_\\d",
                                   filename_separator ="T|\\-|\\_|\\.",
                                   tz_loc = "America/Toronto"){
-  ll <- length(stringr::str_split(list_waves[[1]], "/")[[1]])
 
-  pathnames <- c(glue::glue("Folder{1:(ll-1)}"), "WaveFilename")
+  if(any(is.na(wav_names_log[['yyyymmdd']]) | nchar(wav_names_log[['yyyymmdd']])!=8) ){
+    abort("Date extraction failed. Check parsing settings and try again.")
+  }
 
-  WaveFileName_Strings <- if_else(site_in_filename,
-                                  glue::glue_collapse(c("ARUName",
-                                                        "yyyymmdd",
-                                                        "hhmmss", "utm",
-                                                        "SR_SS",
-                                                        "wav"), sep = ";"),
-                                  glue::glue_collapse(c("yyyymmdd",
-                                                        "hhmmss", "utm",
-                                                        "SR_SS",
-                                                        "wav"), sep = ";")
-  )
-  # browser()
-
-  wav_names_log <- tibble::tibble(filename=list_waves) %>%
-    {if(ll==1){
-      dplyr::mutate(., WaveFilename=filename)
-    } else{
-
-      tidyr::separate(., remove=F, col = filename, sep = "/",
-                      into = pathnames, extra = 'merge') } } %>%
-    tidyr::separate(remove=F, col = WaveFilename, sep = filename_separator,
-                    into =stringr::str_split(WaveFileName_Strings, ";")[[1]],
-                    extra = 'merge') |>
-    dplyr::mutate(
-      SiteID = stringr::str_extract(filename, site_pattern),
-      # ARU_serial = serial_number,
+  wav_names_log_with_dates <- wav_names_log |>
+    mutate(
       date = lubridate::ymd(yyyymmdd),
       year = lubridate::year(date),
       month = lubridate::month(date),
