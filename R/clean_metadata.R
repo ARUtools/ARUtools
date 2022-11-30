@@ -115,6 +115,7 @@ clean_metadata <- function(type,
       "x" = "Differing filename structures are likely to lead to errors",
       "i" = "Run clean_metadata on each filename type separately"))
 
+
   if(length(WaveFileNames_vect)!=ll_names){
     abort(
       c("File name structure does not match naming structure.
@@ -124,7 +125,7 @@ clean_metadata <- function(type,
         "i" = "Manually specify WaveFileName_Strings as a string separated by ';'"))
   }
   fileName_sep <-
-    tibble::as_tibble(x = do.call(rbind, fileName_sep_list))
+    tibble::as_tibble(x = do.call(rbind, fileName_sep_list), .name_repair = 'minimal')
   names(fileName_sep) <- WaveFileNames_vect
 
 
@@ -188,6 +189,7 @@ clean_metadata <- function(type,
     SMfiles <- dplyr::filter(wav_names_log,ARU_type=="SongMeter" )
 
     if(nrow(SMfiles)>0){
+      # browser()
     if(grepl("3", type)) warn("Default site_pattern is set for SM4. Recommend changing based on file structure")
     if(!exists("site_pattern")) site_pattern <-  "S4A\\d{5}"
     # file.location <- "//WRIV02DTSTDNT1/RecordStor20172019/BetweenRivers_2019"
@@ -214,14 +216,14 @@ clean_metadata <- function(type,
     wav_names_log <- parse_datetimes(wav_names_log,
                                      tz_loc = unique(gps_locations$tz ))
 
-    rec_log_ss <- prep_sunrise_sunset(gps_locations = gps_locations,
+    recording_log <- prep_sunrise_sunset(gps_locations = gps_locations,
                                             wav_names_log = wav_names_log)
 
 
     # browser()
 
 
-    return(rec_log_ss)
+    return(recording_log)
 
 
 }
