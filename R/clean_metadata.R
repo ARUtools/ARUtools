@@ -181,6 +181,8 @@ clean_metadata <- function(type,
                       file_list= list_files,dist_cutoff=dist_cutoff,
                       deploy_start_date = deploy_start_date,
                       check_dists)
+    } else{
+      gps_locations_barLT <- gps_locations
     }
 
 

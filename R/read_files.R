@@ -179,13 +179,14 @@ process_gps_barlt <- function(base_folder, file_list, deploy_start_date,check_di
   dist_cutoff <- 100
   list2env(list(...), environment())
   # browser()
-  gps_files <- glue::glue("{base_folder}/{file_list[grepl('GPS', file_list)]}")
-  folder_gps <- stringr::str_remove(gps_files, base_folder)
+  # TODO fix this process for updated firmware, which includes GPX files
+  # browser()
+  gps_files_txt <- glue::glue("{base_folder}/{file_list[grepl('GPS\\\\w+.csv', file_list)]}")
+  gps_files_gpx <- glue::glue("{base_folder}/{file_list[grepl('GPS\\\\w+.gpx', file_list)]}")
+  folder_gps <- stringr::str_remove(gps_files_txt, base_folder)
   n_fold <- stringr::str_split(folder_gps, "/") |> purrr::map_dbl(length) |> unique()
   stopifnot(length(n_fold)==1)
-  gps_log_full <- purrr::map_df(gps_files,
-    ~{readr::read_csv(.x,skip = 1, col_names = T, col_types = readr::cols()) |>
-    janitor::clean_names() |> mutate(filepath = .x)}) |>
+  gps_log_full <- purrr::map_df(gps_files_txt,read_and_check_barlt_gps) |>
     mutate(dd_mm_yy_raw = dd_mm_yy,
       dd_mm_yy = lubridate::dmy(dd_mm_yy),
       SiteID = stringr::str_extract(filepath, site_pattern)) |>
@@ -200,6 +201,7 @@ process_gps_barlt <- function(base_folder, file_list, deploy_start_date,check_di
     # ) |>
     dplyr::select(-matches("^dropme")) |>
     dplyr::filter(dd_mm_yy >= deploy_start_date)
+
   if(any(is.na(gps_log_full$SiteID)))abort("Some SiteID were not parsed from GPS log. Check SiteID_pattern is correct")
   tz_loc <- lutz::tz_lookup_coords(lat = gps_log_full$latitude_decimal_degrees,
                                    lon = gps_log_full$longitude_decimal_degrees,
@@ -265,3 +267,32 @@ check_gps_distances <- function(gps_log, crs_m = 3161, dist_cutoff = 100){
 }
 
 
+#' Read barlt gps and check locations
+#'
+#' @param .x Path to gps file from barLT
+#'
+#' @return Returns paths chosen by user
+read_and_check_barlt_gps <- function(.x){
+  csv_tmp <- readr::read_csv(.x,skip = 1, col_names = T, col_types = readr::cols()) |>
+    janitor::clean_names() |> dplyr::mutate(filepath = .x)
+   if(!"hh_mm_ss" %in% names(csv_tmp)&"hh_mm"%in% names(csv_tmp)) csv_tmp$hh_mm_ss <- csv_tmp$hh_mm
+    # browser()
+
+
+  if(nrow(csv_tmp)!=1){
+    if(!interactive()){tmp_action <- 1:nrow(csv_tmp)
+    rlang::warn(glue::glue("Multple locations found for {.x}, but no option to select specifics. Run in interactive session to allow selection."))
+    } else{
+    tmp_action <- coda::multi.menu(c(glue::glue("DMY: {csv_tmp$dd_mm_yy}, Time: {csv_tmp$hh_mm}, Lat: {csv_tmp$latitude_decimal_degrees }, Lon: {csv_tmp$longitude_decimal_degrees}"), "Abort program"),
+                       title = glue::glue("Multiple locations detected for {.x}. Which would you like to use?"))
+    }
+    if (tmp_action == (nrow(csv_tmp) + 1)) {
+      abort("Check ARU log file and try again")
+    } else{
+      gps_loc <-csv_tmp[tmp_action,]
+    }
+  } else{ gps_loc <- csv_tmp}
+  return(gps_loc)
+
+
+}
