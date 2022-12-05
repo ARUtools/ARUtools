@@ -4,10 +4,12 @@
 \alias{play_random_track}
 \title{Play random track}
 \usage{
-play_random_track(base_folder, random_seed = NULL)
+play_random_track(base_folder, file_list = NULL, random_seed = NULL)
 }
 \arguments{
 \item{base_folder}{Base folder path from which to search from.}
+
+\item{file_list}{Vector of strings with file locations. If it is null, will search for them manually.}
 }
 \value{
 Will not return anything. It does open your media player

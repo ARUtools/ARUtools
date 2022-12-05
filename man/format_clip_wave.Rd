@@ -2,20 +2,45 @@
 % Please edit documentation in R/Clip_wav_file.R
 \name{format_clip_wave}
 \alias{format_clip_wave}
-\title{Clip wave to length from given start time in recording}
+\title{Process multiple wav files by copying them with a new filename or clipping
+to a given length.}
 \usage{
 format_clip_wave(
-  seg,
-  length_clip,
-  out_dir,
-  sub_dir_col,
-  filename_col,
-  warn = T
+  segment_df,
+  in_base_directory,
+  out_base_directory,
+  length_clip_col,
+  sub_dir_out_col,
+  filepath_in_col,
+  out_filename_col,
+  filewarn = T,
+  use_job = F,
+  ...
 )
 }
 \arguments{
-\item{warn}{}
+\item{segment_df}{Data frame with details of file locations.}
+
+\item{in_base_directory}{String. Directory where wav files are read from.}
+
+\item{out_base_directory}{String. Directory to output files to}
+
+\item{length_clip_col}{String with column name for the length of clip in seconds}
+
+\item{sub_dir_out_col}{String with column name for directories to output to, nested in out_base_directory}
+
+\item{filepath_in_col}{String with column name for path to file, either nested in base directory or absolute}
+
+\item{out_filename_col}{String with column name for output filename}
+
+\item{filewarn}{Logical. Default to TRUE. Should function provide warnings about file movements}
+
+\item{use_job}{Logical. Default to FALSE. Use the {job} package to copy files.}
+}
+\value{
+logical or logical vector of status of file copy.
 }
 \description{
-Clip wave to length from given start time in recording
+Process multiple wav files by copying them with a new filename or clipping
+to a given length.
 }

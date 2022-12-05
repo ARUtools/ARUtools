@@ -37,6 +37,7 @@ clean_metadata <- function(type,
   }
   list2env(list(...), envir = environment())
   if(!exists("file_ext")) file_ext <- ".wav"
+  if(!exists("return_full_metadata")) return_full_metadata <- FALSE
   # browser()
   # If file list not provided, scan it from base folder.
   if(is_null(list_files)){
@@ -224,8 +225,14 @@ clean_metadata <- function(type,
 
     # browser()
 
+    if(isTRUE(return_full_metadata)){
+      list(gps_locations = gps_locations,
+           recording_log = recording_log,
+           )
 
-    return(recording_log)
+      } else{
+        return(recording_log)
+      }
 
 
 }
