@@ -60,7 +60,7 @@ parse_datetimes <- function(wav_names_log,
 #'
 #' @return
 link_gps_locs <- function(gps_locations, wav_names_log){
-  browser()
+  # browser()
   stopifnot(
     "Not all SiteID from GPS log are in wav_names_log"=
       all(gps_locations$SiteID %in% wav_names_log$SiteID),
@@ -108,7 +108,7 @@ link_gps_locs <- function(gps_locations, wav_names_log){
     group_by(filename) |>
     slice_min(date_time - dategps) |>
     ungroup()
-  browser()
+  # browser()
   stopifnot(
     "Differing numbers of records after joining wav_names_log with gps_locations" =
       nrow(wav_with_gps)==nrow(wav_names_log),

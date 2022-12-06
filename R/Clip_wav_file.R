@@ -71,7 +71,7 @@ format_clip_wave <- function(segment_df,in_base_directory,
                    "x"="Only wav files are processed by format_clip_wave",
                    "i" = "Check file names are correct.") )
   }
-  outfiles <- glue::glue("{out_dir}/{segment_df[[sub_dir_out_col]]}/{segment_df[[out_filename_col]]}.wav")
+  outfiles <- glue::glue("{out_base_directory}/{segment_df[[sub_dir_out_col]]}/{segment_df[[out_filename_col]]}.wav")
   if(all(grepl(in_base_directory, segment_df[[filepath_in_col]]))){
     ll <- purrr::map_dbl(segment_df[[filepath_in_col]], get_wav_length, return_numeric = T)
     infiles <- seg[[filepath_in_col]]
@@ -81,7 +81,7 @@ format_clip_wave <- function(segment_df,in_base_directory,
       return_numeric = T) )
     infiles <- glue::glue("{in_base_directory}/{segment_df[[filepath_in_col]]}")
   }
-
+  if(length(infiles)!=length(outfiles)) browser()
   if(nrow(segment_df)==1) {
     x <- format_clip_wave_single(in_file = infiles,
                                  out_file= outfiles,

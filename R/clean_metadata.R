@@ -183,6 +183,7 @@ clean_metadata <- function(type,
                       deploy_start_date = deploy_start_date,
                       check_dists)
     } else{
+
       gps_locations_barLT <- gps_locations
     }
 
@@ -204,7 +205,7 @@ clean_metadata <- function(type,
     if(is_null(gps_locations)){
       gps_locations_SM <- process_gps_SM(folder_base = folder_base, list_files = list_files,
                                       site_pattern = site_pattern)
-    }
+    } else{ gps_locations_SM <- gps_locations}
     if(!exists("site_in_filename")) site_in_filename <- TRUE
     }
 
@@ -218,6 +219,14 @@ clean_metadata <- function(type,
     # if(length(unique(gps_locations$tz ))>1) browser()
     wav_names_log <- parse_datetimes(wav_names_log,
                                      tz_loc = unique(gps_locations$tz ))
+
+
+    if(exists("Filter_gps_sites")){
+      if(isTRUE(Filter_gps_sites)){
+        gps_locations <- gps_locations |>
+          dplyr::filter(SiteID %in% wav_names_log$SiteID)
+      }
+    }
 
     recording_log <- prep_sunrise_sunset(gps_locations = gps_locations,
                                             wav_names_log = wav_names_log)
