@@ -24,8 +24,9 @@ gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameter
   }
   warn("Since version 0.4 default selection parameter in gen_dens_sel_simulation is psel_normalize,
          which ranges from 0 to 1. If you wish to base decisions here off the simulation,
-         you can adjust the `selection_variable` paramter, which is an unquoted variable name of which
-         options are psel, psel_doy, psel_tod, psel_std, psel_scaled, or psel_normalized")
+         you can adjust the `selection_variable` paramter, which is an unquoted variable
+         name of which options are
+       psel, psel_doy, psel_tod, psel_std, psel_scaled, or psel_normalized")
   # min_fun <- switch (fun,
   #   "lognorm" = function(x, m, sd, log) dlnorm(x+off,log(m+off), sd, log),
   #   "norm" = dnorm,
@@ -61,12 +62,14 @@ gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameter
         psel_scaled = psel/max(psel),
         date = ymd("2022-01-01") + doy)
   } else if(any(par_existing)){
-    abort(c("Use of individual named parameters is depreciated.",
-            "x" = "If using old method must include all of the following as parameters: \n\r
+    a_1 <- c("Use of individual named parameters is depreciated.",
+             "x" = "If using old method must include all of the following as parameters: \n\r
             min, mean_min, sd_min, doy, mean_doy, sd_doy\n\r,
             and should include values for  log_, fun , & off",
-            "i" = "Suggest to use`parms` parameter to set values for simulation"))
-  }
+             "i" = "Suggest to use`parms` parameter to set values for simulation")
+    if(!exists('min'))  abort(a_1)
+    if(exists('min')) if(class(min)!="function") abort(a_1)
+      }
 
 
 
