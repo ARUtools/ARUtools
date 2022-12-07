@@ -5,40 +5,27 @@
 \title{Simulate selection probabilities for GRTS}
 \usage{
 gen_dens_sel_simulation(
-  min,
-  mean_min,
-  sd_min,
-  doy,
-  mean_doy,
-  sd_doy,
+  parms = ARUtools::default_selection_parameters,
+  selection_variable = psel_normalized,
   return_dat = F,
-  log_ = F,
-  fun = "norm",
-  off = NULL
+  ...
 )
 }
 \arguments{
-\item{min}{Vector of minutes to sunrise or sunset}
+\item{parms}{List of parameters for simulation see ?ARUtools::default_selection_parameters for names and default values}
 
-\item{doy}{Vector of minutes to sunrise or sunset (negative is before)}
+\item{selection_variable}{unquoted variable name of which options are psel, psel_doy, psel_tod, psel_std, psel_scaled, or psel_normalized. Default is psel_normalized}
 
-\item{mean_doy}{Mean of density for days to sun event}
-
-\item{sd_doy}{Standard deviation of days portion of density}
-
-\item{return_dat}{Logical - return just the data or print basic plots}
-
-\item{log_}{Logical - to use log of densities (creates softer patterns)}
-
-\item{fun}{Function to use for densities. Can be "lognorm", "norm", or "cauchy"}
-
-\item{mean_log_min}{Mean (on log scale) of density for minutes to sun event}
-
-\item{sdlog_min}{Standard deviation of minutes portion of density}
+\item{return_dat}{Logical - return just the data or print basic plot}
 }
 \value{
 Returns either a data frame with selection probabilities or plots of selection probabiliies.
 }
 \description{
 Simulate selection probabilities for GRTS
+}
+\examples{
+gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
+              parms = ARUtools::default_selection_parameters,
+             selection_variable = psel_normalized , return_dat=F)
 }

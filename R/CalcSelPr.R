@@ -1,56 +1,97 @@
 #' Simulate selection probabilities for GRTS
 #'
-#' @param min  Vector of minutes to sunrise or sunset
-#' @param mean_log_min Mean (on log scale) of density for minutes to sun event
-#' @param sdlog_min Standard deviation of minutes portion of density
-#' @param doy Vector of minutes to sunrise or sunset (negative is before)
-#' @param mean_doy Mean of density for days to sun event
-#' @param sd_doy Standard deviation of days portion of density
-#' @param return_dat Logical - return just the data or print basic plots
-#' @param log_ Logical - to use log of densities (creates softer patterns)
-#' @param fun Function to use for densities. Can be "lognorm", "norm", or "cauchy"
+#' @param parms List of parameters for simulation see ?ARUtools::default_selection_parameters for names and default values
+#' @param selection_variable unquoted variable name of which options are psel, psel_doy, psel_tod, psel_std, psel_scaled, or psel_normalized. Default is psel_normalized
+#' @param return_dat Logical - return just the data or print basic plot
 #'
 #' @import patchwork
 #'
 #' @return Returns either a data frame with selection probabilities or plots of selection probabiliies.
 #' @export
-gen_dens_sel_simulation <- function( min, mean_min, sd_min, doy, mean_doy, sd_doy, return_dat =F, log_=F, fun = 'norm',
-                                     off=NULL ) {
+#'
+#' @examples
+#' gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
+#'               parms = ARUtools::default_selection_parameters,
+#'              selection_variable = psel_normalized , return_dat=F)
+gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameters,
+                                     selection_variable=psel_normalized,
+                                     return_dat =F , ...) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop(
       "Package \"ggplot2\" must be installed to use this function.",
       call. = FALSE
     )
   }
-  min_fun <- switch (fun,
-    "lognorm" = function(x, m, sd, log) dlnorm(x+off,log(m+off), sd, log),
-    "norm" = dnorm,
-    "cauchy"=dcauchy
-  )
+  warn("Since version 0.4 default selection parameter in gen_dens_sel_simulation is psel_normalize,
+         which ranges from 0 to 1. If you wish to base decisions here off the simulation,
+         you can adjust the `selection_variable` paramter, which is an unquoted variable name of which
+         options are psel, psel_doy, psel_tod, psel_std, psel_scaled, or psel_normalized")
+  # min_fun <- switch (fun,
+  #   "lognorm" = function(x, m, sd, log) dlnorm(x+off,log(m+off), sd, log),
+  #   "norm" = dnorm,
+  #   "cauchy"=dcauchy
+  # )
 
-  dens_min <- min_fun(min, mean_min, sd_min, log = log_)
-  dens_doy <- dnorm(doy, mean_doy, sd_doy, log=log_)
-  all <- expand.grid(doy = doy, min = min) |>
+  # dens_min <- min_fun(min, mean_min, sd_min, log = log_)
+  # dens_doy <- dnorm(doy, mean_doy, sd_doy, log=log_)
+  list2env(list(...), envir = environment())
+  par_existing <- c( exists("min"), exists("mean_min"), exists("sd_min"),
+  exists("doy"), exists("mean_doy"), exists("sd_doy"))
+  suggest_existing <- c(exists("fun"), exists("log_"), exists("off"))
+  if(all(par_existing)  ){
+    warn("Use of individual named parameters is depreciated. Use`parms` parameter to set values for simulation")
+    if(!all(suggest_existing)){
+      if(!exists("fun")) fun <- "norm"
+      if(!exists("log_")) log_ <- FALSE
+      if(!exists("off")) off <-NULL
+    }
+    min_fun <- switch (fun,
+                       "lognorm" = function(x, m, sd, log) dlnorm(x+off,log(m+off), sd, log),
+                       "norm" = dnorm,
+                       "cauchy"=dcauchy
+    )
+    dens_min <- min_fun(min, mean_min, sd_min, log = log_)
+    dens_doy <- dnorm(doy, mean_doy, sd_doy, log=log_)
+    all <- expand.grid(doy = doy, min = min) |>
+      dplyr::mutate(
+        psel_tod = min_fun(round(min,0), mean_min, sd_min, log = log_)/max(abs(dens_min)),
+        psel_doy = dnorm(doy,mean= mean_doy, sd = sd_doy, log=log_)/max(abs(dens_doy)),
+        psel = dplyr::case_when(log_~ exp( psel_tod + psel_doy),
+                                !log_~ psel_tod * psel_doy),
+        psel_scaled = psel/max(psel),
+        date = ymd("2022-01-01") + doy)
+  } else if(any(par_existing)){
+    abort(c("Use of individual named parameters is depreciated.",
+            "x" = "If using old method must include all of the following as parameters: \n\r
+            min, mean_min, sd_min, doy, mean_doy, sd_doy\n\r,
+            and should include values for  log_, fun , & off",
+            "i" = "Suggest to use`parms` parameter to set values for simulation"))
+  }
+
+
+
+  all <- expand.grid(doy = seq(parms$doy_range[[1]],parms$doy_range[[2]]),
+                     min = seq(parms$min_range[[1]],parms$min_range[[2]]),
+                     location=1) |>
+    calc_sel_pr(ARU_ID_col = location,
+                min_col = min,
+                day_col = doy,
+                parms = parms) |>
     dplyr::mutate(
-      psel_tod = min_fun(round(min,0), mean_min, sd_min, log = log_)/max(abs(dens_min)),
-      psel_doy = dnorm(doy,mean= mean_doy, sd = sd_doy, log=log_)/max(abs(dens_doy)),
-      psel = dplyr::case_when(log_~ exp( psel_tod + psel_doy),
-                       !log_~ psel_tod * psel_doy),
-      psel_scaled = psel/max(psel),
-      date = ymd("2022-01-01") + doy)
+      date = lubridate::ymd("2022-01-01") + doy)
 
   if(isTRUE(return_dat))(return(all))
   ggplot2::theme_set(ggplot2::theme_minimal(base_size = 14, base_family = "Roboto Condensed"))
 
-  p1 <- ggplot2::ggplot(all, aes(date, psel_doy)) + geom_line() +
+  p1 <- ggplot2::ggplot(all, ggplot2::aes(date, psel_doy)) + ggplot2::geom_line() +
     ggplot2::labs(x="Date", y = "Selection probability (date)")
-  p2 <- ggplot2::ggplot(all, aes(min, psel_tod)) + geom_line() +
+  p2 <- ggplot2::ggplot(all, ggplot2::aes(min, psel_tod)) + ggplot2::geom_line() +
     ggplot2::labs(x="Time to sun event", y = "Selection probability (time)")
   p3 <- ggplot2::ggplot(all,
-               aes(date,
+               ggplot2::aes(date,
                    min,
                    fill =
-                     psel_scaled
+                     {{selection_variable}}
                )
   ) +
     ggplot2::geom_tile() +
@@ -108,7 +149,8 @@ calc_sel_pr <- function(.data,ARU_ID_col, min_col, day_col, parms = list(min_ran
                             !log_~ psel_tod * psel_doy),
            psel_scaled = psel/max(psel)) %>%
     dplyr::group_by({{ARU_ID_col}}) %>%
-    dplyr::mutate(psel_std = psel / max(psel)) %>%
+    dplyr::mutate(psel_std = psel / max(psel),
+                  psel_normalized =  pmax(1e-3,(psel-min(psel))/(max(psel)-min(psel)))) %>%
     dplyr::ungroup()
 
 

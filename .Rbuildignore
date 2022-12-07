@@ -5,3 +5,4 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 inst\Gen_gex.R
+^data-raw$
