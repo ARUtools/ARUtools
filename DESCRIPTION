@@ -38,6 +38,7 @@ Suggests:
     sessioninfo,
     withr,
     job,
-    rstudioapi
+    rstudioapi,
+    jsonlite
 Config/testthat/edition: 3
 RoxygenNote: 7.2.1

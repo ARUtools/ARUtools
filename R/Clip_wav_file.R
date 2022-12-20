@@ -50,7 +50,7 @@ format_clip_wave_single <- function(in_file, out_file, length_clip, StartTime, w
 #' @param in_base_directory String. Directory where wav files are read from.
 #' @param out_base_directory String. Directory to output files to
 #' @param length_clip_col String with column name for the length of clip in seconds
-#' @param sub_dir_out_col String with column name for directories to output to, nested in out_base_directory
+#' @param sub_dir_out_col String or vector of strings with column name for directories to output to, nested in out_base_directory
 #' @param filepath_in_col String with column name for path to file, either nested in base directory or absolute
 #' @param out_filename_col String with column name for output filename
 #' @param filewarn Logical. Default to TRUE. Should function provide warnings about file movements
@@ -66,12 +66,19 @@ format_clip_wave <- function(segment_df,in_base_directory,
                      filewarn=T, use_job=F, ...){
   list2env(list(...), envir = environment())
   if(!exists("diff_limit")) diff_limit <- 30
+  if(length(sub_dir_out_col)>1){
+    output_subfolders <- segment_df[,sub_dir_out_col] |>
+      dplyr::rowwise() |>
+      dplyr::mutate(output = glue::glue_collapse(c_across(), sep = "/")) |>
+      dplyr::ungroup() |>
+      dplyr::pull(output)
+  } else{output_subfolders <- segment_df[[sub_dir_out_col]]}
   if(any(!grepl(".wav$", segment_df[[filepath_in_col]] )) ){
     rlang::abort(c("Non-wav file found in files.",
                    "x"="Only wav files are processed by format_clip_wave",
                    "i" = "Check file names are correct.") )
   }
-  outfiles <- glue::glue("{out_base_directory}/{segment_df[[sub_dir_out_col]]}/{segment_df[[out_filename_col]]}.wav")
+  outfiles <- glue::glue("{out_base_directory}/{output_subfolders}/{segment_df[[out_filename_col]]}.wav")
   if(all(grepl(in_base_directory, segment_df[[filepath_in_col]]))){
     ll <- purrr::map_dbl(segment_df[[filepath_in_col]], get_wav_length, return_numeric = T)
     infiles <- seg[[filepath_in_col]]

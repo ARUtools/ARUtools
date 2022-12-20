@@ -85,9 +85,9 @@ link_gps_locs <- function(gps_locations, wav_names_log){
 
   g <- gps_locations |> #filter(SiteID == sites[[i]]) |>
     dplyr::rowwise() %>% {if(lubridate::is.Date(.$dd_mm_yy)){
-    dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm, sep = " "), tz = tz))
+    dplyr::mutate(.,dategps = lubridate::dmy_hm(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm, sep = " "), tz = tz))
     } else{
-      dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(dd_mm_yy, hh_mm, sep = " "), tz = tz))
+      dplyr::mutate(.,dategps = lubridate::dmy_hm(paste(dd_mm_yy, hh_mm, sep = " "), tz = tz))
     }
     } |>
     dplyr::ungroup() |>
@@ -108,7 +108,6 @@ link_gps_locs <- function(gps_locations, wav_names_log){
     group_by(filename) |>
     slice_min(date_time - dategps) |>
     ungroup()
-  # browser()
   stopifnot(
     "Differing numbers of records after joining wav_names_log with gps_locations" =
       nrow(wav_with_gps)==nrow(wav_names_log),

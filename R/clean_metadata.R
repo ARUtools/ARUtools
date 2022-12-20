@@ -76,7 +76,7 @@ clean_metadata <- function(type,
       "x" = "Differing folder structures are likely to lead to errors",
       "i" = "Run clean_metadata on each folder type separately"))
 
-  if(is_null(folder_names)) {pathnames <- c(glue::glue("Folder{1:(ll-1)}"), "WaveFilename")
+  if(rlang::is_null(folder_names)) {pathnames <- c(glue::glue("Folder{1:(ll-1)}"), "WaveFilename")
   } else if(length(folder_names) == ll){
     if(folder_names[length(folder_names)]!= "WaveFilename")folder_names[length(folder_names)] <-  "WaveFilename"
     pathnames <-  folder_names
@@ -89,7 +89,6 @@ clean_metadata <- function(type,
     {if(ll==1){
       dplyr::mutate(., WaveFilename=filename)
     } else{
-
       tidyr::separate(., remove=F, col = filename, sep = "/",
                       into = pathnames, extra = 'merge') } }
   if(is_null(WaveFileName_Strings)){

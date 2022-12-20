@@ -97,7 +97,6 @@ read_summary_SM4 <- function(filename, SiteID_pattern = "SM4A\\d{5}"){
 
 
 }
-
 #' Process GPS locations for SongMeters
 #'
 #' @param folder_base Base folder were summary folders locationed
@@ -106,6 +105,22 @@ read_summary_SM4 <- function(filename, SiteID_pattern = "SM4A\\d{5}"){
 #'
 #' @return Returns a data frame with lat/lon for each location and date collected
 process_gps_SM <- function(folder_base, list_files, site_pattern){
+    warn("process_gps_SM is depreciated. Use process_log_SM")
+    process_log_SM(folder_base, list_files, site_pattern,
+                   return_gps=T, return_log=F)
+
+  }
+#' Process log files from SongMeters
+#'
+#' @param folder_base Base folder were summary folders locationed
+#' @param list_files List of files in folder_base
+#' @param site_pattern site pattern to separate out siteid
+#' @param return_gps Logical. Should function return GPS locations?
+#' @param return_log Logical. Should the function return the full log?
+#'
+#' @return Returns a data frame with lat/lon for each location and date collected
+#' @export
+process_log_SM <- function(folder_base, list_files, site_pattern, return_gps, return_log){
 
   summText <- list_files[grep("_Summary.txt", list_files)]
   # browser()
@@ -114,6 +129,7 @@ process_gps_SM <- function(folder_base, list_files, site_pattern){
       dplyr::mutate(SiteID = stringr::str_extract(.x, site_pattern))}) |>
     tibble::as_tibble()
   if(any(is.na(summaries$SiteID)))abort("Some SiteID were not parsed. Check SiteID_pattern is correct")
+  if(isTRUE(return_gps)){
   needed_names <- c("LAT", "LON", "DATE", "TIME")
   if(!all( needed_names%in% names(summaries))) abort(
     glue::glue(
@@ -159,7 +175,14 @@ process_gps_SM <- function(folder_base, list_files, site_pattern){
                                              method = 'accurate')
   stopifnot("Multiple time zones detected, please run separately"=
               length(unique(gps_locations$tz))==1)
-  return(gps_locations)
+  }
+  if(all(is_true(return_gps), is_true(return_log)))
+    return(list(gps_locations = gps_locations,
+                metadata = summaries))
+  if(all(is_true(return_gps), is_false(return_log)))  return(gps_locations)
+  if(all(is_false(return_gps), is_true(return_log)))  return(summaries)
+  if(all(is_false(return_gps), is_false(return_log)))
+    abort(c("I don't know what to return", "i" = "one or both of return_gps or return_log must be TRUE") )
 }
 
 
