@@ -27,7 +27,7 @@ format_clip_wave(
 
 \item{length_clip_col}{String with column name for the length of clip in seconds}
 
-\item{sub_dir_out_col}{String with column name for directories to output to, nested in out_base_directory}
+\item{sub_dir_out_col}{String or vector of strings with column name for directories to output to, nested in out_base_directory}
 
 \item{filepath_in_col}{String with column name for path to file, either nested in base directory or absolute}
 

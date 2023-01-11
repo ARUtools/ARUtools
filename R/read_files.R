@@ -9,7 +9,7 @@
 #'
 read_log_barlt <- function(filename){
   # Read the full file in
-  full_file <- readr::read_lines(file = filename, skip = 2)
+  full_file <- readr::read_lines(file = filename)
   # Parse out serial number
   serial <- full_file[grep("Serial Number:", full_file)] |>
     stringr::str_extract_all(pattern ="((\\d{5,}\\-)+\\d{5,}|\\d{5,})") |> unique()

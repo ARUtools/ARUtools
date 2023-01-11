@@ -66,6 +66,15 @@ fun_aru_samp <- function(df, N, os, seed, strat_, selprob_id, x, y, ...) {
 
   print(c(mindis, maxtry, DesignID))
   # browser()
+  if(is.data.frame(N)){
+    if(all(c("N", "n_os") %in% names(N),arus %in% N[[strat_]] )  ) {
+    Stratdsgn <- N$N
+    n_os <- N$n_os
+    names(Stratdsgn) <- names(n_os) <- N[[strat_]]
+    } else{abort(c("Failed to parse N as data.frame.",
+                   "x" = glue::glue("Need to include columns named 'N', 'n_os', and '{strat_}'"),
+                   "i" = "Check format of N as a data frame and try agian.")) }
+  }else{
   if(length(N)==1){
   Stratdsgn <- rep(N, length(arus))
   if(length(os)==1){
@@ -84,8 +93,7 @@ fun_aru_samp <- function(df, N, os, seed, strat_, selprob_id, x, y, ...) {
       n_os <- os
     } else {simpleError("OS should either be single value or list with all strata ID. Not all Strata found in OS and OS has length >1")}
   } else {simpleError("N should either be single value or list with all strata ID. Not all Strata found in N and N has length >1")}
-
-
+  }
 
 
   set.seed(seed)

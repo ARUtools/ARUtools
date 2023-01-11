@@ -5,6 +5,8 @@
 #' @param f filepath for json
 #' @param json_string_regex string. Regex to extract from file path
 #'
+#' @export
+#'
 #' @return
 wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]+"){
   warn("Function in development. Use at own risk")
@@ -34,15 +36,15 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
                     "/")) )
   }
 
-  tmp <- purrr::pluck(jsonfile, "Wind free regions") %>% transpose()
+  tmp <- purrr::pluck(jsonfile, "Wind free regions") %>% purrr::transpose()
   nm <- purrr::pluck(jsonfile, "FileName")
-  tibble::tibble(s = purrr::list_c(pluck(tmp, "s")),
-         e = tmp |>
-           pluck("e") |>
-           purrr::list_flatten() |>
-           purrr::list_flatten()
-
-  ) %>%
+  e <- tmp |>
+    purrr::pluck("e") |>
+    purrr::list_c()# |>
+    # purrr::list_flatten()
+  s <-  purrr::list_c(purrr::pluck(tmp, "s"))
+  # browser()
+  tibble::tibble(s,e) %>%
     dplyr::mutate(t=e-s) %>%
     dplyr::summarize(totalwindless = sum(t),
               pwindless = totalwindless/dets,
@@ -58,7 +60,7 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
 
 
 
-#' Preprocessing of files for Wind Detection program
+#' Pre-processing of files for Wind Detection program
 #'
 #' @param wav_vector
 #' @param site_pattern
