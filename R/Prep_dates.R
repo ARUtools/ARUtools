@@ -236,3 +236,44 @@ prep_sunrise_sunset <- function(gps_locations,wav_names_log){
       dow = lubridate::wday(date_time))
 }
 
+
+
+
+
+#' Temporary alternative function to calculate sunrise sunset
+#'
+#' Just a placeholder to put into prep_sunrise_sunset potentially
+#'
+#' @param data_in
+#' @param time_zone
+#'
+#' @return
+est_sunrise_sunset <- function(data_in, time_zone){
+  tmp <- data_in |> filter(tz == time_zone)
+  map(c("date", "day_before", "day_after"),
+      ~{x <- as.symbol(.x)
+      ARUtools:::calculate_sunrise_sunset(.data = st_drop_geometry(tmp), var_day = !!x ) |>
+        dplyr::select(-SiteID, -date, -lat, -lon)
+      }) |> bind_cols() |> bind_cols(tmp) |>
+    dplyr::mutate(
+      t2sr = lubridate::int_length(lubridate::interval(sunrise_date, date_time))/60,
+      t2sr_before = lubridate::int_length(lubridate::interval(sunrise_day_before,date_time))/60,
+      t2sr_after = lubridate::int_length(lubridate::interval(sunrise_day_after,date_time))/60,
+
+
+      t2ss = lubridate::int_length(lubridate::interval(sunset_date, date_time))/60,
+      t2ss_before = lubridate::int_length(lubridate::interval(sunset_day_before,date_time))/60,
+      t2ss_after = lubridate::int_length(lubridate::interval(sunset_day_after,date_time))/60,
+      doy = lubridate::yday(date)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(t2sr_min = c(t2sr, t2sr_before, t2sr_after)[which.min(c(abs(t2sr), abs(t2sr_before),
+                                                                          abs(t2sr_after)))],
+                  t2ss_min = c(t2ss, t2ss_before, t2ss_after)[which.min(c(abs(t2ss), abs(t2ss_before),
+                                                                          abs(t2ss_after)))],
+
+    ) |> dplyr::ungroup() |>
+    dplyr::mutate(
+      week = lubridate::week(date_time),
+      dow = lubridate::wday(date_time),
+      Sunset_Sunrise = ifelse(t2sr_min< -125, "SS", "SR"))
+}

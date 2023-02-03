@@ -293,23 +293,26 @@ check_gps_distances <- function(gps_log, crs_m = 3161, dist_cutoff = 100){
 #' Read barlt gps and check locations
 #'
 #' @param .x Path to gps file from barLT
+#' @param return_all_locs logical. Return all gps locations from file. Default is false
 #'
 #' @return Returns paths chosen by user
-read_and_check_barlt_gps <- function(.x){
+read_and_check_barlt_gps <- function(.x, return_all_locs=F){
   csv_tmp <- readr::read_csv(.x,skip = 1, col_names = T, col_types = readr::cols()) |>
     janitor::clean_names() |> dplyr::mutate(filepath = .x)
-   if(!"hh_mm_ss" %in% names(csv_tmp)&"hh_mm"%in% names(csv_tmp)) csv_tmp$hh_mm_ss <- csv_tmp$hh_mm
-    # browser()
+   if(!"hh_mm_ss" %in% names(csv_tmp)&"hh_mm"%in% names(csv_tmp))
+     csv_tmp$hh_mm_ss <- csv_tmp$hh_mm
+
 
 
   if(nrow(csv_tmp)!=1){
-    if(!interactive()){tmp_action <- 1:nrow(csv_tmp)
+    if(!interactive()|isTRUE(return_all_locs)){tmp_action <- 1:nrow(csv_tmp)
     rlang::warn(glue::glue("Multple locations found for {.x}, but no option to select specifics. Run in interactive session to allow selection."))
     } else{
     tmp_action <- coda::multi.menu(c(glue::glue("DMY: {csv_tmp$dd_mm_yy}, Time: {csv_tmp$hh_mm}, Lat: {csv_tmp$latitude_decimal_degrees }, Lon: {csv_tmp$longitude_decimal_degrees}"), "Abort program"),
                        title = glue::glue("Multiple locations detected for {.x}. Which would you like to use?"))
     }
-    if (tmp_action == (nrow(csv_tmp) + 1)) {
+    # browser()
+    if (max(tmp_action) == (nrow(csv_tmp) + 1)) {
       abort("Check ARU log file and try again")
     } else{
       gps_loc <-csv_tmp[tmp_action,]
