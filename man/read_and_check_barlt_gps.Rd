@@ -4,10 +4,12 @@
 \alias{read_and_check_barlt_gps}
 \title{Read barlt gps and check locations}
 \usage{
-read_and_check_barlt_gps(.x)
+read_and_check_barlt_gps(.x, return_all_locs = F)
 }
 \arguments{
 \item{.x}{Path to gps file from barLT}
+
+\item{return_all_locs}{logical. Return all gps locations from file. Default is false}
 }
 \value{
 Returns paths chosen by user
