@@ -71,9 +71,16 @@ link_gps_locs <- function(gps_locations, wav_names_log){
     # Messy fix here for having hh_mm_ss instead of just hh_mm
     g <- gps_locations |> #filter(SiteID == sites[[i]]) |>
       dplyr::rowwise() %>% {if(lubridate::is.Date(.$dd_mm_yy)){
-        dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm_ss, sep = " "), tz = tz))
+        dplyr::mutate(.,dategps = lubridate::parse_date_time(
+          paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm_ss, sep = " "),
+          orders = "dmY HMS",truncated = 3,
+          tz = tz))
       } else{
-        dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(dd_mm_yy, hh_mm_ss, sep = " "), tz = tz))
+        dplyr::mutate(.,
+                      dategps = lubridate::parse_date_time(
+                        paste(dd_mm_yy, hh_mm_ss, sep = " "),
+                        orders = "dmY HMS",truncated = 3,
+                        tz = tz))
       }
       } |>
       dplyr::ungroup() |>
@@ -85,9 +92,14 @@ link_gps_locs <- function(gps_locations, wav_names_log){
 
   g <- gps_locations |> #filter(SiteID == sites[[i]]) |>
     dplyr::rowwise() %>% {if(lubridate::is.Date(.$dd_mm_yy)){
-    dplyr::mutate(.,dategps = lubridate::dmy_hm(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm, sep = " "), tz = tz))
+    dplyr::mutate(.,dategps = lubridate::parse_date_time(
+      paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm, sep = " "),
+      orders = "dmY HMS",truncated = 3,
+      tz = tz))
     } else{
-      dplyr::mutate(.,dategps = lubridate::dmy_hm(paste(dd_mm_yy, hh_mm, sep = " "), tz = tz))
+      dplyr::mutate(.,dategps = lubridate::parse_date_time(
+        paste(dd_mm_yy, hh_mm, sep = " "),,orders = "dmY HMS",truncated = 3,
+                                                  tz = tz))
     }
     } |>
     dplyr::ungroup() |>
