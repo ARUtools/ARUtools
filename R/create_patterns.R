@@ -24,19 +24,16 @@ create_pattern_date <- function(order = "ymd", sep = c("_", "-"), n_years = 4) {
 }
 
 #' @export
-# seconds = c("optional", "omit", "enforce")
-create_pattern_time <- function(sep = c("_", "-", ":"), seconds = "optional") {
+create_pattern_time <- function(sep = c("_", "-", ":"), seconds = TRUE) {
 
   sep <- create_pattern_sep(sep)
 
   h <- "([0-2]{1}[0-9]{1})"
   m <- "([0-5]{1}[0-9]{1})"
-  s <- "([0-5]{1}[0-9]{1})"
 
-  if(seconds == "optional") s <- paste0(s, "?")
-  if(seconds == "omit") s <- ""
-
-  paste0(h, sep, m, sep, s)
+  p <- paste0(h, sep, m)
+  if(seconds) p <- paste0(p, sep, "([0-5]{1}[0-9]{1})")
+  p
 }
 
 #' @examples
