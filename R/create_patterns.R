@@ -4,6 +4,21 @@ create_pattern_sep <- function(sep, optional = TRUE) {
   sep
 }
 
+#' Create a pattern to match date
+#'
+#' Helper function to create a regular expression pattern to match different
+#' types of date formats in file paths.
+#'
+#' @param order Character. Expected order of (y)ear, (m)onth and (d)ate.
+#'   Default is "ymd" for Year-Month-Date order.
+#' @param sep Character vector. Expected (optional) separators between the
+#'   values. Can be "" for no separator. Otherwise all separators are optional.
+#' @param n_years Numeric. Number of digits in Year, either 2 or 4.
+#'
+#' @examples
+#' create_pattern_date()
+#' create_pattern_date(sep = "")
+#'
 #' @export
 create_pattern_date <- function(order = "ymd", sep = c("_", "-"), n_years = 4) {
 
