@@ -28,7 +28,8 @@ Imports:
     lutz,
     units,
     suncalc,
-    magrittr
+    magrittr,
+    fs (>= 1.6.1)
 Suggests: 
     testthat (>= 3.0.0),
     soundecology,
