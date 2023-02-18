@@ -21,7 +21,7 @@
 #'
 #' @examples
 #'
-#' clean_metadata(subset_dir = "P71")
+#' clean_metadata(subset = "P71")
 #' clean_metadata()
 #'
 #' @export
@@ -29,8 +29,9 @@ clean_metadata <- function(
     project_dir = NULL,
     project_files = NULL,
     file_type = "wav",
-    subset_dir = NULL,
+    subset = NULL,
     subset_type = "keep",
+    site_from_date = NULL,
     pattern_site = "[P|Q]\\d+(_|-)\\d",
     pattern_aru_id = create_pattern_aru_id(),
     pattern_date = create_pattern_date(),
@@ -40,28 +41,26 @@ clean_metadata <- function(
     order_date = "ymd",
     quiet = FALSE) {
 
+  # CHECKS
+
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
-
-  #BarLT <- (grepl("bar", type, ignore.case = T) & grepl("lt", type, ignore.case = T))
-  #SM <- (grepl("sm", type, ignore.case = T) & grepl("3|4", type, ignore.case = T))
-  #Mixed <- (grepl("mixed", type, ignore.case = T))
-
-  #if(!any(BarLT ,SM, Mixed) ){
-  #  abort("Currently only BarLT and SM4 ARUs are supported. Will add more as needed.")
-  #}
+  file_type <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
 
   if(!is.null(project_dir)) {
     if(!quiet) rlang::inform("Fetching file list...")
-    project_files <- list_files(project_dir, subset_dir, subset_type)
+    project_files <- list_files(project_dir, subset, subset_type,
+                                type = "file")
+  } else if(!is.null(subset)){
+    project_files <- stringr::str_subset(project_files, subset,
+                                         negate = subset_type == "omit")
   }
 
   # Check for files (either zero or all directories)
   if(length(project_files) == 0 || all(fs::is_dir(project_files))) {
-    if(is.null(subset_dir)) {
-
+    if(is.null(subset)) {
       msg <- "`project_dir`"
     } else {
-      msg <- "`project_dir`/`subset_dir`/`subset_type` combination"
+      msg <- "`project_dir`/`subset`/`subset_type` combination"
     }
 
     rlang::abort(c(
@@ -80,18 +79,28 @@ clean_metadata <- function(
                    "i" = "Check `project_dir` is correct"))
   }
 
-  # Collect non-file-type files
+
   if(!is.null(project_dir)) {
     project_files <- stringr::str_remove(project_files, project_dir)
   }
+
+  # Collect non-file-type files
   extra <- stringr::str_subset(project_files, file_type, negate = TRUE)
+  gps <- stringr::str_subset(extra, stringr::regex("gps", ignore_case = TRUE))
   focal <- stringr::str_subset(project_files, file_type)
 
   # Set up file path metadata
   meta <- dplyr::tibble(
     dir = fs::path_dir(focal),
     file_name = fs::path_file(focal),
-    type = fs::path_ext(focal))
+    type = tolower(fs::path_ext(focal)))
+
+  if(length(gps) > 1) {
+    meta <- meta %>%
+      dplyr::add_row(dir = fs::path_dir(gps),
+                     file_name = fs::path_file(gps),
+                     type = "gps")
+  }
 
   pattern_aru <- c("barlt" = "BarLT",
                    "SMM" = "SongMeter",
@@ -142,7 +151,6 @@ clean_metadata <- function(
       date = lubridate::as_date(.data$date_time))
 
   if(any(is.na(meta$date))) {
-    if(!quiet) rlang::inform("  Getting dates where times missing...")
     missing <- meta %>%
       dplyr::filter(is.na(.data$date)) %>%
       dplyr::mutate(
@@ -155,22 +163,55 @@ clean_metadata <- function(
           NA_character_),
         date = lubridate::parse_date_time(.data$date_chr, orders = order_date),
         date = lubridate::as_date(.data$date)) %>%
-      dplyr::select(-"date_chr")
+      dplyr::select("dir", "file_name", "date")
 
     # Add dates where missing
     meta <- dplyr::rows_patch(meta, missing, by = c("dir", "file_name"))
   }
 
+  # Extra files
+  if(length(extra) > 1) {
+    rlang::inform(
+      c("!" = paste0("Omitted ", length(extra), " extra, non-",
+                     meta$type[1], " files")))
+  }
+
+  if(length(gps) > 1) {
+    rlang::inform(c("!" = paste0("Detected ", length(gps), " GPS logs")))
+  }
+
   # Flag problems
-        #flag_date_time = is.na(date_time_chr)
+  f <- dplyr::filter(meta, type == "wav")
+  n <- nrow(f)
+  f_dt <- sum(is.na(f$date_time))
+  f_type <- sum(is.na(f$ARU_type))
+  f_id <- sum(is.na(f$ARU_id))
+  f_site <- sum(is.na(f$site))
+
+  if(any(c(f_dt, f_type, f_id, f_site) > 0)) {
+   msg <- c("!" = "Identified possible problems with metadata extraction:")
+   if(f_dt > 0) msg <- c(msg, "x" = paste0("Not all date/times were successfully detected (", f_dt, "/", n, ")"))
+   if(f_type > 0) msg <- c(msg, "x" = paste0("Not all ARU types were successfully detected (", f_type, "/", n, ")"))
+   if(f_id > 0) msg <- c(msg, "x" = paste0("Not all ARU ids were successfully detected (", f_id, "/", n, ")"))
+   if(f_site > 0) msg <- c(msg, "x" = paste0("Not all sites were successfully detected (", f_site, "/", n, ")"))
+   rlang::inform(msg)
+  }
+
+  dplyr::arrange(meta, type != "gps", !is.na(date_time), dir, file_name, site, date_time) %>%
+    dplyr::select(-"file_left", -"dir_left", -"date_time_chr")
+}
 
 
-  dplyr::select(meta, -"file_left", -"dir_left", -"date_time_chr")
+clean_site_index <- function(index) {
+  type <- fs::path_ext(index)
+  if(type == "csv") site_index <- readr::read_csv(index)
+  if(type == "xlsx") site_index <- readxl::read_excel(index)
 }
 
 
 
-clean_gps <- function() {
+clean_gps <- function(meta, gps = NULL) {
+
 
   # |- BarLT   ----------------
 
@@ -191,6 +232,7 @@ clean_gps <- function() {
       "x" = glue::glue("folder_names is {length(folder_names)}, while number of folders is {ll}"),
       "i" = "Run clean_metadata on each folder type separately") ) }
   if(!exists("site_in_filename")) site_in_filename <- FALSE
+  browser()
   wav_names_log <- tibble::tibble(filename=list_waves) %>%
     {if(ll==1){
       dplyr::mutate(., WaveFilename=filename)
@@ -234,7 +276,6 @@ clean_gps <- function() {
     tibble::as_tibble(x = do.call(rbind, fileName_sep_list), .name_repair = 'minimal')
   names(fileName_sep) <- WaveFileNames_vect
 
-
   wav_names_log <- wav_names_log %>%
     bind_cols(fileName_sep)  |>
     dplyr::mutate(
@@ -260,6 +301,8 @@ clean_gps <- function() {
 
     }
 
+  wav_names_log$SiteID <- "Site1"
+
   if(sum(is.na(wav_names_log$ARU_type))>0){abort("Error assessing ARU type, some rows have NAs")}
   # browser()
     BarLTfiles <- dplyr::filter(wav_names_log,ARU_type=="BarLT" )
@@ -279,7 +322,6 @@ clean_gps <- function() {
       format("%d/%m/%Y") |> lubridate::dmy()
     if(!exists("check_dists")) check_dists <- TRUE
 
-
     if(is_null(gps_locations)){
       if(!exists("dist_cutoff")) dist_cutoff <- 100
       gps_locations_barLT <- process_gps_barlt(base_folder = folder_base,
@@ -291,7 +333,7 @@ clean_gps <- function() {
 
       gps_locations_barLT <- gps_locations
     }
-
+    browser()
 
   }
   # |- SM4   ----------------
@@ -305,7 +347,7 @@ clean_gps <- function() {
 
       # list.files(folder_base, "_Summary.txt", recursive = T, full.names = T)
 
-
+    browser()
 
     if(is_null(gps_locations)){
       gps_locations_SM <- process_gps_SM(folder_base = folder_base, list_files = list_files,
@@ -337,7 +379,7 @@ clean_gps <- function() {
                                             wav_names_log = wav_names_log)
 
 
-    # browser()
+     browser()
 
     if(isTRUE(return_full_metadata)){
       list(gps_locations = gps_locations,
@@ -350,3 +392,5 @@ clean_gps <- function() {
 
 
 }
+
+
