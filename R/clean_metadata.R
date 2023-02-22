@@ -31,7 +31,7 @@ clean_metadata <- function(
     file_type = "wav",
     subset = NULL,
     subset_type = "keep",
-    site_from_date = NULL,
+    site_index = NULL,
     pattern_site = "[P|Q]\\d+(_|-)\\d",
     pattern_aru_id = create_pattern_aru_id(),
     pattern_date = create_pattern_date(),
@@ -45,6 +45,9 @@ clean_metadata <- function(
 
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
   file_type <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
+
+  check_index(site_index)
+
 
   if(!is.null(project_dir)) {
     if(!quiet) rlang::inform("Fetching file list...")
@@ -170,6 +173,30 @@ clean_metadata <- function(
     meta <- dplyr::rows_patch(meta, missing, by = c("dir", "file_name"))
   }
 
+
+  # Use site_index -------------------------
+  if(!is.null(site_index)) {
+    rlang::inform("Supplementing `site_id`s with those from `site_index`")
+
+    site_index <- site_index |>
+      dplyr::mutate(dep_int = lubridate::interval(
+        .data$date_start, .data$date_end)) |>
+      dplyr::select("site_id_file" = "site_id", "aru_id", "dep_int")
+
+    meta <- dplyr::left_join(meta, site_index, by = "aru_id") |>
+      dplyr::mutate(win = lubridate::`%within%`(.data$date, .data$dep_int)) |>
+      dplyr::group_by(aru_id, dir, file_name) |>
+      dplyr::slice_max(win, with_ties = FALSE) |>
+      dplyr::mutate(site_id = dplyr::if_else(
+        is.na(.data$site_id) & .data$win, # Missing site, and in window
+        .data$site_id_file,
+        .data$site_id)) |>
+      dplyr::ungroup() |>
+      dplyr::select(-"site_id_file", -"dep_int", -"win")
+
+  }
+
+  # Report on details -------------------------
   # Extra files
   if(length(extra) > 1) {
     rlang::inform(
@@ -205,10 +232,59 @@ clean_metadata <- function(
 }
 
 
-clean_site_index <- function(index) {
-  type <- fs::path_ext(index)
-  if(type == "csv") site_index <- readr::read_csv(index)
-  if(type == "xlsx") site_index <- readxl::read_excel(index)
+clean_site_index <- function(site_index,
+                             col_aru_id = "aru_id",
+                             col_site_id = "site_id",
+                             col_dates = c("date_start", "date_end"),
+                             col_coords = c("longitude", "latitude")) {
+
+  # Checks
+  check_string(col_aru_id)
+  check_string(col_site_id)
+  check_string(col_dates)
+  check_string(col_coords, not_null = FALSE)
+
+  # MORE CHECKS (more format options - Data frame?)
+  if(is.data.frame(site_index)) {
+    site_index <- suppressMessages(readr::type_convert(site_index))
+  } else {
+    type <- fs::path_ext(site_index)
+    check_ext(type, c("csv", "xlsx"))
+
+    # Let readr do the index checking
+    if(type == "csv") {
+      site_index <- readr::read_csv(site_index,
+                                    progress = FALSE,
+                                    show_col_types = FALSE)
+    } else if(type == "xlsx") {
+      site_index <- readxl::read_excel(index, progress = FALSE)
+    }
+  }
+
+  site_index <- dplyr::rename_with(site_index, tolower)
+
+  # Check cols
+  check_cols(site_index, c(col_site_id, col_dates, col_aru_id, col_coords),
+             name = "site_index",
+             extra = "See ?clean_site_index")
+
+  # Check dates
+  check_dates(site_index, col_dates)
+
+  # Prepare for renaming
+  cols <- c(
+    "site_id" = col_site_id,
+    setNames(col_dates, c("date_start", "date_end")),
+    "aru_id" = col_aru_id,
+    if(!is.null(col_coords)) setNames(col_coords, c("longitude", "latitude"))) |>
+    tolower()
+
+  site_index %>%
+    # Grab and rename columns
+    dplyr::select(dplyr::all_of(cols)) %>%
+    # Convert times to dates
+    dplyr::mutate(date_start = lubridate::as_date(.data$date_start),
+                  date_end = lubridate::as_date(.data$date_end))
 }
 
 
