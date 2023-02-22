@@ -1,6 +1,9 @@
 
 # example 1 - different date formats
 d <- "../ARUtools - Extra/ARUtools_file_examples/HudsonBayCoast_2021/"
+
+count_files(d)
+
 t <- clean_metadata(project_dir = d,
                     pattern_site = "BP_ARU0(1|2)",
                     pattern_dt_sep = "(_|T)")
@@ -10,9 +13,14 @@ t <- clean_metadata(project_dir = d,
                     pattern_site = "BP_ARU0(1|2)",
                     pattern_dt_sep = create_pattern_dt_sep(c("T", "_")))
 
+check_meta(t)
+
+
 # example 2
 d <- "../ARUtools - Extra/ARUtools_file_examples/JamesBayLowlands_2021/"
 t <- clean_metadata(project_dir = d)
+
+check_meta(t)
 
 # example 3
 files <- readr::read_rds("../Boreal_Shield_Lowlands_transition_Selection/Transition_all_files.rds")

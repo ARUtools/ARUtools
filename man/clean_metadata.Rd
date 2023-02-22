@@ -5,16 +5,20 @@
 \title{Clean aru metadata}
 \usage{
 clean_metadata(
-  type,
-  folder_base,
-  included_subfolders = "all",
-  gps_locations = NULL,
-  file_split_pattern = "T|\\\\-|\\\\_|\\\\.",
-  site_pattern = "[P|Q]\\\\d+_\\\\d",
-  list_files = NULL,
-  folder_names = NULL,
-  WaveFileName_Strings = NULL,
-  ...
+  project_dir = NULL,
+  project_files = NULL,
+  file_type = "wav",
+  subset = NULL,
+  subset_type = "keep",
+  site_index = NULL,
+  pattern_site = "[P|Q]\\\\d+(_|-)\\\\d",
+  pattern_aru_id = create_pattern_aru_id(),
+  pattern_date = create_pattern_date(),
+  pattern_time = create_pattern_time(),
+  pattern_dt_sep = create_pattern_dt_sep(),
+  pattern_model = NULL,
+  order_date = "ymd",
+  quiet = FALSE
 )
 }
 \arguments{
@@ -43,4 +47,10 @@ May need to adjust if non-standard naming convention is used.}
 }
 \description{
 Clean aru metadata
+}
+\examples{
+
+clean_metadata(subset = "P71")
+clean_metadata()
+
 }
