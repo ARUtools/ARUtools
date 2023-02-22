@@ -71,8 +71,8 @@ clean_metadata <- function(
     )
   }
 
+  # Check for file types
   n_ext <- sum(stringr::str_detect(project_files, file_type))
-
   if(length(n_ext) == 0){
     rlang::abort(c(glue::glue("Did not find any '{file_type}' files."),
                    "i" = "Use `file_type` to change file extension for sound files",
@@ -80,6 +80,7 @@ clean_metadata <- function(
   }
 
 
+  # Clean up file paths
   if(!is.null(project_dir)) {
     project_files <- stringr::str_remove(project_files, project_dir)
   }
@@ -108,28 +109,28 @@ clean_metadata <- function(
                    "S\\dA" = "SongMeter")
 
   if(!quiet) rlang::inform("Extracting ARU info...")
-  # Get ARU info
+
+  # Extract ARU metadata -----------------------
   meta <- meta %>%
     dplyr::mutate(
-      ARU_type = extract_replace(.data$file_name, pattern_aru),
-      ARU_type = dplyr::if_else(is.na(.data$ARU_type),
+      aru_type = extract_replace(.data$file_name, pattern_aru),
+      aru_type = dplyr::if_else(is.na(.data$aru_type),
                                 extract_replace(.data$dir, pattern_aru),
-                                .data$ARU_type),
-      ARU_id = stringr::str_extract(.data$file_name, pattern_aru_id),
-      ARU_id = dplyr::if_else(is.na(.data$ARU_id),
+                                .data$aru_type),
+      aru_id = stringr::str_extract(.data$file_name, pattern_aru_id),
+      aru_id = dplyr::if_else(is.na(.data$aru_id),
                               stringr::str_extract(.data$dir, pattern_aru_id),
-                              .data$ARU_id))
+                              .data$aru_id))
 
-  # Get sites
-  meta <- dplyr::mutate(meta, site = stringr::str_extract(.data$dir, .env$pattern_site))
-
-  # Option for site by date? From a separate file?
+  meta <- dplyr::mutate(meta, site_id = stringr::str_extract(.data$dir, .env$pattern_site))
 
   pattern_non_date <- paste0("(", pattern_site, ")|(",
                              pattern_aru_id, ")|(",
                              paste0("(", pattern_aru, ")", collapse = "|"),
                              ")")
 
+
+  # Extract Date/time --------------------------
   if(!quiet) rlang::inform("Extracting Dates and Times...")
 
   meta <- meta %>%
@@ -173,7 +174,7 @@ clean_metadata <- function(
   if(length(extra) > 1) {
     rlang::inform(
       c("!" = paste0("Omitted ", length(extra), " extra, non-",
-                     meta$type[1], " files")))
+                     meta$type[1], "/GPS files")))
   }
 
   if(length(gps) > 1) {
@@ -184,20 +185,22 @@ clean_metadata <- function(
   f <- dplyr::filter(meta, type == "wav")
   n <- nrow(f)
   f_dt <- sum(is.na(f$date_time))
-  f_type <- sum(is.na(f$ARU_type))
-  f_id <- sum(is.na(f$ARU_id))
-  f_site <- sum(is.na(f$site))
+  f_type <- sum(is.na(f$aru_type))
+  f_id <- sum(is.na(f$aru_id))
+  f_site <- sum(is.na(f$site_id))
 
   if(any(c(f_dt, f_type, f_id, f_site) > 0)) {
-   msg <- c("!" = "Identified possible problems with metadata extraction:")
-   if(f_dt > 0) msg <- c(msg, "x" = paste0("Not all date/times were successfully detected (", f_dt, "/", n, ")"))
-   if(f_type > 0) msg <- c(msg, "x" = paste0("Not all ARU types were successfully detected (", f_type, "/", n, ")"))
-   if(f_id > 0) msg <- c(msg, "x" = paste0("Not all ARU ids were successfully detected (", f_id, "/", n, ")"))
-   if(f_site > 0) msg <- c(msg, "x" = paste0("Not all sites were successfully detected (", f_site, "/", n, ")"))
+   msg <- c("Identified possible problems with metadata extraction:")
+   msg <- c(msg, report_missing(f_dt, n, "date/times"))
+   msg <- c(msg, report_missing(f_type, n, "ARU types"))
+   msg <- c(msg, report_missing(f_id, n, "ARU ids"))
+   msg <- c(msg, report_missing(f_site, n, "sites"))
    rlang::inform(msg)
   }
 
-  dplyr::arrange(meta, type != "gps", !is.na(date_time), dir, file_name, site, date_time) %>%
+  meta %>%
+    dplyr::arrange(.data$type != "gps", !is.na(.data$date_time), .data$dir,
+                   .data$file_name, .data$site_id, .data$date_time) %>%
     dplyr::select(-"file_left", -"dir_left", -"date_time_chr")
 }
 
