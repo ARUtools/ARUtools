@@ -12,3 +12,12 @@ example_files <- tidyr::expand_grid(d, random, id, sites, dts) %>%
   dplyr::pull(f)
 
 usethis::use_data(example_files, overwrite = TRUE)
+
+
+site_meta <- data.frame(Sites = c("first", "second", "third"),
+                        Date_set_out = c("2020-01-01", "2020-01-05", "2020-01-10"),
+                        Date_removed = c("2020-01-09", "2020-01-07", "2020-01-11"),
+                        ARU = c("BARLT10962", "S4A01234", "BARLT10962"),
+                        lat = c(50.006, 52.678, 48.999),
+                        lon = c(-85.03, -87.45, -90.38))
+usethis::use_data(site_meta, overwrite = TRUE)
