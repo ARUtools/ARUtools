@@ -8,12 +8,16 @@ t <- clean_metadata(project_dir = d,
                     pattern_site = "BP_ARU0(1|2)",
                     pattern_dt_sep = "(_|T)")
 
+check_meta(t)
+
 # OR
 t <- clean_metadata(project_dir = d,
                     pattern_site = "BP_ARU0(1|2)",
                     pattern_dt_sep = create_pattern_dt_sep(c("T", "_")))
 
-check_meta(t)
+t <- clean_gps(t)
+
+
 
 
 # example 2
