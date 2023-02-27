@@ -83,11 +83,6 @@ clean_metadata <- function(
   }
 
 
-  # Clean up file paths
-  if(!is.null(project_dir)) {
-    project_files <- stringr::str_remove(project_files, project_dir)
-  }
-
   # Collect non-file-type files
   extra <- stringr::str_subset(project_files, file_type, negate = TRUE)
   gps <- stringr::str_subset(extra, stringr::regex("gps", ignore_case = TRUE))
