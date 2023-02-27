@@ -16,7 +16,7 @@ clean_gps <- function(meta, gps = NULL, check_dists = TRUE, dist_cutoff = 100,
     rlang::inform(c("!" = "No GPS data provided, using GPS log files",
                     "*" = "Note GPS log files are notoriously unreliable..."))
 
-    gps %>%
+    gps |>
       dplyr::select("dir", "file_name", "aru_type", "aru_id", "site_id") |>
       dplyr::mutate(gps = file.path(.data$dir, .data$file_name)) |>
       dplyr::mutate(
@@ -81,7 +81,7 @@ check_gps_distances <- function(gps_log, crs_m = 3161, dist_cutoff = 100){
                            "latitude_decimal_degrees"),
                  crs = 4326) |>
     sf::st_transform(crs_m) |>
-    dplyr::group_by(SiteID) %>%
+    dplyr::group_by(SiteID) |>
     dplyr::summarize(max_dist = max(sf::st_distance(geometry, geometry)),
                      .groups = 'drop') |>
     sf::st_drop_geometry()

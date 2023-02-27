@@ -95,7 +95,7 @@ clean_metadata <- function(
     type = tolower(fs::path_ext(focal)))
 
   if(length(gps) > 1) {
-    meta <- meta %>%
+    meta <- meta |>
       dplyr::add_row(dir = fs::path_dir(gps),
                      file_name = fs::path_file(gps),
                      type = "gps")
@@ -109,7 +109,7 @@ clean_metadata <- function(
   if(!quiet) rlang::inform("Extracting ARU info...")
 
   # Extract ARU metadata -----------------------
-  meta <- meta %>%
+  meta <- meta |>
     dplyr::mutate(
       aru_type = extract_replace(.data$file_name, pattern_aru),
       aru_type = dplyr::if_else(is.na(.data$aru_type),
@@ -131,7 +131,7 @@ clean_metadata <- function(
   # Extract Date/time --------------------------
   if(!quiet) rlang::inform("Extracting Dates and Times...")
 
-  meta <- meta %>%
+  meta <- meta |>
     dplyr::mutate(
       file_left = stringr::str_remove_all(.data$file_name, pattern_non_date),
       dir_left = stringr::str_remove_all(.data$dir, pattern_non_date),
@@ -150,8 +150,8 @@ clean_metadata <- function(
       date = lubridate::as_date(.data$date_time))
 
   if(any(is.na(meta$date))) {
-    missing <- meta %>%
-      dplyr::filter(is.na(.data$date)) %>%
+    missing <- meta |>
+      dplyr::filter(is.na(.data$date)) |>
       dplyr::mutate(
         # Try file name
         date_chr = stringr::str_extract(file_name, .env$pattern_date),
@@ -161,7 +161,7 @@ clean_metadata <- function(
           stringr::str_extract(.data$dir, .env$pattern_date),
           NA_character_),
         date = lubridate::parse_date_time(.data$date_chr, orders = order_date),
-        date = lubridate::as_date(.data$date)) %>%
+        date = lubridate::as_date(.data$date)) |>
       dplyr::select("dir", "file_name", "date")
 
     # Add dates where missing
@@ -220,9 +220,9 @@ clean_metadata <- function(
    rlang::inform(msg)
   }
 
-  meta %>%
+  meta |>
     dplyr::arrange(.data$type != "gps", !is.na(.data$date_time), .data$dir,
-                   .data$file_name, .data$site_id, .data$date_time) %>%
+                   .data$file_name, .data$site_id, .data$date_time) |>
     dplyr::select(-"file_left", -"dir_left", -"date_time_chr")
 }
 
@@ -274,9 +274,9 @@ clean_site_index <- function(site_index,
     if(!is.null(col_coords)) setNames(col_coords, c("longitude", "latitude"))) |>
     tolower()
 
-  site_index %>%
+  site_index |>
     # Grab and rename columns
-    dplyr::select(dplyr::all_of(cols)) %>%
+    dplyr::select(dplyr::all_of(cols)) |>
     # Convert times to dates
     dplyr::mutate(date_start = lubridate::as_date(.data$date_start),
                   date_end = lubridate::as_date(.data$date_end))
