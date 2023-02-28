@@ -13,3 +13,13 @@
 "_PACKAGE"
 
 rlang::on_load(rlang::local_use_cli())
+
+.onLoad <- function(libname, pkgname) {
+  # Set column patterns (case insensitive)
+  options(ARUtools =
+            list(pat_gps_date = "date|(DD/MM/YY)",
+                 pat_gps_time = "time|(HH/MM)",
+                 pat_gps_coords = c("lat", "lon")
+            )
+  )
+}
