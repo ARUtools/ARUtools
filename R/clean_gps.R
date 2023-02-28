@@ -1,40 +1,77 @@
-clean_gps <- function(meta, gps = NULL, check_dists = TRUE, dist_cutoff = 100,
-                      verbose = FALSE) {
+#' Check and clean GPS data
+#'
+#' Check and clean GPS data either from ARU logs or user-supplied GPS data
+#' (preferred). GPS points are checked for obvious problems (expected range,
+#' distance cutoffs and timing) then attached to the meta data frame.
+#'
+#' @param meta Data frame. Output of `clean_metadata()`.
+#' @param gps Data frame. GPS data points (optional, but recommended).
+#' @param dist_cutoff Numeric. Maximum distance (m) between GPS points within a
+#'   site. Default is 100m but can be set to `Inf` to skip.
+#' @param dist_crs Numeric. Coordinate Reference System to use when calculating
+#'   distance (should be one with m).
+#' @param verbose Logical.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 
-  browser()
+clean_gps <- function(meta, gps = NULL, dist_cutoff = 100, dist_crs = 3161,
+                      skip_bad = FALSE, verbose = FALSE) {
 
+  # CHECK meta
+  # CHECK gps
+  # CHECK dist_crs
+  # Other checks...
+
+  # Clean depending on source
   if(is_null(gps)) {
-
-    gps <- dplyr::filter(meta, .data$type == "gps")
-
-    if(nrow(gps) == 0) {
-      rlang::abort(
-        "No GPS data provided and no GPS log files recorded in `meta`",
-        call = NULL)
-    }
-
-    rlang::inform(c("!" = "No GPS data provided, using GPS log files",
-                    "*" = "Note GPS log files are notoriously unreliable..."))
-
-    gps |>
-      dplyr::select("dir", "file_name", "aru_type", "aru_id", "site_id") |>
-      dplyr::mutate(gps = file.path(.data$dir, .data$file_name)) |>
-      dplyr::mutate(
-        gps_data = purrr::map(gps, ~readr::read_csv(.x, skip = 1, show_col_types = verbose)),
-        gps_data = purrr::map(gps_data, fmt_gps)) |>
-      tidyr::unnest("gps_data")
-
-
-    gps_locations <- process_gps_barlt(base_folder = folder_base,
-                                       site_pattern = site_pattern,
-                                       file_list= list_files,dist_cutoff=dist_cutoff,
-                                       deploy_start_date = deploy_start_date,
-                                       check_dists)
-
-    gps_locations <- process_gps_SM(folder_base = folder_base, list_files = list_files,
-                                    site_pattern = site_pattern)
-
+    gps <- clean_gps_logs(meta, skip_bad, verbose)
   } else {
+    gps <- clean_gps_df(gps, verbose)
+  }
+
+  # Check start/end dates
+
+  # Check distances (skips if dist_cutoff = Inf)
+  gps <- check_gps_dist(gps, crs = dist_crs, dist_cutoff = dist_cutoff)
+
+  gps
+}
+
+clean_gps_logs <- function(meta, skip_bad, verbose) {
+
+  gps <- dplyr::filter(meta, .data$type == "gps")
+
+  if(nrow(gps) == 0) {
+    rlang::abort(
+      "No GPS data provided and no GPS log files recorded in `meta`",
+      call = NULL)
+  }
+
+  rlang::inform(c("No GPS data provided, using GPS log files",
+                  "*" = "Note GPS log files are notoriously unreliable..."))
+  gps |>
+    # Check columns and get skips
+    check_gps_files(skip_bad) |>
+    dplyr::filter(!is.na(.data$skip)) |>
+    dplyr::mutate(
+
+      # Read files
+      gps_data = purrr::map2(
+        path, skip,
+        ~readr::read_csv(.x, skip = .y - 1, show_col_types = verbose,
+                         name_repair = "unique_quiet",
+                         progress = FALSE)),
+      # Format data
+      gps_data = purrr::map(.data$gps_data, fmt_gps)) |>
+
+    # Clean up
+    dplyr::select(-"date_time", -"date", -"path", -"skip") %>%
+    tidyr::unnest("gps_data", keep_empty = TRUE)
+}
+
 
     # Check user-supplied GPS locations
 
