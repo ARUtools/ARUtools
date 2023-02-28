@@ -223,7 +223,8 @@ clean_metadata <- function(
   meta |>
     dplyr::arrange(.data$type != "gps", !is.na(.data$date_time), .data$dir,
                    .data$file_name, .data$site_id, .data$date_time) |>
-    dplyr::select(-"file_left", -"dir_left", -"date_time_chr")
+    dplyr::mutate(path = file.path(.data$dir, .data$file_name)) |>
+    dplyr::select(-"file_left", -"dir_left", -"date_time_chr", -"dir")
 }
 
 

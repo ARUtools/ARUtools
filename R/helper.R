@@ -16,7 +16,7 @@ check_meta <- function(meta) {
   meta %>%
     dplyr::group_by(.data$site_id, .data$type, .data$aru_type, .data$aru_id) %>%
     dplyr::summarize(n_files = dplyr::n(),
-                     n_dirs = dplyr::n_distinct(.data$dir),
+                     n_dirs = dplyr::n_distinct(fs::path_dir(.data$path)),
                      min_date = min(.data$date_time),
                      max_date = max(.data$date_time),
                      n_days = dplyr::n_distinct(.data$date),
@@ -26,4 +26,7 @@ check_meta <- function(meta) {
     dplyr::relocate("n_days", .before = "min_date")
 }
 
-
+#' @export
+check_file <- function(file, n_max = 10) {
+  readr::read_lines(file, n_max = n_max)
+}
