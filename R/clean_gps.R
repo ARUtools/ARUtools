@@ -72,17 +72,58 @@ clean_gps_logs <- function(meta, skip_bad, verbose) {
     tidyr::unnest("gps_data", keep_empty = TRUE)
 }
 
+clean_gps_df <- function(gps) {
 
-    # Check user-supplied GPS locations
 
+}
+
+check_gps_files <- function(gps_files, skip_bad) {
+
+  lines <- setNames(nm = gps_files$path) |>
+    purrr::imap(~readr::read_lines(.x, n_max = 5))
+
+  # Set patterns
+  opts <- getOption("ARUtools")
+  pattern_date <- stringr::regex(opts$pat_gps_date, ignore_case = TRUE)
+  pattern_time <- stringr::regex(opts$pat_gps_time, ignore_case = TRUE)
+  pattern_coords <- stringr::regex(paste0(opts$pat_gps_coords, collapse = "|"),
+                                   ignore_case = TRUE)
+
+  # Get skips
+  skips <- purrr::map(lines,
+                      ~stringr::str_which(.x, pattern_coords) |> dplyr::first())
+
+  # Check for columns
+  dt <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_date)))
+  tm <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_time)))
+  ll <- is.na(skips)
+
+  if(any(c(dt, tm, ll))) {
+    w <- which(dt | tm | ll)
+    msg <- paste0("Detected problems in some GPS files (indices: ",
+                  paste0(w, collapse = ", "), ")")
+
+    t <- "Could not detect columns in all files: "
+    cols <- vector()
+    if(any(dt)) cols <- c(cols, "date")
+    if(any(tm)) cols <- c(cols, "time")
+    if(any(ll)) cols <- c(cols, "lat and lon")
+    t <- paste0(t, paste0(cols, collapse = ", "))
+
+    msg <- c(msg,
+             c("!" = t,
+               "!" = paste0(
+                 "GPS files are expected to have named columns with ",
+                 "date, time, latitude, and longitude (names can be loose)")))
+
+    if(skip_bad) {
+      rlang::inform(c(msg, c("!" = "Skipping problematic file(s)")))
+      skips[w] <- NA_integer_
+    } else rlang::abort(msg, call = NULL)
   }
 
-  # Check distances
-  if(check_dists) {
-    site_distances <- check_gps_distances(gps_log_full, crs_m = crs_m, dist_cutoff = dist_cutoff)
-    gps_log_full <- left_join(gps_log_full, site_distances, by = "SiteID")
-  }
-
+  dplyr::mutate(gps_files, skip = unlist(.env$skips))
+}
 
 
 coord_dir <- function(col, pattern) {
