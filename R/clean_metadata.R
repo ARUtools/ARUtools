@@ -85,7 +85,7 @@ clean_metadata <- function(
 
   # Collect non-file-type files
   extra <- stringr::str_subset(project_files, file_type, negate = TRUE)
-  gps <- stringr::str_subset(extra, stringr::regex("gps", ignore_case = TRUE))
+  gps <- stringr::str_subset(extra, stringr::regex("gps|summary", ignore_case = TRUE))
   focal <- stringr::str_subset(project_files, file_type)
 
   # Set up file path metadata
