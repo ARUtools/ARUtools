@@ -252,7 +252,7 @@ clean_site_index <- function(site_index,
                                     progress = FALSE,
                                     show_col_types = FALSE)
     } else if(type == "xlsx") {
-      site_index <- readxl::read_excel(index, progress = FALSE)
+      site_index <- readxl::read_excel(site_index, progress = FALSE)
     }
   }
 
