@@ -85,22 +85,50 @@ clean_gps_logs <- function(meta, skip_bad, verbose) {
 
 
 
-
-
-  # Check start/end dates
-
+coord_dir <- function(col, pattern) {
+  all(stringr::str_detect(col, paste0("^[", pattern, "]{1}$")) & !is.na(col),
+      na.rm = TRUE)
 }
 
 fmt_gps <- function(df) {
-  df |>
-    dplyr::rename_with(~"latitude", .cols = dplyr::matches("lat")) |>
-    dplyr::rename_with(~"longitude", .cols = dplyr::matches("lon")) |>
-    dplyr::rename_with(~"date", .cols = dplyr::matches("date|(DD/MM/YY)")) |>
-    dplyr::rename_with(~"time", .cols = dplyr::matches("time|(HH/MM)")) |>
-    dplyr::mutate(date_time_chr = paste(.data$date, .data$time),
-                  date_time = lubridate::dmy_hms(.data$date_time_chr),
-                  date = lubridate::as_date(date_time)) |>
-    dplyr::select("longitude", "latitude", "date_time")
+  opts <- getOption("ARUtools")
+
+  df_fmt <- df |>
+    dplyr::rename_with(~"latitude", .cols = dplyr::matches(opts$pat_gps_coords[1])) |>
+    dplyr::rename_with(~"longitude", .cols = dplyr::matches(opts$pat_gps_coords[2])) |>
+    dplyr::rename_with(~"date", .cols = dplyr::matches(opts$pat_gps_date)) |>
+    dplyr::rename_with(~"time", .cols = dplyr::matches(opts$pat_gps_time)) |>
+
+    # Format times
+    dplyr::mutate(
+      date_time_chr = paste(.data$date, .data$time),
+      date_time = lubridate::parse_date_time(
+        .data$date_time_chr, orders = c("Ymd HMS", "dmY HMS")),
+      date = lubridate::as_date(date_time),
+      )
+
+  # Fix coords - Check and apply -/+ if N/S/E/W columns present
+  dir <- dplyr::select(df_fmt, dplyr::where(~coord_dir(.x, "NnSsEeWw")))
+  if(ncol(dir) > 0) {
+    df_fmt <- df_fmt |>
+      dplyr::rename_with(~ "ns", .cols = dplyr::where(~coord_dir(.x, "NnSs"))) |>
+      dplyr::rename_with(~ "ew", .cols = dplyr::where(~coord_dir(.x, "EeWw"))) |>
+      # Define direction shift
+      dplyr::mutate(dplyr::across(
+        dplyr::any_of(c("ns", "ew")),
+        ~ stringr::str_replace_all(tolower(.x),
+                                   c("w" = "-", "e" = "",
+                                     "s" = "-", "n" = "")))) |>
+      # Apply direction shift (i.e. merge)
+      tidyr::unite("latitude", dplyr::any_of(c("ns", "latitude")), sep = "") |>
+      tidyr::unite("longitude", dplyr::any_of(c("ew", "longitude")), sep = "")
+  }
+
+  # Clean up
+  df_fmt |>
+    dplyr::mutate(latitude = as.numeric(.data$latitude),
+                  longitude = as.numeric(.data$longitude)) |>
+    dplyr::select("longitude", "latitude", "date", "date_time")
 }
 
 
