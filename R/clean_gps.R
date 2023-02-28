@@ -134,28 +134,43 @@ fmt_gps <- function(df) {
 
 #' Check distances between points from GPS log
 #'
-#' @param gps_log gps log file generated from process_gps_barlt
-#' @param crs_m  CRS for measurement of distances. Should be in meters
+#' @param gps Data frame of gps sites and coordinates
+#' @param crs Numeric. CRS to use for measuring distances. Should be in meters
 #' @param dist_cutoff Distance cutoff in meters. Can be set to Inf to avoid this check.
 #'
-#' @return Returns a data frame with maximum distances between gps points at site.
-check_gps_distances <- function(gps_log, crs_m = 3161, dist_cutoff = 100){
-  max_distances <-
-    gps_log |>
-    sf::st_as_sf(coords= c("longitude_decimal_degrees",
-                           "latitude_decimal_degrees"),
-                 crs = 4326) |>
-    sf::st_transform(crs_m) |>
-    dplyr::group_by(SiteID) |>
-    dplyr::summarize(max_dist = max(sf::st_distance(geometry, geometry)),
-                     .groups = 'drop') |>
-    sf::st_drop_geometry()
+#' @return Returns data frame with maximum distances between gps points at site.
+#'
+#' @noRd
+check_gps_dist <- function(gps, crs, dist_cutoff){
+  if(dist_cutoff < Inf) {
+    max_dist <- gps |>
+      dplyr::filter(!is.na(.data$longitude), !is.na(.data$latitude),
+                    !is.na(.data$site_id))
 
-  if(any(max_distances$max_dist>units::set_units(dist_cutoff, "m"))) #browser()
-    abort(c("Within Site distance is greater than cuttoff",
-            "x" = "Distance must be less than `dist_cutoff`",
-            "i" = "Set dist_cutoff to Inf to avoid this (e.g. moving ARU)"))
+    if(nrow(max_dist) == 0) {
+      rlang::inform(
+        c("Skipping distance check:",
+          "All records missing at least one of longitude, latitude and site_id"))
+    } else {
+      max_dist <- max_dist |>
 
-  return(max_distances)
+        sf::st_as_sf(coords= c("longitude", "latitude"), crs = 4326) |>
+        sf::st_transform(crs) |>
+        dplyr::group_by(site_id) |>
+        dplyr::summarize(max_dist = max(sf::st_distance(geometry, geometry)),
+                         .groups = 'drop') |>
+        sf::st_drop_geometry()
 
+      if(any(max_dist$max_dist > units::set_units(dist_cutoff, "m"))) {
+        rlang::abort(
+          c("Within site distances are greater than cutoff",
+            "x" = paste0("Distances among ARUs within a site must be less than ",
+                         "`dist_cutoff` (currently ", dist_cutoff, "m)"),
+            "i" = "Set `dist_cutoff` to `Inf` to skip this check (e.g. moving ARUs)"),
+          call = NULL)
+      }
+      gps <- dplyr::left_join(gps, max_dist, by = "site_id")
+    }
+  }
+  gps
 }
