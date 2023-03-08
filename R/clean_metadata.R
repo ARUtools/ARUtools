@@ -174,21 +174,13 @@ clean_metadata <- function(
     rlang::inform("Supplementing `site_id`s with those from `site_index`")
 
     site_index <- site_index |>
-      dplyr::mutate(dep_int = lubridate::interval(
+      dplyr::mutate(date_range = lubridate::interval(
         .data$date_start, .data$date_end)) |>
-      dplyr::select("site_id_file" = "site_id", "aru_id", "dep_int")
+      dplyr::select("site_id_file" = "site_id", "aru_id", "date_range")
 
-    meta <- dplyr::left_join(meta, site_index, by = "aru_id") |>
-      dplyr::mutate(win = lubridate::`%within%`(.data$date, .data$dep_int)) |>
-      dplyr::group_by(aru_id, dir, file_name) |>
-      dplyr::slice_max(win, with_ties = FALSE) |>
+    meta <- date_join(meta, site_index, by = "aru_id", id = "path") |>
       dplyr::mutate(site_id = dplyr::if_else(
-        is.na(.data$site_id) & .data$win, # Missing site, and in window
-        .data$site_id_file,
-        .data$site_id)) |>
-      dplyr::ungroup() |>
-      dplyr::select(-"site_id_file", -"dep_int", -"win")
-
+        is.na(.data$site_id), .data$site_id_file, .data$site_id))
   }
 
   # Report on details -------------------------
