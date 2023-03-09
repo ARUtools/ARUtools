@@ -111,6 +111,7 @@ clean_metadata <- function(
   # Extract ARU metadata -----------------------
   meta <- meta |>
     dplyr::mutate(
+      path = file.path(.data$dir, .data$file_name),
       aru_type = extract_replace(.data$file_name, pattern_aru),
       aru_type = dplyr::if_else(is.na(.data$aru_type),
                                 extract_replace(.data$dir, pattern_aru),
@@ -162,10 +163,10 @@ clean_metadata <- function(
           NA_character_),
         date = lubridate::parse_date_time(.data$date_chr, orders = order_date),
         date = lubridate::as_date(.data$date)) |>
-      dplyr::select("dir", "file_name", "date")
+      dplyr::select("path", "date")
 
     # Add dates where missing
-    meta <- dplyr::rows_patch(meta, missing, by = c("dir", "file_name"))
+    meta <- dplyr::rows_patch(meta, missing, by = "path")
   }
 
 
@@ -213,9 +214,8 @@ clean_metadata <- function(
   }
 
   meta |>
-    dplyr::arrange(.data$type != "gps", !is.na(.data$date_time), .data$dir,
-                   .data$file_name, .data$site_id, .data$date_time) |>
-    dplyr::mutate(path = file.path(.data$dir, .data$file_name)) |>
+    dplyr::arrange(.data$type != "gps", !is.na(.data$date_time), .data$path,
+                   .data$site_id, .data$date_time) |>
     dplyr::select(-"file_left", -"dir_left", -"date_time_chr", -"dir")
 }
 
