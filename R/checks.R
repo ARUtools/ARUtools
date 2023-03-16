@@ -49,3 +49,42 @@ check_index <- function(index) {
     check_dates(index, c("date_start", "date_end"))
   }
 }
+
+
+check_date_joins <- function(df, by_date) {
+
+  n_single <- stringr::str_subset(names(df), paste0("^", by_date, "$"))
+  n_range <- stringr::str_subset(names(df), paste0("^", by_date, "_(start|end)$"))
+
+  n_all <- paste0(c(n_single, n_range), collapse = "`, `")
+  if(n_all == "") n_all <- "none"
+
+
+  if(length(n_range) == 0 & length(n_single) == 1) {
+    rlang::inform(paste0("Joining by column `", n_single, "` using buffers"))
+    use <- n_single
+  } else if(length(n_range) == 1 & length(n_single) == 1) {
+    rlang::inform(
+      paste0("Joining by column `", n_single, "` using buffers\n",
+             "(Only `", n_range, "` detected but both `",
+             paste0(paste0("`", n_single, c("_start`", "_end`")), collapse = " and "),
+             " are required to use a range.")
+    )
+    use <- n_single
+  } else if(length(n_range) == 2) {
+    rlang::inform(
+      paste0("Joining by columns ",
+             paste0(paste0("`", n_range, "`"), collapse = " and ")))
+    use <- n_range
+  } else {
+    rlang::abort(
+      c("Cannot find date/time columns for joining",
+        paste0("Require either `date`/`date_time` or *both* ",
+               "`date_start`/`date_time_start` and `date_end`/`date_time_end`"),
+        paste0("Found: `", n_all, "`")
+      ),
+      call = NULL)
+  }
+
+  use
+}

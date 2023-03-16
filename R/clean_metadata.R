@@ -31,7 +31,6 @@ clean_metadata <- function(
     file_type = "wav",
     subset = NULL,
     subset_type = "keep",
-    site_index = NULL,
     pattern_site = "[P|Q]\\d+(_|-)\\d",
     pattern_aru_id = create_pattern_aru_id(),
     pattern_date = create_pattern_date(),
@@ -42,12 +41,10 @@ clean_metadata <- function(
     quiet = FALSE) {
 
   # CHECKS
+  # TODO: more checks
 
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
   file_type <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
-
-  check_index(site_index)
-
 
   if(!is.null(project_dir)) {
     if(!quiet) rlang::inform("Fetching file list...")
@@ -167,21 +164,6 @@ clean_metadata <- function(
 
     # Add dates where missing
     meta <- dplyr::rows_patch(meta, missing, by = "path")
-  }
-
-
-  # Use site_index -------------------------
-  if(!is.null(site_index)) {
-    rlang::inform("Supplementing `site_id`s with those from `site_index`")
-
-    site_index <- site_index |>
-      dplyr::mutate(date_range = lubridate::interval(
-        .data$date_start, .data$date_end)) |>
-      dplyr::select("site_id_file" = "site_id", "aru_id", "date_range")
-
-    meta <- date_join(meta, site_index, by = "aru_id", id = "path") |>
-      dplyr::mutate(site_id = dplyr::if_else(
-        is.na(.data$site_id), .data$site_id_file, .data$site_id))
   }
 
   # Report on details -------------------------
