@@ -61,11 +61,13 @@ create_pattern_dt_sep <- function(sep = "T", optional = FALSE) {
 
 #' @export
 create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM", "SMA"),
-                                  n_digits = c(4, 8), sep = c("_", "-")) {
+                                  n_digits = c(4, 8), sep = c("_", "-"),
+                                  prefix = "", suffix = "") {
 
   sep <- create_pattern_sep(sep)
 
   arus <- paste0("(", arus, ")", collapse = "|")
 
-  paste0("(", arus, ")", sep, "\\d{", n_digits[1], ",", n_digits[2], "}")
+  paste0("(", prefix, ")(", arus, ")", sep,
+         "\\d{", n_digits[1], ",", n_digits[2], "}(", suffix, ")")
 }
