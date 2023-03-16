@@ -27,17 +27,18 @@ report_missing <- function(missing, total, name) {
   msg
 }
 
-date_join <- function(x, y, by, id, col = "date", int = "date_range") {
+date_join <- function(x, y, by, id, col = "date", int = "date_range",
+                      check_col = "...n") {
 
   # Nested filters
   match <- y |>
     dplyr::ungroup() |>
-    tidyr::nest(gps = -c(int)) |>
+    tidyr::nest(add = -c(int)) |>
     dplyr::mutate(data = purrr::map2(
-      .data[[int]], .data$gps,
-      ~dplyr::filter(m, lubridate::`%within%`(.data[[col]], .x)) |>
-        dplyr::inner_join(.y, by = .env$by))) |>
-    dplyr::select(-dplyr::any_of(int), -"gps") |>
+      .data[[int]], .data$add,
+      ~dplyr::filter(x, lubridate::`%within%`(.data[[col]], ..1)) |>
+        dplyr::inner_join(..2, by = .env$by))) |>
+    dplyr::select(-dplyr::any_of(int), -"add") |>
     tidyr::unnest(data)
 
   no_match <- dplyr::anti_join(x, match, by = id)
@@ -46,7 +47,7 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range") {
 
   if(nrow(x) != nrow(all)) {
     all <- dplyr::add_count(all, .data[[id]], name = "n_matches")
-    all$n_matches[is.na(all$longitude)] <- NA_integer_
+    all$n_matches[is.na(all[[check_col]])] <- NA_integer_
   }
 
   all

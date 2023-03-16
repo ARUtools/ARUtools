@@ -202,19 +202,31 @@ clean_metadata <- function(
 }
 
 
+#' Title
+#'
+#' @param site_index
+#' @param col_aru_id
+#' @param col_site_id
+#' @param col_date_time
+#' @param col_coords
+#'
+#' @return
+#' @export
+#'
+#' @examples
 clean_site_index <- function(site_index,
                              col_aru_id = "aru_id",
                              col_site_id = "site_id",
-                             col_dates = c("date_start", "date_end"),
+                             col_date_time = "date",
                              col_coords = c("longitude", "latitude")) {
 
   # Checks
   check_string(col_aru_id)
   check_string(col_site_id)
-  check_string(col_dates)
+  check_string(col_date_time)
   check_string(col_coords, not_null = FALSE)
 
-  # MORE CHECKS (more format options - Data frame?)
+  # TODO: MORE CHECKS (more format options - Data frame?)
   if(is.data.frame(site_index)) {
     site_index <- suppressMessages(readr::type_convert(site_index))
   } else {
@@ -231,20 +243,23 @@ clean_site_index <- function(site_index,
     }
   }
 
+  #TODO: Get date/date_times vs. ranges (start and end)
+
+
   site_index <- dplyr::rename_with(site_index, tolower)
 
   # Check cols
-  check_cols(site_index, c(col_site_id, col_dates, col_aru_id, col_coords),
+  check_cols(site_index, c(col_site_id, col_date_time, col_aru_id, col_coords),
              name = "site_index",
              extra = "See ?clean_site_index")
 
   # Check dates
-  check_dates(site_index, col_dates)
+  check_dates(site_index, col_date_time)
 
   # Prepare for renaming
   cols <- c(
     "site_id" = col_site_id,
-    setNames(col_dates, c("date_start", "date_end")),
+    setNames(col_date_time, c("date_time_start", "date_time_end")),
     "aru_id" = col_aru_id,
     if(!is.null(col_coords)) setNames(col_coords, c("longitude", "latitude"))) |>
     tolower()
@@ -252,83 +267,54 @@ clean_site_index <- function(site_index,
   site_index |>
     # Grab and rename columns
     dplyr::select(dplyr::all_of(cols)) |>
-    # Convert times to dates
-    dplyr::mutate(date_start = lubridate::as_date(.data$date_start),
-                  date_end = lubridate::as_date(.data$date_end))
+    # Get dates
+    dplyr::mutate(date_start = lubridate::as_date(.data$date_time_start),
+                  date_end = lubridate::as_date(.data$date_time_end)) |>
+    dplyr::relocate("date_start", "date_end", .after = "date_time_end")
+}
+
+meta_to_index <- function(meta) {
+  meta %>%
+    dplyr::filter(.data$type != "gps") %>%
+    dplyr::select("site_id", "date", "aru_id") %>%
+    dplyr::distinct() %>%
+    dplyr::group_by(.data$site_id, .data$aru_id) %>%
+    dplyr::summarize(date_start = min(.data$date), date_end = max(.data$date))
 }
 
 
 
 
+add_sun <- function(meta) {
+
+  # TODO: Checks
+  # Check for lat/lon
+
+  browser()
+
+  tz <- dplyr::select(meta, "longitude", "latitude") |>
+    dplyr::distinct() |>
+    tidyr::drop_na() |>
+    dplyr::mutate(tz = lutz::tz_lookup_coords(
+      lat = .data$latitude,
+      lon = .data$longitude,
+      method = 'accurate'))
+
+  m <- dplyr::left_join(meta, tz, by = c("longitude", "latitude"))
+
+  m_dt <- dplyr::select(meta, "date", "longitude", "latitude") |>
+    dplyr::distinct()
 
 
-clean_sun <- function() {
-
-    if(!exists("deploy_start_date")) deploy_start_date <-
-      list_waves |>
-      stringr::str_extract("\\d{8}") |>
-      lubridate::ymd() %>% { min(.) -2 } |>
-      format("%d/%m/%Y") |> lubridate::dmy()
-    if(!exists("check_dists")) check_dists <- TRUE
-
-    if(is_null(gps_locations)){
-      if(!exists("dist_cutoff")) dist_cutoff <- 100
-      gps_locations_barLT <- process_gps_barlt(base_folder = folder_base,
-                                         site_pattern = site_pattern,
-                      file_list= list_files,dist_cutoff=dist_cutoff,
-                      deploy_start_date = deploy_start_date,
-                      check_dists)
-    } else{
-
-      gps_locations_barLT <- gps_locations
-    }
-    browser()
-
-  }
-  # |- SM4   ----------------
-    SMfiles <- dplyr::filter(wav_names_log,ARU_type=="SongMeter" )
-
-    if(nrow(SMfiles)>0){
-      # browser()
-    if(grepl("3", type)) warn("Default site_pattern is set for SM4. Recommend changing based on file structure")
-    if(!exists("site_pattern")) site_pattern <-  "S4A\\d{5}"
-    # file.location <- "//WRIV02DTSTDNT1/RecordStor20172019/BetweenRivers_2019"
-
-      # list.files(folder_base, "_Summary.txt", recursive = T, full.names = T)
-
-    browser()
-
-    if(is_null(gps_locations)){
-      gps_locations_SM <- process_gps_SM(folder_base = folder_base, list_files = list_files,
-                                      site_pattern = site_pattern)
-    } else{ gps_locations_SM <- gps_locations}
-    if(!exists("site_in_filename")) site_in_filename <- TRUE
-    }
-
-    if(exists("gps_locations_barLT")& exists("gps_locations_SM")){
-      gps_locations <- bind_rows(gps_locations_barLT, gps_locations_SM)
-    } else if(exists("gps_locations_barLT")& !exists("gps_locations_SM")){
-      gps_locations <- gps_locations_barLT
-    } else if(!exists("gps_locations_barLT")& exists("gps_locations_SM")){
-      gps_locations <- gps_locations_SM
-    } else{abort("Error combining gps locations. Check ARU type")}
-    # if(length(unique(gps_locations$tz ))>1) browser()
-    wav_names_log <- parse_datetimes(wav_names_log,
-                                     tz_loc = unique(gps_locations$tz ))
 
 
-    if(exists("Filter_gps_sites")){
-      if(isTRUE(Filter_gps_sites)){
-        gps_locations <- gps_locations |>
-          dplyr::filter(SiteID %in% wav_names_log$SiteID)
-      }
-    }
-
-    recording_log <- prep_sunrise_sunset(gps_locations = gps_locations,
-                                            wav_names_log = wav_names_log)
+  #if(dplyr::n_distinct(tz_loc)>1) warn("Multple time zones detected. This may affect sunrise/sunset accuracy")
 
 
-     browser()
+
+
+  recording_log <- prep_sunrise_sunset(gps_locations = gps_locations,
+                                       wav_names_log = wav_names_log)
 
     if(isTRUE(return_full_metadata)){
       list(gps_locations = gps_locations,
