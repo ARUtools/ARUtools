@@ -14,7 +14,7 @@ count_files <- function(project_dir, subset_dir = NULL, subset_type = "keep") {
 #' @export
 check_meta <- function(meta) {
   meta %>%
-    dplyr::group_by(.data$site_id, .data$type, .data$aru_type, .data$aru_id) %>%
+    dplyr::group_by(.data$site_id, .data$aru_type, .data$aru_id, .data$type) %>%
     dplyr::summarize(n_files = dplyr::n(),
                      n_dirs = dplyr::n_distinct(fs::path_dir(.data$path)),
                      min_date = min(.data$date_time),
@@ -30,3 +30,4 @@ check_meta <- function(meta) {
 check_file <- function(file, n_max = 10) {
   readr::read_lines(file, n_max = n_max)
 }
+
