@@ -12,7 +12,7 @@ test_that("fmt_gps()", {
     `HH/MM` = c("07:30", "16:08"),
     `DD/MM/YY` = c("25/05/2021", "03/06/2021")) |>
     readr::type_convert() |>
-    supprsessMessages()
+    suppressMessages()
 
   # SongMeter
   g2 <- dplyr::tibble(
