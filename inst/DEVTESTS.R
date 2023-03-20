@@ -117,17 +117,11 @@ sites <- clean_site_index(i, # Supply column names
                           col_date_time = c("Date_Deploy", "Date_Retrieve"),
                           col_extra = c("river" = "NorthernRiverTrip"))
 
-f <- add_sites(t, sites) # Need to omit "site_id" from by
-f <- add_sites(t, sites, by = "aru_id")
-# BerensR-3252-2 2022-06-29 - 2022-06-30
-# BerensR-3252-3 2022-06-30 - 2022-07-01
-# Where does 2022-06-30 belong? Best to use `date_time` to split
+f <- add_sites(t, sites, dt_type = "date_time") # Need to omit "site_id" from by
 f <- add_sites(t, sites, by = "aru_id", dt_type = "date_time")
 
-# Still have some problems... oops, some sound files have no times, so match both...
-# Will need use input to fix these
-filter(f, n_matches > 1)
-
-# Now check non-matched - These are either a) not in the date range in sites, or b) missing a record in sites
+# Now check non-matched - These are either
+# a) not in the date range in sites, or
+# b) missing a record in sites
 filter(f, is.na(site_id)) |>
   check_meta()

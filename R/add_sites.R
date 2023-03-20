@@ -34,7 +34,7 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   if(length(omit_cols) > 0) {
 
     rlang::inform(c(
-      "!" = "Some columns in both `meta` and `sites` are not used to join (not in `by`)",
+      "Some columns in both `meta` and `sites` are not used to join (not in `by`)",
       "*" = paste0(
         "These columns (`", paste0(omit_cols, collapse = "`, `"), "`) ",
         "will be overwritten in `meta`")
