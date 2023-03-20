@@ -218,17 +218,21 @@ clean_site_index <- function(site_index,
                              col_aru_id = "aru_id",
                              col_site_id = "site_id",
                              col_date_time = "date",
-                             col_coords = c("longitude", "latitude")) {
+                             col_coords = c("longitude", "latitude"),
+                             col_extra = NULL,
+                             resolve_overlaps = TRUE) {
 
   # Checks
+  check_df_file(site_index)
   check_string(col_aru_id)
   check_string(col_site_id)
-  check_string(col_date_time)
-  check_string(col_coords, not_null = FALSE)
+  check_string(col_date_time, n_max = 2)
+  check_string(col_coords, not_null = FALSE, n_max = 2)
+  check_string(col_extra, not_null = FALSE, n_max = Inf)
 
-  # TODO: MORE CHECKS (more format options - Data frame?)
   if(is.data.frame(site_index)) {
-    site_index <- suppressMessages(readr::type_convert(site_index))
+    site_index <- suppressMessages(readr::type_convert(site_index)) |>
+      dplyr::as_tibble()
   } else {
     type <- fs::path_ext(site_index)
     check_ext(type, c("csv", "xlsx"))
@@ -243,34 +247,78 @@ clean_site_index <- function(site_index,
     }
   }
 
-  #TODO: Get date/date_times vs. ranges (start and end)
-
-
   site_index <- dplyr::rename_with(site_index, tolower)
 
   # Check cols
-  check_cols(site_index, c(col_site_id, col_date_time, col_aru_id, col_coords),
+  check_cols(site_index, c(col_site_id, col_date_time, col_aru_id, col_coords,
+                           col_extra),
              name = "site_index",
              extra = "See ?clean_site_index")
 
   # Check dates
   check_dates(site_index, col_date_time)
 
+  if(length(col_date_time) == 1) {
+    dt <- "date_time"
+    d <- "date"
+  } else {
+    dt <- c("date_time_start", "date_time_end")
+    d <- c("date_start", "date_end")
+  }
+
   # Prepare for renaming
+
+  if(length(names(col_extra)) == 0) {
+    col_extra <- stats::setNames(nm = col_extra)
+  }
+
   cols <- c(
     "site_id" = col_site_id,
-    setNames(col_date_time, c("date_time_start", "date_time_end")),
     "aru_id" = col_aru_id,
-    if(!is.null(col_coords)) setNames(col_coords, c("longitude", "latitude"))) |>
+    setNames(col_date_time, dt),
+    if(!is.null(col_coords)) setNames(col_coords, c("longitude", "latitude")),
+    col_extra) |>
     tolower()
 
-  site_index |>
+  site_index <- site_index |>
     # Grab and rename columns
     dplyr::select(dplyr::all_of(cols)) |>
     # Get dates
-    dplyr::mutate(date_start = lubridate::as_date(.data$date_time_start),
-                  date_end = lubridate::as_date(.data$date_time_end)) |>
-    dplyr::relocate("date_start", "date_end", .after = "date_time_end")
+    dplyr::mutate(
+      dplyr::across(dplyr::all_of(dt), lubridate::as_datetime),
+      dplyr::across(dplyr::all_of(dt), lubridate::as_date, .names = "{d}")) |>
+    dplyr::relocate(dplyr::any_of(c("longitude", "latitude")),
+                    .after = dplyr::last_col()) |>
+    dplyr::relocate(dplyr::any_of(names(col_extra)), .after = dplyr::last_col())
+
+  # For date ranges, check if only using dates
+  if(resolve_overlaps &&
+     length(dt) == 2 &&
+     all(site_index$date_time_start == site_index$date_start) &&
+     all(site_index$date_time_end == site_index$date_end)) {
+
+    site_index$date_time_end %in% site_index$date_time_start
+
+    by_site <- dplyr::group_by(site_index, .data$site_id) |>
+      dplyr::filter(.data$date_time_end %in% .data$date_time_start) |>
+      nrow()
+    by_aru <- dplyr::group_by(site_index, .data$aru_id) |>
+      dplyr::filter(.data$date_time_end %in% .data$date_time_start) |>
+      nrow()
+
+    if(by_site > 0 | by_aru > 0) {
+      rlang::inform(
+        c("There are overlapping date ranges",
+          "Shifting start/end times to 'noon'",
+          #"Use `dt_type = \"date_time\"` in `add_sites()`",
+          "Skip this with `resolve_overlaps = FALSE`"))
+
+      lubridate::hour(site_index$date_time_start) <- 12
+      lubridate::hour(site_index$date_time_end) <- 12
+    }
+  }
+
+  site_index
 }
 
 meta_to_index <- function(meta) {

@@ -114,7 +114,8 @@ sites <- clean_site_index(i) # Expect standard column names
 sites <- clean_site_index(i, # Supply column names
                           col_aru_id = "ARU_ID",
                           col_site_id = "SiteID_WildTrax",
-                          col_date_time = c("Date_Deploy", "Date_Retrieve"))
+                          col_date_time = c("Date_Deploy", "Date_Retrieve"),
+                          col_extra = c("river" = "NorthernRiverTrip"))
 
 f <- add_sites(t, sites) # Need to omit "site_id" from by
 f <- add_sites(t, sites, by = "aru_id")

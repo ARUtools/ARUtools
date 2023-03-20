@@ -7,12 +7,15 @@ check_ext <- function(ext, opts)  {
   }
 }
 
-check_string <- function(arg, not_null = TRUE) {
+check_string <- function(arg, not_null = TRUE, n_min = 1, n_max = 1) {
   nm <- paste0("`", deparse(substitute(arg)), "`")
   if(not_null && is.null(arg)) {
-    rlang::abort(nm, " cannot be `NULL`.", call = NULL)
+    rlang::abort(paste0(nm, "cannot be `NULL`"), call = NULL)
   } else if(!is.null(arg) && !is.character(arg)) {
-    rlang::abort(nm, " must be a text string", call = NULL)
+    rlang::abort(paste(nm, "must be a text string"), call = NULL)
+  } else if(!is.null(arg) && !dplyr::between(length(arg), n_min, n_max)) {
+    rlang::abort(paste(nm, "must have between", n_min, "and", n_max,
+                       "values"), call = NULL)
   }
 }
 
@@ -47,6 +50,16 @@ check_index <- function(index) {
     }
     check_cols(index, c("site_id", "date_start", "date_end"))
     check_dates(index, c("date_start", "date_end"))
+  }
+}
+
+check_df_file <- function(input) {
+  if(!is.data.frame(input)) {
+    if(!is.character(input)) {
+      rlang::abort(paste0(
+        "`", deparse(substitude(input)), "` must be either ",
+        "a data frame or the location of a CSV or Excel file to open"))
+    }
   }
 }
 
