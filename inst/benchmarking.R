@@ -22,3 +22,12 @@ bench::mark(t1 <- fs::dir_ls(project_dir, all = FALSE, recurse = TRUE, type = "f
             t2 <- fs::dir_ls(project_dir, all = FALSE, recurse = TRUE, type = "file") %>%
               stringr::str_subset("P71", negate = TRUE)
 )
+
+
+# sun_diff faster but equivalent to using intervals
+t1 <- Sys.time()
+t2 <- t1 - lubridate::hours(6)
+
+mark(sun_diff(t1, t2),
+     abs(lubridate::int_length(lubridate::interval(t1, t2))/60),
+     min_time = 5)

@@ -1,124 +1,105 @@
-#' Parse file names of wave files for dates and times.
+#' Calculate and add time to sunrise/sunset
 #'
-#' @param wav_names_log data frame passed from clean_metadata. must include yyyymmdd and hhmmss
-#' @param tz_loc Time zone for location. Default to "America/Toronto"
+#' Calculate the sunrise/sunset of each sound file for the day of, the day before
+#' and the day after to get the nearest sunrise to the recording.
 #'
-#' @return Returns a data frame with filenames parsed to date & time.
-parse_datetimes <- function(wav_names_log,
-                            tz_loc = "America/Toronto"){
-
-  if(!"yyyymmdd" %in% names(wav_names_log) |
-    any(is.na(wav_names_log[['yyyymmdd']]) | nchar(wav_names_log[['yyyymmdd']])!=8) ){
-    abort("Date extraction failed. Check parsing settings and try again.")
-  }
-  if(!"hhmmss" %in% names(wav_names_log) |
-    any(is.na(wav_names_log[['hhmmss']]) | nchar(wav_names_log[['hhmmss']])!=6) ){
-    abort("Time extraction failed. Check parsing settings and try again.")
-  }
-
-  wav_names_log_with_dates <- wav_names_log |>
-    mutate(
-      date = lubridate::ymd(yyyymmdd),
-      year = lubridate::year(date),
-      month = lubridate::month(date),
-      day = lubridate::day(date),
-      doy = lubridate::yday(date),
-      hour = stringr::str_sub(hhmmss, 1L, 2L),
-      min =  stringr::str_sub(hhmmss, 3L, 4L),
-      sec =  stringr::str_sub(hhmmss, 5L, 6L),
-      time = lubridate::hms(glue::glue("{hour}:{min}:{sec}")),
-      raw_date_time=glue::glue("{year}-{month}-{day} {hour}:{min}:{sec}"),
-      date_time = lubridate::ymd_hms(raw_date_time, tz = tz_loc),
-
-      day_before = date-1,
-      day_after=date+1
-
-    )
-
-  if(any(sum(is.na(wav_names_log_with_dates$time))==nrow(wav_names_log),
-         sum(is.na(wav_names_log_with_dates$date))==nrow(wav_names_log) )|
-     all(is.na(wav_names_log_with_dates$SiteID))
-         ){#browser()
-    rlang::abort(c("File parsing failed.",
-                   "x" = "Folder structure not parsed",
-                   "i" = "Check folder structure and use file_split_pattern to modify parsing. "))
-
-  }
-  if(any(is.na(wav_names_log_with_dates$time))) rlang::warn(c("Some time parsing failed",
-                                                   "i" = "Check output"))
-
-  return(wav_names_log_with_dates)
-
-
-}
-
-
-#' Link GPS locations with wav files
+#' @param meta
+#' @param aru_tz Character. Must be either "local" or a timezone listed in
+#'   `OlsonNames()`. See Details.
 #'
-#' @param gps_locations gps locatoins
-#' @param wav_names_log wav list
+#'
+#' @details Timezones. To ensure that the sunrise/sunset times are calculated
+#'   correctly relative to the time of the recording, we need to know the
+#'   timezone of the date/time of the recording. If ARUs were calibrated with a
+#'   specific timezone before going into the field, that can be specified by
+#'   using, for example, `aru_tz = "America/Toronto"`. If on the other hand each
+#'   ARU was calibrated to whichever timezone was local when it was deployed use
+#'   `aru_tz = "local"`. The specific timezone will be calculated individually
+#'   based on the latitude and longitude of each recording.
 #'
 #' @return
-link_gps_locs <- function(gps_locations, wav_names_log){
-  # browser()
-  stopifnot(
-    "Not all SiteID from GPS log are in wav_names_log"=
-      all(gps_locations$SiteID %in% wav_names_log$SiteID),
-    "Not all SiteID from wave_names_log are in GPS log" =
-      all(wav_names_log$SiteID %in% gps_locations$SiteID)
-  )
-  if("hh_mm_ss" %in% names(gps_locations)){
-    # Messy fix here for having hh_mm_ss instead of just hh_mm
-    g <- gps_locations |> #filter(SiteID == sites[[i]]) |>
-      dplyr::rowwise() %>% {if(lubridate::is.Date(.$dd_mm_yy)){
-        dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm_ss, sep = " "), tz = tz))
-      } else{
-        dplyr::mutate(.,dategps = lubridate::dmy_hms(paste(dd_mm_yy, hh_mm_ss, sep = " "), tz = tz))
-      }
-      } |>
-      dplyr::ungroup() |>
-      dplyr::arrange(SiteID,dategps) |>
+#' @export
+#'
+#' @examples
+calc_sun <- function(meta, aru_tz = "local") {
+
+  # TODO: Checks
+  # Check for lat/lon
+
+  if(aru_tz != "local") {
+    # Get timezones from location if not set globally
+    tz <- dplyr::select(meta, "longitude", "latitude") |>
+      dplyr::distinct() |>
+      tidyr::drop_na() |>
       dplyr::mutate(
-        gr = dplyr::row_number())
+        tz = lutz::tz_lookup_coords(
+          lat = .data$latitude,
+          lon = .data$longitude,
+          method = 'accurate'))
 
-  } else if("hh_mm" %in% names(gps_locations)){
+    m <- dplyr::left_join(meta, tz, by = c("longitude", "latitude"))
+  } else {
+    check_tz(aru_tz)
+    m <- dplyr::mutate(meta, tz = .env$aru_tz)
+  }
 
-  g <- gps_locations |> #filter(SiteID == sites[[i]]) |>
-    dplyr::rowwise() %>% {if(lubridate::is.Date(.$dd_mm_yy)){
-    dplyr::mutate(.,dategps = lubridate::dmy_hm(paste(format(dd_mm_yy, "%d-%m-%Y"), hh_mm, sep = " "), tz = tz))
-    } else{
-      dplyr::mutate(.,dategps = lubridate::dmy_hm(paste(dd_mm_yy, hh_mm, sep = " "), tz = tz))
-    }
-    } |>
-    dplyr::ungroup() |>
-    dplyr::arrange(SiteID,dategps) |>
+  ss <- dplyr::select(m, "date", "tz", "longitude", "latitude") |>
+    dplyr::distinct() |>
+    tidyr::drop_na() |>
+    tidyr::nest(dates = -"tz") |>
+    dplyr::mutate(times = purrr::map2(
+      .data$dates, .data$tz, ~calc_all_ss(.x, tz = .y))) |>
+    tidyr::unnest("times") |>
+    dplyr::select(-"dates", -"date_before", -"date_after")
+
+  m <- dplyr::left_join(m, ss, by = c("date", "tz", "latitude", "longitude"))
+
+  m |>
     dplyr::mutate(
-      gr = dplyr::row_number())
-  } else{rlang::abort("Need date (dd_mm_yy) and time (hh_mm or hh_mm_ss) in gps_locations")}
-  wav_with_gps <-
-    wav_names_log |>
-    # filter(SiteID == sites[[i]]) |>
-    # slice_tail(n=2) |>
-    left_join(g[,c("SiteID","dategps",
-                   "latitude_decimal_degrees",
-                   "longitude_decimal_degrees",
-                   "tz"
-    )], by = "SiteID") |>
-    filter(date_time>=(dategps-lubridate::days(1))) |>
-    group_by(filename) |>
-    slice_min(date_time - dategps) |>
-    ungroup()
-  stopifnot(
-    "Differing numbers of records after joining wav_names_log with gps_locations" =
-      nrow(wav_with_gps)==nrow(wav_names_log),
-    "Not all files in final record" =
-      all(wav_names_log$filename %in% wav_with_gps$filename)
-  )
-  if(any(is.na(wav_with_gps$latitude_decimal_degrees))) warn("Some records did not link with a gps location")
-
-  return(wav_with_gps)
-
+      t2sr = sun_diff(.data$sunrise, .data$date_time),
+      t2sr_before = sun_diff(.data$sunrise_before, .data$date_time),
+      t2sr_after = sun_diff(.data$sunrise_after, .data$date_time),
+      t2ss = sun_diff(.data$sunset, .data$date_time),
+      t2ss_before = sun_diff(.data$sunset_before, .data$date_time),
+      t2ss_after = sun_diff(.data$sunset_after, .data$date_time),
+      doy = lubridate::yday(.data$date),
+      t2sr = pmin(.data$t2sr, .data$t2sr_before, .data$t2sr_after),
+      t2ss = pmin(.data$t2ss, .data$t2ss_before, .data$t2ss_after)) |>
+    dplyr::select(dplyr::all_of(names(meta)), "tz", "t2sr", "t2ss")
 }
+
+sun_diff <- function(t1, t2) {
+  abs(as.numeric(difftime(t1, t2, units = "mins")))
+}
+
+#' Calculate sunrise and sunset and time to sunset for BarLT recordings
+#'
+#'
+#'
+#' @param gps_locations data frame generated by process_gps_barlt or process_gps_SM
+#' @param wav_names_log data frame generated by parse_datetimes
+#'
+#' @return returns a data frame with time to sunrise
+#'
+#' @noRd
+calc_all_ss <- function(dates, tz){
+
+  ss_day_of <- calc_ss(dates, tz)
+
+  ss_day_before <- dates |>
+    dplyr::mutate(date = date - lubridate::days(1)) |>
+    calc_ss(tz, suffix = "_before") |>
+    dplyr::bind_cols(date = dates$date)
+
+  ss_day_after <- dates |>
+    dplyr::mutate(date = date + lubridate::days(1)) |>
+    calc_ss(tz, suffix = "_after") |>
+    dplyr::bind_cols(date = dates$date)
+
+  dplyr::left_join(ss_day_of, ss_day_before, by = c("date", "latitude", "longitude")) |>
+    dplyr::left_join(ss_day_after, by = c("date", "latitude", "longitude"))
+}
+
 
 #' Calculate sunrise sunset
 #'
@@ -130,150 +111,19 @@ link_gps_locs <- function(gps_locations, wav_names_log){
 #'
 #' @return Returns a data frame with sunrise and sunset
 #'
-calculate_sunrise_sunset <- function(.data,var_day){
-    .tz <- unique(.data$tz)
-    stopifnot("Multiple time zones detected, please run separately"=
-                length(.tz)==1)
-    .data |>
-      dplyr::transmute(SiteID, original_date = date,
-                       date = {{var_day}},
-                       lat = latitude_decimal_degrees,
-                       lon = longitude_decimal_degrees,
-                       tz = tz) %>%
-      suncalc::getSunlightTimes(data = .,
-                                keep = c("sunrise", "sunset"),
-                                tz = .tz) |>
-       dplyr::rename(
-      "calc_{{var_day}}" := date,
-        "sunrise_{{var_day}}":= sunrise,
-        "sunset_{{var_day}}":= sunset
-      ) |> dplyr::bind_cols(
-        dplyr::select(.data, SiteID, date)
-      )|>
+#' @noRd
+calc_ss <- function(dates, tz, suffix = ""){
+
+  dplyr::rename(dates, "lat" = "latitude", "lon" = "longitude") |>
+    suncalc::getSunlightTimes(data = _, keep = c("sunrise", "sunset"), tz = tz) |>
+    dplyr::mutate(sunrise = lubridate::force_tz(.data$sunrise, "UTC"),
+                  sunset = lubridate::force_tz(.data$sunset, "UTC")) |>
+    dplyr::rename(
+      "date{suffix}" := "date",
+      "sunrise{suffix}" := "sunrise",
+      "sunset{suffix}" := "sunset",
+      "latitude" = "lat",
+      "longitude" = "lon"
+    ) |>
     tibble::as_tibble()
-    }
-
-
-#' Calculate sunrise and sunset and time to sunset for BarLT recordings
-#'
-#'
-#'
-#' @param gps_locations data frame generated by process_gps_barlt or process_gps_SM
-#' @param wav_names_log data frame generated by parse_datetimes
-#'
-#' @return returns a data frame with time to sunrise
-prep_sunrise_sunset <- function(gps_locations,wav_names_log){
-
-  wav_with_gps <- link_gps_locs(gps_locations = gps_locations,
-                                      wav_names_log = wav_names_log)
-
-
-
- ss_dayof <- calculate_sunrise_sunset(.data = wav_with_gps, date)
- ss_daybefore <- calculate_sunrise_sunset(.data = wav_with_gps, day_before )
- ss_dayafter <- calculate_sunrise_sunset(.data = wav_with_gps, day_after )
-
- stopifnot("Time zones not equal"=all.equal(lubridate::tz(ss_dayafter$sunrise_day_after),
-                     lubridate::tz(ss_daybefore$sunset_day_before),
-                     lubridate::tz(ss_dayof$sunset_date),
-                     lubridate::tz(wav_with_gps$date_time)
-                     ),
-           "Sites not row paired in Sunrise Calculation"=all.equal(ss_dayafter$SiteID,
-                                            (ss_daybefore$SiteID),
-                                            (ss_dayof$SiteID),
-                                            (wav_with_gps$SiteID) ) ,
-           "Dates not row paired in Sunrise Calculation"=all.equal(as.numeric(ss_dayafter$date),
-                                                                   as.numeric(ss_daybefore$date),
-                                                                   as.numeric(ss_dayof$date),
-                                                                   as.numeric(wav_with_gps$date),
-                                                                   tolerance = 0 ) )
-
-
- ss <- wav_with_gps |>
-    bind_cols(
-      ss_dayof |>
-      dplyr::select(-SiteID, -date, -lat, -lon)
-      ) |>
-   bind_cols(
-     ss_daybefore |>
-       dplyr::select(-SiteID, -date,-lat, -lon)
-   ) |>
-   bind_cols(
-     ss_dayafter |>
-       dplyr::select(-SiteID, -date,-lat, -lon)
-   )
-  # ,
-  #   calculate_sunrise_sunset(.data = wav_with_gps, day_before ),
-  #   by = c("SiteID",  "date")) |>
-  #   left_join(
-  #     calculate_sunrise_sunset(.data = wav_with_gps, day_after )
-  #   )
-
-
-
-
-
-  ss |>
-    dplyr::mutate(
-      t2sr = lubridate::int_length(lubridate::interval(sunrise_date, date_time))/60,
-      t2sr_before = lubridate::int_length(lubridate::interval(sunrise_day_before,date_time))/60,
-      t2sr_after = lubridate::int_length(lubridate::interval(sunrise_day_after,date_time))/60,
-
-
-      t2ss = lubridate::int_length(lubridate::interval(sunset_date, date_time))/60,
-      t2ss_before = lubridate::int_length(lubridate::interval(sunset_day_before,date_time))/60,
-      t2ss_after = lubridate::int_length(lubridate::interval(sunset_day_after,date_time))/60,
-      doy = lubridate::yday(date)) |>
-    dplyr::rowwise() |>
-    dplyr::mutate(t2sr_min = c(t2sr, t2sr_before, t2sr_after)[which.min(c(abs(t2sr), abs(t2sr_before),
-                                                                          abs(t2sr_after)))],
-                  t2ss_min = c(t2ss, t2ss_before, t2ss_after)[which.min(c(abs(t2ss), abs(t2ss_before),
-                                                                          abs(t2ss_after)))],
-
-    ) |> dplyr::ungroup() |>
-    dplyr::mutate(
-      week = lubridate::week(date_time),
-      dow = lubridate::wday(date_time))
-}
-
-
-
-
-
-#' Temporary alternative function to calculate sunrise sunset
-#'
-#' Just a placeholder to put into prep_sunrise_sunset potentially
-#'
-#' @param data_in
-#' @param time_zone
-#'
-#' @return
-est_sunrise_sunset <- function(data_in, time_zone){
-  tmp <- data_in |> filter(tz == time_zone)
-  map(c("date", "day_before", "day_after"),
-      ~{x <- as.symbol(.x)
-      ARUtools:::calculate_sunrise_sunset(.data = st_drop_geometry(tmp), var_day = !!x ) |>
-        dplyr::select(-SiteID, -date, -lat, -lon)
-      }) |> bind_cols() |> bind_cols(tmp) |>
-    dplyr::mutate(
-      t2sr = lubridate::int_length(lubridate::interval(sunrise_date, date_time))/60,
-      t2sr_before = lubridate::int_length(lubridate::interval(sunrise_day_before,date_time))/60,
-      t2sr_after = lubridate::int_length(lubridate::interval(sunrise_day_after,date_time))/60,
-
-
-      t2ss = lubridate::int_length(lubridate::interval(sunset_date, date_time))/60,
-      t2ss_before = lubridate::int_length(lubridate::interval(sunset_day_before,date_time))/60,
-      t2ss_after = lubridate::int_length(lubridate::interval(sunset_day_after,date_time))/60,
-      doy = lubridate::yday(date)) |>
-    dplyr::rowwise() |>
-    dplyr::mutate(t2sr_min = c(t2sr, t2sr_before, t2sr_after)[which.min(c(abs(t2sr), abs(t2sr_before),
-                                                                          abs(t2sr_after)))],
-                  t2ss_min = c(t2ss, t2ss_before, t2ss_after)[which.min(c(abs(t2ss), abs(t2ss_before),
-                                                                          abs(t2ss_after)))],
-
-    ) |> dplyr::ungroup() |>
-    dplyr::mutate(
-      week = lubridate::week(date_time),
-      dow = lubridate::wday(date_time),
-      Sunset_Sunrise = ifelse(t2sr_min< -125, "SS", "SR"))
 }

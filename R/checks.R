@@ -101,3 +101,12 @@ check_date_joins <- function(df, by_date) {
 
   use
 }
+
+check_tz <- function(tz) {
+  nm <- deparse(substitute(tz))
+ if(!tz %in% OlsonNames()) {
+   rlang::abort(
+     paste0("`", nm, "` must be a valid timezone listed in `OlsonNames()`."),
+     call = NULL)
+ }
+}
