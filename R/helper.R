@@ -12,9 +12,12 @@ count_files <- function(project_dir, subset_dir = NULL, subset_type = "keep") {
 }
 
 #' @export
-check_meta <- function(meta) {
-  meta %>%
-    dplyr::group_by(.data$site_id, .data$aru_type, .data$aru_id, .data$type) %>%
+check_meta <- function(meta, by_date = FALSE) {
+  g <- c("site_id", "aru_type", "aru_id", "type")
+  if(by_date) g <- c(g, "date")
+
+  m <- meta %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(g))) %>%
     dplyr::summarize(n_files = dplyr::n(),
                      n_dirs = dplyr::n_distinct(fs::path_dir(.data$path)),
                      min_date = min(.data$date_time),
@@ -24,6 +27,9 @@ check_meta <- function(meta) {
                      max_time = hms::as_hms(max(hms::as_hms(.data$date_time))),
                      .groups = "drop") %>%
     dplyr::relocate("n_days", .before = "min_date")
+
+  if(by_date) m <- dplyr::select(m, -"min_date", -"max_date")
+  m
 }
 
 #' @export
