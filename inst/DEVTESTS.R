@@ -97,20 +97,20 @@ m
 files <- readr::read_rds("../RiverTrips_DataPrep/all_files_vec.rds")
 i <- "../RiverTrips_DataPrep/NRT2022_SMM_Logfile_Compile.xlsx"
 
-# Some funny files 'zoom'
 t <- clean_metadata(project_files = files,
                     pattern_dt_sep = "_")
 
+# Some funny files 'zoom'
 filter(t, is.na(aru_id))
 
-# Omit 'zoom' files
+# Omit 'zoom' files (no sites)
 t <- clean_metadata(project_files = files,
                     subset = "Zoom", subset_type = "omit",
                     pattern_aru_id = create_pattern_aru_id(prefix = "CWS-"),
                     pattern_dt_sep = "_")
 
 # Add sites by date
-sites <- clean_site_index(i) # Expect standard column names
+sites <- clean_site_index(i) # Expect standard column names - No good
 sites <- clean_site_index(i, # Supply column names
                           col_aru_id = "ARU_ID",
                           col_site_id = "SiteID_WildTrax",
@@ -121,7 +121,14 @@ f <- add_sites(t, sites, dt_type = "date_time") # Need to omit "site_id" from by
 f <- add_sites(t, sites, by = "aru_id", dt_type = "date_time")
 
 # Now check non-matched - These are either
-# a) not in the date range in sites, or
-# b) missing a record in sites
+# a) not in the date range in the sites index, or
+# b) missing a record in the sites index
 filter(f, is.na(site_id)) |>
-  check_meta()
+  check_meta(by_date = TRUE)
+
+
+s <- calc_sun(f, aru_tz = "America/Toronto")
+
+
+
+
