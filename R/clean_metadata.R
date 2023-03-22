@@ -36,11 +36,23 @@ clean_metadata <- function(
     pattern_date = create_pattern_date(),
     pattern_time = create_pattern_time(),
     pattern_dt_sep = create_pattern_dt_sep(),
-    pattern_model = NULL,
     order_date = "ymd",
     quiet = FALSE) {
 
-  # CHECKS
+  # Checks
+  check_text(project_dir, not_null = FALSE)
+  check_text(project_files, not_null = FALSE, n = c(1, Inf))
+  check_text(file_type)
+  check_text(subset, not_null = FALSE)
+  check_text(subset_type)
+  check_text(pattern_site)
+  check_text(pattern_aru_id)
+  check_text(pattern_date)
+  check_text(pattern_dt_sep)
+  check_text(order_date)
+  check_logical(quiet)
+
+
   # TODO: more checks
 
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)

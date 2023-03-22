@@ -22,9 +22,9 @@ clean_site_index <- function(site_index,
   check_df_file(site_index)
   check_text(col_aru_id)
   check_text(col_site_id)
-  check_text(col_date_time, n_max = 2)
-  check_text(col_coords, n_max = 2)
-  check_text(col_extra, not_null = FALSE, n_max = Inf)
+  check_text(col_date_time, n = c(1, 2))
+  check_text(col_coords, n = 2)
+  check_text(col_extra, not_null = FALSE, n = c(1, Inf))
   check_logical(resolve_overlaps)
 
   if(is.data.frame(site_index)) {

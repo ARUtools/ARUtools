@@ -23,8 +23,9 @@
 #' @examples
 calc_sun <- function(meta, aru_tz = "local") {
 
-  # TODO: Checks
-  # Check for lat/lon
+  # Checks
+  check_data(meta, type = "meta_sites", ref = "add_sites()")
+  check_tz(aru_tz)
 
   if(aru_tz != "local") {
     # Get timezones from location if not set globally
@@ -39,7 +40,6 @@ calc_sun <- function(meta, aru_tz = "local") {
 
     m <- dplyr::left_join(meta, tz, by = c("longitude", "latitude"))
   } else {
-    check_tz(aru_tz)
     m <- dplyr::mutate(meta, tz = .env$aru_tz)
   }
 
