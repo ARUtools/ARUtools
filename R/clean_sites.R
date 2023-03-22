@@ -24,9 +24,12 @@ clean_gps <- function(meta = NULL,
                       skip_bad = FALSE, verbose = FALSE) {
 
   # TODO:
-  # CHECK gps
-  # CHECK dist_crs
-  # Other checks...
+  check_data(meta, type = "meta", ref = "clean_metadata()")
+  check_num(dist_cutoff)
+  check_num(dist_crs)
+  check_text(dist_by, n = c(1, Inf))
+  check_logical(skip_bad)
+  check_logical(verbose)
 
   # Load, combine and clean gps files
   gps <- clean_gps_files(meta, skip_bad, verbose)
