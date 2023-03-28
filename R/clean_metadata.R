@@ -174,8 +174,10 @@ clean_metadata <- function(
         date = lubridate::as_date(.data$date)) |>
       dplyr::select("path", "date")
 
-    # Add dates where missing
-    meta <- dplyr::rows_patch(meta, missing, by = "path")
+    if(any(!is.na(missing$date))) {
+      # Add dates where missing
+      meta <- dplyr::rows_patch(meta, missing, by = "path")
+    }
   }
 
   # Report on details -------------------------
