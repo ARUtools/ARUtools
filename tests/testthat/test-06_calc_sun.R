@@ -80,10 +80,11 @@ test_that("calc_ss_diff()", {
 test_that("calc_sun()", {
 
   # "local" timezone from lat/lon
-  expect_silent(s1 <- calc_sun(clean))
-  expect_equal(clean, dplyr::select(s1, -"tz", -"t2sr", -"t2ss"))
-  expect_equal(unique(s1$tz), c(NA_character_, "America/Toronto",
-                               "America/Detroit", "America/Winnipeg"))
+  expect_silent(s1 <- calc_sun(example_clean))
+  expect_equal(example_clean, dplyr::select(s1, -"tz", -"t2sr", -"t2ss", -"t2event"))
+  expect_equal(unique(s1$tz),
+               c("America/Toronto", "America/Detroit", "America/Winnipeg",
+                 "America/Chicago"))
 
   # Same sunrise/sunset for each unique combo of date, loc, and tz
   expect_equal(
@@ -91,8 +92,8 @@ test_that("calc_sun()", {
     dplyr::distinct(s1, date, longitude, latitude, tz) |> nrow())
 
   # Specified timezone
-  expect_silent(s2 <- calc_sun(clean, aru_tz = "America/Toronto"))
-  expect_equal(clean, dplyr::select(s2, -"tz", -"t2sr", -"t2ss", -"t2event"))
+  expect_silent(s2 <- calc_sun(example_clean, aru_tz = "America/Toronto"))
+  expect_equal(example_clean, dplyr::select(s2, -"tz", -"t2sr", -"t2ss", -"t2event"))
   expect_equal(unique(s2$tz), "America/Toronto")
 
   # Same sunrise/sunset for each unique combo of date and loc
@@ -101,8 +102,9 @@ test_that("calc_sun()", {
     dplyr::distinct(s2, date, longitude, latitude) |> nrow())
 
   # Expect offsets compared to "local" timezones
-  i <- which(s1$tz == "America/Winnipeg")
-  expect_equal(s1$t2sr[i], s2$t2sr[i] - 60)
+  i <- which(s1$tz %in% c("America/Winnipeg", "America/Chicago"))
+  expect_equal(s1$t2sr[i], abs(60 - s2$t2sr[i])) # After sunrise
+  expect_equal(s1$t2ss[i], s2$t2ss[i] + 60) # Before sunset
 
   # Expect others to be the same
   expect_equal(s1$t2sr[-i], s2$t2sr[-i])

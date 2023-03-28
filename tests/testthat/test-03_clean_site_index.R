@@ -1,62 +1,45 @@
 test_that("clean_site_index()", {
   unlink("test.csv")
-  readr::write_csv(site_meta, "test.csv")
+  readr::write_csv(example_sites, "test.csv")
 
   expect_error(clean_site_index("test.csv"), "Problems with data") |>
     suppressMessages()
 
-  expect_silent(i1 <- clean_site_index(
+  expect_message(i1 <- clean_site_index(
     "test.csv",
     col_aru_id = "ARU",
     col_site_id = "Sites",
     col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = NULL))
+    col_coords = c("lon", "lat")),
+    "overlapping date ranges")
 
   expect_s3_class(i1, "data.frame")
-  expect_named(i, c("site_id", "aru_id", "date_time_start", "date_time_end",
-                    "date_start", "date_end"))
+  expect_named(i1, c("site_id", "aru_id", "date_time_start", "date_time_end",
+                    "date_start", "date_end", "longitude", "latitude"))
   expect_s3_class(i1[["date_time_start"]], "POSIXct")
   expect_s3_class(i1[["date_end"]], "Date")
   expect_s3_class(i1[["date_start"]], "Date")
   expect_s3_class(i1[["date_end"]], "Date")
+  expect_equal(example_sites$lon, i1$longitude)
+  expect_equal(example_sites$lat, i1$latitude)
   unlink("test.csv")
 
-  expect_silent(i2 <- clean_site_index(
-    site_meta,
+  expect_message(i2 <- clean_site_index(
+    example_sites,
     col_aru_id = "ARU",
     col_site_id = "Sites",
     col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = NULL))
+    col_coords = c("lon", "lat")),
+    "overlapping date ranges")
 
   expect_equal(i1, i2)
 
 })
 
-test_that("clean_site_index() coords", {
-
-  expect_silent(i <- clean_site_index(
-    site_meta,
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = c("lon", "lat")))
-
-  expect_named(i, c("site_id", "aru_id", "date_time_start", "date_time_end",
-                    "date_start", "date_end", "longitude", "latitude"))
-
-  expect_equal(site_meta$lon, i$longitude)
-  expect_equal(site_meta$lat, i$latitude)
-
-})
-
 test_that("clean_site_index() extra cols", {
 
-  m <- dplyr::mutate(site_meta,
-                     Plots = c("Plot1", "Plot1", "Plot2"),
-                     Subplot = c("a", "a", "a"))
-
-  expect_silent(i <- clean_site_index(
-    m,
+  expect_message(i <- clean_site_index(
+    example_sites,
     col_aru_id = "ARU",
     col_site_id = "Sites",
     col_date_time = c("Date_set_out", "Date_removed"),
@@ -67,12 +50,11 @@ test_that("clean_site_index() extra cols", {
                     "date_start", "date_end", "longitude", "latitude",
                     "Plots", "Subplot"))
 
-  expect_equal(m$Plots, i$Plots)
-  expect_equal(m$Subplot, i$Subplot)
+  expect_equal(example_sites$Plots, i$Plots)
+  expect_equal(example_sites$Subplot, i$Subplot)
 
-
-  expect_silent(i <- clean_site_index(
-    m,
+  expect_message(i <- clean_site_index(
+    example_sites,
     col_aru_id = "ARU",
     col_site_id = "Sites",
     col_date_time = c("Date_set_out", "Date_removed"),
@@ -83,14 +65,14 @@ test_that("clean_site_index() extra cols", {
                     "date_start", "date_end", "longitude", "latitude",
                     "plot", "sub"))
 
-  expect_equal(m$Plots, i$plot)
-  expect_equal(m$Subplot, i$sub)
+  expect_equal(example_sites$Plots, i$plot)
+  expect_equal(example_sites$Subplot, i$sub)
 
 })
 
 test_that("clean_site_index() overlapping dates", {
 
-  m <- site_meta
+  m <- example_sites
   m$Sites <- "first"
   m$Date_removed[2] <- m$Date_set_out[3]
 
@@ -108,9 +90,10 @@ test_that("clean_site_index() overlapping dates", {
 
 test_that("clean_site_index() single date", {
   expect_silent(i <- clean_site_index(
-    site_meta,
+    example_sites,
     col_aru_id = "ARU",
     col_site_id = "Sites",
     col_date_time = c("Date_set_out"),
     col_coords = c("lon", "lat")))
 })
+
