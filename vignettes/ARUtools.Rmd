@@ -1,0 +1,152 @@
+---
+title: "Getting started with ARUtools"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with ARUtools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r}
+library(ARUtools)
+```
+
+Let's use some example data to get started
+
+```{r}
+example_files
+```
+
+This is a list of hypothetical ARU files from different sites, and using different
+ARUs.
+
+First things first, we'll clean up the meta data associated with the files.
+
+```{r}
+m <- clean_metadata(project_files = example_files)
+```
+
+Because our example files follow the standard formats for Site ID, ARU Id, and
+date/time, we can extract all the information without having to change any of the
+default arguments.
+
+```{r}
+m
+```
+
+Next, we want to add our coordinates to this data. 
+
+If your data has GPS logs included, they would have been detected in the above step
+and you could now use `g <- clean_gps(m)` to create a list of GPS coordinates.
+
+However, ARU GPS logs are notoriously unreliable, so it is recommended that you
+create a site index file to manually record deployment locations, like this one.
+
+```{r}
+example_sites
+```
+
+While you can simply specify a single date, it is recommended that you use both
+a start date and an end date for the best matching.
+
+Now let's clean up this list so we can add these sites to our metadata.
+
+```{r, error = TRUE}
+sites <- clean_site_index(example_sites)
+```
+
+Ooops! We can see right away that `clean_site_index()` expects the data to be
+in a particular format. Luckily we can let it know if we've used a different 
+format.
+
+```{r}
+sites <- clean_site_index(example_sites, 
+                          col_aru_id = "ARU", 
+                          col_site_id = "Sites", 
+                          col_date_time = c("Date_set_out", "Date_removed"),
+                          col_coords = c("lon", "lat"))
+```
+
+Hmm, that's an interesting message! This means that some of our deployment
+dates overlap. ARUtools assumes that if you set out an ARU on a specific day, 
+you probably didn't set it out at midnight (i.e. the very start of that day).
+Since we assume you are likely using ARUs for recording in the early morning or 
+late at night, we shift the dates start/end times to noon as an estimate of when
+the ARU was likely deployed.
+
+If your ARU was deployed at midnight, use `resolve_ovelaps = FALSE`. Or, if you
+know the exact time your ARU was deployed, use a date/time rather than just a
+date in your site index. 
+
+```{r}
+sites
+```
+
+Note that we've lost a couple of non-standard columns: `Plots` and `Subplot`. 
+
+We can retain these by specifying `cols_extra`. 
+
+```{r}
+sites <- clean_site_index(example_sites, 
+                          col_aru_id = "ARU", 
+                          col_site_id = "Sites", 
+                          col_date_time = c("Date_set_out", "Date_removed"),
+                          col_coords = c("lon", "lat"),
+                          col_extra = c("Plots", "Subplot"))
+sites
+```
+
+We can even be fancy and rename them for consistency by using named vectors.  
+
+```{r}
+sites <- clean_site_index(example_sites, 
+                          col_aru_id = "ARU", 
+                          col_site_id = "Sites", 
+                          col_date_time = c("Date_set_out", "Date_removed"),
+                          col_coords = c("lon", "lat"),
+                          col_extra = c("plot" = "Plots", "subplot" = "Subplot"))
+sites
+```
+
+
+
+Now let's add this site-related information to our metadata.
+
+
+```{r}
+m <- add_sites(m, sites)
+m
+```
+
+Great! We have all the site-related information to describe that recording.
+
+Now to prepare for our selection procedure, the last thing we need to do is 
+calculate the time to sunrise or sunset. 
+
+Here we need to be clear about what timezone the ARU unit was recording times as.
+
+There are two options. The first is that each ARU unit was set up to record in 
+the local timezone where it was placed. If this is the case, specify `tz = "local"`
+and the `calc_sun()` function will use coordinates to determine local timezones.
+
+The second option is that all ARUs were set up at home base before deployment.
+In this case it's possible they were deployed in a location with a different 
+timezone than what they were recording in. This doesn't matter, as long as you 
+specify it here. In this case, use `tz = "America/Toronto"`, or which ever time
+zone was used. Note that timezones must be one of `OlsonNames()`.
+
+In our example, let's assume that the ARUs were set up in each location they 
+were deployed. So we'll use `tz = "local"`, the default setting.
+```{r}
+m <- calc_sun(m)
+m
+```
+
