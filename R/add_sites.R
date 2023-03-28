@@ -1,6 +1,6 @@
 add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
                       by = c("site_id", "aru_id"),
-                      dt_type = "date", digits = 3) {
+                      dt_type = "date_time", digits = 3) {
 
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
@@ -112,10 +112,10 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
     if(length(by_date) == 1)  msg <- c(msg, fix_buffers)
 
     rlang::inform(msg)
-    meta_sites <- dplyr::select(meta_sites, -"...n")
   }
 
-  dplyr::arrange(meta_sites, dplyr::across(dplyr::any_of(c(by, by_date, "path"))))
+  dplyr::select(meta_sites, -"...n") |>
+    dplyr::arrange(dplyr::across(dplyr::any_of(c(by, by_date, "path"))))
 }
 
 calc_buffers <- function(df, buffer_before, buffer_after, by_date) {
