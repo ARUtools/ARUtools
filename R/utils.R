@@ -33,7 +33,7 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
   # Nested filters
   match <- y |>
     dplyr::ungroup() |>
-    tidyr::nest(add = -c(int)) |>
+    tidyr::nest(add = -dplyr::all_of(int)) |>
     dplyr::mutate(data = purrr::map2(
       .data[[int]], .data$add,
       ~dplyr::filter(x, lubridate::`%within%`(.data[[col]], ..1)) |>
