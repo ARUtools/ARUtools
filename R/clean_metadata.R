@@ -6,16 +6,7 @@
 #' See `vignette("customizing", package = "ARUtools")` for details on customizing
 #' `clean_metadata()` for your project.
 #'
-#' @param project_dir Character. Directory where project files are stored. File
-#'   paths will be used to extract metadata. Must have one of `project_dir` or
-#'   `project_files`.
-#' @param project_files Character. Vector of file paths to extract metadata
-#'   from. Must have one of `project_dir` or `project_files`.
 #' @param file_type Character. Type of file (extension) to summarize. Default wav.
-#' @param subset Character. Text pattern to mark a subset of files to either
-#'   `keep` or `omit` (see `subset_type`)
-#' @param subset_type Character. Either `keep` (default) or `omit` files which
-#'   match the pattern in `subset`.
 #' @param pattern_site_id Character. Regular expression to extract site ids. See
 #'   `create_pattern_site_id()`.
 #' @param pattern_aru_id Character. Regular expression to extract ARU ids. See
@@ -29,6 +20,8 @@
 #' @param order_date Character. Order that the date appears in. One of "ymd"
 #'   (default), "mdy", "dmy".
 #' @param quiet Logical. Whether to suppress progress messages.
+#'
+#' @inheritParams common_docs
 #'
 #' @return Data frame with extracted metadata
 #'
@@ -176,7 +169,7 @@ clean_metadata <- function(
       dplyr::filter(is.na(.data$date)) |>
       dplyr::mutate(
         # Try file name
-        date_chr = stringr::str_extract(file_name, .env$pattern_date),
+        date_chr = stringr::str_extract(.data$file_name, .env$pattern_date),
         # Try dir name
         date_chr = dplyr::if_else(
           is.na(.data$date_chr),
@@ -205,7 +198,7 @@ clean_metadata <- function(
   }
 
   # Flag problems
-  f <- dplyr::filter(meta, type == "wav")
+  f <- dplyr::filter(meta, .data$type == "wav")
   n <- nrow(f)
   f_dt <- sum(is.na(f$date_time))
   f_type <- sum(is.na(f$aru_type))

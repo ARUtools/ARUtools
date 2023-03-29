@@ -10,9 +10,9 @@
 #' @export
 #'
 #' @examples
-#' gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
-#'               parms = ARUtools::default_selection_parameters,
-#'              selection_variable = psel_normalized , return_dat=F)
+#' # gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
+#' #               parms = ARUtools::default_selection_parameters,
+#' #             selection_variable = psel_normalized , return_dat=F)
 gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameters,
                                      selection_variable=psel_normalized,
                                      return_dat =F , ...) {
@@ -68,7 +68,7 @@ gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameter
             and should include values for  log_, fun , & off",
              "i" = "Suggest to use`parms` parameter to set values for simulation")
     if(!exists('min'))  abort(a_1)
-    if(exists('min')) if(class(min)!="function") abort(a_1)
+    if(exists('min')) if(!inherits(min, "function")) abort(a_1)
       }
 
 

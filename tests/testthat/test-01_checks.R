@@ -40,7 +40,7 @@ test_that("check_cols()", {
 })
 
 test_that("check_dates()", {
-  s <- dplyr::mutate(site_meta, date = lubridate::ymd(Date_set_out),
+  s <- dplyr::mutate(example_sites, date = lubridate::ymd(Date_set_out),
                      date_time = as.POSIXct(date))
 
   expect_silent(check_dates(s, "date"))

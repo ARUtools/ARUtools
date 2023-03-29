@@ -39,7 +39,7 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
       ~dplyr::filter(x, lubridate::`%within%`(.data[[col]], ..1)) |>
         dplyr::inner_join(..2, by = .env$by))) |>
     dplyr::select(-dplyr::any_of(int), -"add") |>
-    tidyr::unnest(data)
+    tidyr::unnest(.data$data)
 
   no_match <- dplyr::anti_join(x, match, by = id)
 

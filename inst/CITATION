@@ -1,11 +1,12 @@
 citHeader("To cite ARUtools in publications use:")
 
 citEntry(
-  entry    = "ARUtools",
+  entry    = "Manual",
   title    = "ARUtools: a package for ARU data",
   author   = "David Hope",
+  year     = 2023,
   url      = "www.github.com/dhope/ARUtools",
   textVersion = paste(
-  Hope, David. ARUtools: a package for ARU data. www.github.com/dhope/ARUtools
+  "Hope, David. ARUtools: a package for ARU data. www.github.com/dhope/ARUtools"
   )
 )

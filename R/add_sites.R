@@ -25,6 +25,8 @@
 #'   coordinates recorded by ARUs at the same site. To omit this simplification
 #'   use a high number of digits. Default 3.
 #'
+#' @inheritParams common_docs
+#'
 #' @return A data frame of metadata with site-level data joined in.
 #' @export
 #'
@@ -50,7 +52,7 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
 
   by_date <- check_date_joins(sites, dt_type)
 
-  meta <- dplyr::filter(meta, type != "gps")
+  meta <- dplyr::filter(meta, .data$type != "gps")
 
   if(dt_type == "date") {
     dt_fun <- lubridate::as_date

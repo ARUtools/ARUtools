@@ -4,9 +4,22 @@
 \alias{common_docs}
 \title{Common arguments and documentation for various functions}
 \arguments{
+\item{project_dir}{Character. Directory where project files are stored. File
+paths will be used to extract information Must have one of `project_dir` or
+`project_files`.}
+
+\item{project_files}{Character. Vector of project file paths. Must have one
+of `project_dir` or `project_files`.}
+
+\item{subset}{Character. Text pattern to mark a subset of files/directories
+to either `keep` or `omit` (see `subset_type`)}
+
+\item{subset_type}{Character. Either `keep` (default) or `omit`
+files/directories which match the pattern in `subset`.}
+
 \item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
 
-\item{meta_gps}{Data frame. Recording metadata with added coordinates.
+\item{meta_sites}{Data frame. Recording metadata with added coordinates.
 Output of `clean_metadata()` and then `add_sites()`.}
 }
 \description{

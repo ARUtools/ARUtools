@@ -21,19 +21,19 @@ clean_metadata(
 }
 \arguments{
 \item{project_dir}{Character. Directory where project files are stored. File
-paths will be used to extract metadata. Must have one of `project_dir` or
+paths will be used to extract information Must have one of `project_dir` or
 `project_files`.}
 
-\item{project_files}{Character. Vector of file paths to extract metadata
-from. Must have one of `project_dir` or `project_files`.}
+\item{project_files}{Character. Vector of project file paths. Must have one
+of `project_dir` or `project_files`.}
 
 \item{file_type}{Character. Type of file (extension) to summarize. Default wav.}
 
-\item{subset}{Character. Text pattern to mark a subset of files to either
-`keep` or `omit` (see `subset_type`)}
+\item{subset}{Character. Text pattern to mark a subset of files/directories
+to either `keep` or `omit` (see `subset_type`)}
 
-\item{subset_type}{Character. Either `keep` (default) or `omit` files which
-match the pattern in `subset`.}
+\item{subset_type}{Character. Either `keep` (default) or `omit`
+files/directories which match the pattern in `subset`.}
 
 \item{pattern_site_id}{Character. Regular expression to extract site ids. See
 `create_pattern_site_id()`.}

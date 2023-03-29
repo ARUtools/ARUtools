@@ -104,8 +104,8 @@ clean_site_index <- function(site_index,
   cols <- c(
     "site_id" = col_site_id,
     "aru_id" = col_aru_id,
-    setNames(col_date_time, dt),
-    if(!is.null(col_coords)) setNames(col_coords, c("longitude", "latitude")),
+    stats::setNames(col_date_time, dt),
+    if(!is.null(col_coords)) stats::setNames(col_coords, c("longitude", "latitude")),
     col_extra) |>
     tolower()
 
@@ -163,11 +163,14 @@ clean_site_index <- function(site_index,
 #'   site. Default is 100m but can be set to `Inf` to skip.
 #' @param dist_crs Numeric. Coordinate Reference System to use when calculating
 #'   distance (should be one with m).
-#' @param verbose Logical.
+#' @param dist_by Character. Column which identifies sites within which to
+#'   compare distance among gps points. Only valid if `dist_cutoff` is not
+#'   `Inf`.
+#' @param skip_bad Logical. Skip GPS files which create errors.
+#' @param verbose Logical. Show extra loading information. Default `FALSE`.
 #'
 #' @return Data frame of site-level metadata.
 #' @export
-
 
 clean_gps <- function(meta = NULL,
                       dist_cutoff = 100, dist_crs = 3161,
@@ -238,7 +241,7 @@ clean_gps_files <- function(meta, skip_bad, verbose) {
 
       # Read files
       gps_data = purrr::map2(
-        path, skip,
+        .data$path, .data$skip,
         ~readr::read_csv(.x, skip = .y - 1, show_col_types = verbose,
                          name_repair = "unique_quiet",
                          progress = FALSE)),
@@ -253,7 +256,7 @@ clean_gps_files <- function(meta, skip_bad, verbose) {
 
 check_gps_files <- function(gps_files, skip_bad) {
 
-  lines <- setNames(nm = gps_files$path) |>
+  lines <- stats::setNames(nm = gps_files$path) |>
     purrr::imap(~readr::read_lines(.x, n_max = 5))
 
   # Set patterns
@@ -319,7 +322,7 @@ fmt_gps <- function(df) {
       date_time_chr = paste(.data$date, .data$time),
       date_time = lubridate::parse_date_time(
         .data$date_time_chr, orders = c("Ymd HMS", "dmY HMS")),
-      date = lubridate::as_date(date_time),
+      date = lubridate::as_date(.data$date_time),
       )
 
   # Fix coords - Check and apply -/+ if N/S/E/W columns present
@@ -383,8 +386,9 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
         sf::st_as_sf(coords= c("longitude", "latitude"), crs = 4326) |>
         sf::st_transform(crs) |>
         dplyr::group_by(.data[[dist_by]]) |>
-        dplyr::summarize(max_dist = max(sf::st_distance(geometry, geometry)),
-                         .groups = 'drop') |>
+        dplyr::summarize(
+          max_dist = max(sf::st_distance(.data$geometry, .data$geometry)),
+          .groups = 'drop') |>
         sf::st_drop_geometry()
 
       if(any(max_dist$max_dist > units::set_units(dist_cutoff, "m"))) {

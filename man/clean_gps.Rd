@@ -22,7 +22,13 @@ site. Default is 100m but can be set to `Inf` to skip.}
 \item{dist_crs}{Numeric. Coordinate Reference System to use when calculating
 distance (should be one with m).}
 
-\item{verbose}{Logical.}
+\item{dist_by}{Character. Column which identifies sites within which to
+compare distance among gps points. Only valid if `dist_cutoff` is not
+`Inf`.}
+
+\item{skip_bad}{Logical. Skip GPS files which create errors.}
+
+\item{verbose}{Logical. Show extra loading information. Default `FALSE`.}
 }
 \value{
 Data frame of site-level metadata.

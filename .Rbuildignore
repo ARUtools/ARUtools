@@ -6,4 +6,6 @@
 ^README\.Rmd$
 inst\Gen_gex.R
 ^data-raw$
-^tests/testing_parse_barlt_log_file\.R$
+^\.github$
+^CODE_DESIGN.md$
+^misc$

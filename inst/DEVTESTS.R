@@ -130,5 +130,6 @@ filter(f, is.na(site_id)) |>
 s <- calc_sun(f, aru_tz = "America/Toronto")
 
 
+filter(s, !is.na(longitude))
 
 

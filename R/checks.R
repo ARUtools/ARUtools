@@ -119,7 +119,7 @@ check_df_file <- function(input) {
   if(!is.data.frame(input)) {
     if(!is.character(input)) {
       rlang::abort(paste0(
-        "`", deparse(substitude(input)), "` must be either ",
+        "`", deparse(substitute(input)), "` must be either ",
         "a data frame or the location of a CSV or Excel file to open"))
     }
   }

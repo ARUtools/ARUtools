@@ -15,6 +15,8 @@ add_sites(
 )
 }
 \arguments{
+\item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
+
 \item{sites}{Data frame. Site-level data from `clean_site_index()`.}
 
 \item{buffer_before}{Numeric. Number of hours before a deployment in which to
