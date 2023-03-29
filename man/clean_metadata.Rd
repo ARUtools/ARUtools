@@ -10,7 +10,7 @@ clean_metadata(
   file_type = "wav",
   subset = NULL,
   subset_type = "keep",
-  pattern_site = "[P|Q]\\\\d+(_|-)\\\\d",
+  pattern_site_id = create_pattern_site_id(),
   pattern_aru_id = create_pattern_aru_id(),
   pattern_date = create_pattern_date(),
   pattern_time = create_pattern_time(),
