@@ -31,7 +31,7 @@ clean_metadata <- function(
     file_type = "wav",
     subset = NULL,
     subset_type = "keep",
-    pattern_site = "[P|Q]\\d+(_|-)\\d",
+    pattern_site_id = create_pattern_site_id(),
     pattern_aru_id = create_pattern_aru_id(),
     pattern_date = create_pattern_date(),
     pattern_time = create_pattern_time(),
@@ -45,7 +45,7 @@ clean_metadata <- function(
   check_text(file_type)
   check_text(subset, not_null = FALSE)
   check_text(subset_type)
-  check_text(pattern_site)
+  check_text(pattern_site_id)
   check_text(pattern_aru_id)
   check_text(pattern_date)
   check_text(pattern_dt_sep)
@@ -56,7 +56,7 @@ clean_metadata <- function(
   # TODO: more checks
 
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
-  file_type <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
+  file_type_pattern <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
 
   if(!is.null(project_dir)) {
     if(!quiet) rlang::inform("Fetching file list...")
@@ -84,18 +84,18 @@ clean_metadata <- function(
   }
 
   # Check for file types
-  n_ext <- sum(stringr::str_detect(project_files, file_type))
-  if(length(n_ext) == 0){
+  n_ext <- sum(stringr::str_detect(project_files, file_type_pattern))
+  if(n_ext == 0){
     rlang::abort(c(glue::glue("Did not find any '{file_type}' files."),
                    "i" = "Use `file_type` to change file extension for sound files",
-                   "i" = "Check `project_dir` is correct"))
+                   "i" = "Check `project_dir`/`project_files` are correct"))
   }
 
 
   # Collect non-file-type files
-  extra <- stringr::str_subset(project_files, file_type, negate = TRUE)
+  extra <- stringr::str_subset(project_files, file_type_pattern, negate = TRUE)
   gps <- stringr::str_subset(extra, stringr::regex("gps|summary", ignore_case = TRUE))
-  focal <- stringr::str_subset(project_files, file_type)
+  focal <- stringr::str_subset(project_files, file_type_pattern)
 
   # Set up file path metadata
   meta <- dplyr::tibble(
@@ -110,10 +110,10 @@ clean_metadata <- function(
                      type = "gps")
   }
 
-  pattern_aru <- c("barlt" = "BarLT",
-                   "SMM" = "SongMeter",
-                   "SM\\d" = "SongMeter",
-                   "S\\dA" = "SongMeter")
+  pattern_aru_type <- c("barlt" = "BarLT",
+                        "SMM" = "SongMeter",
+                        "SM\\d" = "SongMeter",
+                        "S\\dA" = "SongMeter")
 
   if(!quiet) rlang::inform("Extracting ARU info...")
 
@@ -121,20 +121,20 @@ clean_metadata <- function(
   meta <- meta |>
     dplyr::mutate(
       path = file.path(.data$dir, .data$file_name),
-      aru_type = extract_replace(.data$file_name, pattern_aru),
+      aru_type = extract_replace(.data$file_name, pattern_aru_type),
       aru_type = dplyr::if_else(is.na(.data$aru_type),
-                                extract_replace(.data$dir, pattern_aru),
+                                extract_replace(.data$dir, pattern_aru_type),
                                 .data$aru_type),
       aru_id = stringr::str_extract(.data$file_name, pattern_aru_id),
       aru_id = dplyr::if_else(is.na(.data$aru_id),
                               stringr::str_extract(.data$dir, pattern_aru_id),
                               .data$aru_id))
 
-  meta <- dplyr::mutate(meta, site_id = stringr::str_extract(.data$dir, .env$pattern_site))
+  meta <- dplyr::mutate(meta, site_id = stringr::str_extract(.data$dir, .env$pattern_site_id))
 
-  pattern_non_date <- paste0("(", pattern_site, ")|(",
+  pattern_non_date <- paste0("(", pattern_site_id, ")|(",
                              pattern_aru_id, ")|(",
-                             paste0("(", pattern_aru, ")", collapse = "|"),
+                             paste0("(", pattern_aru_type, ")", collapse = "|"),
                              ")")
 
 
@@ -185,7 +185,7 @@ clean_metadata <- function(
   if(length(extra) > 1) {
     rlang::inform(
       c("!" = paste0("Omitted ", length(extra), " extra, non-",
-                     meta$type[1], "/GPS files")))
+                     file_type, "/GPS files")))
   }
 
   if(length(gps) > 1) {
