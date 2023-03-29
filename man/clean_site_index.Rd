@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean_sites.R
 \name{clean_site_index}
 \alias{clean_site_index}
-\title{Title}
+\title{Prepare and clean site index file}
 \usage{
 clean_site_index(
   site_index,
@@ -15,8 +15,53 @@ clean_site_index(
 )
 }
 \arguments{
-\item{col_coords}{}
+\item{site_index}{Data frame or file path. Site index data to clean. If file
+path, must be to a local csv or xlsx file.}
+
+\item{col_aru_id}{Character. Column name that contains ARU ids. Default `aru_id`.}
+
+\item{col_site_id}{Character. Column name that contains site ids.}
+
+\item{col_date_time}{Character. Column name that contains dates or
+date/times. Can be vector of two names if there are both 'start' and 'end'
+columns.}
+
+\item{col_coords}{Character. Column names that contain longitude and
+latitude (in that order).}
+
+\item{col_extra}{Character. Column names for extra data to include. If a named
+vector, will rename the columns (see examples).}
+
+\item{resolve_overlaps}{Logical. Whether or not to resolve date overlaps by
+shifting the start/end dates to noon (default `TRUE`). This assumes that
+ARUs are generally *not* deployed/removed at midnight (the official
+start/end of a day) and so noon is used as an approximation for when an ARU
+was deployed or removed. If possible, use specific deployment times to
+avoid this issue.}
+}
+\value{
+Standardized site index data frame
 }
 \description{
-Title
+A site index file contains information on when specific ARUs were deployed
+where. This function cleans a file (csv, xlsx) or data frame in preparation
+for adding these details to the output of `clean_metadata()`. It can be used
+to specify missing information according to date, such as GPS lat/lons and
+site ids.
+}
+\examples{
+
+s <- clean_site_index(example_sites,
+                      col_aru_id = "ARU",
+                      col_site_id = "Sites",
+                      col_date_time = c("Date_set_out", "Date_removed"),
+                      col_coords = c("lon", "lat"))
+
+s <- clean_site_index(example_sites,
+                      col_aru_id = "ARU",
+                      col_site_id = "Sites",
+                      col_date_time = c("Date_set_out", "Date_removed"),
+                      col_coords = c("lon", "lat"),
+                      col_extra = c("plot" = "Plots"))
+
 }

@@ -1,15 +1,47 @@
-#' Title
+#' Prepare and clean site index file
 #'
-#' @param site_index
-#' @param col_aru_id
-#' @param col_site_id
-#' @param col_date_time
-#' @param col_coords
+#' A site index file contains information on when specific ARUs were deployed
+#' where. This function cleans a file (csv, xlsx) or data frame in preparation
+#' for adding these details to the output of `clean_metadata()`. It can be used
+#' to specify missing information according to date, such as GPS lat/lons and
+#' site ids.
 #'
-#' @return
+#' @param site_index Data frame or file path. Site index data to clean. If file
+#'   path, must be to a local csv or xlsx file.
+#' @param col_aru_id Character. Column name that contains ARU ids. Default `aru_id`.
+#' @param col_site_id Character. Column name that contains site ids.
+#' @param col_date_time Character. Column name that contains dates or
+#'   date/times. Can be vector of two names if there are both 'start' and 'end'
+#'   columns.
+#' @param col_coords Character. Column names that contain longitude and
+#'   latitude (in that order).
+#' @param col_extra Character. Column names for extra data to include. If a named
+#'  vector, will rename the columns (see examples).
+#' @param resolve_overlaps Logical. Whether or not to resolve date overlaps by
+#'   shifting the start/end dates to noon (default `TRUE`). This assumes that
+#'   ARUs are generally *not* deployed/removed at midnight (the official
+#'   start/end of a day) and so noon is used as an approximation for when an ARU
+#'   was deployed or removed. If possible, use specific deployment times to
+#'   avoid this issue.
+#'
+#' @return Standardized site index data frame
 #' @export
 #'
 #' @examples
+#'
+#' s <- clean_site_index(example_sites,
+#'                       col_aru_id = "ARU",
+#'                       col_site_id = "Sites",
+#'                       col_date_time = c("Date_set_out", "Date_removed"),
+#'                       col_coords = c("lon", "lat"))
+#'
+#' s <- clean_site_index(example_sites,
+#'                       col_aru_id = "ARU",
+#'                       col_site_id = "Sites",
+#'                       col_date_time = c("Date_set_out", "Date_removed"),
+#'                       col_coords = c("lon", "lat"),
+#'                       col_extra = c("plot" = "Plots"))
+#'
 clean_site_index <- function(site_index,
                              col_aru_id = "aru_id",
                              col_site_id = "site_id",
@@ -133,10 +165,9 @@ clean_site_index <- function(site_index,
 #'   distance (should be one with m).
 #' @param verbose Logical.
 #'
-#' @return
+#' @return Data frame of site-level metadata.
 #' @export
-#'
-#' @examples
+
 
 clean_gps <- function(meta = NULL,
                       dist_cutoff = 100, dist_crs = 3161,
@@ -158,7 +189,7 @@ clean_gps <- function(meta = NULL,
   gps <- check_gps_dist(gps, crs = dist_crs, dist_cutoff = dist_cutoff,
                         dist_by = dist_by)
 
-  # Flag problems -----------------------------
+  # Flag problems
   n <- nrow(gps)
   f_dt <- sum(is.na(gps$date_time))
   f_coord <- sum(is.na(gps$longitude) | is.na(gps$latitude))

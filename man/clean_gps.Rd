@@ -24,6 +24,9 @@ distance (should be one with m).}
 
 \item{verbose}{Logical.}
 }
+\value{
+Data frame of site-level metadata.
+}
 \description{
 Check and clean GPS data from ARU logs. GPS points are checked for obvious
 problems (expected range, distance cutoffs and timing) then attached to the

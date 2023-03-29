@@ -4,11 +4,15 @@
 \alias{calc_sun}
 \title{Calculate and add time to sunrise/sunset}
 \usage{
-calc_sun(meta, aru_tz = "local")
+calc_sun(meta_sites, aru_tz = "local")
 }
 \arguments{
 \item{aru_tz}{Character. Must be either "local" or a timezone listed in
 `OlsonNames()`. See Details.}
+}
+\value{
+Data frame with metadata and added timezone of recording time (`tz`),
+ and time to sunrise/sunset (`t2sr`, `t2ss`).
 }
 \description{
 Calculate the sunrise/sunset of each sound file for the day of, the day before
@@ -23,4 +27,12 @@ Timezones. To ensure that the sunrise/sunset times are calculated
   ARU was calibrated to whichever timezone was local when it was deployed use
   `aru_tz = "local"`. The specific timezone will be calculated individually
   based on the latitude and longitude of each recording.
+}
+\examples{
+m <- clean_metadata(project_files = example_files)
+s <- clean_site_index(example_sites_clean,
+                      col_date = c("date_time_start", "date_time_end"))
+m <- add_sites(m, s)
+m <- calc_sun(m)
+
 }

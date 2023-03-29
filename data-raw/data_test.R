@@ -19,7 +19,7 @@ usethis::use_data(example_sites, overwrite = TRUE)
 # Example file list
 random <- letters[c(1,10,15)]
 
-dates <- site_meta |>
+dates <- example_sites |>
   select(Sites, ARU, Date_set_out, Date_removed) |>
   group_by(Sites, ARU) |>
   reframe(date = seq(lubridate::as_date(Date_set_out) + lubridate::days(1),
@@ -29,8 +29,8 @@ dates <- site_meta |>
          date_time = format(date_time, "%Y%m%dT%H%M%S"))
 
 
-example_files <- tidyr::expand_grid(random, select(site_meta, Sites, ARU)) |>
-  dplyr::left_join(dates, by = c("Sites", "ARU"), multiple = "all") |>
+example_files <- tidyr::expand_grid(random, select(example_sites, Sites, ARU)) |>
+  dplyr::left_join(dates, by = c("Sites", "ARU"), relationship = "many-to-many") |>
   dplyr::rowwise() |>
   dplyr::mutate(f = paste0(random, "_", ARU, "_", Sites, "/", Sites, "_", date_time, "_ARU.wav")) %>%
   dplyr::pull(f)
@@ -39,9 +39,15 @@ usethis::use_data(example_files, overwrite = TRUE)
 
 
 # Example meta data for sun
+example_sites_clean <- clean_site_index(
+  example_sites, col_site_id = "Sites",
+  col_aru_id = "ARU",
+  col_date_time = c("Date_set_out", "Date_removed"),
+  col_coords = c("lon", "lat"))
+
+usethis::use_data(example_sites_clean, overwrite = TRUE)
+
 example_clean <- clean_metadata(project_files = example_files) |>
-  add_sites(clean_site_index(site_meta, col_site_id = "Sites",
-                             col_aru_id = "ARU",
-                             col_date_time = c("Date_set_out", "Date_removed"),
-                             col_coords = c("lon", "lat")))
+  add_sites(example_clean_sites)
+
 usethis::use_data(example_clean, overwrite = TRUE)

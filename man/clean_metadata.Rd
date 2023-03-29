@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean_metadata.R
 \name{clean_metadata}
 \alias{clean_metadata}
-\title{Clean aru metadata}
+\title{Extract and clean ARU metadata from file names}
 \usage{
 clean_metadata(
   project_dir = NULL,
@@ -20,35 +20,54 @@ clean_metadata(
 )
 }
 \arguments{
-\item{type}{BarLT or SM4}
+\item{project_dir}{Character. Directory where project files are stored. File
+paths will be used to extract metadata. Must have one of `project_dir` or
+`project_files`.}
 
-\item{folder_base}{Folder base directory}
+\item{project_files}{Character. Vector of file paths to extract metadata
+from. Must have one of `project_dir` or `project_files`.}
 
-\item{included_subfolders}{Defaults to 'all', which means all subfolders included.
-To include only some folders (at first level only),
-provide a vector with folder names to include.}
+\item{file_type}{Character. Type of file (extension) to summarize. Default wav.}
 
-\item{gps_locations}{GPS locations in lat/lon format with SiteID
-Must also include timezone (tz) and deploy date.}
+\item{subset}{Character. Text pattern to mark a subset of files to either
+`keep` or `omit` (see `subset_type`)}
 
-\item{file_split_pattern}{Regular expression to split sound file name into pieces.
-May need to adjust if non-standard naming convention is used.}
+\item{subset_type}{Character. Either `keep` (default) or `omit` files which
+match the pattern in `subset`.}
 
-\item{site_pattern}{Regular expression to extract site name from folder path.}
+\item{pattern_site_id}{Character. Regular expression to extract site ids. See
+`create_pattern_site_id()`.}
 
-\item{...}{Extra parameters for devleopment. Currently works with:
-- file_ext: default is '.wav'
-- site_in_filename: Logical: default is FALSE
-- deploy_start_date:  default is 2 days before first recording (dmy format)
-- check_dists: Logical to check distances from GPS within site. Default is TRUE
-- dist_cutoff: Cutoff to raise error in distance check. Default is 100 (in meters).}
+\item{pattern_aru_id}{Character. Regular expression to extract ARU ids. See
+`create_pattern_aru_id()`.}
+
+\item{pattern_date}{Character. Regular expression to extract dates. See
+`create_pattern_date()`.}
+
+\item{pattern_time}{Character. Regular expression to extract times. See
+`create_pattern_time()`.}
+
+\item{pattern_dt_sep}{Character. Regular expression to mark separators betwen
+dates and times. See `create_pattern_dt_sep()`.}
+
+\item{order_date}{Character. Order that the date appears in. One of "ymd"
+(default), "mdy", "dmy".}
+
+\item{quiet}{Logical. Whether to suppress progress messages.}
+}
+\value{
+Data frame with extracted metadata
 }
 \description{
-Clean aru metadata
+Using regular expressions, metadata is extracted from file names and
+directory structure, checked and cleaned.
+}
+\details{
+See `vignette("customizing", package = "ARUtools")` for details on customizing
+`clean_metadata()` for your project.
 }
 \examples{
-
-clean_metadata(subset = "P71")
-clean_metadata()
+clean_metadata(project_files = example_files)
+clean_metadata(project_files = example_files, subset = "P02")
 
 }

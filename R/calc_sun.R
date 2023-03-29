@@ -3,10 +3,8 @@
 #' Calculate the sunrise/sunset of each sound file for the day of, the day before
 #' and the day after to get the nearest sunrise to the recording.
 #'
-#' @param meta
 #' @param aru_tz Character. Must be either "local" or a timezone listed in
 #'   `OlsonNames()`. See Details.
-#'
 #'
 #' @details Timezones. To ensure that the sunrise/sunset times are calculated
 #'   correctly relative to the time of the recording, we need to know the
@@ -17,19 +15,28 @@
 #'   `aru_tz = "local"`. The specific timezone will be calculated individually
 #'   based on the latitude and longitude of each recording.
 #'
-#' @return
+#' @inheritParams common_docs
+#'
+#' @return Data frame with metadata and added timezone of recording time (`tz`),
+#'  and time to sunrise/sunset (`t2sr`, `t2ss`).
 #' @export
 #'
 #' @examples
-calc_sun <- function(meta, aru_tz = "local") {
+#' m <- clean_metadata(project_files = example_files)
+#' s <- clean_site_index(example_sites_clean,
+#'                       col_date = c("date_time_start", "date_time_end"))
+#' m <- add_sites(m, s)
+#' m <- calc_sun(m)
+#'
+calc_sun <- function(meta_sites, aru_tz = "local") {
 
   # Checks
-  check_data(meta, type = "meta_sites", ref = "add_sites()")
+  check_data(meta_sites, type = "meta_sites", ref = "add_sites()")
   check_tz(aru_tz)
 
   if(aru_tz == "local") {
     # Get timezones from location if not set globally
-    tz <- dplyr::select(meta, "longitude", "latitude") |>
+    tz <- dplyr::select(meta_sites, "longitude", "latitude") |>
       dplyr::distinct() |>
       tidyr::drop_na() |>
       dplyr::mutate(
@@ -38,9 +45,9 @@ calc_sun <- function(meta, aru_tz = "local") {
           lon = .data$longitude,
           method = 'accurate'))
 
-    m <- dplyr::left_join(meta, tz, by = c("longitude", "latitude"))
+    m <- dplyr::left_join(meta_sites, tz, by = c("longitude", "latitude"))
   } else {
-    m <- dplyr::mutate(meta, tz = .env$aru_tz)
+    m <- dplyr::mutate(meta_sites, tz = .env$aru_tz)
   }
 
   ss <- dplyr::select(m, "date", "tz", "longitude", "latitude") |>
@@ -56,7 +63,7 @@ calc_sun <- function(meta, aru_tz = "local") {
 
   m |>
     calc_ss_diff() |>
-    dplyr::select(dplyr::all_of(names(meta)), "tz", "t2sr", "t2ss", "t2event")
+    dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss", "t2event")
 }
 
 #' Calculate sunrise and sunset times for range of dates

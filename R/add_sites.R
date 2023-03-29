@@ -1,3 +1,40 @@
+#' Add site-level data to the metadata
+#'
+#' Uses dates to join site-level data to the meta data. If the sites data has
+#' only single dates, then a buffer before and after is used to determine which
+#' recordings belong to that site obseration.
+#'
+#' @param sites Data frame. Site-level data from `clean_site_index()`.
+#' @param buffer_before Numeric. Number of hours before a deployment in which to
+#'   include recordings. `NULL` means include the time up to the last
+#'   deployment. Coupled with `buffer_after`, this creates a window around a
+#'   date/time in which to join recordings to the site-level data. Ignored if
+#'   `sites` has both a start and end column for date/times. Default 0.
+#' @param buffer_after Numeric. Number of hours after the deployment in which to
+#'   include recordings. `NULL` means include the time up to the next
+#'   deployment. Coupled with `buffer_before`, creates a window around a
+#'   date/time in which to join recordings to the site-level data. Ignored if
+#'   `sites` has both a start and end column for date/times. Default `NULL`.
+#' @param by Character. Columns which identify a deployment in `sites` as well
+#'   as `meta`, besides date/time, which are used to join the data. Default is
+#'   `site_id` and `aru_id`.
+#' @param dt_type Character. Date/time type to join data by. `date` is faster
+#'   but `date_time` is more precise. Default `date_time`.
+#' @param digits Numeric. Number of digits to keep in coordinates. Coordinates
+#'   are rounded down to this number of digits to reduce minor variations in
+#'   coordinates recorded by ARUs at the same site. To omit this simplification
+#'   use a high number of digits. Default 3.
+#'
+#' @return A data frame of metadata with site-level data joined in.
+#' @export
+#'
+#' @examples
+#' m <- clean_metadata(project_files = example_files)
+#' s <- clean_site_index(example_sites_clean,
+#'                       col_date = c("date_time_start", "date_time_end"))
+#' m <- add_sites(m, s)
+#'
+#'
 add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
                       by = c("site_id", "aru_id"),
                       dt_type = "date_time", digits = 3) {

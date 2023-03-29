@@ -123,7 +123,6 @@ create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM",
 #' @param suffix Character. Suffixes (can be more than one) for site ids.
 #' @param s_digits Numeric. Number of digits following the `suffix`.
 #'
-#' @return
 #' @export
 #'
 #' @examples
