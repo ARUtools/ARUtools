@@ -27,7 +27,8 @@ paths will be used to extract information Must have one of `project_dir` or
 \item{project_files}{Character. Vector of project file paths. Must have one
 of `project_dir` or `project_files`.}
 
-\item{file_type}{Character. Type of file (extension) to summarize. Default wav.}
+\item{file_type}{Character. Type of file (extension) to summarize. Default
+wav.}
 
 \item{subset}{Character. Text pattern to mark a subset of files/directories
 to either `keep` or `omit` (see `subset_type`)}
@@ -47,8 +48,8 @@ files/directories which match the pattern in `subset`.}
 \item{pattern_time}{Character. Regular expression to extract times. See
 `create_pattern_time()`.}
 
-\item{pattern_dt_sep}{Character. Regular expression to mark separators betwen
-dates and times. See `create_pattern_dt_sep()`.}
+\item{pattern_dt_sep}{Character. Regular expression to mark separators
+between dates and times. See `create_pattern_dt_sep()`.}
 
 \item{order_date}{Character. Order that the date appears in. One of "ymd"
 (default), "mdy", "dmy".}
@@ -63,8 +64,14 @@ Using regular expressions, metadata is extracted from file names and
 directory structure, checked and cleaned.
 }
 \details{
-See `vignette("customizing", package = "ARUtools")` for details on customizing
-`clean_metadata()` for your project.
+Note that times are extracted by first combining the date, date/time
+separator and the time patterns. This means that if there is a problem with
+this combination, dates might be extracted but date/times will not. This
+mismatch can be used to determine which part of a pattern needs to be
+tweaked.
+
+See `vignette("customizing", package = "ARUtools")` for details on
+customizing `clean_metadata()` for your project.
 }
 \examples{
 clean_metadata(project_files = example_files)

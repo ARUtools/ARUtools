@@ -3,10 +3,17 @@
 #' Using regular expressions, metadata is extracted from file names and
 #' directory structure, checked and cleaned.
 #'
-#' See `vignette("customizing", package = "ARUtools")` for details on customizing
-#' `clean_metadata()` for your project.
+#' Note that times are extracted by first combining the date, date/time
+#' separator and the time patterns. This means that if there is a problem with
+#' this combination, dates might be extracted but date/times will not. This
+#' mismatch can be used to determine which part of a pattern needs to be
+#' tweaked.
 #'
-#' @param file_type Character. Type of file (extension) to summarize. Default wav.
+#' See `vignette("customizing", package = "ARUtools")` for details on
+#' customizing `clean_metadata()` for your project.
+#'
+#' @param file_type Character. Type of file (extension) to summarize. Default
+#'   wav.
 #' @param pattern_site_id Character. Regular expression to extract site ids. See
 #'   `create_pattern_site_id()`.
 #' @param pattern_aru_id Character. Regular expression to extract ARU ids. See
@@ -15,8 +22,8 @@
 #'   `create_pattern_date()`.
 #' @param pattern_time Character. Regular expression to extract times. See
 #'   `create_pattern_time()`.
-#' @param pattern_dt_sep Character. Regular expression to mark separators betwen
-#'   dates and times. See `create_pattern_dt_sep()`.
+#' @param pattern_dt_sep Character. Regular expression to mark separators
+#'   between dates and times. See `create_pattern_dt_sep()`.
 #' @param order_date Character. Order that the date appears in. One of "ymd"
 #'   (default), "mdy", "dmy".
 #' @param quiet Logical. Whether to suppress progress messages.
