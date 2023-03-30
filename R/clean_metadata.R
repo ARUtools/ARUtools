@@ -200,14 +200,16 @@ clean_metadata <- function(
   # Flag problems
   f <- dplyr::filter(meta, .data$type == "wav")
   n <- nrow(f)
+  f_d <- sum(is.na(f$date))
   f_dt <- sum(is.na(f$date_time))
   f_type <- sum(is.na(f$aru_type))
   f_id <- sum(is.na(f$aru_id))
   f_site <- sum(is.na(f$site_id))
 
-  if(any(c(f_dt, f_type, f_id, f_site) > 0)) {
+  if(any(c(f_d, f_dt, f_type, f_id, f_site) > 0)) {
    msg <- c("Identified possible problems with metadata extraction:")
-   msg <- c(msg, report_missing(f_dt, n, "date/times"))
+   msg <- c(msg, report_missing(f_d, n, "dates"))
+   msg <- c(msg, report_missing(f_dt, n, "times"))
    msg <- c(msg, report_missing(f_type, n, "ARU types"))
    msg <- c(msg, report_missing(f_id, n, "ARU ids"))
    msg <- c(msg, report_missing(f_site, n, "sites"))

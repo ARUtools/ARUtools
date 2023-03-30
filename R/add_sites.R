@@ -54,6 +54,16 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
 
   meta <- dplyr::filter(meta, .data$type != "gps")
 
+  # Check 'by's
+  for(i in by) {
+    if(all(is.na(meta[[i]]))) {
+      by <- by[by != i]
+      rlang::inform(c(
+        "*" = paste0("Column '", i, "' in `meta` is all NA. ",
+                     "Omitting from joins (`by`).")))
+    }
+  }
+
   if(dt_type == "date") {
     dt_fun <- lubridate::as_date
   } else dt_fun <- lubridate::as_datetime
@@ -77,14 +87,20 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   omit_cols <- omit_cols[!omit_cols %in% c(by, by_date)]
   omit_cols <- omit_cols[omit_cols %in% names(meta)]
   if(length(omit_cols) > 0) {
-
-    rlang::inform(c(
-      "Some columns in both `meta` and `sites` are not used to join (not in `by`)",
-      "*" = paste0(
-        "These columns (`", paste0(omit_cols, collapse = "`, `"), "`) ",
-        "will be overwritten in `meta`")
-    ))
     meta <- dplyr::select(meta, -dplyr::all_of(omit_cols))
+
+    # Don't report if all NA in meta
+    report <- omit_cols
+    for(i in report) if(all(is.na(meta[[i]]))) report <- report[report != i]
+
+    if(length(report) > 0) {
+      rlang::inform(c(
+        "Some columns in both `meta` and `sites` are not used to join (`by`)",
+        "*" = paste0(
+          "These columns (`", paste0(omit_cols, collapse = "`, `"), "`) ",
+          "will be overwritten in `meta`")
+      ))
+    }
   }
 
   # Check that columns to add
