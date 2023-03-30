@@ -38,17 +38,12 @@ test_that("fmt_gps()", {
   }
 })
 
-test_that("clean_gps_logs()", {
+test_that("clean_gps_files()", {
 
 
 })
 
 test_that("check_gps_dist()", {
-
-})
-
-test_that("clean_gps_df()", {
-
 
 })
 

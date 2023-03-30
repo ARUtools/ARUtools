@@ -45,9 +45,9 @@ test_that("check_dates()", {
 
   expect_silent(check_dates(s, "date"))
   expect_silent(check_dates(s, c("date", "date_time")))
-  expect_error(check_dates(s, cols = "Date_set_out"), "Problems with")
-  expect_error(check_dates(s, cols = c("date", "Date_set_out")), "Problems with")
 
+  s <- dplyr::mutate(example_sites, date = "13/05/2020")
+  expect_error(check_dates(s, cols = "date"), "Problems with")
 })
 
 test_that("check_df_file()", {

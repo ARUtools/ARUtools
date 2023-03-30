@@ -3,10 +3,12 @@
 # m <- clean_metadata()
 # s <- clean_site_index() # From user-supplied file
 # m <- add_sites(s)
+# m <- calc_sun(m)
 #
 # m <- clean_metadata()
 # g <- clean_gps(m)    # From GPS summary log files
 # m <- add_sites(s)
+# m <- calc_sun(m)
 
 
 # eg File output ----------
@@ -27,6 +29,7 @@ m <- clean_metadata(project_dir = d,
 
 check_meta(m)
 
+
 # OR
 m <- clean_metadata(project_dir = d,
                     pattern_site = "BP_ARU0(1|2)",
@@ -40,47 +43,71 @@ m <- add_sites(m, g)
 filter(m, is.na(longitude)) %>% select(-path) # Look at where no GPS match
 filter(g, site_id == "BP_ARU01") # Ah, no date overlap
 
-# eg 2 - 'Summary' GPS files -------------------------------------------
+# eg 2 - GPS files / Site Index ------------------------------------
 d <- "../ARUtools - Extra/ARUtools_file_examples/LutherMarsh_2021/"
 count_files(d)
 
 m <- clean_metadata(project_dir = d)
 
 # Hmm, check for problems
-m$path[1:15]
+check_problems(m)              # Show relevant columns
+check_problems(m, path = TRUE) # Show just paths
 check_meta(m)
 
 # Try again
 m <- clean_metadata(project_dir = d,
                     pattern_dt_sep = "_")
-m
+
+check_problems(m) # No site-related information in names
+check_meta(m)
+
+# Create site index
+sites <- readr::read_csv("../ARUtools - Extra/Scripts/LutherMarsh_2021/2022-02-23_Locations_LutherMarsh_2021.csv") |>
+  mutate(aru_id = stringr::str_remove(location, "LutherMarsh2021-"),
+         date_start = min(m$date_time, na.rm = TRUE),
+         date_end = max(m$date_time, na.rm = TRUE)) |>
+  clean_site_index(col_site_id = "location",
+                   col_date_time = c("date_start", "date_end"))
+
+# GPS from logs
 g <- clean_gps(m, dist_by = "aru_id")
 
+# Compare
+select(g, aru_id, longitude, latitude) |> distinct()
+sites
 
-# eg 3 - -------------------------
+# Join (although could easily just use a simpler left_join(), because not dependent on dates)
+m <- add_sites(m, sites)
+check_problems(m)
+
+m <- calc_sun(m, aru_tz = "America/Toronto")
+
+m
+
+# eg 3 - Big set of files -------------------------
 d <- "../ARUtools - Extra/ARUtools_file_examples/JamesBayLowlands_2021/"
 m <- clean_metadata(project_dir = d)
 
+check_problems(m)
+check_problems(m, path = TRUE) # No ARU types or IDs in file names, ignore.
 check_meta(m)
 
 g <- clean_gps(m)
 
-# Check problematic file
-m$path[183]
-check_file(m$path[183])
+# Check problematic GPS file
+m$path[183] # file path
+check_file(m$path[183]) # lines in file
 
 # Try skipping for now
 g <- clean_gps(m, skip_bad = TRUE)
 g <- clean_gps(m, skip_bad = TRUE, dist_cutoff = Inf)
 
+m <- add_sites(m, g)
 
-m_full <- add_sites(m, g)
-filter(m_full, n_matches > 1)
-filter(m_full, is.na(longitude))
+check_problems(m, check = "longitude")
+check_problems(m, check = "longitude", by_date = TRUE)
 
-# try again
-m_full <- add_sites(m, g, dt_type = "date_time")
-filter(m_full, is.na(longitude))
+filter(g, site_id == "P68_2") # No GPS log for this site
 
 # eg 4 - File lists -----------------------------
 files <- readr::read_rds("../Boreal_Shield_Lowlands_transition_Selection/Transition_all_files.rds")
@@ -97,17 +124,20 @@ m
 files <- readr::read_rds("../RiverTrips_DataPrep/all_files_vec.rds")
 i <- "../RiverTrips_DataPrep/NRT2022_SMM_Logfile_Compile.xlsx"
 
-t <- clean_metadata(project_files = files,
+m <- clean_metadata(project_files = files,
+                    pattern_aru_id = create_pattern_aru_id(prefix = "CWS-"),
                     pattern_dt_sep = "_")
 
-# Some funny files 'zoom'
-filter(t, is.na(aru_id))
+check_problems(m) # Some funny files 'zoom'
 
 # Omit 'zoom' files (no sites)
-t <- clean_metadata(project_files = files,
+m <- clean_metadata(project_files = files,
                     subset = "Zoom", subset_type = "omit",
                     pattern_aru_id = create_pattern_aru_id(prefix = "CWS-"),
                     pattern_dt_sep = "_")
+
+check_problems(m)
+check_meta(m)
 
 # Add sites by date
 sites <- clean_site_index(i) # Expect standard column names - No good
@@ -117,19 +147,20 @@ sites <- clean_site_index(i, # Supply column names
                           col_date_time = c("Date_Deploy", "Date_Retrieve"),
                           col_extra = c("river" = "NorthernRiverTrip"))
 
-f <- add_sites(t, sites, dt_type = "date_time") # Need to omit "site_id" from by
-f <- add_sites(t, sites, by = "aru_id", dt_type = "date_time")
+f <- add_sites(m, sites) # See that it omits "site_id" from by (included by default)
 
-# Now check non-matched - These are either
+# Check Problems (non-matched) - These are either
 # a) not in the date range in the sites index, or
 # b) missing a record in the sites index
 filter(f, is.na(site_id)) |>
   check_meta(by_date = TRUE)
 
+check_problems(f, by_date = TRUE)
+
+# All not in the date range of the sites file
+semi_join(sites, check_problems(f, by_date = TRUE), by = c("aru_id"))
+
 
 s <- calc_sun(f, aru_tz = "America/Toronto")
-
-
-filter(s, !is.na(longitude))
 
 
