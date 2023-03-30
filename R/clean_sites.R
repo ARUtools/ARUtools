@@ -383,6 +383,8 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
       }
 
       max_dist <- max_dist |>
+        dplyr::select(.data[[dist_by]], "longitude", "latitude") |>
+        dplyr::distinct() |>
         sf::st_as_sf(coords= c("longitude", "latitude"), crs = 4326) |>
         sf::st_transform(crs) |>
         dplyr::group_by(.data[[dist_by]]) |>
