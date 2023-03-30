@@ -104,11 +104,15 @@ check_cols <- function(df, cols = NULL, name, extra = NULL, dates = FALSE) {
 }
 
 
-check_dates <- function(df, cols) {
+check_dates <- function(df, cols, extra = "") {
   msg <- vector()
   for(i in cols) {
-    if(!(lubridate::is.POSIXct(df[[tolower(i)]]) | lubridate::is.Date(df[[tolower(i)]]))) {
-      msg <- c(msg, paste0("Column `", i, "` is not a Date or Date-Time column"))
+    if(!(lubridate::is.POSIXct(df[[tolower(i)]]) |
+         lubridate::is.Date(df[[tolower(i)]]) |
+         is_dateable(df[[tolower(i)]]))) {
+      msg <- c(msg, paste0(
+        "Column `", i,
+        "` is not a Date or Date-Time column in YYYY-MM-DD HH:MM:SS format"))
     }
   }
   if(length(msg) > 0) rlang::abort(c("Problems with dates: ", msg), call = NULL)

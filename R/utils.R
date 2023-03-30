@@ -58,6 +58,33 @@ floor_dec <- function(x, digits) {
  floor(x * 10^digits) / 10^digits
 }
 
+
+#' Check if character is easily convertable to Date
+#'
+#' Checks if `lubridate::as_date()` can convert the string.
+#' If warning or error returns `FALSE` else returns `TRUE`.
+#'
+#' @param x Character/Date. Date in text (if Date, passes through, no problem).
+#'
+#' @return TRUE/FALSE
+#'
+#' @examples
+#' is_dateable("2023-01-01")          # TRUE
+#' is_dateable("20-01-01")            # TRUE
+#' is_dateable("2023-01-01 01:00:00") # TRUE
+#' is_dateable("05/16/2020")          # FALSE
+#'
+#' @noRd
+is_dateable <- function(x) {
+  tryCatch(
+    expr = {
+      lubridate::as_date(x)
+      TRUE
+    },
+    error = \(x) FALSE,
+    warning = \(x) FALSE)
+}
+
 #' Quiet min/max functions
 #'
 #' Quietly return NA if no non-missing values (not -Inf or Inf)
