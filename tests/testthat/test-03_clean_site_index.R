@@ -97,3 +97,18 @@ test_that("clean_site_index() single date", {
     col_coords = c("lon", "lat")))
 })
 
+test_that("clean_site_index() date/times", {
+  expect_silent(clean_site_index(example_sites_clean,
+                                 col_date_time = c("date_time_start")))
+})
+
+test_that("clean_site_index() errors", {
+
+  e <- dplyr::mutate(example_sites_clean, date = "2020-05-06 01:00:00")
+  expect_silent(clean_site_index(e))
+
+  e <- dplyr::mutate(example_sites_clean, date = "14/05/2020")
+  expect_error(clean_site_index(e), "not a Date or Date-Time column")
+
+})
+
