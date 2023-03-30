@@ -165,17 +165,19 @@ clean_metadata <- function(
       date = lubridate::as_date(.data$date_time))
 
   if(any(is.na(meta$date))) {
+
     missing <- meta |>
       dplyr::filter(is.na(.data$date)) |>
       dplyr::mutate(
         # Try file name
-        date_chr = stringr::str_extract(.data$file_name, .env$pattern_date),
+        date_chr = stringr::str_extract(.data$file_left, .env$pattern_date),
         # Try dir name
         date_chr = dplyr::if_else(
           is.na(.data$date_chr),
-          stringr::str_extract(.data$dir, .env$pattern_date),
-          NA_character_),
-        date = lubridate::parse_date_time(.data$date_chr, orders = order_date),
+          stringr::str_extract(.data$dir_left, .env$pattern_date),
+          .data$date_chr),
+        date = lubridate::parse_date_time(.data$date_chr, orders = order_date,
+                                          quiet = TRUE),
         date = lubridate::as_date(.data$date)) |>
       dplyr::select("path", "date")
 
