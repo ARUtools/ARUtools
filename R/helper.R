@@ -23,9 +23,6 @@ count_files <- function(project_dir, subset = NULL, subset_type = "keep") {
 #' Cleaning metadata can take a series of tries. This function helps summarize
 #' and explore the metadata for possible patterns which may help find problems.
 #'
-#' @param by_date Logical. Whether to summarize metadata by date. Default
-#'   `FALSE`.
-#'
 #' @inheritParams common_docs
 #'
 #' @return A data frame summarizing the metadata by site_id, aru_type, aru_id,
@@ -57,6 +54,66 @@ check_meta <- function(meta, by_date = FALSE) {
     dplyr::relocate("n_days", .before = "min_date")
 
   if(by_date) m <- dplyr::select(m, -"min_date", -"max_date")
+  m
+}
+
+#' Check problems in output of `clean_metadata()`
+#'
+#' Cleaning metadata can take a series of tries. This function helps summarize
+#' and explore missing metadata (problems).
+#'
+#' @param check Character. Character vector of columns to check for missing
+#'   values. Default is `site_id`, `aru_id`, `date`, `date_time`, `longitude`
+#'   and `latitude`.
+#' @param by_date Logical.
+#' @param path Logical. Whether to return just the file paths which have missing
+#' attributes. Default `FALSE`
+#'
+#' @inheritParams common_docs
+#'
+#' @return A data frame summarizing the metadata by site_id, aru_type, aru_id,
+#' and (optionally) by date. Presents the number of files, directories, and days
+#' worth of recordings, as well as the minimum and maximum recording times.
+#'
+#' @export
+#'
+#' @examples
+#'
+#' m <- clean_metadata(project_files = example_files, pattern_aru_id = "test")
+#'
+#' check_problems(m)
+#' check_problems(m, by_date = TRUE)
+#' check_problems(m, path = TRUE)
+check_problems <- function(meta, check = c("site_id", "aru_id",
+                                           "date", "date_time", "longitude",
+                                           "latitude"),
+                           path = FALSE, by_date = FALSE) {
+  if(path & by_date) {
+    rlang::abort(c("`by_date` summarizes problems, so `path` cannot be returned",
+                   "Use one or the other"),
+                 call = NULL)
+  }
+
+  m <- dplyr::filter(meta,
+                     .data$type != "gps",
+                     dplyr::if_any(dplyr::any_of(check), ~is.na(.x))) |>
+    dplyr::select(-dplyr::any_of(c("type", "file_name", "aru_type")))
+
+
+  if(by_date) {
+    check <- check[check %in% c("longitude", "latitude", "date_time")]
+    m <- m |>
+      dplyr::group_by(
+        dplyr::across(dplyr::any_of(c("site_id", "aru_id", "date")))) |>
+      dplyr::summarize(
+        dplyr::across(dplyr::any_of(check),
+                      list("min" = min_q, "max" = max_q,
+                           "n" = length,
+                           "n_na" = ~sum(is.na(.x)))),
+        .groups = "drop")
+  }
+
+  if(path) m <- dplyr::select(m, "path")
   m
 }
 

@@ -57,3 +57,22 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
 floor_dec <- function(x, digits) {
  floor(x * 10^digits) / 10^digits
 }
+
+#' Quiet min/max functions
+#'
+#' Quietly return NA if no non-missing values (not -Inf or Inf)
+#'
+#' @param x
+#'
+#' @noRd
+min_q <- function(x) minmax_q(x, min)
+max_q <- function(x) minmax_q(x, max)
+
+minmax_q <- function(x, fun) {
+  if(length(x) == 0) {
+    r <- NA
+  } else if(all(is.na(x))) {
+    r <- x[1]
+  } else r <- fun(x, na.rm = TRUE)
+  r
+}

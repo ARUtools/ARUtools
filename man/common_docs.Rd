@@ -21,6 +21,9 @@ files/directories which match the pattern in `subset`.}
 
 \item{meta_sites}{Data frame. Recording metadata with added coordinates.
 Output of `clean_metadata()` and then `add_sites()`.}
+
+\item{by_date}{Logical. Whether to summarize output by date (as well as
+`site_id` and `aru_id`. Default `FALSE`.}
 }
 \description{
 Common arguments and documentation for various functions

@@ -9,8 +9,8 @@ check_meta(meta, by_date = FALSE)
 \arguments{
 \item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
 
-\item{by_date}{Logical. Whether to summarize metadata by date. Default
-`FALSE`.}
+\item{by_date}{Logical. Whether to summarize output by date (as well as
+`site_id` and `aru_id`. Default `FALSE`.}
 }
 \value{
 A data frame summarizing the metadata by site_id, aru_type, aru_id,
