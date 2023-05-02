@@ -63,7 +63,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
 
   m |>
     calc_ss_diff() |>
-    dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss", "t2event")
+    dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss")
 }
 
 #' Calculate sunrise and sunset times for range of dates
@@ -136,8 +136,7 @@ calc_ss_diff <- function(sun_times) {
       t2ss_after = sun_diff(.data$sunset_after, .data$date_time),
       doy = lubridate::yday(.data$date),
       t2sr = pmin(.data$t2sr_day_of, .data$t2sr_before, .data$t2sr_after),
-      t2ss = pmin(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after),
-      t2event = dplyr::if_else(.data$t2sr < .data$t2ss, .data$t2sr, .data$t2ss))
+      t2ss = pmin(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after))
 }
 
 sun_diff <- function(t1, t2) {

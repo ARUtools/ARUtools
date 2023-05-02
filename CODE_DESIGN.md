@@ -18,7 +18,7 @@ making collaboration and future modifications easier.
   - `date`, `date_start`, `date_end`, `date_time`, `date_time_start`, `date_time_end`
   - `aru_id`, `aru_type`, `site_id`
   - `longitude`, `latitude`
-  - `tz`, `t2sr`, `t2ss` (`t2event`)
+  - `tz`, `t2sr`, `t2ss`
 - `add_sites()` does allow adding and keeping extra columns (`col_extra = ...`)
 
 ## Regular Expression patterns

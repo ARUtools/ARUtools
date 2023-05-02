@@ -10,7 +10,7 @@ out2 <- out |>
          site_id = Plot, aru_type = ARU_type,
          aru_id = Site_ARUid,
          doy, latitude = latitude_decimal_degrees, longitude = longitude_decimal_degrees,
-         tz, t2sr = t2sr_min, t2ss = t2ss_min, t2event = time_to_event) |>
+         tz, t2sr = t2sr_min, t2ss = t2ss_min) |>
   mutate(aru_id_old = aru_id,
          id = str_extract(aru_id_old, "^\\d(b|A|C){0,2}(?=_)"),
          aru_id = str_remove(aru_id_old, paste0(id, "_"))) |>
