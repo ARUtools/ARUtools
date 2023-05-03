@@ -177,7 +177,7 @@ clean_gps <- function(meta = NULL,
                       dist_by = "site_id",
                       skip_bad = FALSE, verbose = FALSE) {
 
-  # TODO:
+  # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
   check_num(dist_cutoff)
   check_num(dist_crs)
@@ -228,35 +228,62 @@ clean_gps_files <- function(meta, skip_bad, verbose) {
       call = NULL)
   }
 
-  rlang::inform(c("Note: GPS log files are notoriously unreliable... ",
+  rlang::inform(c("Note: GPS log files can be unreliable... ",
                   "Consider supplying your own GPS records and using `clean_site_index()`"))
 
   # TODO: CHECK IF HAVE SERIAL? FIRMWARE?
-
   gps |>
-    # Check columns and get skips
+    # Check columns and get skips for non-GPX files
     check_gps_files(skip_bad) |>
-    dplyr::filter(!is.na(.data$skip)) |>
+    # Omit text files without a skip value
+    dplyr::filter(!(.data$ext != "gpx" & is.na(.data$skip))) |>
     dplyr::mutate(
 
       # Read files
-      gps_data = purrr::map2(
-        .data$path, .data$skip,
-        ~readr::read_csv(.x, skip = .y - 1, show_col_types = verbose,
-                         name_repair = "unique_quiet",
-                         progress = FALSE)),
+      gps_data = purrr::pmap(
+        list(.data$path, .data$skip, .data$ext),
+        ~load_gps(..1, ..2, ..3, verbose = verbose),
+        .progress = list(
+          show_after = 0,
+          format = "Loading GPS files {cli::pb_percent} [{cli::pb_elapsed}]")),
+
       # Format data
-      gps_data = purrr::map(.data$gps_data, fmt_gps)) |>
+      gps_data = purrr::map2(
+        .data$gps_data, .data$ext, fmt_gps,
+        .progress = list(
+          show_after = 0,
+          format = "Formating GPS files {cli::pb_percent} [{cli::pb_elapsed}]"))) |>
 
     # Clean up
-    dplyr::select(-"date_time", -"date", -"skip") %>%
+    dplyr::select(-"date_time", -"date", -"skip", -"ext") %>%
     tidyr::unnest("gps_data", keep_empty = TRUE)
 
 }
 
+load_gps <- function(path, skip, ext, verbose) {
+  if(ext == "gpx") {
+    # Omit parsing warnings
+    suppressWarnings(g <- gpx::read_gpx(path)$waypoints)
+  } else {
+    g <- readr::read_csv(path, skip = skip - 1, show_col_types = verbose,
+                         guess_max = Inf,
+                         name_repair = "unique_quiet",
+                         progress = FALSE)
+  }
+  g
+}
+
 check_gps_files <- function(gps_files, skip_bad) {
 
-  lines <- stats::setNames(nm = gps_files$path) |>
+  # Get text-based GPS logs (i.e. anything but GPX files)
+  gps_files <- dplyr::mutate(gps_files,
+                             ext = tolower(fs::path_ext(.data$path)))
+
+  gps_txt <- gps_files |>
+    dplyr::filter(.data$ext != "gpx") |>
+    dplyr::pull(path)
+
+  lines <- stats::setNames(nm = gps_txt) |>
     purrr::imap(~readr::read_lines(.x, n_max = 5))
 
   # Set patterns
@@ -299,23 +326,49 @@ check_gps_files <- function(gps_files, skip_bad) {
     } else rlang::abort(msg, call = NULL)
   }
 
-  dplyr::mutate(gps_files, skip = unlist(.env$skips))
+  dplyr::tibble(path = names(skips),
+                skip = unlist(skips)) |>
+    dplyr::full_join(gps_files, by = "path")
 }
 
 
 coord_dir <- function(col, pattern) {
-  all(stringr::str_detect(col, paste0("^[", pattern, "]{1}$")) & !is.na(col),
-      na.rm = TRUE)
+  # Not all missing
+  !all(is.na(col)) &
+    # all a direction pattern
+    all(stringr::str_detect(col, paste0("^[", pattern, "]{1}$")), na.rm = TRUE)
 }
 
-fmt_gps <- function(df) {
+fmt_gps <- function(df, ext) {
+  if(ext == "gpx") g <- fmt_gps_gpx(df) else g <- fmt_gps_txt(df)
+  g |>
+    dplyr::select("longitude", "latitude", "date", "date_time")
+}
+
+fmt_gps_gpx <- function(df) {
+  df |>
+    dplyr::rename_with(tolower) |>
+    # Silently drop missing date/times
+    dplyr::filter(!is.na(time)) |>
+    dplyr::rename("date_time" = "time") |>
+    dplyr::mutate(date = lubridate::as_date(.data$date_time))
+}
+
+
+fmt_gps_txt <- function(df) {
+
   opts <- getOption("ARUtools")
 
   df_fmt <- df |>
-    dplyr::rename_with(~"latitude", .cols = dplyr::matches(opts$pat_gps_coords[1])) |>
-    dplyr::rename_with(~"longitude", .cols = dplyr::matches(opts$pat_gps_coords[2])) |>
-    dplyr::rename_with(~"date", .cols = dplyr::matches(opts$pat_gps_date)) |>
-    dplyr::rename_with(~"time", .cols = dplyr::matches(opts$pat_gps_time)) |>
+
+    dplyr::rename(
+      "latitude" = dplyr::matches(opts$pat_gps_coords[1]),
+      "longitude" = dplyr::matches(opts$pat_gps_coords[2]),
+      "date" = dplyr::matches(opts$pat_gps_date),
+      "time" = dplyr::matches(opts$pat_gps_time)) |>
+
+    # Some summary files have MICROTYPE and DATE
+    dplyr::filter(.data$date != "DATE") |>
 
     # Format times
     dplyr::mutate(

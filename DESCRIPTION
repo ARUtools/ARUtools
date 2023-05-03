@@ -29,7 +29,8 @@ Imports:
     magrittr,
     fs (>= 1.6.1),
     hms (>= 1.1.2),
-    readxl (>= 1.4.2)
+    readxl (>= 1.4.2),
+    gpx
 Suggests: 
     testthat (>= 3.0.0),
     soundecology,

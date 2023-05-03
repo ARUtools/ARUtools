@@ -163,4 +163,12 @@ semi_join(sites, check_problems(f, by_date = TRUE), by = c("aru_id"))
 
 s <- calc_sun(f, aru_tz = "America/Toronto")
 
+# eg 6 - BAR-LT GPS file examples ------------------------------------------
+d <- "../ARUtools - Extra/ARUtools_file_examples/James_Bay_Lowlands_Boreal_Shield_Transition_2022/"
+#file.create(file.path(d, "/P028/1A_BARLT10962/", "0000.wav")) # Just for testing
+
+m <- clean_metadata(project_dir = d)
+
+g <- clean_gps(m, dist_by = "aru_id")
+
 
