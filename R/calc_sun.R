@@ -134,12 +134,18 @@ calc_ss_diff <- function(sun_times) {
       t2ss_day_of = sun_diff(.data$sunset, .data$date_time),
       t2ss_before = sun_diff(.data$sunset_before, .data$date_time),
       t2ss_after = sun_diff(.data$sunset_after, .data$date_time),
-      doy = lubridate::yday(.data$date),
-      t2sr = pmin(.data$t2sr_day_of, .data$t2sr_before, .data$t2sr_after),
-      t2ss = pmin(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after))
+      doy = lubridate::yday(.data$date)) |>
+    dplyr::rowwise() |> # This is slow and ungainly, but pmin didn't work if not taking abs time to sunrise.
+    dplyr::mutate(t2sr = c(t2sr_day_of, t2sr_before, t2sr_after)[which.min(c(abs(t2sr_day_of), abs(t2sr_before),
+                                                                          abs(t2sr_after)))],
+                  t2ss = c(t2ss_day_of, t2ss_before, t2ss_after)[which.min(c(abs(t2ss_day_of), abs(t2ss_before),
+                                                                          abs(t2ss_after)))]) |>
+    dplyr::ungroup()
+      # t2sr = pmin(.data$t2sr_day_of, .data$t2sr_before, .data$t2sr_after),
+      # t2ss = pmin(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after))
 }
 
 sun_diff <- function(t1, t2) {
-  abs(as.numeric(difftime(t1, t2, units = "mins")))
+  as.numeric(difftime(t2, t1, units = "mins"))
 }
 

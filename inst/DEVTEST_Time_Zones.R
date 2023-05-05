@@ -1,5 +1,5 @@
 
-
+library(dplyr)
 tz_locs <- tibble::tribble(
   ~tz, ~lat, ~lon,~site_id,
   "Central",54.31810, -90.16277, "ARU1",
@@ -67,5 +67,3 @@ ARUtools_sr_local <-
 hist(ARUtools_sr$t2sr-ARUtools_sr$t2sr_settings )
 hist(ARUtools_sr_local$t2sr-ARUtools_sr_local$t2sr_settings)
 
-
-ggplot(ARUtools_sr, aes(sunrise, sunrise_me)) + geom_point()
