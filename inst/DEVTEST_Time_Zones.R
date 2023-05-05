@@ -53,7 +53,8 @@ library(ggplot2)
 
 
 ARUtools_sr <-
-  calc_sun(recordings_arus |> rename(sunrise_me  = sunrise),
+  calc_sun(recordings_arus |> rename(sunrise_me  = sunrise,
+                                     tz_me = tz),
            aru_tz = "America/Toronto")
 
 
@@ -67,3 +68,12 @@ ARUtools_sr_local <-
 hist(ARUtools_sr$t2sr-ARUtools_sr$t2sr_settings )
 hist(ARUtools_sr_local$t2sr-ARUtools_sr_local$t2sr_settings)
 
+
+
+ggplot(ARUtools_sr, aes(t2sr, t2sr_settings)) +
+ geom_abline(slope =1, intercept = 1, linetype =2)+
+  geom_point(aes(colour = tz_me))
+
+ggplot(ARUtools_sr_local, aes(t2sr, t2sr_settings)) +
+  geom_abline(slope =1, intercept = 1, linetype =2)+
+  geom_point(aes(colour = tz_me))
