@@ -135,17 +135,31 @@ calc_ss_diff <- function(sun_times) {
       t2ss_before = sun_diff(.data$sunset_before, .data$date_time),
       t2ss_after = sun_diff(.data$sunset_after, .data$date_time),
       doy = lubridate::yday(.data$date)) |>
-    dplyr::rowwise() |> # This is slow and ungainly, but pmin didn't work if not taking abs time to sunrise.
-    dplyr::mutate(t2sr = c(t2sr_day_of, t2sr_before, t2sr_after)[which.min(c(abs(t2sr_day_of), abs(t2sr_before),
-                                                                          abs(t2sr_after)))],
-                  t2ss = c(t2ss_day_of, t2ss_before, t2ss_after)[which.min(c(abs(t2ss_day_of), abs(t2ss_before),
-                                                                          abs(t2ss_after)))]) |>
-    dplyr::ungroup()
-      # t2sr = pmin(.data$t2sr_day_of, .data$t2sr_before, .data$t2sr_after),
-      # t2ss = pmin(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after))
+    dplyr::mutate(
+      t2sr = purrr::pmap_dbl(
+        list(.data$t2sr_day_of, .data$t2sr_before, .data$t2sr_after), min_abs),
+      t2ss = purrr::pmap_dbl(
+        list(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after), min_abs))
 }
 
+#' Calculate the diff time in minutes
+#' @noRd
 sun_diff <- function(t1, t2) {
   as.numeric(difftime(t2, t1, units = "mins"))
+}
+
+
+#' Calculate abs min of a group
+#'
+#' Return the value where the absolute is the minimum. Returns only 1, even if
+#' more than one matches the min(abs).
+#'
+#' @param x A value
+#' @param y A value
+#' @param z A value
+#'
+#' @noRd
+min_abs <- function(x, y, z) {
+  c(x, y, z)[abs(c(x, y, z)) == pmin(abs(x), abs(y), abs(z))][1]
 }
 

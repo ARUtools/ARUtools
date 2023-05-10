@@ -59,8 +59,9 @@ test_that("sun_diff()", {
   expect_type(d1, "double")
   expect_equal(d1, 30.53333, tolerance = 0.001)
 
+  # Expect non-abs values
   expect_silent(d2 <- sun_diff(t[2], t[1]))
-  expect_equal(d1, d2)
+  expect_equal(d1, -d2)
 
 })
 
@@ -72,9 +73,9 @@ test_that("calc_ss_diff()", {
   expect_true(all(c("t2sr", "t2sr_day_of", "t2sr_before", "t2sr_after",
                     "t2ss", "t2ss_day_of", "t2ss_before", "t2ss_after", "doy") %in%
                     names(diff)))
-  expect_equal(diff$t2sr, pmin(diff$t2sr_day_of, diff$t2sr_after, diff$t2sr_before))
-  expect_equal(diff$t2ss, pmin(diff$t2ss_day_of, diff$t2ss_after, diff$t2ss_before))
-  expect_true(all(select(diff, starts_with("t2")) < 48*60)) # at most two day aways
+  expect_equal(diff$t2sr, c(30.53333, -20.11667), tolerance = 0.0001)
+  expect_equal(diff$t2ss, c(468.0833, 520.9000), tolerance = 0.0001)
+  expect_true(all(select(diff, starts_with("t2")) < 48*60)) # at most two day away
 })
 
 test_that("calc_sun()", {
@@ -103,10 +104,9 @@ test_that("calc_sun()", {
 
   # Expect offsets compared to "local" timezones
   i <- which(s1$tz %in% c("America/Winnipeg", "America/Chicago"))
-  expect_equal(s1$t2sr[i], abs(60 - s2$t2sr[i])) # After sunrise
+  expect_equal(s1$t2sr[i], 60 + s2$t2sr[i]) # After sunrise
   expect_equal(s1$t2ss[i], s2$t2ss[i] + 60) # Before sunset
 
   # Expect others to be the same
   expect_equal(s1$t2sr[-i], s2$t2sr[-i])
-
 })
