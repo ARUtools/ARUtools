@@ -6,15 +6,15 @@
 #' to specify missing information according to date, such as GPS lat/lons and
 #' site ids.
 #'
-#' @param site_index Data frame or file path. Site index data to clean. If file
-#'   path, must be to a local csv or xlsx file.
+#' @param site_index Data frame (can be spatial) or file path. Site index data
+#'   to clean. If file path, must be to a local csv or xlsx file.
 #' @param col_aru_id Character. Column name that contains ARU ids. Default `aru_id`.
 #' @param col_site_id Character. Column name that contains site ids.
 #' @param col_date_time Character. Column name that contains dates or
 #'   date/times. Can be vector of two names if there are both 'start' and 'end'
 #'   columns.
 #' @param col_coords Character. Column names that contain longitude and
-#'   latitude (in that order).
+#'   latitude (in that order). Ignored if `site_index` is spatial.
 #' @param col_extra Character. Column names for extra data to include. If a named
 #'  vector, will rename the columns (see examples).
 #' @param resolve_overlaps Logical. Whether or not to resolve date overlaps by
@@ -55,14 +55,30 @@ clean_site_index <- function(site_index,
   check_text(col_aru_id)
   check_text(col_site_id)
   check_text(col_date_time, n = c(1, 2))
-  check_text(col_coords, n = 2)
   check_text(col_extra, not_null = FALSE, n = c(1, Inf))
   check_logical(resolve_overlaps)
 
-  if(is.data.frame(site_index)) {
+  is_sf <- inherits(site_index, "sf")
+
+  if(!is_sf) {
+    check_text(col_coords, n = 2)
+  } else {
+    check_points(site_index)
+    col_coords <- NULL
+  }
+
+
+  # Format different inputs
+
+  if(is_sf) {
+    # SF - (create tibble sf https://github.com/r-spatial/sf/issues/951#issuecomment-455735564)
+    site_index <- dplyr::as_tibble(site_index) |> sf::st_as_sf()
+  } else if(is.data.frame(site_index)) {
+    # Data frames
     site_index <- suppressMessages(readr::type_convert(site_index)) |>
       dplyr::as_tibble()
   } else {
+    # Files
     type <- fs::path_ext(site_index)
     check_ext(type, c("csv", "xlsx"))
 
@@ -116,7 +132,7 @@ clean_site_index <- function(site_index,
     dplyr::mutate(
       dplyr::across(dplyr::all_of(dt), lubridate::as_datetime),
       dplyr::across(dplyr::all_of(dt), lubridate::as_date, .names = "{d}")) |>
-    dplyr::relocate(dplyr::any_of(c("longitude", "latitude")),
+    dplyr::relocate(dplyr::any_of(c("longitude", "latitude", "geometry")),
                     .after = dplyr::last_col()) |>
     dplyr::relocate(dplyr::any_of(names(col_extra)), .after = dplyr::last_col())
 

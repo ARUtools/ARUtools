@@ -1,4 +1,6 @@
 test_that("clean_site_index()", {
+
+  # Text file
   unlink("test.csv")
   readr::write_csv(example_sites, "test.csv")
 
@@ -24,6 +26,7 @@ test_that("clean_site_index()", {
   expect_equal(example_sites$lat, i1$latitude)
   unlink("test.csv")
 
+  # Data Frame
   expect_message(i2 <- clean_site_index(
     example_sites,
     col_aru_id = "ARU",
@@ -34,6 +37,18 @@ test_that("clean_site_index()", {
 
   expect_equal(i1, i2)
 
+  # SF
+  example_sites_sf <- sf::st_as_sf(example_sites, coords = c("lon", "lat"),
+                                   crs = 4326)
+  expect_message(i3 <- clean_site_index(
+    example_sites_sf,
+    col_aru_id = "ARU",
+    col_site_id = "Sites",
+    col_date_time = c("Date_set_out", "Date_removed")),
+    "overlapping date ranges")
+
+  expect_equal(sf::st_drop_geometry(i3),
+               dplyr::select(i2, -"longitude", -"latitude"))
 })
 
 test_that("clean_site_index() extra cols", {

@@ -119,8 +119,9 @@ check_dates <- function(df, cols, extra = "") {
 }
 
 # Let the readr/readxl functions test if the file can be opened
+# Allows both data frames *and* spatial data frames
 check_df_file <- function(input) {
-  if(!is.data.frame(input)) {
+  if(!is.data.frame(input) & !inherits(input, "sf")) {
     if(!is.character(input)) {
       rlang::abort(paste0(
         "`", deparse(substitute(input)), "` must be either ",
@@ -129,6 +130,11 @@ check_df_file <- function(input) {
   }
 }
 
+check_points <- function(df) {
+  if(!all(sf::st_geometry_type(df) == "POINT")) {
+    rlang::abort("Spatial data must use POINT geometries", call = NULL)
+  }
+}
 
 check_date_joins <- function(df, by_date) {
 
