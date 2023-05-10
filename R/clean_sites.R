@@ -158,23 +158,34 @@ clean_site_index <- function(site_index,
 #' your own Site Index file including site ids, and GPS coordinates. This file
 #' can be cleaned and prepared with `clean_site_index()` instead.
 #'
+#' If checking for a maximum distance (`dist_cutoff`) among GPS points within a
+#' group (`dist_by`), the returned data frame will include a column `max_dist`,
+#' which represents the largest distance among points within that group.
+#'
 #' @param meta Data frame. Output of `clean_metadata()`.
 #' @param dist_cutoff Numeric. Maximum distance (m) between GPS points within a
 #'   site. Default is 100m but can be set to `Inf` to skip.
 #' @param dist_crs Numeric. Coordinate Reference System to use when calculating
 #'   distance (should be one with m).
 #' @param dist_by Character. Column which identifies sites within which to
-#'   compare distance among gps points. Only valid if `dist_cutoff` is not
+#'   compare distance among GPS points. Only valid if `dist_cutoff` is not
 #'   `Inf`.
 #' @param skip_bad Logical. Skip GPS files which create errors.
 #' @param verbose Logical. Show extra loading information. Default `FALSE`.
 #'
 #' @return Data frame of site-level metadata.
 #' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#'   m <- clean_metadata(project_dir = "my_project")
+#'   g <- clean_gps(meta = m)
+#' }
 
 clean_gps <- function(meta = NULL,
                       dist_cutoff = 100, dist_crs = 3161,
-                      dist_by = "site_id",
+                      dist_by = c("site_id", "aru_id"),
                       skip_bad = FALSE, verbose = FALSE) {
 
   # Checks
@@ -404,11 +415,16 @@ fmt_gps_txt <- function(df) {
 
 #' Check distances between points from GPS log
 #'
-#' @param gps Data frame of gps sites and coordinates
+#' @param gps Data frame of gps sites and coordinates. Requires latitude,
+#'   longitude, and any columns in `dist_by`.
 #' @param crs Numeric. CRS to use for measuring distances. Should be in meters
-#' @param dist_cutoff Distance cutoff in meters. Can be set to Inf to avoid this check.
+#' @param dist_cutoff Distance cutoff in meters. Can be set to Inf to avoid this
+#'   check.
+#' @param dist_by Character. Column names to use in grouping GPS points before
+#'   calculating within group distances.
 #'
-#' @return Returns data frame with maximum distances between gps points at site.
+#' @return Returns data frame with maximum distances between gps points within a
+#' group.
 #'
 #' @noRd
 check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
@@ -419,41 +435,47 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
         dplyr::any_of(c("latitude", "longitude", dist_by)), ~!is.na(.)))
 
     if(nrow(max_dist) == 0) {
-      if(!is.null(dist_by)) dist_by <- paste0(", `", dist_by, "`") else dist_by <- ""
+      if(!is.null(dist_by)) {
+        dist_by <- paste0(", `", paste0(dist_by, collapse = "`, `"), "`")
+      } else dist_by <- ""
       rlang::inform(
         c("Skipping distance check:",
           paste0("All records missing at least one of ",
                  "`longitude`, `latitude`", dist_by)))
     } else {
-      n <- dplyr::count(max_dist, .data$latitude, .data$longitude, .data[[dist_by]])
+      n <- max_dist |>
+        dplyr::select(dplyr::all_of(c("latitude", "longitude", dist_by))) |>
+        dplyr::distinct() |>
+        dplyr::count(dplyr::across(dplyr::all_of(dist_by)))
 
       if(all(n$n == 1)) {
         rlang::inform(
           c("Skipping distance check:",
-            paste0("No records with more than one set of coordinates per `",
-                   dist_by, "`")))
-      }
+            paste0("No records with more than one set of coordinates per unique`",
+                   paste0(dist_by, collapse = "`/`"), "`")))
+      } else {
 
-      max_dist <- max_dist |>
-        dplyr::select(.data[[dist_by]], "longitude", "latitude") |>
-        dplyr::distinct() |>
-        sf::st_as_sf(coords= c("longitude", "latitude"), crs = 4326) |>
-        sf::st_transform(crs) |>
-        dplyr::group_by(.data[[dist_by]]) |>
-        dplyr::summarize(
-          max_dist = max(sf::st_distance(.data$geometry, .data$geometry)),
-          .groups = 'drop') |>
-        sf::st_drop_geometry()
+        max_dist <- max_dist |>
+          dplyr::select(dplyr::all_of(c(dist_by, "longitude", "latitude"))) |>
+          dplyr::distinct() |>
+          sf::st_as_sf(coords= c("longitude", "latitude"), crs = 4326) |>
+          sf::st_transform(crs) |>
+          dplyr::group_by(dplyr::across(dplyr::all_of(dist_by))) |>
+          dplyr::summarize(
+            max_dist = max(sf::st_distance(.data$geometry, .data$geometry)),
+            .groups = 'drop') |>
+          sf::st_drop_geometry()
 
-      if(any(max_dist$max_dist > units::set_units(dist_cutoff, "m"))) {
-        rlang::abort(
-          c("Within site distances are greater than cutoff",
-            "x" = paste0("Distances among ARUs within a site must be less than ",
-                         "`dist_cutoff` (currently ", dist_cutoff, "m)"),
-            "i" = "Set `dist_cutoff` to `Inf` to skip this check (e.g. moving ARUs)"),
-          call = NULL)
+        if(any(max_dist$max_dist > units::set_units(dist_cutoff, "m"))) {
+          rlang::warn(
+            c("Within site distances are greater than cutoff",
+              "x" = paste0("Distances among ARUs within a site must be less than ",
+                           "`dist_cutoff` (currently ", dist_cutoff, "m)"),
+              "i" = "Set `dist_cutoff` to `Inf` to skip this check (e.g. moving ARUs)"),
+            call = NULL)
+        }
+        gps <- dplyr::left_join(gps, max_dist, by = dist_by)
       }
-      gps <- dplyr::left_join(gps, max_dist, by = dist_by)
     }
   }
   gps

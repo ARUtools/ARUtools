@@ -8,7 +8,7 @@ clean_gps(
   meta = NULL,
   dist_cutoff = 100,
   dist_crs = 3161,
-  dist_by = "site_id",
+  dist_by = c("site_id", "aru_id"),
   skip_bad = FALSE,
   verbose = FALSE
 )
@@ -23,7 +23,7 @@ site. Default is 100m but can be set to `Inf` to skip.}
 distance (should be one with m).}
 
 \item{dist_by}{Character. Column which identifies sites within which to
-compare distance among gps points. Only valid if `dist_cutoff` is not
+compare distance among GPS points. Only valid if `dist_cutoff` is not
 `Inf`.}
 
 \item{skip_bad}{Logical. Skip GPS files which create errors.}
@@ -39,4 +39,16 @@ problems (expected range, distance cutoffs and timing) then attached to the
 meta data frame. Note that it is often safer and more reliable to create
 your own Site Index file including site ids, and GPS coordinates. This file
 can be cleaned and prepared with `clean_site_index()` instead.
+}
+\details{
+If checking for a maximum distance (`dist_cutoff`) among GPS points within a
+group (`dist_by`), the returned data frame will include a column `max_dist`,
+which represents the largest distance among points within that group.
+}
+\examples{
+
+\dontrun{
+  m <- clean_metadata(project_dir = "my_project")
+  g <- clean_gps(meta = m)
+}
 }

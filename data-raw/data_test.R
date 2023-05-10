@@ -1,7 +1,7 @@
 sites <- paste0("P", stringr::str_pad(1:10, width = 2, pad = "0"), "_1")
 
 # Example sites list
-example_sites<- data.frame(
+example_sites <- data.frame(
   Sites = sites,
   Date_set_out = c("2020-05-01", "2020-05-03", "2020-05-05", "2020-05-05", "2020-05-06",
                    "2020-05-08", "2020-05-08", "2020-05-10", "2020-05-10", "2020-05-10"),

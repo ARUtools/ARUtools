@@ -167,8 +167,9 @@ s <- calc_sun(f, aru_tz = "America/Toronto")
 d <- "../ARUtools - Extra/ARUtools_file_examples/James_Bay_Lowlands_Boreal_Shield_Transition_2022/"
 #file.create(file.path(d, "/P028/1A_BARLT10962/", "0000.wav")) # Just for testing
 
-m <- clean_metadata(project_dir = d)
+m <- clean_metadata(project_dir = d,
+                    pattern_site_id = create_pattern_site_id(s_digits = 0))
 
-g <- clean_gps(m, dist_by = "aru_id")
+g <- clean_gps(m)
 
 
