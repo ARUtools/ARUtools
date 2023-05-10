@@ -262,8 +262,7 @@ clean_gps_files <- function(meta, skip_bad, verbose) {
 
 load_gps <- function(path, skip, ext, verbose) {
   if(ext == "gpx") {
-    # Omit parsing warnings
-    suppressWarnings(g <- gpx::read_gpx(path)$waypoints)
+    g <- sf::st_read(path, layer = "waypoints", quiet = TRUE)
   } else {
     g <- readr::read_csv(path, skip = skip - 1, show_col_types = verbose,
                          guess_max = Inf,
@@ -300,7 +299,7 @@ check_gps_files <- function(gps_files, skip_bad) {
   # Check for columns
   dt <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_date)))
   tm <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_time)))
-  ll <- is.na(skips)
+  ll <- is.na(skips) | length(skips) == 0
 
   if(any(c(dt, tm, ll))) {
     w <- which(dt | tm | ll)
@@ -347,11 +346,11 @@ fmt_gps <- function(df, ext) {
 
 fmt_gps_gpx <- function(df) {
   df |>
-    dplyr::rename_with(tolower) |>
-    # Silently drop missing date/times
-    dplyr::filter(!is.na(time)) |>
-    dplyr::rename("date_time" = "time") |>
-    dplyr::mutate(date = lubridate::as_date(.data$date_time))
+    sf::st_drop_geometry() |>
+    dplyr::bind_cols(sf::st_coordinates(df)) |>
+    dplyr::select("date_time" = "time", "latitude" = "Y", "longitude" = "X") |>
+    dplyr::mutate(date_time = lubridate::as_datetime(.data$date_time),
+                  date = lubridate::as_date(.data$date_time))
 }
 
 
@@ -368,7 +367,7 @@ fmt_gps_txt <- function(df) {
       "time" = dplyr::matches(opts$pat_gps_time)) |>
 
     # Some summary files have MICROTYPE and DATE
-    dplyr::filter(.data$date != "DATE") |>
+    dplyr::filter(!(is.character(.data$date) && any(.data$date == "DATE"))) |>
 
     # Format times
     dplyr::mutate(
