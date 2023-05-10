@@ -145,8 +145,9 @@ create_pattern_site_id <- function(prefix = c("P", "Q"),
 
   suffix <- pat_collapse(suffix)
   if(s_digits > 0) suffix <- paste0(suffix, "\\d{", s_digits, "}")
+  if(suffix != "") suffix <- paste0(sep, suffix)
 
-  paste0(prefix, sep, suffix)
+  paste0(prefix, suffix)
 }
 
 create_pattern_sep <- function(sep, optional = TRUE) {
