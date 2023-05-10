@@ -1,7 +1,7 @@
 test_that("Playing does not affect global seed", {
   expect_equal({set.seed(1234)
     runif(1)} , {set.seed(1234)
-      try(play_random_track("path/to/file/"))
+      try(play_random_track("path/to/file/"), silent = TRUE)
       runif(1)}
     )
 })
