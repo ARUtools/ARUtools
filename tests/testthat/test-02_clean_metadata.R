@@ -17,3 +17,105 @@ test_that("clean_metadata()", {
   expect_true(all(!is.na(m$date)))
 
 })
+
+
+
+test_that("clean_metadata() with multiple patterns in create_pattern_XXX", {
+
+  f <- c("P01_1/2020-01-01T09:00:00.wav",
+         "P02_01/01012020 10:00.wav")
+
+  # Problem date/time, problem site_id
+  expect_message(m <- clean_metadata(project_files = f)) |> suppressMessages()
+  expect_equal(m$date_time, lubridate::as_datetime(c(NA, "2020-01-01 09:00:00")))
+  expect_equal(m$site_id, c("P02_0", "P01_1"))
+
+  # Fix pattern matching of date
+  expect_message(
+    m <- clean_metadata(
+      project_files = f,
+      pattern_date = create_pattern_date(c("mdy", "ymd"), sep = c("", "-")),
+      pattern_time = create_pattern_time(seconds = "maybe"),
+      pattern_dt_sep = create_pattern_dt_sep(sep = c("T", " ")))) |>
+    suppressMessages()
+  expect_equal(m$date_time,
+               lubridate::as_datetime(c("2020-01-01 09:00:00",
+                                        "2001-01-20 20:10:00")))
+
+  # Fix parsing of date
+  expect_message(
+    m <- clean_metadata(
+      project_files = f,
+      pattern_date = create_pattern_date(c("mdy", "ymd"), sep = c("", "-")),
+      pattern_time = create_pattern_time(seconds = "maybe"),
+      pattern_dt_sep = create_pattern_dt_sep(sep = c("T", " ")),
+      order_date = c("mdy", "ymd"))) |>
+    suppressMessages()
+  expect_equal(m$date_time,
+               lubridate::as_datetime(c("2020-01-01 09:00:00",
+                                        "2020-01-01 10:00:00")))
+
+  # Fix pattern matching of site_id
+  expect_message(
+    m <- clean_metadata(
+      project_files = f,
+      pattern_date = create_pattern_date(c("mdy", "ymd"), sep = c("", "-")),
+      pattern_time = create_pattern_time(sep = ":", seconds = "maybe"),
+      pattern_dt_sep = create_pattern_dt_sep(sep = c("T", " ")),
+      order_date = c("mdy", "ymd"),
+      pattern_site_id = create_pattern_site_id(s_digits = c(1, 2)))) |>
+    suppressMessages()
+  expect_equal(m$site_id, c("P01_1", "P02_01"))
+
+})
+
+test_that("clean_metadata() with multiple patterns in args", {
+
+  f <- c("P01_1/2020-01-01T09:00:00.wav",
+         "P02_01/01012020 10:00.wav")
+
+  # Fix pattern matching of date
+  expect_message(
+    m <- clean_metadata(
+      project_files = f,
+      pattern_date = c(create_pattern_date("ymd", sep = "-"),
+                       create_pattern_date("mdy", sep = "")),
+      pattern_time = c(create_pattern_time(seconds = "yes"),
+                       create_pattern_time(seconds = "no")),
+      pattern_dt_sep = c("T", " "))) |>
+    suppressMessages()
+  expect_equal(m$date_time,
+               lubridate::as_datetime(c("2020-01-01 09:00:00",
+                                        "2001-01-20 20:10:00")))
+
+  # Fix parsing of date
+  expect_message(
+    m <- clean_metadata(
+      project_files = f,
+      pattern_date = c(create_pattern_date("ymd", sep = "-"),
+                       create_pattern_date("mdy", sep = "")),
+      pattern_time = c(create_pattern_time(seconds = "yes"),
+                       create_pattern_time(seconds = "no")),
+      pattern_dt_sep = c("T", " "),
+      order_date = c("mdy", "ymd"))) |>
+    suppressMessages()
+  expect_equal(m$date_time,
+               lubridate::as_datetime(c("2020-01-01 09:00:00",
+                                        "2020-01-01 10:00:00")))
+
+  # Fix pattern matching of site_id
+  expect_message(
+    m <- clean_metadata(
+      project_files = f,
+      pattern_date = c(create_pattern_date("ymd", sep = "-"),
+                       create_pattern_date("mdy", sep = "")),
+      pattern_time = c(create_pattern_time(seconds = "yes"),
+                       create_pattern_time(seconds = "no")),
+      pattern_dt_sep = c("T", " "),
+      order_date = c("mdy", "ymd"),
+      pattern_site_id = c(create_pattern_site_id(),
+                          create_pattern_site_id(s_digits = 2)))) |>
+    suppressMessages()
+  expect_equal(m$site_id, c("P01_1", "P02_01"))
+
+})

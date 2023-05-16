@@ -15,17 +15,17 @@
 #' @param file_type Character. Type of file (extension) to summarize. Default
 #'   wav.
 #' @param pattern_site_id Character. Regular expression to extract site ids. See
-#'   `create_pattern_site_id()`.
+#'   `create_pattern_site_id()`. Can be a vector of multiple patterns to match.
 #' @param pattern_aru_id Character. Regular expression to extract ARU ids. See
-#'   `create_pattern_aru_id()`.
+#'   `create_pattern_aru_id()`. Can be a vector of multiple patterns to match.
 #' @param pattern_date Character. Regular expression to extract dates. See
-#'   `create_pattern_date()`.
+#'   `create_pattern_date()`. Can be a vector of multiple patterns to match.
 #' @param pattern_time Character. Regular expression to extract times. See
-#'   `create_pattern_time()`.
+#'   `create_pattern_time()`. Can be a vector of multiple patterns to match.
 #' @param pattern_dt_sep Character. Regular expression to mark separators
 #'   between dates and times. See `create_pattern_dt_sep()`.
-#' @param order_date Character. Order that the date appears in. One of "ymd"
-#'   (default), "mdy", "dmy".
+#' @param order_date Character. Order that the date appears in. "ymd"
+#'   (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.
 #' @param quiet Logical. Whether to suppress progress messages.
 #'
 #' @inheritParams common_docs
@@ -68,8 +68,16 @@ clean_metadata <- function(
 
   # TODO: more checks
 
-  pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
+
   file_type_pattern <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
+
+  pattern_site_id <-  pat_collapse(pattern_site_id)
+  pattern_aru_id <- pat_collapse(pattern_aru_id)
+  pattern_date <- pat_collapse(pattern_date)
+  pattern_time <- pat_collapse(pattern_time)
+  pattern_dt_sep <- pat_collapse(pattern_dt_sep)
+
+  pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
 
   if(!is.null(project_dir)) {
     if(!quiet) rlang::inform("Fetching file list...")
@@ -169,7 +177,8 @@ clean_metadata <- function(
       # Get date_times
       date_time = lubridate::parse_date_time(
         .data$date_time_chr,
-        orders = paste(order_date, "HMS")),
+        orders = paste(order_date, "HMS"),
+        truncated = 1),
       date = lubridate::as_date(.data$date_time))
 
   if(any(is.na(meta$date))) {

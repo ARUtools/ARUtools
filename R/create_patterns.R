@@ -13,46 +13,55 @@
 #' pattern grabs what you want. This is just a simple wrapper around
 #' `stringr::str_extract()`.
 #'
+#' @param sep Character vector. Expected separator(s) between the pattern parts.
+#'   Can be "" for no separator.
+#'
 #' @return Either a pattern (`create_pattern_xxx()`) or the text extracted by a
 #'   pattern (`test_pattern()`)
 #'
 #' @name create_pattern
 NULL
 
-#' @param order Character. Expected order of (y)ear, (m)onth and (d)ate.
-#'   Default is "ymd" for Year-Month-Date order.
-#' @param sep Character vector. Expected separator(s) between the
-#'   values. Can be "" for no separator.
-#' @param n_years Numeric. Number of digits in Year, either 2 or 4.
+#' @param order Character vector. Expected orders of (y)ear, (m)onth and (d)ate.
+#'   Default is "ymd" for Year-Month-Date order. Can have more than one possible
+#'   order.
+#' @param y_digits Numeric vector. Number of digits in Year, either 2 or 4.
 #'
 #' @examples
-#' create_pattern_date()  # Default matches 2020-01-01 (- or _ as optional separators)
-#' create_pattern_date(sep = "") # Matches 20200101 (no separator)
+#' create_pattern_date()  # Default matches 2020-01-01 or 2020_01_01 or 20200101
+#'                        # ("-", "_" or "" as separators)
+#' create_pattern_date(sep = "") # Matches only 20200101 (no separator allowed)
 #'
 #' @export
 #' @describeIn create_pattern Create a pattern to match a date
 
-create_pattern_date <- function(order = "ymd", sep = c("_", "-"), n_years = 4) {
+create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), y_digits = 4) {
 
-  sep <- create_pattern_sep(sep)
+  check_text(order, opts = c("ymd", "dmy", "mdy"))
+  check_text(sep)
+  check_num(y_digits, opts = c(2, 4))
 
-  if(n_years == 4) {
-    y <- paste0("([12]{1}\\d{3})")  # First must be 1 or 2
-  } else if (n_years == 2) {
-    y <- "(\\d{2})"
-  }
+  sep <- create_pattern_sep(sep, optional = FALSE)
+
+
+  y_digits <- rev(sort(y_digits)) # Ensure long patterns matched first if available
+
+  y <- dplyr::case_when(y_digits == 4 ~ "([12]{1}\\d{3})",  # First must be 1 or 2
+                        y_digits == 2 ~ "(\\d{2})") |>
+    pat_collapse()
 
   m <- "(\\d{2})"
   d <- "(\\d{2})"
 
   dplyr::case_when(order == "ymd" ~ paste0(y, sep, m, sep, d),
                    order == "mdy" ~ paste0(m, sep, d, sep, y),
-                   order == "dmy" ~ paste0(d, sep, m, sep, y))
+                   order == "dmy" ~ paste0(d, sep, m, sep, y)) |>
+  pat_collapse()
+
 }
 
-#' @param sep Character vector. Expected separators between the
-#'   values. Can be "" for no separator.
-#' @param seconds Logical. Whether seconds are included.
+#' @param seconds Character. Whether seconds are included. Options are "yes",
+#' "no", "maybe".
 #'
 #' @examples
 #' create_pattern_time()  # Default matches 23_59_59 (_, -, :, as optional separators)
@@ -61,15 +70,20 @@ create_pattern_date <- function(order = "ymd", sep = c("_", "-"), n_years = 4) {
 #' @export
 #'
 #' @describeIn create_pattern Create a pattern to match a time
-create_pattern_time <- function(sep = c("_", "-", ":"), seconds = TRUE) {
+create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes") {
 
-  sep <- create_pattern_sep(sep)
+  check_text(sep)
+  check_text(seconds, opts = c("yes", "no", "maybe"), n = 1)
+
+
+  sep <- create_pattern_sep(sep, optional = FALSE)
 
   h <- "([0-2]{1}[0-9]{1})"
   m <- "([0-5]{1}[0-9]{1})"
 
   p <- paste0(h, sep, m)
-  if(seconds) p <- paste0(p, sep, "([0-5]{1}[0-9]{1})")
+  if(seconds != "no") p <- paste0(p, "(", sep, "([0-5]{1}[0-9]{1}))")
+  if(seconds == "maybe") p <- paste0(p, "?")
   p
 }
 
@@ -89,8 +103,10 @@ create_pattern_dt_sep <- function(sep = "T", optional = FALSE) {
 }
 
 
-#' @param arus Character. Pattern identifying the ARU prefix (usually model specific).
-#' @param n_digits Numeric. Number of digits expected to follow the `arus` pattern. Can be one or two (a range).
+#' @param arus Character vector. Pattern(s) identifying the ARU prefix (usually
+#'   model specific).
+#' @param n_digits Numeric vector. Number of digits expected to follow the
+#'   `arus` pattern. Can be one or two (a range).
 #'
 #' @examples
 #' create_pattern_aru_id()
@@ -100,10 +116,18 @@ create_pattern_dt_sep <- function(sep = "T", optional = FALSE) {
 #' @export
 #' @describeIn create_pattern Create a pattern to match an ARU id
 create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM", "SMA"),
-                                  n_digits = c(4, 8), sep = c("_", "-"),
-                                  prefix = "", suffix = "") {
+                                  n_digits = c(4, 8),
+                                  sep = c("_", "-", ""),
+                                  prefix = "",
+                                  suffix = "") {
 
-  sep <- create_pattern_sep(sep, optional = TRUE)
+  check_text(arus)
+  check_num(n_digits, n = c(1, 2))
+  check_text(sep)
+  check_text(prefix)
+  check_text(suffix)
+
+  sep <- create_pattern_sep(sep, optional = FALSE)
   if(length(n_digits) > 1) {
     n_digits <- paste0("\\d{", n_digits[1], ",", n_digits[2], "}")
   } else {
@@ -117,11 +141,10 @@ create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM",
   paste0(prefix, "(", arus, ")", sep, n_digits, suffix)
 }
 
-#' @param prefix Character. Prefixes (can be more than one) for site ids.
-#' @param p_digits Numeric. Number of digits following the `prefix`.
-#' @param sep Character. Separators between a prefix and suffix sections
-#' @param suffix Character. Suffixes (can be more than one) for site ids.
-#' @param s_digits Numeric. Number of digits following the `suffix`.
+#' @param prefix Character vector. Prefix(es) for site ids.
+#' @param p_digits Numeric vector. Number(s) of digits following the `prefix`.
+#' @param suffix Character vector. Suffix(es) for site ids.
+#' @param s_digits Numeric vector. Number(s) of digits following the `suffix`.
 #'
 #' @export
 #'
@@ -138,19 +161,36 @@ create_pattern_site_id <- function(prefix = c("P", "Q"),
                                    suffix = "",
                                    s_digits = 1) {
 
+  check_text(prefix)
+  check_num(p_digits)
+  check_text(sep)
+  check_text(suffix)
+  check_num(s_digits)
+
   sep <- create_pattern_sep(sep, optional = FALSE)
 
+  # Use reverse sort, to make sure that longer patterns are matched first
+  # (otherwise shorter patterns can be matched to what should be a long one)
   prefix <- pat_collapse(prefix)
-  if(p_digits > 0) prefix <- paste0(prefix, "\\d{", p_digits, "}")
+  if(any(p_digits > 0)) {
+    p_digits <- pat_collapse(paste0("\\d{", rev(sort(p_digits)), "}"))
+    prefix <- paste0(prefix, p_digits)
+  }
 
   suffix <- pat_collapse(suffix)
-  if(s_digits > 0) suffix <- paste0(suffix, "\\d{", s_digits, "}")
+  if(any(s_digits > 0)) {
+    s_digits <- pat_collapse(paste0("\\d{", rev(sort(s_digits)), "}"))
+    suffix <- paste0(suffix, s_digits)
+  }
   if(suffix != "") suffix <- paste0(sep, suffix)
 
   paste0(prefix, suffix)
 }
 
 create_pattern_sep <- function(sep, optional = TRUE) {
+  check_text(sep)
+  check_logical(optional)
+
   if(!all(sep == "")) {
     sep <- paste0("(", paste0(sep, collapse = "|"), ")")
     if(optional) sep <- paste0(sep, "?")
@@ -161,14 +201,14 @@ create_pattern_sep <- function(sep, optional = TRUE) {
 
 pat_collapse <- function(x) {
   if(any(x != "")) {
-    paste0("(", paste0("(", x, ")", collapse = "|"), ")")
+    paste0("(", paste0("(", rev(sort(x)), ")", collapse = "|"), ")")
   } else ""
 }
 
 
 
 
-#' @param test Character. Example text to test.
+#' @param test Character vector. Examples of text to test.
 #' @param pattern Character. Regular expression pattern to test.
 #'
 #' @export
@@ -188,10 +228,12 @@ pat_collapse <- function(x) {
 #' test_pattern("site111", pat)
 #' pat <- create_pattern_site_id(prefix = "site", p_digits = 3, sep = "",
 #'                              suffix = c("a", "b", "c"), s_digits = 0)
-#' test_pattern("site100a", pat)
+#' test_pattern(c("site9", "site100a"), pat)
 #'
 #' @describeIn create_pattern Test patterns
 
 test_pattern <- function(test, pattern) {
+  check_text(test)
+  check_text(pattern, n = 1)
  stringr::str_extract(test, pattern)
 }

@@ -16,7 +16,7 @@ test_that("create_pattern_XXXX()", {
   expect_silent(stringr::str_extract(test, p) %>% lubridate::ymd_hms())
 
   # Different order
-  expect_silent(d <- create_pattern_date(order = "mdy", n_years = 2))
+  expect_silent(d <- create_pattern_date(order = "mdy", y_digits = 2))
   p <- paste0(d, s, t)
 
   test <- c("sdfs061206T230000lkajsdlfj89", "aru06_05_10T23_00_00_site2",

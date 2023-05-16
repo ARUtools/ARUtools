@@ -16,10 +16,12 @@ knitr::opts_chunk$set(
 
 
 ```{r}
+#| message: false
 library(ARUtools)
+library(dplyr)
 ```
 
-In our getting started tutorial, we worked with a set of files that matched the
+In our "Getting started" tutorial, we worked with a set of files that matched the
 expected metadata patterns. However, this is probably not going to be the case
 much of the time.
 
@@ -63,7 +65,9 @@ This clearly doesn't define the sites in our example here.
 You can supply your own regular expression, instead.
 
 ```{r}
-clean_metadata(project_files = f, pattern_site_id = "site\\d{3}-(a|b)\\d{2}")
+m <- clean_metadata(project_files = f, pattern_site_id = "site\\d{3}-(a|b)\\d{2}")
+m
+m$site_id
 ```
 
 
@@ -84,7 +88,8 @@ pat_site
 ```
 
 ```{r}
-clean_metadata(project_files = f, pattern_site_id = pat_site)
+m <- clean_metadata(project_files = f, pattern_site_id = pat_site)
+m$site_id
 ```
 
 It can be useful to look at the default patterns in the functions to see what 
@@ -107,10 +112,11 @@ Let's continue customizing our metadata patterns by specifying ARU ids, dates an
 ```{r}
 pat_aru <- create_pattern_aru_id(arus = "s4a", n_digits = 4)
 
-clean_metadata(project_files = f,
-               pattern_site_id = pat_site,
-               pattern_aru_id = pat_aru,
-               pattern_dt_sep = "_")
+m <- clean_metadata(project_files = f,
+                    pattern_site_id = pat_site,
+                    pattern_aru_id = pat_aru,
+                    pattern_dt_sep = "_")
+m
 ```
 
 ## Other options
@@ -134,6 +140,91 @@ clean_metadata(project_files = f,
 
 Note that you need to specify it once when making the pattern, and then again 
 when telling the function how to turn the extracted text into a date.
+
+You can specify more than one order with `c("mdy", "ymd")`, but only do this if
+you *know* you have multiple orders in the file names. 
+In particular, try to avoid using both `mdy` and `dmy`. Some of these dates can
+be ambiguous (for example, what order is 05/05/2020?) and may not be parsed 
+correctly in these situations.
+
+
+### Matching multiple patterns
+
+```{r}
+f <- c("P01-1/05042020_052500_S4A1234.wav",
+       "P01-1/05042020_054000_S4A1111.wav",
+       "Site10/2020-01-01T09:00:00_BARLT100.wav",
+       "Site10/2020-01-02T09:00:00_BARLT100.wav")
+```
+
+Sometimes your files may use more than one pattern. You can address this problem
+in one of two ways. 
+
+**One option is to run `clean_metadata()` twice and then join the outputs**
+
+```{r}
+m1 <- clean_metadata(project_files = f, 
+                     pattern_dt_sep = "_",
+                     pattern_date = create_pattern_date(order = "mdy"),
+                     order_date = "mdy")
+m1 <- filter(m1, !is.na(date_time))
+m1
+
+m2 <- clean_metadata(
+  project_files = f,
+  pattern_site_id = create_pattern_site_id(prefix = "Site", s_digits = 0),
+  pattern_aru_id = create_pattern_aru_id(n_digits = 3))
+m2 <- filter(m2, !is.na(date_time))
+m2
+
+m <- bind_rows(m1, m2)
+m
+```
+
+With this approach you should check that the number of files in the end matches
+the number you expect.
+
+```{r}
+nrow(m)
+```
+
+**Another option is to supply multiple patterns to `clean_metadata()` or to the
+`create_pattern_XXX()` functions**
+
+```{r}
+m <- clean_metadata(project_files = f, 
+                    pattern_dt_sep = c("_", "T"),
+                    pattern_date = create_pattern_date(order = c("ymd", "mdy")),
+                    order_date = c("ymd", "mdy"),
+                    pattern_aru_id = create_pattern_aru_id(n_digits = c(3, 4)),
+                    pattern_site_id = create_pattern_site_id(prefix = c("P", "Site"),
+                                                             sep = c("-", ""),
+                                                             s_digits = c(1, 0)))
+m
+```
+
+**Which approach you should use depends on the situation.**
+
+The first approach means that the patterns being matched are more rigid. 
+There is less of a chance of accidentally matching an incorrect pattern.
+However, there is a chance of omitting files that don't match either pattern.
+
+The second approach is more flexible in matching patterns and allows you to do
+so all in one step, which is convenient. 
+However, the more flexible a pattern is, the more opportunities there are to get
+incorrect matches and date parsing. 
+
+With both approaches, it is important to double check the results and make sure
+the ids and date/times make sense.
+
+```{r}
+check_meta(m)
+check_meta(m, by_date = TRUE)
+check_problems(m)
+
+unique(m$site_id)
+unique(m$aru_id)
+```
 
 
 ### Subsetting files

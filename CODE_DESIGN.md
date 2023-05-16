@@ -27,3 +27,25 @@ making collaboration and future modifications easier.
 - Patterns that are not expected to vary, but either a) might, or b) need to
   be used in several places, are stored as options set in `ARUtools-package.R`
     - e.g., patterns for extracting data from GPS files
+    
+## Nitty gritty of patterns (esp for date/times)
+- Multiple patterns can be created by supplying multiple arguments to the 
+  `create_pattern_XXX()` functions, *or* by supplying a vector of patterns to
+  `clean_metadata()` (for example). 
+- Date/time patterns and order need to be specified in the pattern creation, but
+  *also* in `clean_metadata()` (`order_date`) because they are two steps, extracting
+  the pattern and then parsing the pattern. 
+- Currently, although seconds can be enforced, omitted or be optional in the 
+  `create_pattern_time()` function, they are *always* optional in the parsing
+  function (i.e. `lubridate::parse_date_time(... truncated = 1)`). 
+  If necessary, they could be made optional for parsing by adding another argument
+  `optional_sec` or similar, but this may be overkill for now
+- Right now, users supply date, sep, and time patterns, but possibly, it might
+  be worth having the option to supply a single datetime pattern that would take
+  precedence. It's unclear how often this would be necessary, however.
+- Where there is a possibility of matching different numbers of numbers (i.e.
+  can match 2 year digits or 4 year digits), always use `rev(sort(digits))`, 
+  (or `sort(digits, decreasing = TRUE)`) to ensure that longer patterns can
+  be matched before comparing to shorter patterns
+  
+  

@@ -37,22 +37,22 @@ to either `keep` or `omit` (see `subset_type`)}
 files/directories which match the pattern in `subset`.}
 
 \item{pattern_site_id}{Character. Regular expression to extract site ids. See
-`create_pattern_site_id()`.}
+`create_pattern_site_id()`. Can be a vector of multiple patterns to match.}
 
 \item{pattern_aru_id}{Character. Regular expression to extract ARU ids. See
-`create_pattern_aru_id()`.}
+`create_pattern_aru_id()`. Can be a vector of multiple patterns to match.}
 
 \item{pattern_date}{Character. Regular expression to extract dates. See
-`create_pattern_date()`.}
+`create_pattern_date()`. Can be a vector of multiple patterns to match.}
 
 \item{pattern_time}{Character. Regular expression to extract times. See
-`create_pattern_time()`.}
+`create_pattern_time()`. Can be a vector of multiple patterns to match.}
 
 \item{pattern_dt_sep}{Character. Regular expression to mark separators
 between dates and times. See `create_pattern_dt_sep()`.}
 
-\item{order_date}{Character. Order that the date appears in. One of "ymd"
-(default), "mdy", "dmy".}
+\item{order_date}{Character. Order that the date appears in. "ymd"
+(default), "mdy", or "dmy". Can be a vector of multiple patterns to match.}
 
 \item{quiet}{Logical. Whether to suppress progress messages.}
 }

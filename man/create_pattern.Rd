@@ -10,16 +10,16 @@
 \alias{test_pattern}
 \title{Create a pattern to match date}
 \usage{
-create_pattern_date(order = "ymd", sep = c("_", "-"), n_years = 4)
+create_pattern_date(order = "ymd", sep = c("_", "-", ""), y_digits = 4)
 
-create_pattern_time(sep = c("_", "-", ":"), seconds = TRUE)
+create_pattern_time(sep = c("_", "-", ":", ""), seconds = "yes")
 
 create_pattern_dt_sep(sep = "T", optional = FALSE)
 
 create_pattern_aru_id(
   arus = c("BARLT", "S\\\\d(A|U)", "SM\\\\d", "SMM", "SMA"),
   n_digits = c(4, 8),
-  sep = c("_", "-"),
+  sep = c("_", "-", ""),
   prefix = "",
   suffix = ""
 )
@@ -35,31 +35,36 @@ create_pattern_site_id(
 test_pattern(test, pattern)
 }
 \arguments{
-\item{order}{Character. Expected order of (y)ear, (m)onth and (d)ate.
-Default is "ymd" for Year-Month-Date order.}
+\item{order}{Character vector. Expected orders of (y)ear, (m)onth and (d)ate.
+Default is "ymd" for Year-Month-Date order. Can have more than one possible
+order.}
 
-\item{sep}{Character. Separators between a prefix and suffix sections}
+\item{sep}{Character vector. Expected separator(s) between the pattern parts.
+Can be "" for no separator.}
 
-\item{n_years}{Numeric. Number of digits in Year, either 2 or 4.}
+\item{y_digits}{Numeric vector. Number of digits in Year, either 2 or 4.}
 
-\item{seconds}{Logical. Whether seconds are included.}
+\item{seconds}{Character. Whether seconds are included. Options are "yes",
+"no", "maybe".}
 
 \item{optional}{Logical. Whether the separator should be optional or not.
 Allows matching on different date/time patterns.}
 
-\item{arus}{Character. Pattern identifying the ARU prefix (usually model specific).}
+\item{arus}{Character vector. Pattern(s) identifying the ARU prefix (usually
+model specific).}
 
-\item{n_digits}{Numeric. Number of digits expected to follow the `arus` pattern. Can be one or two (a range).}
+\item{n_digits}{Numeric vector. Number of digits expected to follow the
+`arus` pattern. Can be one or two (a range).}
 
-\item{prefix}{Character. Prefixes (can be more than one) for site ids.}
+\item{prefix}{Character vector. Prefix(es) for site ids.}
 
-\item{suffix}{Character. Suffixes (can be more than one) for site ids.}
+\item{suffix}{Character vector. Suffix(es) for site ids.}
 
-\item{p_digits}{Numeric. Number of digits following the `prefix`.}
+\item{p_digits}{Numeric vector. Number(s) of digits following the `prefix`.}
 
-\item{s_digits}{Numeric. Number of digits following the `suffix`.}
+\item{s_digits}{Numeric vector. Number(s) of digits following the `suffix`.}
 
-\item{test}{Character. Example text to test.}
+\item{test}{Character vector. Examples of text to test.}
 
 \item{pattern}{Character. Regular expression pattern to test.}
 }
@@ -96,8 +101,9 @@ pattern grabs what you want. This is just a simple wrapper around
 
 }}
 \examples{
-create_pattern_date()  # Default matches 2020-01-01 (- or _ as optional separators)
-create_pattern_date(sep = "") # Matches 20200101 (no separator)
+create_pattern_date()  # Default matches 2020-01-01 or 2020_01_01 or 20200101
+                       # ("-", "_" or "" as separators)
+create_pattern_date(sep = "") # Matches only 20200101 (no separator allowed)
 
 create_pattern_time()  # Default matches 23_59_59 (_, -, :, as optional separators)
 create_pattern_time(sep = "", seconds = FALSE) # Matches 2359 (no seconds no separators)
@@ -129,6 +135,6 @@ pat <- create_pattern_site_id(prefix = "site", p_digits = 3, sep = "", s_digits 
 test_pattern("site111", pat)
 pat <- create_pattern_site_id(prefix = "site", p_digits = 3, sep = "",
                              suffix = c("a", "b", "c"), s_digits = 0)
-test_pattern("site100a", pat)
+test_pattern(c("site9", "site100a"), pat)
 
 }
