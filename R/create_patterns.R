@@ -25,7 +25,7 @@ NULL
 #' @param order Character vector. Expected orders of (y)ear, (m)onth and (d)ate.
 #'   Default is "ymd" for Year-Month-Date order. Can have more than one possible
 #'   order.
-#' @param y_digits Numeric vector. Number of digits in Year, either 2 or 4.
+#' @param yr_digits Numeric vector. Number of digits in Year, either 2 or 4.
 #'
 #' @examples
 #' create_pattern_date()  # Default matches 2020-01-01 or 2020_01_01 or 20200101
@@ -35,19 +35,19 @@ NULL
 #' @export
 #' @describeIn create_pattern Create a pattern to match a date
 
-create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), y_digits = 4) {
+create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits = 4) {
 
   check_text(order, opts = c("ymd", "dmy", "mdy"))
   check_text(sep)
-  check_num(y_digits, opts = c(2, 4))
+  check_num(yr_digits, opts = c(2, 4))
 
   sep <- create_pattern_sep(sep, optional = FALSE)
 
 
-  y_digits <- rev(sort(y_digits)) # Ensure long patterns matched first if available
+  yr_digits <- rev(sort(yr_digits)) # Ensure long patterns matched first if available
 
-  y <- dplyr::case_when(y_digits == 4 ~ "([12]{1}\\d{3})",  # First must be 1 or 2
-                        y_digits == 2 ~ "(\\d{2})") |>
+  y <- dplyr::case_when(yr_digits == 4 ~ "([12]{1}\\d{3})",  # First must be 1 or 2
+                        yr_digits == 2 ~ "(\\d{2})") |>
     pat_collapse()
 
   m <- "(\\d{2})"

@@ -10,7 +10,7 @@
 \alias{test_pattern}
 \title{Create a pattern to match date}
 \usage{
-create_pattern_date(order = "ymd", sep = c("_", "-", ""), y_digits = 4)
+create_pattern_date(order = "ymd", sep = c("_", "-", ""), yr_digits = 4)
 
 create_pattern_time(sep = c("_", "-", ":", ""), seconds = "yes")
 
@@ -42,7 +42,7 @@ order.}
 \item{sep}{Character vector. Expected separator(s) between the pattern parts.
 Can be "" for no separator.}
 
-\item{y_digits}{Numeric vector. Number of digits in Year, either 2 or 4.}
+\item{yr_digits}{Numeric vector. Number of digits in Year, either 2 or 4.}
 
 \item{seconds}{Character. Whether seconds are included. Options are "yes",
 "no", "maybe".}
