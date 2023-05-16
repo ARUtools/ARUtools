@@ -5,11 +5,12 @@
 \title{Common arguments and documentation for various functions}
 \arguments{
 \item{project_dir}{Character. Directory where project files are stored. File
-paths will be used to extract information Must have one of `project_dir` or
-`project_files`.}
+paths will be used to extract information and must actually exist.}
 
-\item{project_files}{Character. Vector of project file paths. Must have one
-of `project_dir` or `project_files`.}
+\item{project_files}{Character. Vector of project file paths. These paths can
+be absolute or relative to the working directory, and don't actually need
+to point to existing files unless you plan to use `clean_gps()` or other
+sampling steps down the line. Must be provided if `project_dir` is `NULL`.}
 
 \item{subset}{Character. Text pattern to mark a subset of files/directories
 to either `keep` or `omit` (see `subset_type`)}

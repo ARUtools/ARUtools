@@ -80,12 +80,18 @@ clean_metadata <- function(
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
 
   if(!is.null(project_dir)) {
+    if(!is.null(project_files)) {
+      rlang::warn("`project_dir` overrides `project_files`", call = NULL)
+    }
     if(!quiet) rlang::inform("Fetching file list...")
     project_files <- list_files(project_dir, subset, subset_type,
                                 type = "file")
   } else if(!is.null(subset)){
     project_files <- stringr::str_subset(project_files, subset,
                                          negate = subset_type == "omit")
+  } else if(is.null(project_files)) {
+    rlang::abort("Must provide one of `project_dir` or `project_files`",
+                 call = NULL)
   }
 
   # Check for files (either zero or all directories)

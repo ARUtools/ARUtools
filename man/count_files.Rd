@@ -8,8 +8,7 @@ count_files(project_dir, subset = NULL, subset_type = "keep")
 }
 \arguments{
 \item{project_dir}{Character. Directory where project files are stored. File
-paths will be used to extract information Must have one of `project_dir` or
-`project_files`.}
+paths will be used to extract information and must actually exist.}
 
 \item{subset}{Character. Text pattern to mark a subset of files/directories
 to either `keep` or `omit` (see `subset_type`)}

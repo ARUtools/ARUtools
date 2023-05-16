@@ -15,8 +15,8 @@ clean_site_index(
 )
 }
 \arguments{
-\item{site_index}{Data frame or file path. Site index data to clean. If file
-path, must be to a local csv or xlsx file.}
+\item{site_index}{Data frame (can be spatial) or file path. Site index data
+to clean. If file path, must be to a local csv or xlsx file.}
 
 \item{col_aru_id}{Character. Column name that contains ARU ids. Default `aru_id`.}
 
@@ -27,7 +27,7 @@ date/times. Can be vector of two names if there are both 'start' and 'end'
 columns.}
 
 \item{col_coords}{Character. Column names that contain longitude and
-latitude (in that order).}
+latitude (in that order). Ignored if `site_index` is spatial.}
 
 \item{col_extra}{Character. Column names for extra data to include. If a named
 vector, will rename the columns (see examples).}
