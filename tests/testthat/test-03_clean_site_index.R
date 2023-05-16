@@ -37,17 +37,28 @@ test_that("clean_site_index()", {
 
   expect_equal(i1, i2)
 
+  # Tibble
+  expect_message(i3 <- clean_site_index(
+    dplyr::as_tibble(example_sites),
+    col_aru_id = "ARU",
+    col_site_id = "Sites",
+    col_date_time = c("Date_set_out", "Date_removed"),
+    col_coords = c("lon", "lat")),
+    "overlapping date ranges")
+
+  expect_equal(i1, i3)
+
   # SF
   example_sites_sf <- sf::st_as_sf(example_sites, coords = c("lon", "lat"),
                                    crs = 4326)
-  expect_message(i3 <- clean_site_index(
+  expect_message(i4 <- clean_site_index(
     example_sites_sf,
     col_aru_id = "ARU",
     col_site_id = "Sites",
     col_date_time = c("Date_set_out", "Date_removed")),
     "overlapping date ranges")
 
-  expect_equal(sf::st_drop_geometry(i3),
+  expect_equal(sf::st_drop_geometry(i4),
                dplyr::select(i2, -"longitude", -"latitude"))
 })
 
