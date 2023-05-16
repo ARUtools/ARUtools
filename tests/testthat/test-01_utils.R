@@ -26,3 +26,44 @@ test_that("date_join()", {
   y <- dplyr::select(y, -aru_id)
   expect_silent(date_join(x, y, by = c("site_id"), id = "file"))
 })
+
+
+test_that("sf_to_df() / df_to_sf()", {
+
+  # GPS
+  sf1 <- sf::st_as_sf(example_clean,
+                      coords = c("longitude", "latitude"),
+                      crs = 4326)
+
+  expect_silent(df1 <- sf_to_df(sf1))
+  expect_false(inherits(df1, "sf"))
+  expect_equal(example_clean, df1)
+
+  expect_silent(sf2 <- df_to_sf(df1, sf1))
+  expect_s3_class(sf2, "sf")
+  expect_equal(sf2, sf1)
+
+  # Non-GPS
+  sf3 <- sf::st_as_sf(example_clean,
+                      coords = c("longitude", "latitude"),
+                      crs = 4326) |>
+    sf::st_transform(crs = 3161)
+
+  expect_silent(df2 <- sf_to_df(sf3))
+  expect_false(inherits(df2, "sf"))
+  expect_equal(example_clean, df2)
+
+  expect_silent(sf4 <- df_to_sf(df2, sf3))
+  expect_s3_class(sf4, "sf")
+  expect_equal(sf4, sf3)
+
+  # No change
+  expect_silent(df <- sf_to_df(example_clean))
+  expect_false(inherits(df2, "sf"))
+  expect_equal(example_clean, df)
+
+  expect_silent(sf_false <- df_to_sf(df, example_clean))
+  expect_false(inherits(sf_false, "sf"))
+  expect_equal(sf_false, df)
+
+})

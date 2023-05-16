@@ -34,9 +34,13 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
   check_data(meta_sites, type = "meta_sites", ref = "add_sites()")
   check_tz(aru_tz)
 
+  # If sf, convert to df
+  m <- sf_to_df(meta_sites)
+
   if(aru_tz == "local") {
     # Get timezones from location if not set globally
-    tz <- dplyr::select(meta_sites, "longitude", "latitude") |>
+
+    tz <- dplyr::select(m, "longitude", "latitude") |>
       dplyr::distinct() |>
       tidyr::drop_na() |>
       dplyr::mutate(
@@ -45,9 +49,9 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
           lon = .data$longitude,
           method = 'accurate'))
 
-    m <- dplyr::left_join(meta_sites, tz, by = c("longitude", "latitude"))
+    m <- dplyr::left_join(m, tz, by = c("longitude", "latitude"))
   } else {
-    m <- dplyr::mutate(meta_sites, tz = .env$aru_tz)
+    m <- dplyr::mutate(m, tz = .env$aru_tz)
   }
 
   ss <- dplyr::select(m, "date", "tz", "longitude", "latitude") |>
@@ -63,7 +67,9 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
 
   m |>
     calc_ss_diff() |>
-    dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss")
+    df_to_sf(meta_sites) |> # If was sf, convert back
+    dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss") |>
+    dplyr::relocate(dplyr::any_of("geometry"), .after = dplyr::last_col())
 }
 
 #' Calculate sunrise and sunset times for range of dates

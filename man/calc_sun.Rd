@@ -7,8 +7,9 @@
 calc_sun(meta_sites, aru_tz = "local")
 }
 \arguments{
-\item{meta_sites}{Data frame. Recording metadata with added coordinates.
-Output of `clean_metadata()` and then `add_sites()`.}
+\item{meta_sites}{(Spatial) Data frame. Recording metadata with added
+coordinates. Output of `clean_metadata()` and then `add_sites()` (with
+either `clean_gps()` or `clean_site_index()`).}
 
 \item{aru_tz}{Character. Must be either "local" or a timezone listed in
 `OlsonNames()`. See Details.}

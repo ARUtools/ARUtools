@@ -104,3 +104,31 @@ minmax_q <- function(x, fun) {
   r
 }
 
+
+
+#' Convert spatial data frames to non-spatial data frames and back
+#'
+#' Extract geometry as latitude and longitude columns.
+#' Backwards conversion uses crs from original spatial data.
+#'
+#' @noRd
+sf_to_df <- function(sf) {
+  if(inherits(sf, "sf")){
+    sf <- sf::st_transform(sf, crs = 4326)
+
+    df <- sf |>
+      sf::st_drop_geometry() |>
+      dplyr::bind_cols(sf::st_coordinates(sf)) |>
+      dplyr::rename("longitude" = "X", "latitude" = "Y")
+  } else df <- sf
+  df
+}
+
+df_to_sf <- function(df, sf) {
+  if(inherits(sf, "sf")) {
+    sf <- df |>
+      sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+      sf::st_transform(sf::st_crs(sf))
+  } else sf <- df
+  sf
+}

@@ -109,4 +109,15 @@ test_that("calc_sun()", {
 
   # Expect others to be the same
   expect_equal(s1$t2sr[-i], s2$t2sr[-i])
+
+
+  # SF input - Works and returns sf output
+  example_clean_sf <- sf::st_as_sf(example_clean,
+                                   coords = c("longitude", "latitude"),
+                                   crs = 4326)
+
+  expect_silent(s_sf <- calc_sun(example_clean_sf))
+  expect_equal(example_clean_sf, dplyr::select(s_sf, -"tz", -"t2sr", -"t2ss"))
+  expect_equal(df_to_sf(s1, s_sf), s_sf)
+
 })

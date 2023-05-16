@@ -12,8 +12,9 @@
 #' @param subset_type Character. Either `keep` (default) or `omit`
 #'   files/directories which match the pattern in `subset`.
 #' @param meta Data frame. Recording metadata. Output of `clean_metadata()`.
-#' @param meta_sites Data frame. Recording metadata with added coordinates.
-#'   Output of `clean_metadata()` and then `add_sites()`.
+#' @param meta_sites (Spatial) Data frame. Recording metadata with added
+#'   coordinates. Output of `clean_metadata()` and then `add_sites()` (with
+#'   either `clean_gps()` or `clean_site_index()`).
 #' @param by_date Logical. Whether to summarize output by date (as well as
 #'   `site_id` and `aru_id`. Default `FALSE`.
 #'

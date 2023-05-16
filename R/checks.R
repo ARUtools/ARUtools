@@ -8,6 +8,8 @@ check_data <- function(df, type, ref) {
 
     e <- paste0("Should be output of `", ref, "`")
 
+    if(inherits(df, "sf")) coords <- NULL else coords <- c("latitude", "longitude")
+
     if(type == "meta") {
       check_cols(
         df, c("file_name", "path", "site_id", "date", "date_time", "aru_id"),
@@ -15,19 +17,19 @@ check_data <- function(df, type, ref) {
         extra = e)
     } else if(type == "sites") {
       check_cols(
-        df, c("site_id", "aru_id", "latitude", "longitude"),
+        df, c("site_id", "aru_id", coords),
         dates = TRUE,
         name = "sites",
         extra = e)
     } else if (type == "meta_sites") {
       check_cols(
-        df, c("site_id", "aru_id", "latitude", "longitude"),
+        df, c("site_id", "aru_id", coords),
         dates = TRUE,
         name = "meta",
         extra = e)
     } else if (type == "meta_sun") {
       check_cols(
-        df, c("site_id", "aru_id", "latitude", "longitude", "tz", "t2sr", "t2ss"),
+        df, c("site_id", "aru_id", coords, "tz", "t2sr", "t2ss"),
         dates = TRUE,
         name = "meta",
         extra = e)
