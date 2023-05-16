@@ -44,11 +44,11 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
   check_data(sites, type = "sites", ref = "clean_sites_index()` or `clean_gps()")
-  check_text(by, n = c(1, Inf))
-  check_text(dt_type, opts = c("date", "date_time"))
-  check_num(digits)
-  check_num(buffer_before, not_null = FALSE)
-  check_num(buffer_after, not_null = FALSE)
+  check_text(by)
+  check_text(dt_type, opts = c("date", "date_time"), n = 1)
+  check_num(digits, n = 1)
+  check_num(buffer_before, not_null = FALSE, n = 1)
+  check_num(buffer_after, not_null = FALSE, n = 1)
 
   by_date <- check_date_joins(sites, dt_type)
 

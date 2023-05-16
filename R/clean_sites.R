@@ -52,10 +52,10 @@ clean_site_index <- function(site_index,
 
   # Checks
   check_df_file(site_index)
-  check_text(col_aru_id)
-  check_text(col_site_id)
+  check_text(col_aru_id, n = 1)
+  check_text(col_site_id, n = 1)
   check_text(col_date_time, n = c(1, 2))
-  check_text(col_extra, not_null = FALSE, n = c(1, Inf))
+  check_text(col_extra, not_null = FALSE)
   check_logical(resolve_overlaps)
 
   is_sf <- inherits(site_index, "sf")
@@ -206,9 +206,9 @@ clean_gps <- function(meta = NULL,
 
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
-  check_num(dist_cutoff)
-  check_num(dist_crs)
-  check_text(dist_by, n = c(1, Inf))
+  check_num(dist_cutoff, n = 1)
+  check_num(dist_crs, n = 1)
+  check_text(dist_by)
   check_logical(skip_bad)
   check_logical(verbose)
 

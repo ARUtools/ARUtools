@@ -52,14 +52,15 @@ clean_metadata <- function(
     quiet = FALSE) {
 
   # Checks
-  check_text(project_dir, not_null = FALSE)
-  check_text(project_files, not_null = FALSE, n = c(1, Inf))
-  check_text(file_type)
-  check_text(subset, not_null = FALSE)
-  check_text(subset_type)
+  check_text(project_dir, not_null = FALSE, n = 1)
+  check_text(project_files, not_null = FALSE)
+  check_text(file_type, n = 1)
+  check_text(subset, not_null = FALSE, n = 1)
+  check_text(subset_type, n = 1)
   check_text(pattern_site_id)
   check_text(pattern_aru_id)
   check_text(pattern_date)
+  check_text(pattern_time)
   check_text(pattern_dt_sep)
   check_text(order_date)
   check_logical(quiet)

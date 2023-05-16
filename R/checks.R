@@ -49,7 +49,7 @@ check_ext <- function(ext, opts)  {
 }
 
 
-check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = 1) {
+check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = c(1, Inf)) {
   nm <- paste0("`", nm, "`")
   if(not_null && is.null(x)) {
     rlang::abort(paste(nm, "cannot be `NULL`"), call = NULL)
@@ -78,7 +78,7 @@ check_num <- function(x, ..., type = "numeric") {
   check_value(x, nm = deparse(substitute(x)), ..., type = type)
 }
 
-check_logical <- function(x, ..., type = "logical") {
+check_logical <- function(x, ..., type = "logical", n = 1) {
   check_value(x, nm = deparse(substitute(x)), ..., type = type)
 }
 
