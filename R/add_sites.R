@@ -50,6 +50,11 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   check_num(buffer_before, not_null = FALSE, n = 1)
   check_num(buffer_after, not_null = FALSE, n = 1)
 
+  if(any(c("date", "date_time") %in% by)) {
+    rlang::abort(c("Cannot use 'date' or 'date_time' in `by`. ",
+                   "Did you mean to use `dt_type`?"), call = NULL)
+  }
+
   by_date <- check_date_joins(sites, dt_type)
 
   meta <- dplyr::filter(meta, .data$type != "gps")
