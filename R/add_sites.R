@@ -113,13 +113,35 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   }
 
 
-  # Summarize multiple, similar coordinates within a date by grouping variables
+  sites <- dplyr::distinct(sites) # Omit duplicates
+
+  # Summarize multiple, coordinates within a date by grouping variables
   # Deals with multiple reads of GPS locations (e.g., hourly)
-  if(!is.null(digits) && dt_type == "date") {
-    sites <- sites %>%
-      dplyr::mutate(longitude = floor_dec(.data$longitude, .env$digits),
-                    latitude = floor_dec(.data$latitude, .env$digits)) |>
-      dplyr::distinct()
+  if(dt_type == "date") {
+    n <- dplyr::count(
+      sites,
+      dplyr::across(.cols = c(dplyr::all_of(by), dplyr::matches("date(_(start|end))?"))))
+    if(any(n$n > 1)) {
+
+      sites <- sites |>
+        dplyr::group_by(dplyr::across(
+          .cols = c(dplyr::all_of(by), dplyr::matches("date(_(start|end))?")))) |>
+        dplyr::summarize(sd_lon = sd(.data$longitude),
+                         sd_lat = sd(.data$latitude),
+                         longitude = mean(.data$longitude),
+                         latitude = mean(.data$latitude)) |>
+        dplyr::ungroup()
+
+      rlang::inform(c(
+        paste0("Multiple coordinates per date at each combination of `",
+               paste0(by, collapse = "`/`"), "`"),
+        paste0("Taking mean coordinates ",
+               "(max sd lon ", round(max(sites$sd_lon, na.rm = TRUE), 4),
+               "; max sd lat ", round(max(sites$sd_lat, na.rm = TRUE), 4), ")"),
+        "Consider using `by = \"date_time\"` for more fine-tuned control"))
+
+      sites <- dplyr::select(sites, -"sd_lon", -"sd_lat")
+    }
   }
 
 

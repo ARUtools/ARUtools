@@ -1,25 +1,45 @@
-
 test_that("add_sites()", {
-  i <- clean_site_index(example_sites,
-                        col_aru_id = "ARU",
-                        col_site_id = "Sites",
-                        col_date_time = c("Date_set_out", "Date_removed"),
-                        col_coords = c("lon", "lat")) |>
-    suppressMessages()
+  meta <- clean_metadata(project_files = example_files, quiet = TRUE)
+  m <- dplyr::mutate(meta, site_id = NA_character_)
 
-  # Add site_ids by date correctlyl
-  expect_silent(m <- clean_metadata(project_files = example_files, quiet = TRUE))
-  m2 <- dplyr::mutate(m, site_id = NA_character_)
-  expect_message(m2 <- add_sites(m2, i, by = "aru_id")) |>
+  # Add site_ids by datetime
+  expect_message(m <- add_sites(m, example_sites_clean, by = "aru_id")) |>
     suppressMessages()
-  expect_equal(dplyr::arrange(m, file_name), dplyr::arrange(m2[names(m)], file_name))
+  expect_equal(dplyr::arrange(meta, file_name),
+               dplyr::arrange(m[names(meta)], file_name))
 
-  # Add lat/lon correctly
-  dts <- dplyr::group_by(i, site_id, aru_id, latitude, longitude) |>
-    dplyr::reframe(date = seq(date_start, date_end, by = "1 day"))
+  # Check that lat/lon added correctly
   # All site/aru/date/coord combos exist in site index data
+  dts <- dplyr::group_by(example_sites_clean, site_id, aru_id, latitude, longitude) |>
+    dplyr::reframe(date = seq(date_start, date_end, by = "1 day"))
   expect_equal(
-    dplyr::anti_join(dplyr::select(m2, site_id, aru_id, date, latitude, longitude),
+    dplyr::anti_join(dplyr::select(m, site_id, aru_id, date, latitude, longitude),
                      dts, by = c("site_id", "aru_id", "date")) |> nrow(),
     0)
+
+  # Add site_ids by date
+  expect_message(m <- add_sites(m, example_sites_clean, by = "aru_id", dt_type = "date"),
+                 "matched multiple site references") |>
+    suppressMessages()
+})
+
+test_that("add_sites() average over coords", {
+
+  i <- data.frame(
+    site_id = c("P01", "P01", "P02", "P02"),
+    aru_id = c("A", "A", "B", "B"),
+    date = rep("2020-05-01", 4),
+    longitude = c(-88, -88.3, -99, -99.1),
+    latitude = c(50, 50.1, 52, 52.2)) |>
+    clean_site_index()
+
+  meta <- dplyr::select(i, -"longitude", -"latitude") |>
+   dplyr::mutate(file_name = "a", path = "b", type = "wav")
+
+  expect_message(m <- add_sites(meta, i, dt_type = "date"),
+                 "Taking mean coordinates")
+  expect_named(m, c(names(meta), "longitude", "latitude"))
+  expect_equal(m$longitude, c(-88.15, -88.15, -99.05, -99.05))
+  expect_equal(m$latitude, c(50.05, 50.05, 52.1, 52.1))
+
 })

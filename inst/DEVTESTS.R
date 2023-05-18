@@ -102,10 +102,12 @@ check_file(m$path[183]) # lines in file
 g <- clean_gps(m, skip_bad = TRUE)
 g <- clean_gps(m, skip_bad = TRUE, dist_cutoff = Inf)
 
-m <- add_sites(m, g)
 
-check_problems(m, check = "longitude")
-check_problems(m, check = "longitude", by_date = TRUE)
+m1 <- add_sites(m, g, dt_type = "date") # Faster, but averages over coordinates
+m2 <- add_sites(m, g)                   # Slow but matches more precisely
+
+check_problems(m2, check = "longitude")
+check_problems(m2, check = "longitude", by_date = TRUE)
 
 filter(g, site_id == "P68_2") # No GPS log for this site
 
