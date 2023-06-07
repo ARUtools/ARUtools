@@ -48,7 +48,7 @@ test_that("clean_site_index()", {
 
   expect_equal(i1, i3)
 
-  # SF
+  # sf
   example_sites_sf <- sf::st_as_sf(example_sites, coords = c("lon", "lat"),
                                    crs = 4326)
   expect_message(i4 <- clean_site_index(
@@ -128,7 +128,7 @@ test_that("clean_site_index() date/times", {
                                  col_date_time = c("date_time_start")))
 })
 
-test_that("clean_site_index() errors", {
+test_that("clean_site_index() errors etc.", {
 
   e <- dplyr::mutate(example_sites_clean, date = "2020-05-06 01:00:00")
   expect_silent(clean_site_index(e))

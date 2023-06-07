@@ -20,10 +20,6 @@
 #'   `site_id` and `aru_id`.
 #' @param dt_type Character. Date/time type to join data by. `date` is faster
 #'   but `date_time` is more precise. Default `date_time`.
-#' @param digits Numeric. Number of digits to keep in coordinates. Coordinates
-#'   are rounded down to this number of digits to reduce minor variations in
-#'   coordinates recorded by ARUs at the same site. To omit this simplification
-#'   use a high number of digits. Default 3.
 #'
 #' @inheritParams common_docs
 #'
@@ -39,14 +35,13 @@
 #'
 add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
                       by = c("site_id", "aru_id"),
-                      dt_type = "date_time", digits = 3) {
+                      dt_type = "date_time") {
 
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
   check_data(sites, type = "sites", ref = "clean_sites_index()` or `clean_gps()")
   check_text(by)
   check_text(dt_type, opts = c("date", "date_time"), n = 1)
-  check_num(digits, n = 1)
   check_num(buffer_before, not_null = FALSE, n = 1)
   check_num(buffer_after, not_null = FALSE, n = 1)
 
@@ -54,6 +49,10 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
     rlang::abort(c("Cannot use 'date' or 'date_time' in `by`. ",
                    "Did you mean to use `dt_type`?"), call = NULL)
   }
+
+  # If sf, convert to df
+  crs <- sf::st_crs(sites) # Hold on for converting back
+  sites <- sf_to_df(sites)
 
   by_date <- check_date_joins(sites, dt_type)
 
@@ -76,7 +75,7 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   # Clean up and formatting
   omit_dts <- stringr::str_subset(names(sites), "date")
   omit_dts <- omit_dts[!omit_dts %in% by_date]
-  sites <- tidyr::drop_na(sites, dplyr::any_of(by_date), "longitude", "latitude") |>
+  sites <- tidyr::drop_na(sites, dplyr::any_of(c(by_date, "longitude", "latitude"))) |>
     dplyr::select(-dplyr::all_of(omit_dts)) |>
     dplyr::mutate(dplyr::across(dplyr::all_of(by_date), dt_fun))
 
@@ -117,8 +116,8 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
       call = NULL)
   }
 
-
-  sites <- dplyr::distinct(sites) # Omit duplicates
+  # Omit duplicates
+  sites <- dplyr::distinct(sites)
 
   # Summarize multiple, coordinates within a date by grouping variables
   # Deals with multiple reads of GPS locations (e.g., hourly)
@@ -196,7 +195,10 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
     rlang::inform(msg)
   }
 
-  dplyr::select(meta_sites, -"...n") |>
+  meta_sites |>
+    dplyr::select(-"...n") |>
+    # If was sf, convert back
+    df_to_sf(crs = crs) |>
     dplyr::arrange(dplyr::across(dplyr::any_of(c(by, by_date, "path"))))
 }
 

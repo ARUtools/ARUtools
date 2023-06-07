@@ -106,10 +106,9 @@ minmax_q <- function(x, fun) {
 
 
 
-#' Convert spatial data frames to non-spatial data frames and back
+#' Convert spatial data frame to non-spatial data frame
 #'
 #' Extract geometry as latitude and longitude columns.
-#' Backwards conversion uses crs from original spatial data.
 #'
 #' @noRd
 sf_to_df <- function(sf) {
@@ -124,11 +123,34 @@ sf_to_df <- function(sf) {
   df
 }
 
-df_to_sf <- function(df, sf) {
-  if(inherits(sf, "sf")) {
-    sf <- df |>
-      sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
-      sf::st_transform(sf::st_crs(sf))
+#' Convert data frame to spatial data frame if possible
+#'
+#' @param df Data frame to convert
+#' @param sf Original sf data frame (optional, used to get CRS only)
+#' @param crs CRS to use when converting (required if no sf)
+#'
+#' If no sf and no crs, assumes original was a data frame and silently returns
+#' data frame.
+#'
+#' If sf/crs, sses the original sf data frame to get the CRS if not provided. First
+#' checks for missing coordinates. If any are missing warns user and returns
+#' data frame for troubleshooting.
+#'
+#' @noRd
+df_to_sf <- function(df, sf = NULL, crs = NA) {
+  if(!is.null(sf)) crs <- sf::st_crs(sf)
+
+  if(!is.na(crs)) {
+    if(any(is.na(df$latitude) | is.na(df$longitude))) {
+      rlang::warn(c("Cannot have missing coordinates in spatial data frames",
+                    "Returning non-spatial data frame"), call = NULL)
+      sf <- df
+    } else {
+      sf <- df |>
+        sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+        sf::st_transform(crs)
+    }
   } else sf <- df
+
   sf
 }

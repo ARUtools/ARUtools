@@ -35,6 +35,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
   check_tz(aru_tz)
 
   # If sf, convert to df
+  crs <- sf::st_crs(meta_sites)
   m <- sf_to_df(meta_sites)
 
   if(aru_tz == "local") {
@@ -67,7 +68,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
 
   m |>
     calc_ss_diff() |>
-    df_to_sf(meta_sites) |> # If was sf, convert back
+    df_to_sf(crs = crs) |> # If was sf, convert back
     dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss") |>
     dplyr::relocate(dplyr::any_of("geometry"), .after = dplyr::last_col())
 }

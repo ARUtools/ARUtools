@@ -10,8 +10,7 @@ add_sites(
   buffer_before = 0,
   buffer_after = NULL,
   by = c("site_id", "aru_id"),
-  dt_type = "date_time",
-  digits = 3
+  dt_type = "date_time"
 )
 }
 \arguments{
@@ -37,11 +36,6 @@ as `meta`, besides date/time, which are used to join the data. Default is
 
 \item{dt_type}{Character. Date/time type to join data by. `date` is faster
 but `date_time` is more precise. Default `date_time`.}
-
-\item{digits}{Numeric. Number of digits to keep in coordinates. Coordinates
-are rounded down to this number of digits to reduce minor variations in
-coordinates recorded by ARUs at the same site. To omit this simplification
-use a high number of digits. Default 3.}
 }
 \value{
 A data frame of metadata with site-level data joined in.

@@ -3,24 +3,32 @@ test_that("add_sites()", {
   m <- dplyr::mutate(meta, site_id = NA_character_)
 
   # Add site_ids by datetime
-  expect_message(m <- add_sites(m, example_sites_clean, by = "aru_id")) |>
+  expect_message(m1 <- add_sites(m, example_sites_clean, by = "aru_id")) |>
     suppressMessages()
   expect_equal(dplyr::arrange(meta, file_name),
-               dplyr::arrange(m[names(meta)], file_name))
+               dplyr::arrange(m1[names(meta)], file_name))
 
   # Check that lat/lon added correctly
   # All site/aru/date/coord combos exist in site index data
   dts <- dplyr::group_by(example_sites_clean, site_id, aru_id, latitude, longitude) |>
     dplyr::reframe(date = seq(date_start, date_end, by = "1 day"))
   expect_equal(
-    dplyr::anti_join(dplyr::select(m, site_id, aru_id, date, latitude, longitude),
+    dplyr::anti_join(dplyr::select(m1, site_id, aru_id, date, latitude, longitude),
                      dts, by = c("site_id", "aru_id", "date")) |> nrow(),
     0)
 
   # Add site_ids by date
-  expect_message(m <- add_sites(m, example_sites_clean, by = "aru_id", dt_type = "date"),
+  expect_message(add_sites(m, example_sites_clean, by = "aru_id", dt_type = "date"),
                  "matched multiple site references") |>
     suppressMessages()
+
+  # sf
+  example_sites_clean_sf <- df_to_sf(example_sites_clean, crs = 4326)
+  expect_message(m1 <- add_sites(m, example_sites_clean_sf, by = "aru_id")) |>
+    suppressMessages()
+  expect_s3_class(m1, "sf")
+  expect_equal(nrow(m), nrow(m1))
+
 })
 
 test_that("add_sites() average over coords", {
