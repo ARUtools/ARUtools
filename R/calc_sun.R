@@ -33,6 +33,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
   # Checks
   check_data(meta_sites, type = "meta_sites", ref = "add_sites()")
   check_tz(aru_tz)
+  meta_sites <- check_UTC(meta_sites)
 
   # If sf, convert to df
   crs <- sf::st_crs(meta_sites)

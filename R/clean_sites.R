@@ -6,6 +6,10 @@
 #' to specify missing information according to date, such as GPS lat/lons and
 #' site ids.
 #'
+#' Note that times are assumed to be in 'local' time and a timezone isn't used
+#' (and is removed if present, replaced with UTC). This allows sites
+#' from different timezones to be processed at the same time.
+#'
 #' @param site_index Data frame (can be spatial) or file path. Site index data
 #'   to clean. If file path, must be to a local csv or xlsx file.
 #' @param col_aru_id Character. Column name that contains ARU ids. Default `aru_id`.
@@ -125,12 +129,16 @@ clean_site_index <- function(site_index,
     col_extra) |>
     tolower()
 
+  # Check and force time zones to UTC if required
+  site_index <- check_UTC(site_index, cols[dt])
+
+  # Rename and fix dates
   site_index <- site_index |>
     # Grab and rename columns
     dplyr::select(dplyr::all_of(cols)) |>
     # Get dates
     dplyr::mutate(
-      dplyr::across(dplyr::all_of(dt), lubridate::as_datetime),
+      dplyr::across(dplyr::all_of(dt), ~lubridate::as_datetime(.x) |> lubridate::force_tz("UTC")),
       dplyr::across(dplyr::all_of(dt), lubridate::as_date, .names = "{d}")) |>
     dplyr::relocate(dplyr::any_of(c("longitude", "latitude", "geometry")),
                     .after = dplyr::last_col()) |>
@@ -211,6 +219,7 @@ clean_gps <- function(meta = NULL,
   check_text(dist_by)
   check_logical(skip_bad)
   check_logical(verbose)
+  #meta <- check_UTC(meta) # Technically not needed at this step... worth doing anyway?
 
   # Load, combine and clean gps files
   gps <- clean_gps_files(meta, skip_bad, verbose)

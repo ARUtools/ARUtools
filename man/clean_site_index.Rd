@@ -49,6 +49,11 @@ for adding these details to the output of `clean_metadata()`. It can be used
 to specify missing information according to date, such as GPS lat/lons and
 site ids.
 }
+\details{
+Note that times are assumed to be in 'local' time and a timezone isn't used
+(and is removed if present, replaced with UTC). This allows sites
+from different timezones to be processed at the same time.
+}
 \examples{
 
 s <- clean_site_index(example_sites,

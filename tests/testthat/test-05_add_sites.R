@@ -45,9 +45,41 @@ test_that("add_sites() average over coords", {
    dplyr::mutate(file_name = "a", path = "b", type = "wav")
 
   expect_message(m <- add_sites(meta, i, dt_type = "date"),
-                 "Taking mean coordinates")
+                 "Taking mean coordinates") |>
+    suppressMessages()
   expect_named(m, c(names(meta), "longitude", "latitude"))
   expect_equal(m$longitude, c(-88.15, -88.15, -99.05, -99.05))
   expect_equal(m$latitude, c(50.05, 50.05, 52.1, 52.1))
 
+})
+
+
+test_that("add_sites() errors etc.", {
+
+  # Timezone problems
+  m <- clean_metadata(project_files = example_files, quiet = TRUE) |>
+    dplyr::mutate(date_time = lubridate::force_tz(date_time, "America/Toronto"))
+
+  expect_message(m <- add_sites(m, example_sites_clean, by = "aru_id"),
+                 "Removing timezone specification") |>
+    suppressMessages()
+
+  # sf - timezone
+  m <- clean_metadata(project_files = example_files, quiet = TRUE) |>
+    dplyr::mutate(date_time = lubridate::force_tz(date_time, "America/Toronto"))
+
+  example_sites_clean_sf <- df_to_sf(example_sites_clean, crs = 4326)
+
+  expect_message(m <- add_sites(m, example_sites_clean_sf, by = "aru_id"),
+                 "Removing timezone specification") |>
+    suppressMessages()
+
+  # sf - missing sites
+  example_sites_clean_sf <- df_to_sf(example_sites_clean, crs = 4326) |>
+    dplyr::slice(-1)
+  expect_warning(m1 <- add_sites(m, example_sites_clean_sf, by = "aru_id"),
+                 "Cannot have missing coordinates") |>
+    suppressMessages()
+  expect_s3_class(m1, "data.frame")
+  expect_equal(nrow(m), nrow(m1))
 })

@@ -44,6 +44,8 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   check_text(dt_type, opts = c("date", "date_time"), n = 1)
   check_num(buffer_before, not_null = FALSE, n = 1)
   check_num(buffer_after, not_null = FALSE, n = 1)
+  meta <- check_UTC(meta)
+  sites <- check_UTC(sites, stringr::str_subset(names(sites), "^date_time"))
 
   if(any(c("date", "date_time") %in% by)) {
     rlang::abort(c("Cannot use 'date' or 'date_time' in `by`. ",

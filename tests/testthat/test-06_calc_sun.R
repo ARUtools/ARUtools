@@ -121,3 +121,15 @@ test_that("calc_sun()", {
   expect_equal(df_to_sf(s1, s_sf), s_sf)
 
 })
+
+test_that("calc_sun() errors etc.", {
+
+  # Timezone problems
+  e <- dplyr::mutate(example_clean, date_time = lubridate::force_tz(date_time, "America/Toronto"))
+  expect_message(s1 <- calc_sun(e),
+                 "Removing timezone specification")
+  expect_equal(example_clean, dplyr::select(s1, -"tz", -"t2sr", -"t2ss"))
+  expect_equal(unique(s1$tz),
+               c("America/Toronto", "America/Detroit", "America/Winnipeg",
+                 "America/Chicago"))
+})

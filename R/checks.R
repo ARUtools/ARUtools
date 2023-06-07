@@ -120,6 +120,35 @@ check_dates <- function(df, cols, extra = "") {
   if(length(msg) > 0) rlang::abort(c("Problems with dates: ", msg), call = NULL)
 }
 
+#' Check that datetimes are UTC
+#'
+#' If non-UTC timezone, let user know that we're forcing the tz label to UTC.
+#' If there are multiple timezones, error because we don't know how to handle
+#' that. And there should never be columns with different timezones.
+#'
+#' @param df Data farme to check
+#' @param cols Columns in df to check
+#'
+#' @noRd
+check_UTC <- function(df, cols = "date_time") {
+
+  cols <- setNames(cols, NULL)
+  tz <- purrr::map_chr(sf::st_drop_geometry(df[cols]), lubridate::tz)
+
+  if(length(unique(tz)) > 1) {
+    rlang::abort(
+      c("Multiple timezones detected in `date_time` columns. ",
+        "`date_time`s should be in 'local' timezone marked with 'UTC'."),
+      call = NULL)
+  } else if (any(tz != "UTC")) {
+    rlang::inform(
+      c("`date_time` columns are assumed to be in 'local' time marked with 'UTC'",
+        "Removing timezone specification"))
+    df <- dplyr::mutate(df, dplyr::across(dplyr::all_of(cols), ~lubridate::force_tz(.x, "UTC")))
+  }
+  df
+}
+
 # Let the readr/readxl functions test if the file can be opened
 # Allows both data frames *and* spatial data frames
 check_df_file <- function(input) {

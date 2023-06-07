@@ -136,5 +136,23 @@ test_that("clean_site_index() errors etc.", {
   e <- dplyr::mutate(example_sites_clean, date = "14/05/2020")
   expect_error(clean_site_index(e), "not a Date or Date-Time column")
 
+  # Timezone problems
+  e <- dplyr::mutate(
+    example_sites_clean,
+    date_time = lubridate::with_tz(date_time_start, "America/Toronto"))
+  expect_message(clean_site_index(e, col_date_time = "date_time"),
+                 "Removing timezone specification")
+  expect_error(clean_site_index(e, col_date_time = c("date_time", "date_time_end")),
+               "Multiple timezones detected in `date_time` columns")
+
+  # With sf
+  e <- dplyr::mutate(
+    example_sites_clean,
+    date_time = lubridate::with_tz(date_time_start, "America/Toronto")) |>
+    sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+  expect_message(clean_site_index(e, col_date_time = "date_time"),
+                 "Removing timezone specification")
+  expect_error(clean_site_index(e, col_date_time = c("date_time", "date_time_end")),
+               "Multiple timezones detected in `date_time` columns")
 })
 
