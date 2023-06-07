@@ -84,6 +84,8 @@ m <- calc_sun(m, aru_tz = "America/Toronto")
 
 m
 
+
+
 # eg 3 - Big set of files -------------------------
 d <- "../ARUtools - Extra/ARUtools_file_examples/JamesBayLowlands_2021/"
 m <- clean_metadata(project_dir = d)
@@ -174,4 +176,33 @@ m <- clean_metadata(project_dir = d,
 
 g <- clean_gps(m)
 
+
+# eg 7 - Site Index with timezones ------------------------------------
+d <- "../ARUtools - Extra/ARUtools_file_examples/LutherMarsh_2021/"
+m <- clean_metadata(project_dir = d, pattern_dt_sep = "_")
+
+# Create site index
+sites <- readr::read_csv("../ARUtools - Extra/Scripts/LutherMarsh_2021/2022-02-23_Locations_LutherMarsh_2021.csv") |>
+  mutate(aru_id = stringr::str_remove(location, "LutherMarsh2021-"),
+         date_start = min(m$date_time, na.rm = TRUE),
+         date_end = max(m$date_time, na.rm = TRUE),
+         date_start = lubridate::force_tz(date_start, "America/Toronto"),
+         date_end = lubridate::force_tz(date_end, "America/Toronto")) |>
+  clean_site_index(col_site_id = "location",
+                   col_date_time = c("date_start", "date_end"))
+
+# GPS from logs
+g <- clean_gps(m, dist_by = "aru_id")
+
+# Compare
+select(g, aru_id, longitude, latitude) |> distinct()
+sites
+
+# Join (although could easily just use a simpler left_join(), because not dependent on dates)
+m <- add_sites(m, sites)
+check_problems(m)
+
+m <- calc_sun(m, aru_tz = "America/Toronto")
+
+m
 

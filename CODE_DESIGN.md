@@ -41,7 +41,7 @@ making collaboration and future modifications easier.
   If necessary, they could be made optional for parsing by adding another argument
   `optional_sec` or similar, but this may be overkill for now
 - Right now, users supply date, sep, and time patterns, but possibly, it might
-  be worth having the option to supply a single datetime pattern that would take
+  be worth having the option to supply a single date/time pattern that would take
   precedence. It's unclear how often this would be necessary, however.
 - Where there is a possibility of matching different numbers of numbers (i.e.
   can match 2 year digits or 4 year digits), always use `rev(sort(digits))`, 

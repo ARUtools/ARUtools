@@ -1,0 +1,44 @@
+---
+title: "Dealing with Timezones"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Dealing with Timezones}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Timezones can cause a lot of confusion, but, unfortunately are important descriptors of a moment in time.
+
+In R, a date/time column can only have *one* timezone specified.
+However, when working with sites around a timezone divide, it's possible that you 
+may occasionally have recordings made in different timezones which you would like to process together.
+
+To facilitate this we use the convention of 'local' times marked with "UTC". 
+Here we mean 'local' to reflect the timezone that the ARU is recording in.
+This means that the `date_time` column may contain a time recorded in Eastern Daylight savings, but the
+'official' timezone according to R is still UTC.
+
+For example, if we look at our example site index, we see that the start/end 
+date times are all set to noon.
+```{r}
+example_sites_clean
+```
+
+However, if we were to calculate 
+
+
+I didn't follow exactly your email about timezones, so I just wanted to clarify how it works with reference to your example (to make sure we're onthe same page!)
+First, the only considerations should be what timezone did the ARUs think they were in (ie what were they programmed with)? There are technically three options for this (although we only provide options for the first two):
+
+1) The ARUs all thought they were in the same timezone. (e.g., "aru_tz = 'America/Toronto'"). It technically doesn't matter what timezone the actual location is in, only that the timezone provided really does match the timezone of time on the recording. This is because the timezone is only used to calculate a sunrise/sunset time with a matching timezone to the recording time. Then a time to sunrise (not the actual time of sunrise) is then returned.
+
+2) The ARUs thought they were in different timezones, and these were the local timezones of where they were deployed ("aru_tz = 'local'"). This means that `calc_sun` can use the ARU lat/lon's to calculate the local time zone and for the sunrise/sunset calculations.
+
+3) The ARUs thought they were in different timezones, and these are not the local timezones of where they were deployed. This is too messy to deal with. If this happens, I would split the ARU files by timezone and run the workflow using the first option specifying whatever timezone they were programmed with.

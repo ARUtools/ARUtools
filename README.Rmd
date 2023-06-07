@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # ARUtools <img src="inst/figures/ARUtools.png" align="right" width="120" />
 
 <!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/dhope/ARUtools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dhope/ARUtools?branch=main)
 <!-- badges: end -->
 
 The goal of ARUtools is to facilitate the processing of ARU data. It is very much a development version now.

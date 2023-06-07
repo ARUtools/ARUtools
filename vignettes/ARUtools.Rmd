@@ -47,7 +47,7 @@ Next, we want to add our coordinates to this data.
 If your data has GPS logs included, they would have been detected in the above step
 and you could now use `g <- clean_gps(m)` to create a list of GPS coordinates.
 
-However, ARU GPS logs are notoriously unreliable, so it is recommended that you
+However, ARU GPS logs can be tricky, so it is recommended that you
 create a site index file to manually record deployment locations, like this one.
 
 ```{r}

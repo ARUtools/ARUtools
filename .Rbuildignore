@@ -9,3 +9,4 @@ inst\Gen_gex.R
 ^\.github$
 ^CODE_DESIGN.md$
 ^misc$
+^codecov\.yml$
