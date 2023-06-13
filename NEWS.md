@@ -14,7 +14,12 @@
   
 * `clean_metadata()` accepts multiple pattern options
 
-* `add_sites()` takes mean of multiple sites with `dt_type = "date"` (instead of truncating)
+* `clean_site_index()` allows no date columns (`col_date_time = NULL`)
+
+* `add_sites()`
+  * Rename `dt_type` to `by_date`
+  * Take mean of multiple sites with `by_date = "date"` (instead of truncating)
+  * Use `by_date = NULL` to skip joining by date range
 
 * Workflow now works with sf input (must be POINT geometries)
   * `clean_site_index()`
