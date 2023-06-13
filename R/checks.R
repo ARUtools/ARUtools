@@ -12,13 +12,14 @@ check_data <- function(df, type, ref) {
 
     if(type == "meta") {
       check_cols(
-        df, c("file_name", "path", "site_id", "date", "date_time", "aru_id"),
+        df, c("file_name", "path", "site_id", "aru_id"),
+        dates = TRUE,
         name = "meta",
         extra = e)
     } else if(type == "sites") {
       check_cols(
         df, c("site_id", "aru_id", coords),
-        dates = TRUE,
+        dates = FALSE, # Optional
         name = "sites",
         extra = e)
     } else if (type == "meta_sites") {

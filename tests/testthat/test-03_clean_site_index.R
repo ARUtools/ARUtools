@@ -128,6 +128,21 @@ test_that("clean_site_index() date/times", {
                                  col_date_time = c("date_time_start")))
 })
 
+test_that("clean_site_index() no dates", {
+
+  # tibble
+  expect_silent(s <- clean_site_index(
+    example_sites_clean, col_date_time = NULL))
+  expect_named(s, c("site_id", "aru_id", "longitude", "latitude"))
+
+  # sf
+  sites_sf <- sf::st_as_sf(
+    example_sites_clean, coords = c("longitude", "latitude"), crs = 4326)
+  expect_silent(s <- clean_site_index(sites_sf, col_date_time = NULL))
+  expect_s3_class(s, "sf")
+  expect_named(s, c("site_id", "aru_id", "geometry"))
+})
+
 test_that("clean_site_index() errors etc.", {
 
   e <- dplyr::mutate(example_sites_clean, date = "2020-05-06 01:00:00")

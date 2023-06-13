@@ -16,7 +16,7 @@
 #' @param col_site_id Character. Column name that contains site ids.
 #' @param col_date_time Character. Column name that contains dates or
 #'   date/times. Can be vector of two names if there are both 'start' and 'end'
-#'   columns.
+#'   columns. Can be `NULL` to ignore dates.
 #' @param col_coords Character. Column names that contain longitude and
 #'   latitude (in that order). Ignored if `site_index` is spatial.
 #' @param col_extra Character. Column names for extra data to include. If a named
@@ -46,6 +46,15 @@
 #'                       col_coords = c("lon", "lat"),
 #'                       col_extra = c("plot" = "Plots"))
 #'
+#' # Without dates
+#' eg <- dplyr::select(example_sites, -Date_set_out, -Date_removed)
+#' s <- clean_site_index(eg,
+#'                       col_aru_id = "ARU",
+#'                       col_site_id = "Sites",
+#'                       col_date_time = NULL,
+#'                       col_coords = c("lon", "lat"),
+#'                       col_extra = c("plot" = "Plots"))
+#'
 clean_site_index <- function(site_index,
                              col_aru_id = "aru_id",
                              col_site_id = "site_id",
@@ -58,7 +67,7 @@ clean_site_index <- function(site_index,
   check_df_file(site_index)
   check_text(col_aru_id, n = 1)
   check_text(col_site_id, n = 1)
-  check_text(col_date_time, n = c(1, 2))
+  check_text(col_date_time, n = c(1, 2), not_null = FALSE)
   check_text(col_extra, not_null = FALSE)
   check_logical(resolve_overlaps)
 
@@ -71,9 +80,7 @@ clean_site_index <- function(site_index,
     col_coords <- NULL
   }
 
-
   # Format different inputs
-
   if(is_sf) {
     # SF - (create tibble sf https://github.com/r-spatial/sf/issues/951#issuecomment-455735564)
     site_index <- dplyr::as_tibble(site_index) |> sf::st_as_sf()
@@ -107,7 +114,9 @@ clean_site_index <- function(site_index,
   # Check dates
   check_dates(site_index, col_date_time)
 
-  if(length(col_date_time) == 1) {
+  if(is.null(col_date_time)) {
+    d <- dt <- NULL
+  } else if(length(col_date_time) == 1) {
     dt <- "date_time"
     d <- "date"
   } else {
@@ -163,7 +172,7 @@ clean_site_index <- function(site_index,
       rlang::inform(
         c("There are overlapping date ranges",
           "Shifting start/end times to 'noon'",
-          #"Use `dt_type = \"date_time\"` in `add_sites()`",
+          #"Use `by_date = \"date_time\"` in `add_sites()`",
           "Skip this with `resolve_overlaps = FALSE`"))
 
       lubridate::hour(site_index$date_time_start) <- 12

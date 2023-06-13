@@ -24,7 +24,7 @@ to clean. If file path, must be to a local csv or xlsx file.}
 
 \item{col_date_time}{Character. Column name that contains dates or
 date/times. Can be vector of two names if there are both 'start' and 'end'
-columns.}
+columns. Can be `NULL` to ignore dates.}
 
 \item{col_coords}{Character. Column names that contain longitude and
 latitude (in that order). Ignored if `site_index` is spatial.}
@@ -66,6 +66,15 @@ s <- clean_site_index(example_sites,
                       col_aru_id = "ARU",
                       col_site_id = "Sites",
                       col_date_time = c("Date_set_out", "Date_removed"),
+                      col_coords = c("lon", "lat"),
+                      col_extra = c("plot" = "Plots"))
+
+# Without dates
+eg <- dplyr::select(example_sites, -Date_set_out, -Date_removed)
+s <- clean_site_index(eg,
+                      col_aru_id = "ARU",
+                      col_site_id = "Sites",
+                      col_date_time = NULL,
                       col_coords = c("lon", "lat"),
                       col_extra = c("plot" = "Plots"))
 
