@@ -105,7 +105,7 @@ g <- clean_gps(m, skip_bad = TRUE)
 g <- clean_gps(m, skip_bad = TRUE, dist_cutoff = Inf)
 
 
-m1 <- add_sites(m, g, dt_type = "date") # Faster, but averages over coordinates
+m1 <- add_sites(m, g, by_date = "date") # Faster, but averages over coordinates
 m2 <- add_sites(m, g)                   # Slow but matches more precisely
 
 check_problems(m2, check = "longitude")

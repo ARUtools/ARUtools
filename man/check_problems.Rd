@@ -8,7 +8,7 @@ check_problems(
   meta,
   check = c("site_id", "aru_id", "date", "date_time", "longitude", "latitude"),
   path = FALSE,
-  by_date = FALSE
+  date = FALSE
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ and `latitude`.}
 \item{path}{Logical. Whether to return just the file paths which have missing
 attributes. Default `FALSE`}
 
-\item{by_date}{Logical.}
+\item{date}{Logical.}
 }
 \value{
 A data frame summarizing the metadata by site_id, aru_type, aru_id,
@@ -37,6 +37,6 @@ and explore missing metadata (problems).
 m <- clean_metadata(project_files = example_files, pattern_aru_id = "test")
 
 check_problems(m)
-check_problems(m, by_date = TRUE)
+check_problems(m, date = TRUE)
 check_problems(m, path = TRUE)
 }

@@ -4,12 +4,12 @@
 \alias{check_meta}
 \title{Check output of `clean_metadata()`}
 \usage{
-check_meta(meta, by_date = FALSE)
+check_meta(meta, date = FALSE)
 }
 \arguments{
 \item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
 
-\item{by_date}{Logical. Whether to summarize output by date (as well as
+\item{date}{Logical. Whether to summarize output by date (as well as
 `site_id` and `aru_id`. Default `FALSE`.}
 }
 \value{
@@ -25,6 +25,6 @@ and explore the metadata for possible patterns which may help find problems.
 m <- clean_metadata(project_files = example_files)
 
 check_meta(m)
-check_meta(m, by_date = TRUE)
+check_meta(m, date = TRUE)
 
 }

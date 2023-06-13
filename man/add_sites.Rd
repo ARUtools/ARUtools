@@ -10,7 +10,7 @@ add_sites(
   buffer_before = 0,
   buffer_after = NULL,
   by = c("site_id", "aru_id"),
-  dt_type = "date_time"
+  by_date = "date_time"
 )
 }
 \arguments{
@@ -34,8 +34,9 @@ date/time in which to join recordings to the site-level data. Ignored if
 as `meta`, besides date/time, which are used to join the data. Default is
 `site_id` and `aru_id`.}
 
-\item{dt_type}{Character. Date/time type to join data by. `date` is faster
-but `date_time` is more precise. Default `date_time`.}
+\item{by_date}{Character. Date/time type to join data by. `date` is faster
+but `date_time` is more precise. Default `date_time`. `NULL` means ignore
+dates and join only with `by` columns (`dplyr::left_join()`).}
 }
 \value{
 A data frame of metadata with site-level data joined in.
@@ -43,7 +44,7 @@ A data frame of metadata with site-level data joined in.
 \description{
 Uses dates to join site-level data to the meta data. If the sites data has
 only single dates, then a buffer before and after is used to determine which
-recordings belong to that site obseration.
+recordings belong to that site observation.
 }
 \examples{
 m <- clean_metadata(project_files = example_files)
@@ -51,5 +52,10 @@ s <- clean_site_index(example_sites_clean,
                       col_date = c("date_time_start", "date_time_end"))
 m <- add_sites(m, s)
 
+# Without dates (by site only)
+m <- clean_metadata(project_files = example_files)
+eg <- dplyr::select(example_sites_clean, -date_time_start, -date_time_end)
+s <- clean_site_index(eg, col_date_time = NULL)
+m <- add_sites(m, s, by_date = NULL)
 
 }

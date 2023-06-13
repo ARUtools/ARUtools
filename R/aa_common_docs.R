@@ -15,7 +15,7 @@
 #' @param meta_sites (Spatial) Data frame. Recording metadata with added
 #'   coordinates. Output of `clean_metadata()` and then `add_sites()` (with
 #'   either `clean_gps()` or `clean_site_index()`).
-#' @param by_date Logical. Whether to summarize output by date (as well as
+#' @param date Logical. Whether to summarize output by date (as well as
 #'   `site_id` and `aru_id`. Default `FALSE`.
 #'
 #' @details

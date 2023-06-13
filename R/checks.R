@@ -192,17 +192,41 @@ check_date_joins <- function(df, by_date) {
       paste0("Joining by columns ",
              paste0(paste0("`", n_range, "`"), collapse = " and ")))
     use <- n_range
-  } else {
+  } else if(!is.null(by_date)) {
     rlang::abort(
       c("Cannot find date/time columns for joining",
         paste0("Require either `date`/`date_time` or *both* ",
                "`date_start`/`date_time_start` and `date_end`/`date_time_end`"),
-        paste0("Found: `", n_all, "`")
+        paste0("Found: ", n_all),
+        "To join using `by` only, specify `by_date = NULL`"
       ),
       call = NULL)
+  } else {
+    use <- NULL
+    rlang::inform(
+      "Ignoring dates - Joining with `by` columns only (`by_date == NULL`)")
   }
 
   use
+}
+
+check_by <- function(by, df, cols_omit) {
+  if(any(cols_omit %in% by)) {
+    rlang::abort(
+      c("Cannot use '", paste0(cols_omit, collapse = "' or '"), "' in `by`. "),
+      call = NULL)
+  }
+
+  nm <- deparse(substitute(df))
+  for(i in by) {
+    if(all(is.na(df[[i]]))) {
+      by <- by[by != i]
+      rlang::inform(c(
+        "*" = paste0("Column '", i, "' in `", nm, "` is all NA. ",
+                     "Omitting from joins (`by`).")))
+    }
+  }
+  by
 }
 
 check_tz <- function(tz) {

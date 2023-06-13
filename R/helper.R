@@ -35,11 +35,11 @@ count_files <- function(project_dir, subset = NULL, subset_type = "keep") {
 #' m <- clean_metadata(project_files = example_files)
 #'
 #' check_meta(m)
-#' check_meta(m, by_date = TRUE)
+#' check_meta(m, date = TRUE)
 #'
-check_meta <- function(meta, by_date = FALSE) {
+check_meta <- function(meta, date = FALSE) {
   g <- c("site_id", "aru_type", "aru_id", "type")
-  if(by_date) g <- c(g, "date")
+  if(date) g <- c(g, "date")
 
   m <- meta %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(g))) %>%
@@ -53,7 +53,7 @@ check_meta <- function(meta, by_date = FALSE) {
                      .groups = "drop") %>%
     dplyr::relocate("n_days", .before = "min_date")
 
-  if(by_date) m <- dplyr::select(m, -"min_date", -"max_date")
+  if(date) m <- dplyr::select(m, -"min_date", -"max_date")
   m
 }
 
@@ -65,7 +65,7 @@ check_meta <- function(meta, by_date = FALSE) {
 #' @param check Character. Character vector of columns to check for missing
 #'   values. Default is `site_id`, `aru_id`, `date`, `date_time`, `longitude`
 #'   and `latitude`.
-#' @param by_date Logical.
+#' @param date Logical.
 #' @param path Logical. Whether to return just the file paths which have missing
 #' attributes. Default `FALSE`
 #'
@@ -82,14 +82,14 @@ check_meta <- function(meta, by_date = FALSE) {
 #' m <- clean_metadata(project_files = example_files, pattern_aru_id = "test")
 #'
 #' check_problems(m)
-#' check_problems(m, by_date = TRUE)
+#' check_problems(m, date = TRUE)
 #' check_problems(m, path = TRUE)
 check_problems <- function(meta, check = c("site_id", "aru_id",
                                            "date", "date_time", "longitude",
                                            "latitude"),
-                           path = FALSE, by_date = FALSE) {
-  if(path & by_date) {
-    rlang::abort(c("`by_date` summarizes problems, so `path` cannot be returned",
+                           path = FALSE, date = FALSE) {
+  if(path & date) {
+    rlang::abort(c("`date` summarizes problems, so `path` cannot be returned",
                    "Use one or the other"),
                  call = NULL)
   }
@@ -100,7 +100,7 @@ check_problems <- function(meta, check = c("site_id", "aru_id",
     dplyr::select(-dplyr::any_of(c("type", "file_name", "aru_type")))
 
 
-  if(by_date) {
+  if(date) {
     check <- check[check %in% c("longitude", "latitude", "date_time")]
     m <- m |>
       dplyr::group_by(

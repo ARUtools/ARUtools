@@ -1,4 +1,5 @@
 test_that("add_sites()", {
+  # Prep test files
   meta <- clean_metadata(project_files = example_files, quiet = TRUE)
   m <- dplyr::mutate(meta, site_id = NA_character_)
 
@@ -18,7 +19,7 @@ test_that("add_sites()", {
     0)
 
   # Add site_ids by date
-  expect_message(add_sites(m, example_sites_clean, by = "aru_id", dt_type = "date"),
+  expect_message(add_sites(m, example_sites_clean, by = "aru_id", by_date = "date"),
                  "matched multiple site references") |>
     suppressMessages()
 
@@ -29,6 +30,27 @@ test_that("add_sites()", {
   expect_s3_class(m1, "sf")
   expect_equal(nrow(m), nrow(m1))
 
+})
+
+test_that("add_sites() no dates", {
+  # Prep test files
+  m <- clean_metadata(project_files = example_files, quiet = TRUE)
+  s <- dplyr::select(example_sites_clean, -"date_time_start", -"date_time_end") |>
+    clean_site_index(col_date_time = NULL)
+
+  # tibble
+  expect_message(m1 <- add_sites(m, s, by_date = NULL), "Ignoring dates")
+  expect_equal(dplyr::left_join(m, s, by = c("site_id", "aru_id")) |>
+                 dplyr::arrange(file_name),
+               m1 |> dplyr::arrange(file_name))
+
+  # sf
+  s_sf <- sf::st_as_sf(s, coords = c("longitude", "latitude"), crs = 4326)
+  expect_message(m2 <- add_sites(m, s_sf, by_date = NULL), "Ignoring dates")
+  expect_equal(dplyr::left_join(m, s_sf, by = c("site_id", "aru_id")) |>
+                 dplyr::arrange(file_name) |>
+                 sf::st_as_sf(),
+               m2 |> dplyr::arrange(file_name))
 })
 
 test_that("add_sites() average over coords", {
@@ -44,7 +66,7 @@ test_that("add_sites() average over coords", {
   meta <- dplyr::select(i, -"longitude", -"latitude") |>
    dplyr::mutate(file_name = "a", path = "b", type = "wav")
 
-  expect_message(m <- add_sites(meta, i, dt_type = "date"),
+  expect_message(m <- add_sites(meta, i, by_date = "date"),
                  "Taking mean coordinates") |>
     suppressMessages()
   expect_named(m, c(names(meta), "longitude", "latitude"))

@@ -24,7 +24,7 @@ files/directories which match the pattern in `subset`.}
 coordinates. Output of `clean_metadata()` and then `add_sites()` (with
 either `clean_gps()` or `clean_site_index()`).}
 
-\item{by_date}{Logical. Whether to summarize output by date (as well as
+\item{date}{Logical. Whether to summarize output by date (as well as
 `site_id` and `aru_id`. Default `FALSE`.}
 }
 \description{
