@@ -61,7 +61,8 @@ clean_site_index <- function(site_index,
                              col_date_time = "date",
                              col_coords = c("longitude", "latitude"),
                              col_extra = NULL,
-                             resolve_overlaps = TRUE) {
+                             resolve_overlaps = TRUE,
+                             quiet = FALSE) {
 
   # Checks
   check_df_file(site_index)
@@ -169,14 +170,17 @@ clean_site_index <- function(site_index,
       nrow()
 
     if(by_site > 0 | by_aru > 0) {
-      rlang::inform(
-        c("There are overlapping date ranges",
-          "Shifting start/end times to 'noon'",
-          #"Use `by_date = \"date_time\"` in `add_sites()`",
-          "Skip this with `resolve_overlaps = FALSE`"))
 
       lubridate::hour(site_index$date_time_start) <- 12
       lubridate::hour(site_index$date_time_end) <- 12
+
+      if(!quiet) {
+        rlang::inform(
+          c("There are overlapping date ranges",
+            "Shifting start/end times to 'noon'",
+            #"Use `by_date = \"date_time\"` in `add_sites()`",
+            "Skip this with `resolve_overlaps = FALSE`"))
+      }
     }
   }
 
@@ -456,12 +460,13 @@ fmt_gps_txt <- function(df) {
 #'   check.
 #' @param dist_by Character. Column names to use in grouping GPS points before
 #'   calculating within group distances.
+#' @param quiet Logical. Suppress non-essential messages
 #'
 #' @return Returns data frame with maximum distances between gps points within a
 #' group.
 #'
 #' @noRd
-check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
+check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet){
 
   if(dist_cutoff < Inf) {
     max_dist <- gps |>
@@ -472,10 +477,12 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
       if(!is.null(dist_by)) {
         dist_by <- paste0(", `", paste0(dist_by, collapse = "`, `"), "`")
       } else dist_by <- ""
-      rlang::inform(
-        c("Skipping distance check:",
-          paste0("All records missing at least one of ",
-                 "`longitude`, `latitude`", dist_by)))
+      if(!quiet) {
+        rlang::inform(
+          c("Skipping distance check:",
+            paste0("All records missing at least one of ",
+                   "`longitude`, `latitude`", dist_by)))
+      }
     } else {
       n <- max_dist |>
         dplyr::select(dplyr::all_of(c("latitude", "longitude", dist_by))) |>
@@ -483,10 +490,12 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
         dplyr::count(dplyr::across(dplyr::all_of(dist_by)))
 
       if(all(n$n == 1)) {
-        rlang::inform(
-          c("Skipping distance check:",
-            paste0("No records with more than one set of coordinates per unique`",
-                   paste0(dist_by, collapse = "`/`"), "`")))
+        if(!quiet) {
+          rlang::inform(
+            c("Skipping distance check:",
+              paste0("No records with more than one set of coordinates per unique `",
+                     paste0(dist_by, collapse = "`/`"), "`")))
+        }
       } else {
 
         max_dist <- max_dist |>
@@ -505,8 +514,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by){
             c("Within site distances are greater than cutoff",
               "x" = paste0("Distances among ARUs within a site must be less than ",
                            "`dist_cutoff` (currently ", dist_cutoff, "m)"),
-              "i" = "Set `dist_cutoff` to `Inf` to skip this check (e.g. moving ARUs)"),
-            call = NULL)
+              "i" = "Set `dist_cutoff` to `Inf` to skip this check (e.g. moving ARUs)"))
         }
         gps <- dplyr::left_join(gps, max_dist, by = dist_by)
       }

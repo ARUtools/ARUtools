@@ -26,7 +26,6 @@
 #'   between dates and times. See `create_pattern_dt_sep()`.
 #' @param order_date Character. Order that the date appears in. "ymd"
 #'   (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.
-#' @param quiet Logical. Whether to suppress progress messages.
 #'
 #' @inheritParams common_docs
 #'

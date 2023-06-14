@@ -41,7 +41,8 @@
 #'
 add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
                       by = c("site_id", "aru_id"),
-                      by_date = "date_time") {
+                      by_date = "date_time",
+                      quiet = FALSE) {
 
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
@@ -54,8 +55,8 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   sites <- check_UTC(sites, stringr::str_subset(names(sites), "^date_time"))
 
   # Check 'by's
-  by_date_cols <- check_date_joins(sites, by_date)
-  by <- check_by(by, meta, cols_omit = c("date", "date_time"))
+  by_date_cols <- check_date_joins(sites, by_date, quiet)
+  by <- check_by(by, meta, cols_omit = c("date", "date_time"), quiet)
 
   # If sf, convert to df
   crs <- sf::st_crs(sites) # Hold on for converting back
@@ -63,7 +64,7 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
 
   # Clean and prep
   sites <- prep_sites(sites, by, by_date_cols)
-  meta <- prep_meta(meta, names(sites), by, by_date_cols)
+  meta <- prep_meta(meta, names(sites), by, by_date_cols, quiet)
 
   # Check that there are columns to add (check after prep_xxx())
   add <- names(sites)[!names(sites) %in% c(by, by_date_cols)]
@@ -78,7 +79,8 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   if(!is.null(by_date)) {
     meta_sites <- add_sites_date(sites, meta,
                                  by, by_date, by_date_cols,
-                                 buffer_before, buffer_after)
+                                 buffer_before, buffer_after,
+                                 quiet)
   } else {
     meta_sites <- dplyr::left_join(meta, sites, by = by)
   }
@@ -138,7 +140,7 @@ prep_sites <- function(sites, by, by_date_cols) {
   dplyr::distinct(sites)
 }
 
-prep_meta <- function(meta, cols_sites, by , by_date_cols) {
+prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
 
   meta <- dplyr::filter(meta, .data$type != "gps")
 
@@ -153,7 +155,7 @@ prep_meta <- function(meta, cols_sites, by , by_date_cols) {
     report <- omit_cols
     for(i in report) if(all(is.na(meta[[i]]))) report <- report[report != i]
 
-    if(length(report) > 0) {
+    if(length(report) > 0 & !quiet) {
       rlang::inform(c(
         "Some columns in both `meta` and `sites` are not used to join (`by`)",
         "*" = paste0(
@@ -166,7 +168,7 @@ prep_meta <- function(meta, cols_sites, by , by_date_cols) {
 }
 
 add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
-                           buffer_before, buffer_after) {
+                           buffer_before, buffer_after, quiet) {
 
   # Clean up Dates
   if(by_date == "date") {
@@ -192,13 +194,15 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                          latitude = mean(.data$latitude)) |>
         dplyr::ungroup()
 
-      rlang::inform(c(
-        paste0("Multiple coordinates per date at each combination of `",
-               paste0(by, collapse = "`/`"), "`"),
-        paste0("Taking mean coordinates ",
-               "(max sd lon ", round(max(sites$sd_lon, na.rm = TRUE), 4),
-               "; max sd lat ", round(max(sites$sd_lat, na.rm = TRUE), 4), ")"),
-        "Consider using `by = \"date_time\"` for more fine-tuned control"))
+      if(!quiet) {
+        rlang::inform(c(
+          paste0("Multiple coordinates per date at each combination of `",
+                 paste0(by, collapse = "`/`"), "`"),
+          paste0("Taking mean coordinates ",
+                 "(max sd lon ", round(max(sites$sd_lon, na.rm = TRUE), 4),
+                 "; max sd lat ", round(max(sites$sd_lat, na.rm = TRUE), 4), ")"),
+          "Consider using `by = \"date_time\"` for more fine-tuned control"))
+      }
 
       sites <- dplyr::select(sites, -"sd_lon", -"sd_lat")
     }

@@ -17,6 +17,8 @@
 #'   either `clean_gps()` or `clean_site_index()`).
 #' @param date Logical. Whether to summarize output by date (as well as
 #'   `site_id` and `aru_id`. Default `FALSE`.
+#' @param quiet Logical. Whether to suppress progress messages and other
+#'   non-essential updates.
 #'
 #' @details
 #' Use `@inheritParams common_docs` to include the above in any function

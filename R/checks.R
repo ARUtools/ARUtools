@@ -168,7 +168,7 @@ check_points <- function(df) {
   }
 }
 
-check_date_joins <- function(df, by_date) {
+check_date_joins <- function(df, by_date, quiet = FALSE) {
 
   n_single <- stringr::str_subset(names(df), paste0("^", by_date, "$"))
   n_range <- stringr::str_subset(names(df), paste0("^", by_date, "_(start|end)$"))
@@ -176,22 +176,37 @@ check_date_joins <- function(df, by_date) {
   n_all <- paste0(c(n_single, n_range), collapse = "`, `")
   if(n_all == "") n_all <- "none"
 
+  # Single column
   if(length(n_range) == 0 & length(n_single) == 1) {
-    rlang::inform(paste0("Joining by column `", n_single, "` using buffers"))
+
     use <- n_single
+    if(!quiet) {
+      rlang::inform(paste0("Joining by column `", n_single, "` using buffers"))
+    }
+
+    # Single column used, but half of ranged detected
   } else if(length(n_range) == 1 & length(n_single) == 1) {
-    rlang::inform(
-      paste0("Joining by column `", n_single, "` using buffers\n",
-             "(Only `", n_range, "` detected but both `",
-             paste0(paste0("`", n_single, c("_start`", "_end`")), collapse = " and "),
-             " are required to use a range.")
-    )
+
     use <- n_single
-  } else if(length(n_range) == 2) {
     rlang::inform(
-      paste0("Joining by columns ",
-             paste0(paste0("`", n_range, "`"), collapse = " and ")))
+      paste0(
+        "Joining by column `", n_single, "` using buffers\n",
+        "(Only `", n_range, "` detected but both `",
+        paste0(paste0("`", n_single, c("_start`", "_end`")), collapse = " and "),
+        " are required to use a range.")
+    )
+
+    # Range
+  } else if(length(n_range) == 2) {
+
     use <- n_range
+    if(!quiet) {
+      rlang::inform(
+        paste0("Joining by columns ",
+               paste0(paste0("`", n_range, "`"), collapse = " and ")))
+    }
+
+    # No dates but required
   } else if(!is.null(by_date)) {
     rlang::abort(
       c("Cannot find date/time columns for joining",
@@ -201,16 +216,21 @@ check_date_joins <- function(df, by_date) {
         "To join using `by` only, specify `by_date = NULL`"
       ),
       call = NULL)
+
+   # Dates Ignored
   } else {
+
     use <- NULL
-    rlang::inform(
-      "Ignoring dates - Joining with `by` columns only (`by_date == NULL`)")
+    if(!quiet) {
+      rlang::inform(
+        "Ignoring dates - Joining with `by` columns only (`by_date == NULL`)")
+    }
   }
 
   use
 }
 
-check_by <- function(by, df, cols_omit) {
+check_by <- function(by, df, cols_omit, quiet = FALSE) {
   if(any(cols_omit %in% by)) {
     rlang::abort(
       c("Cannot use '", paste0(cols_omit, collapse = "' or '"), "' in `by`. "),
@@ -221,9 +241,11 @@ check_by <- function(by, df, cols_omit) {
   for(i in by) {
     if(all(is.na(df[[i]]))) {
       by <- by[by != i]
-      rlang::inform(c(
-        "*" = paste0("Column '", i, "' in `", nm, "` is all NA. ",
-                     "Omitting from joins (`by`).")))
+      if(!quiet) {
+        rlang::inform(c(
+          "*" = paste0("Column '", i, "' in `", nm, "` is all NA. ",
+                       "Omitting from joins (`by`).")))
+      }
     }
   }
   by
