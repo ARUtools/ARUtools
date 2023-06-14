@@ -17,11 +17,11 @@ extract_replace <- function(string, pattern) {
     stringr::str_replace_all(stringr::regex(pattern, ignore_case = TRUE))
 }
 
-report_missing <- function(missing, total, name) {
+report_missing <- function(missing, total, name, what = "detected") {
   msg <- NULL
   if(missing > 0) {
     if(missing == total) type <- "No" else type <- "Not all"
-    msg <- c("x" = paste0(type, " ", name, " were successfully detected (",
+    msg <- c("x" = paste0(type, " ", name, " were successfully ", what, " (",
                           missing, "/", total, ")"))
   }
   msg
