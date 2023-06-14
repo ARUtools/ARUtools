@@ -17,3 +17,10 @@ test_gps <- function(lat = "Latitude (decimal degrees)",
 
   p
 }
+
+temp_files <- function() {
+  purrr::walk(fs::path_temp(example_files),
+              ~{fs::dir_create(dirname(.x)); writeLines("test", .x)})
+
+  fs::path_temp(example_files)
+}
