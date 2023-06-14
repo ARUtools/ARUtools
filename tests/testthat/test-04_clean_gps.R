@@ -1,15 +1,15 @@
 test_that("check_gps_files()", {
 
   p <- test_gps()
-  expect_silent(g <- check_gps_files(data.frame(path = p, ext = "csv")))
+  expect_silent(g <- check_gps_files(data.frame(path = p, gps_ext = "csv")))
   expect_s3_class(g, "data.frame")
-  expect_named(g, c("path", "skip", "ext"))
+  expect_named(g, c("path", "skip", "problems_dt", "problems_tm", "problems_ll", "gps_ext"))
   expect_equal(g$skip, 2, ignore_attr = TRUE)
 
   p <- test_gps(skips = 3)
-  expect_silent(g <- check_gps_files(data.frame(path = p, ext = "csv")))
+  expect_silent(g <- check_gps_files(data.frame(path = p, gps_ext = "csv")))
   expect_s3_class(g, "data.frame")
-  expect_named(g, c("path", "skip", "ext"))
+  expect_named(g, c("path", "skip", "problems_dt", "problems_tm", "problems_ll", "gps_ext"))
   expect_equal(g$skip, 3, ignore_attr = TRUE)
 
   p <- test_gps("lat", "lon")
@@ -26,20 +26,16 @@ test_that("check_gps_files()", {
 
   # Errors
   p <- test_gps("xxx", "yyy")
-  expect_error(g <- check_gps_files(data.frame(path = p, ext = "csv"),
-                                     skip_bad = FALSE),
-               "Could not detect columns in all files: lat and lon")
-  expect_message(g <- check_gps_files(data.frame(path = p, ext = "csv"),
-                                      skip_bad = TRUE),
-                 "Could not detect columns in all files: lat and lon")
+  expect_silent(g <- check_gps_files(data.frame(path = p, gps_ext = "csv")))
+  expect_true(is.na(g$skip))
+  expect_true(g$problems_ll)
+  expect_true(!g$problems_dt & !g$problems_tm)
 
   p <- test_gps(time = "xxx", date = "yyyy")
-  expect_error(g <- check_gps_files(data.frame(path = p, ext = "csv"),
-                                    skip_bad = FALSE),
-               "Could not detect columns in all files: date, time")
-  expect_message(g <- check_gps_files(data.frame(path = p, ext = "csv"),
-                                      skip_bad = TRUE),
-               "Could not detect columns in all files: date, time")
+  expect_silent(g <- check_gps_files(data.frame(path = p, gps_ext = "csv")))
+  expect_true(is.na(g$skip))
+  expect_true(g$problems_dt & g$problems_tm)
+  expect_true(!g$problems_ll)
 
   unlink(p)
 })
@@ -77,7 +73,7 @@ test_that("fmt_gps()", {
   ext <- c("csv", "csv", "gpx")
   # Expect the same results
   for(i in 1:3) {
-    expect_silent(f <- fmt_gps(g[[i]], ext = ext[i]))
+    expect_silent(f <- fmt_gps(g[[i]], gps_ext = ext[i]))
     expect_s3_class(f, "data.frame")
     expect_named(f, c("longitude", "latitude", "date", "date_time"))
     expect_equal(f$longitude, g1[[2]]) # Compare to g1
@@ -143,7 +139,7 @@ test_that("clean_gps()", {
     suppressMessages()
 
   expect_s3_class(g, "data.frame")
-  expect_named(g, c(names(m), "longitude", "latitude"), ignore.order = TRUE)
+  expect_named(g, c(names(m), "gps_ext", "longitude", "latitude"), ignore.order = TRUE)
   expect_equal(g$longitude, rep(c(-76, -84.3), 2))
   expect_equal(g$latitude, rep(c(45, 55), 2))
   expect_equal(

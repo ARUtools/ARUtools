@@ -207,7 +207,6 @@ clean_site_index <- function(site_index,
 #' @param dist_by Character. Column which identifies sites within which to
 #'   compare distance among GPS points. Only valid if `dist_cutoff` is not
 #'   `Inf`.
-#' @param skip_bad Logical. Skip GPS files which create errors.
 #' @param verbose Logical. Show extra loading information. Default `FALSE`.
 #'
 #' @return Data frame of site-level metadata.
@@ -223,31 +222,35 @@ clean_site_index <- function(site_index,
 clean_gps <- function(meta = NULL,
                       dist_cutoff = 100, dist_crs = 3161,
                       dist_by = c("site_id", "aru_id"),
-                      skip_bad = FALSE, verbose = FALSE) {
+                      quiet = FALSE, verbose = FALSE) {
 
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
   check_num(dist_cutoff, n = 1)
   check_num(dist_crs, n = 1)
   check_text(dist_by)
-  check_logical(skip_bad)
   check_logical(verbose)
   #meta <- check_UTC(meta) # Technically not needed at this step... worth doing anyway?
 
+
   # Load, combine and clean gps files
-  gps <- clean_gps_files(meta, skip_bad, verbose)
+  gps <- clean_gps_files(meta, quiet, verbose)
 
   # Check distances (skips if dist_cutoff = Inf)
   gps <- check_gps_dist(gps, crs = dist_crs, dist_cutoff = dist_cutoff,
-                        dist_by = dist_by)
+                        dist_by = dist_by, quiet = quiet)
 
   # Flag problems
   n <- nrow(gps)
   f_dt <- sum(is.na(gps$date_time))
   f_coord <- sum(is.na(gps$longitude) | is.na(gps$latitude))
-  f_zero <- sum(gps$longitude == 0 | gps$latitude == 0)
+  f_zero <- sum(gps$longitude == 0 | gps$latitude == 0, na.rm = TRUE)
+  f_gpx <- sum(gps$gps_ext == "gpx" &
+                 is.na(gps$date_time) & is.na(gps$date) &
+                 is.na(gps$latitude) & is.na(gps$longitude))
+  f_header <- sum(gps$problems_dt | gps$problems_tm | gps$problems_ll, na.rm = TRUE)
 
-  if(any(c(f_dt, f_coord, f_zero) > 0)) {
+  if(any(c(f_dt, f_coord, f_zero, f_gpx, f_header) > 0)) {
     msg <- c("Identified possible problems with GPS extraction:")
     msg <- c(msg, report_missing(f_dt, n, "date/times"))
     msg <- c(msg, report_missing(f_coord, n, "coordinates"))
@@ -256,18 +259,21 @@ clean_gps <- function(meta = NULL,
         msg,
         "Some coordinates detected as zero (can occur in Song Meters if not set)",
         paste0("Replacing zero coordinates with NA (", f_zero, "/", n, ")"))
+
+      gps <- dplyr::mutate(
+        gps, dplyr::across(c("latitude", "longitude"), ~dplyr::na_if(.x, 0)))
     }
 
-    gps <- dplyr::mutate(
-      gps, dplyr::across(c("latitude", "longitude"), ~dplyr::na_if(.x, 0)))
+    msg <- c(msg, report_missing(f_header, n, "headers (in text GPS files)"))
+    msg <- c(msg, report_missing(f_gpx, n, "GPX files", "extracted"))
 
     rlang::inform(msg)
   }
 
-  gps
+  dplyr::select(gps, -dplyr::starts_with("problems_"))
 }
 
-clean_gps_files <- function(meta, skip_bad, verbose) {
+clean_gps_files <- function(meta, quiet, verbose) {
 
   gps <- dplyr::filter(meta, .data$type == "gps")
 
@@ -277,46 +283,56 @@ clean_gps_files <- function(meta, skip_bad, verbose) {
       call = NULL)
   }
 
-  rlang::inform(c("Note: GPS log files can be unreliable... ",
-                  "Consider supplying your own GPS records and using `clean_site_index()`"))
+  if(!quiet) {
+    rlang::inform(
+      c("Note: GPS log files can be unreliable... ",
+        "Consider supplying your own GPS records and using `clean_site_index()`"))
+  }
 
-  # TODO: CHECK IF HAVE SERIAL? FIRMWARE?
+  if(!quiet) {
+    p1 <- list(
+      show_after = 0,
+      format = "Loading GPS files {cli::pb_percent} [{cli::pb_elapsed}]")
+    p2 <- list(
+      show_after = 0,
+      format = "Formating GPS files {cli::pb_percent} [{cli::pb_elapsed}]")
+  } else p1 <- p2 <- FALSE
+
   gps |>
     # Check columns and get skips for non-GPX files
-    check_gps_files(skip_bad) |>
-    # Omit text files without a skip value
-    dplyr::filter(!(.data$ext != "gpx" & is.na(.data$skip))) |>
+    check_gps_files() |>
     dplyr::mutate(
 
       # Read files
       gps_data = purrr::pmap(
-        list(.data$path, .data$skip, .data$ext),
+        list(.data$path, .data$skip, .data$gps_ext),
         ~load_gps(..1, ..2, ..3, verbose = verbose),
-        .progress = list(
-          show_after = 0,
-          format = "Loading GPS files {cli::pb_percent} [{cli::pb_elapsed}]")),
+        .progress = p1),
 
       # Format data
       gps_data = purrr::map2(
-        .data$gps_data, .data$ext, fmt_gps,
-        .progress = list(
-          show_after = 0,
-          format = "Formating GPS files {cli::pb_percent} [{cli::pb_elapsed}]"))) |>
+        .data$gps_data, .data$gps_ext, fmt_gps,
+        .progress = p2)) |>
 
     # Clean up
-    dplyr::select(-"date_time", -"date", -"skip", -"ext") %>%
+    dplyr::select(-"date_time", -"date", -"skip") |>
     tidyr::unnest("gps_data", keep_empty = TRUE)
 
 }
 
-load_gps <- function(path, skip, ext, verbose) {
-  if(ext == "gpx") {
-    g <- sf::st_read(path, layer = "waypoints", quiet = TRUE)
+load_gps <- function(path, skip, gps_ext, verbose) {
+  if(gps_ext == "gpx") {
+    g <- try(sf::st_read(path, layer = "waypoints", quiet = TRUE), silent = TRUE)
   } else {
-    g <- readr::read_csv(path, skip = skip - 1, show_col_types = verbose,
-                         guess_max = Inf,
-                         name_repair = "unique_quiet",
-                         progress = FALSE)
+    if(is.na(skip)) {
+      g <- try(stop("No skip", call. = FALSE), silent = TRUE)
+    } else {
+      g <- try(readr::read_csv(path, skip = skip - 1, show_col_types = verbose,
+                               guess_max = Inf,
+                               name_repair = "unique_quiet",
+                               progress = FALSE),
+               silent = TRUE)
+    }
   }
   g
 }
@@ -325,14 +341,14 @@ check_gps_files <- function(gps_files, skip_bad) {
 
   # Get text-based GPS logs (i.e. anything but GPX files)
   gps_files <- dplyr::mutate(gps_files,
-                             ext = tolower(fs::path_ext(.data$path)))
+                             gps_ext = tolower(fs::path_ext(.data$path)))
 
   gps_txt <- gps_files |>
-    dplyr::filter(.data$ext != "gpx") |>
+    dplyr::filter(.data$gps_ext != "gpx") |>
     dplyr::pull(path)
 
   lines <- stats::setNames(nm = gps_txt) |>
-    purrr::imap(~readr::read_lines(.x, n_max = 5))
+    purrr::imap(~readr::read_lines(.x, n_max = 5, progress = FALSE))
 
   # Set patterns
   opts <- getOption("ARUtools")
@@ -350,32 +366,15 @@ check_gps_files <- function(gps_files, skip_bad) {
   tm <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_time)))
   ll <- is.na(skips) | length(skips) == 0
 
-  if(any(c(dt, tm, ll))) {
-    w <- which(dt | tm | ll)
-    msg <- paste0("Detected problems in some GPS files (indices: ",
-                  paste0(w, collapse = ", "), ")")
+  # Skip if not detected
+  skips[dt | tm | ll] <- NA_integer_
 
-    t <- "Could not detect columns in all files: "
-    cols <- vector()
-    if(any(dt)) cols <- c(cols, "date")
-    if(any(tm)) cols <- c(cols, "time")
-    if(any(ll)) cols <- c(cols, "lat and lon")
-    t <- paste0(t, paste0(cols, collapse = ", "))
-
-    msg <- c(msg,
-             c("!" = t,
-               "!" = paste0(
-                 "GPS files are expected to have named columns with ",
-                 "date, time, latitude, and longitude (names can be loose)")))
-
-    if(skip_bad) {
-      rlang::inform(c(msg, c("!" = "Skipping problematic file(s)")))
-      skips[w] <- NA_integer_
-    } else rlang::abort(msg, call = NULL)
-  }
-
+  # Get skips and problems for future reporting
   dplyr::tibble(path = names(skips),
-                skip = unlist(skips)) |>
+                skip = unlist(skips),
+                problems_dt = dt,
+                problems_tm = tm,
+                problems_ll = ll) |>
     dplyr::full_join(gps_files, by = "path")
 }
 
@@ -387,14 +386,28 @@ coord_dir <- function(col, pattern) {
     all(stringr::str_detect(col, paste0("^[", pattern, "]{1}$")), na.rm = TRUE)
 }
 
-fmt_gps <- function(df, ext) {
-  if(ext == "gpx") g <- fmt_gps_gpx(df) else g <- fmt_gps_txt(df)
-  g |>
-    dplyr::select("longitude", "latitude", "date", "date_time")
+fmt_gps <- function(df, gps_ext) {
+
+  if(inherits(df, "try-error")) {
+    g <- fmt_gps_empty()
+  } else if(gps_ext == "gpx") {
+    g <- fmt_gps_gpx(df)
+  } else {
+    g <- fmt_gps_txt(df)
+  }
+
+  dplyr::select(g, "longitude", "latitude", "date", "date_time")
+}
+
+fmt_gps_empty <- function() {
+  dplyr::tibble(date = lubridate::NA_Date_,
+                date_time = lubridate::NA_POSIXct_,
+                latitude = NA_real_,
+                longitude = NA_real_)
 }
 
 fmt_gps_gpx <- function(df) {
-  df |>
+  df_fmt <- df |>
     sf::st_drop_geometry() |>
     dplyr::bind_cols(sf::st_coordinates(df)) |>
     dplyr::select("date_time" = "time", "latitude" = "Y", "longitude" = "X") |>
@@ -409,14 +422,14 @@ fmt_gps_txt <- function(df) {
 
   df_fmt <- df |>
 
+    # Omit Headings appearing at odd places
+    dplyr::filter(.data[[names(df)[1]]] != names(df)[[1]]) |>
+
     dplyr::rename(
       "latitude" = dplyr::matches(opts$pat_gps_coords[1]),
       "longitude" = dplyr::matches(opts$pat_gps_coords[2]),
       "date" = dplyr::matches(opts$pat_gps_date),
       "time" = dplyr::matches(opts$pat_gps_time)) |>
-
-    # Some summary files have MICROTYPE and DATE
-    dplyr::filter(!(is.character(.data$date) && any(.data$date == "DATE"))) |>
 
     # Format times
     dplyr::mutate(
@@ -466,7 +479,7 @@ fmt_gps_txt <- function(df) {
 #' group.
 #'
 #' @noRd
-check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet){
+check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
 
   if(dist_cutoff < Inf) {
     max_dist <- gps |>
