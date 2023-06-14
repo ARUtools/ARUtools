@@ -8,7 +8,6 @@
 #' @import patchwork
 #' @import rlang
 #' @import dplyr
-#' @importFrom magrittr %>%
 #'
 "_PACKAGE"
 

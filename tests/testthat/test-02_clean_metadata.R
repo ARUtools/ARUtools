@@ -2,7 +2,7 @@
 test_that("clean_metadata()", {
 
   expect_message(m <- clean_metadata(project_files = example_files),
-                 "Extracting ARU info..") %>%
+                 "Extracting ARU info..") |>
     expect_message("Extracting Dates and Times...")
 
   expect_s3_class(m, "data.frame")

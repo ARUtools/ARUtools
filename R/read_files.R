@@ -50,7 +50,7 @@ read_log_barlt <- function(filename){
 
   dated_logs <- full_file[grepl("^\\d\\d\\/", full_file)] |>
     stringr::str_remove("\xffffffb0") |>
-    stringr::str_conv("UTF-8") %>%
+    stringr::str_conv("UTF-8") |>
     tibble::tibble(row = . ) |>
     tidyr::separate(col = row, into = c("Date", "Time", "Log"),
                     sep = c(10,20), extra = 'merge') |>
@@ -152,7 +152,7 @@ process_log_SM <- function(folder_base, list_files, site_pattern, return_gps, re
     dplyr::mutate(longitude_decimal_degrees = -1*as.numeric(LON),
                   latitude_decimal_degrees = as.numeric(LAT)) #|>
   )
-    # sf::st_as_sf(coords = c("LON", "LAT"), crs = 4326) %>%
+    # sf::st_as_sf(coords = c("LON", "LAT"), crs = 4326) |>
     # dplyr::bind_cols(
     #   tibble::as_tibble(sf::st_coordinates(.))
     # ) |>

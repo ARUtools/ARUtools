@@ -24,7 +24,7 @@ getvals <- function(filename,fl , mf = NA, maxf = NA, units_ = "samples") {
   complexity <- soundecology::acoustic_complexity(wave_ex, min_freq = mf, max_freq = maxf)
   bioindex <- soundecology::bioacoustic_index(wave_ex)
   result <- soundecology::acoustic_diversity(wave_ex)
-  df_out <- tibble::tibble(file = filename) %>% bind_cols(as_tibble(complexity[1:4])) %>%
-    bind_cols(as_tibble(bioindex)) %>% as_tibble(result[1:4])
+  df_out <- tibble::tibble(file = filename) |> bind_cols(as_tibble(complexity[1:4])) |>
+    bind_cols(as_tibble(bioindex)) |> as_tibble(result[1:4])
   df_out
 }

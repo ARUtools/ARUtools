@@ -13,7 +13,7 @@ test_that("create_pattern_XXXX()", {
   expect_equal(stringr::str_extract(test, p),
                c("20210605T230000", "2021_06_05T23_00_00",
                  "2021-06-05T23:00:00", NA_character_)) # No seconds
-  expect_silent(stringr::str_extract(test, p) %>% lubridate::ymd_hms())
+  expect_silent(stringr::str_extract(test, p) |> lubridate::ymd_hms())
 
   # Different order
   expect_silent(d <- create_pattern_date(order = "mdy", yr_digits = 2))
@@ -23,5 +23,5 @@ test_that("create_pattern_XXXX()", {
             "06-05-21T23:00:00")
   expect_equal(stringr::str_extract(test, p),
                c("061206T230000", "06_05_10T23_00_00", "06-05-21T23:00:00"))
-  expect_silent(stringr::str_extract(test, p) %>% lubridate::mdy_hms())
+  expect_silent(stringr::str_extract(test, p) |> lubridate::mdy_hms())
 })

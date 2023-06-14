@@ -36,7 +36,7 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
                     "/")) )
   }
 
-  tmp <- purrr::pluck(jsonfile, "Wind free regions") %>% purrr::transpose()
+  tmp <- purrr::pluck(jsonfile, "Wind free regions") |> purrr::transpose()
   nm <- purrr::pluck(jsonfile, "FileName")
   e <- tmp |>
     purrr::pluck("e") |>
@@ -44,8 +44,8 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
     # purrr::list_flatten()
   s <-  purrr::list_c(purrr::pluck(tmp, "s"))
   # browser()
-  tibble::tibble(s,e) %>%
-    dplyr::mutate(t=e-s) %>%
+  tibble::tibble(s,e) |>
+    dplyr::mutate(t=e-s) |>
     dplyr::summarize(totalwindless = sum(t),
               pwindless = totalwindless/dets,
               n=n(),
@@ -95,9 +95,9 @@ wind_detection_pre_processing <- function(wav_vector,site_pattern,
       stringr::str_replace("\\(", r"(\\\()") |>
       stringr::str_replace("\\)", r"(\\\))") |>
       stringr::str_replace("\\s", r"(\\\ )") |>
-      stringr::str_replace("\\+", "\\\\+") |> #%>%
-      stringr::str_replace("\\[", "\\\\[") |> #%>%
-      stringr::str_replace("\\]", "\\\\]")  #%>%
+      stringr::str_replace("\\+", "\\\\+") |>
+      stringr::str_replace("\\[", "\\\\[") |>
+      stringr::str_replace("\\]", "\\\\]")
 
     sites <- tmp_wav |>
       stringr::str_extract(site_pattern) |>
@@ -110,9 +110,9 @@ wind_detection_pre_processing <- function(wav_vector,site_pattern,
       stringr::str_replace("\\(", r"(\\\()") |>
       stringr::str_replace("\\)", r"(\\\))") |>
       stringr::str_replace("\\s", r"(\\\ )") |>
-      stringr::str_replace("\\+", "\\\\+") |> #%>%
-      stringr::str_replace("\\[", "\\\\[") |> #%>%
-      stringr::str_replace("\\]", "\\\\]")  #%>%
+      stringr::str_replace("\\+", "\\\\+") |>
+      stringr::str_replace("\\[", "\\\\[") |>
+      stringr::str_replace("\\]", "\\\\]")
     if(!is_null(output_directory)&is_true(write_output)){
     dir_ <- glue::glue("{output_directory}/{i}")
 

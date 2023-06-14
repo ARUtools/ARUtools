@@ -32,7 +32,7 @@ dates <- example_sites |>
 example_files <- tidyr::expand_grid(random, select(example_sites, Sites, ARU)) |>
   dplyr::left_join(dates, by = c("Sites", "ARU"), relationship = "many-to-many") |>
   dplyr::rowwise() |>
-  dplyr::mutate(f = paste0(random, "_", ARU, "_", Sites, "/", Sites, "_", date_time, "_ARU.wav")) %>%
+  dplyr::mutate(f = paste0(random, "_", ARU, "_", Sites, "/", Sites, "_", date_time, "_ARU.wav")) |>
   dplyr::pull(f)
 
 usethis::use_data(example_files, overwrite = TRUE)

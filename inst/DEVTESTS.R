@@ -40,7 +40,7 @@ g <- clean_gps(m, dist_cutoff = Inf)
 
 m <- add_sites(m, g)
 
-filter(m, is.na(longitude)) %>% select(-path) # Look at where no GPS match
+filter(m, is.na(longitude)) |> select(-path) # Look at where no GPS match
 filter(g, site_id == "BP_ARU01") # Ah, no date overlap where actually have GPS
 
 # eg 2 - GPS files / Site Index ------------------------------------

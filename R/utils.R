@@ -10,10 +10,10 @@ list_files <- function(project_dir, subset, subset_type,
 
 
 extract_replace <- function(string, pattern) {
-  string %>%
+  string |>
     stringr::str_extract(
       stringr::regex(paste0("(", names(pattern), ")", collapse = "|"),
-                     ignore_case = TRUE)) %>%
+                     ignore_case = TRUE)) |>
     stringr::str_replace_all(stringr::regex(pattern, ignore_case = TRUE))
 }
 
