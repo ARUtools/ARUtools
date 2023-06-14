@@ -124,16 +124,17 @@ check_problems <- function(df, check = c("site_id", "aru_id",
 
 #' Explore a file
 #'
-#' Shows the `n_max` first lines in a text file. Useful for trying to understand
+#' Shows the first few lines in a text file. Useful for trying to understand
 #' problems in GPS files.
 #'
 #' Wrapper around `readr::read_lines(n_max)`.
 #'
 #' @param file_name Character. File path to check.
-#' @param n_max Numeric. Number of lines in the file to show.
+#' @param n_max Numeric. Number of lines in the file to show. Default 10.
+#' @param ... Arguments passed on to `readr::read_lines()`
 #'
 #' @export
-check_file <- function(file_name, n_max = 10) {
-  readr::read_lines(file_name, n_max = n_max)
+check_file <- function(file_name, n_max = 10, ...) {
+  readr::read_lines(file_name, n_max = n_max, ...)
 }
 

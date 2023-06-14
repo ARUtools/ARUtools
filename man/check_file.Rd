@@ -4,15 +4,17 @@
 \alias{check_file}
 \title{Explore a file}
 \usage{
-check_file(file_name, n_max = 10)
+check_file(file_name, n_max = 10, ...)
 }
 \arguments{
 \item{file_name}{Character. File path to check.}
 
-\item{n_max}{Numeric. Number of lines in the file to show.}
+\item{n_max}{Numeric. Number of lines in the file to show. Default 10.}
+
+\item{...}{Arguments passed on to `readr::read_lines()`}
 }
 \description{
-Shows the `n_max` first lines in a text file. Useful for trying to understand
+Shows the first few lines in a text file. Useful for trying to understand
 problems in GPS files.
 }
 \details{
