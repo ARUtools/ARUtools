@@ -10,7 +10,8 @@ add_sites(
   buffer_before = 0,
   buffer_after = NULL,
   by = c("site_id", "aru_id"),
-  by_date = "date_time"
+  by_date = "date_time",
+  quiet = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ as `meta`, besides date/time, which are used to join the data. Default is
 \item{by_date}{Character. Date/time type to join data by. `date` is faster
 but `date_time` is more precise. Default `date_time`. `NULL` means ignore
 dates and join only with `by` columns (`dplyr::left_join()`).}
+
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
 }
 \value{
 A data frame of metadata with site-level data joined in.

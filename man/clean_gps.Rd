@@ -9,7 +9,7 @@ clean_gps(
   dist_cutoff = 100,
   dist_crs = 3161,
   dist_by = c("site_id", "aru_id"),
-  skip_bad = FALSE,
+  quiet = FALSE,
   verbose = FALSE
 )
 }
@@ -25,8 +25,6 @@ distance (should be one with m).}
 \item{dist_by}{Character. Column which identifies sites within which to
 compare distance among GPS points. Only valid if `dist_cutoff` is not
 `Inf`.}
-
-\item{skip_bad}{Logical. Skip GPS files which create errors.}
 
 \item{verbose}{Logical. Show extra loading information. Default `FALSE`.}
 }

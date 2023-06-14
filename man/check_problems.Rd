@@ -5,15 +5,13 @@
 \title{Check problems in output of `clean_metadata()`}
 \usage{
 check_problems(
-  meta,
+  df,
   check = c("site_id", "aru_id", "date", "date_time", "longitude", "latitude"),
   path = FALSE,
   date = FALSE
 )
 }
 \arguments{
-\item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
-
 \item{check}{Character. Character vector of columns to check for missing
 values. Default is `site_id`, `aru_id`, `date`, `date_time`, `longitude`
 and `latitude`.}

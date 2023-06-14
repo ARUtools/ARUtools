@@ -11,7 +11,8 @@ clean_site_index(
   col_date_time = "date",
   col_coords = c("longitude", "latitude"),
   col_extra = NULL,
-  resolve_overlaps = TRUE
+  resolve_overlaps = TRUE,
+  quiet = FALSE
 )
 }
 \arguments{

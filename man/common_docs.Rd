@@ -26,6 +26,9 @@ either `clean_gps()` or `clean_site_index()`).}
 
 \item{date}{Logical. Whether to summarize output by date (as well as
 `site_id` and `aru_id`. Default `FALSE`.}
+
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
 }
 \description{
 Common arguments and documentation for various functions

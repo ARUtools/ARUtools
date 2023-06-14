@@ -55,7 +55,8 @@ between dates and times. See `create_pattern_dt_sep()`.}
 \item{order_date}{Character. Order that the date appears in. "ymd"
 (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.}
 
-\item{quiet}{Logical. Whether to suppress progress messages.}
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
 }
 \value{
 Data frame with extracted metadata

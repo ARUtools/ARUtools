@@ -4,8 +4,8 @@ test_that("add_sites()", {
   m <- dplyr::mutate(meta, site_id = NA_character_)
 
   # Add site_ids by datetime
-  expect_message(m1 <- add_sites(m, example_sites_clean, by = "aru_id")) |>
-    suppressMessages()
+  expect_message(m1 <- add_sites(m, example_sites_clean, by = "aru_id"),
+                 "Joining by columns `date_time_start` and `date_time_end`")
   expect_equal(dplyr::arrange(meta, file_name),
                dplyr::arrange(m1[names(meta)], file_name))
 

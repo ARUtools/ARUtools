@@ -123,7 +123,7 @@ test_that("clean_site_index() single date", {
     col_coords = c("lon", "lat")))
 })
 
-test_that("clean_site_index() date/times", {
+test_that("clean_site_index() date_times", {
   expect_silent(clean_site_index(example_sites_clean,
                                  col_date_time = c("date_time_start")))
 })
@@ -159,6 +159,16 @@ test_that("clean_site_index() errors etc.", {
                  "Removing timezone specification")
   expect_error(clean_site_index(e, col_date_time = c("date_time", "date_time_end")),
                "Multiple timezones detected in `date_time` columns")
+
+  # No problem with shifting to noon
+  expect_message(s1 <- clean_site_index(  # Original
+    example_sites_clean,
+    col_date_time = c("date_start", "date_end")))
+  expect_message(s2 <- clean_site_index(  # TZ set by user
+    e, col_date_time = c("date_start", "date_end")),
+    "overlapping date ranges")
+  expect_equal(s1, s2) # Same in the end
+
 
   # With sf
   e <- dplyr::mutate(

@@ -65,9 +65,7 @@ clean_metadata <- function(
   check_logical(quiet)
 
 
-  # TODO: more checks
-
-
+  # Prepare patterns
   file_type_pattern <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
 
   pattern_site_id <-  pat_collapse(pattern_site_id)
@@ -78,6 +76,7 @@ clean_metadata <- function(
 
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
 
+  # Get file lists
   if(!is.null(project_dir)) {
     if(!is.null(project_files)) {
       rlang::warn("`project_dir` overrides `project_files`", call = NULL)

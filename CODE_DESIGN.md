@@ -49,3 +49,11 @@ making collaboration and future modifications easier.
   be matched before comparing to shorter patterns
   
   
+# Verbosity
+- ARUtools is pretty chatty as a result of having to be clear about how weird 
+  data is being handled
+- `quiet` is an argument that is FALSE by default. If TRUE, non-essential, FYI
+  messages are suppressed (but not warnings, and not informative problem messages)
+- `verbose` is an argument (currently only for `clean_gps()`) that is by default
+  FALSE. If TRUE, shows even more information (generally unnecessary unless
+  troubleshooting a specific problem)

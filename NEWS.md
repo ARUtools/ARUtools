@@ -3,9 +3,11 @@
 * `clean_gps()`
   * can handle GPX files via `sf` now
   * distance cutoff results in a warning (not an error), returning
-    the data with the max_dist column, so users can see which site was problematic.
+    the data with the `max_dist` column, so users can see which site was problematic.
   * now checks for distance by site groups `aru_id` and `site_id` by default
   * pattern matches for GPS column headers have been expanded
+  * catches errors but continues reporting on failed loading (remove `skip_bad` argument)
+  * `check_problems()` now also checks GPS meta data
 
 * `create_pattern_XXX()` 
   * Now accept multiple options
