@@ -84,9 +84,9 @@ check_meta <- function(meta, date = FALSE) {
 #' check_problems(m)
 #' check_problems(m, date = TRUE)
 #' check_problems(m, path = TRUE)
-check_problems <- function(meta, check = c("site_id", "aru_id",
-                                           "date", "date_time", "longitude",
-                                           "latitude"),
+check_problems <- function(df, check = c("site_id", "aru_id",
+                                         "date", "date_time", "longitude",
+                                         "latitude"),
                            path = FALSE, date = FALSE) {
   if(path & date) {
     rlang::abort(c("`date` summarizes problems, so `path` cannot be returned",
@@ -94,15 +94,20 @@ check_problems <- function(meta, check = c("site_id", "aru_id",
                  call = NULL)
   }
 
-  m <- dplyr::filter(meta,
-                     .data$type != "gps",
-                     dplyr::if_any(dplyr::any_of(check), ~is.na(.x))) |>
+  # If a mix of gps and meta, remove gps
+
+  if(any(df$type != "gps")) {
+    df <- dplyr::filter(df, .data$type != "gps")
+  }
+
+  df <- df |>
+    dplyr::filter(dplyr::if_any(dplyr::any_of(check), ~is.na(.x))) |>
     dplyr::select(-dplyr::any_of(c("type", "file_name", "aru_type")))
 
 
   if(date) {
     check <- check[check %in% c("longitude", "latitude", "date_time")]
-    m <- m |>
+    df <- df |>
       dplyr::group_by(
         dplyr::across(dplyr::any_of(c("site_id", "aru_id", "date")))) |>
       dplyr::summarize(
@@ -113,8 +118,8 @@ check_problems <- function(meta, check = c("site_id", "aru_id",
         .groups = "drop")
   }
 
-  if(path) m <- dplyr::select(m, "path")
-  m
+  if(path) df <- dplyr::pull(df, "path")
+  df
 }
 
 #' Explore a file
