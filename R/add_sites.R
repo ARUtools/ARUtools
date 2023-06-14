@@ -230,32 +230,33 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                           col = by_date, int = "dt_range")
 
   # Flags
-  fix_buffers <- c(
-    "Consider adjusting `buffer_before` or `buffer_after`",
-    paste0("Consider using date/time ranges by including `date_start`",
-           "/`date_time_start` and `date_end`/`date_time_end` in `sites`"))
+  msg <- c("Identified possible problems with metadata extraction:")
 
   if(nrow(meta_sites) > nrow(meta)) {
-    msg <- c("Some sound files matched multiple site references.",
-             "See the `n_matches` column for specifics")
-    if(by_date == "date") {
-      msg <- c(msg, "Consider matching by time, `by_date = \"date_time\"`")
-    }
-    if(length(by_date_cols) == 1) msg <- c(msg, fix_buffers)
-
-    rlang::inform(msg)
+    msg <- c(msg,
+             "x" = "Some sound files matched multiple site references (see `n_matches` column)")
   }
 
   if(any(is.na(meta_sites$`...n`))) {
     n <- nrow(meta)
     f <- sum(is.na(meta_sites$`...n`))
-    msg <- c(paste0("Not all files were matched to a site reference (", f, "/", n, ")"),
-             "Consider adjusting the `by` argument")
-    if(length(by_date_cols) == 1)  msg <- c(msg, fix_buffers)
+    msg <- c(msg,
+             "x" = paste0("Not all files were matched to a site reference (", f, "/", n, ")"))
+  }
+  if(length(msg) > 1) {
+    msg <- c(msg, "*" = "Consider adjusting the `by` argument")
+    if(by_date == "date") {
+      msg <- c(msg, "*" = "Consider matching by time, `by_date = \"date_time\"`")
+    }
+    if(length(by_date_cols) == 1)  {
+      msg <- c(msg,
+               "*" = c("Consider adjusting `buffer_before` or `buffer_after`"),
+               "*" = paste0("Consider using date/time ranges by including `date_start`",
+                            "/`date_time_start` and `date_end`/`date_time_end` in `sites`"))
+    }
 
     rlang::inform(msg)
   }
 
-  meta_sites |>
-    dplyr::select(-"...n")
+  dplyr::select(meta_sites, -"...n")
 }
