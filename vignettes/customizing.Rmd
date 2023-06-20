@@ -56,7 +56,7 @@ For example, by default, `clean_metadata()` matches site ids with the expression
 
 Yikes!
 
-Broken down, that means look for a "P" *or* "Q" (`((P)|(Q))`) 
+Broken down, that means look for a "Q" *or* "P" (`((Q)|(P))`) 
 followed by two digits (`\\d{2}`)
 followed by a separator, either `_` *or* `-` (`_|-`)
 followed by a single digit (`\\d{1}`).
@@ -167,14 +167,14 @@ m1 <- clean_metadata(project_files = f,
                      pattern_dt_sep = "_",
                      pattern_date = create_pattern_date(order = "mdy"),
                      order_date = "mdy")
-m1 <- filter(m1, !is.na(date_time))
+m1 <- filter(m1, !is.na(date_time)) # omit ones that didn't work
 m1
 
 m2 <- clean_metadata(
   project_files = f,
   pattern_site_id = create_pattern_site_id(prefix = "Site", s_digits = 0),
   pattern_aru_id = create_pattern_aru_id(n_digits = 3))
-m2 <- filter(m2, !is.na(date_time))
+m2 <- filter(m2, !is.na(date_time)) # omit ones that didn't work
 m2
 
 m <- bind_rows(m1, m2)
@@ -261,7 +261,6 @@ f <- c("a_BARLT10962_P01_1/P01_1_20200502T050000_ARU.mp4",
 Other wise we'll run into problems...
 ```{r, error = TRUE}
 clean_metadata(project_files = f)
-
 ```
 
 ```{r}

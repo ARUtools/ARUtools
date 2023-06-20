@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+#| message: false
 library(ARUtools)
 library(lubridate) # For workding with date/tiems
 library(dplyr)     # For manipulating data

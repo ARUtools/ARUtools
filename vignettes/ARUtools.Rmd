@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 
 ```{r}
+#| message: false
 library(ARUtools)
 ```
 
@@ -133,15 +134,20 @@ calculate the time to sunrise or sunset.
 
 Here we need to be clear about what timezone the ARU unit was recording times as.
 
-There are two options. The first is that each ARU unit was set up to record in 
+There are two options.
+
+The first option is that all ARUs were set up at home base before deployment.
+In this case it's possible they were deployed in a location with a different 
+timezone than what they were recording in. This doesn't matter, as long as you 
+specify the programmed timezone here. 
+In this case, use `tz = "America/Toronto"`, or whichever time
+zone was used. Note that timezones must be one of `OlsonNames()`.
+
+The second option is that each ARU unit was set up to record in 
 the local timezone where it was placed. If this is the case, specify `tz = "local"`
 and the `calc_sun()` function will use coordinates to determine local timezones.
 
-The second option is that all ARUs were set up at home base before deployment.
-In this case it's possible they were deployed in a location with a different 
-timezone than what they were recording in. This doesn't matter, as long as you 
-specify it here. In this case, use `tz = "America/Toronto"`, or which ever time
-zone was used. Note that timezones must be one of `OlsonNames()`.
+(See the Dealing with Timezones vignette for more details).
 
 In our example, let's assume that the ARUs were set up in each location they 
 were deployed. So we'll use `tz = "local"`, the default setting.
@@ -149,4 +155,6 @@ were deployed. So we'll use `tz = "local"`, the default setting.
 m <- calc_sun(m)
 m
 ```
+
+Tada! Now we have a complete set of cleaned metadata associated with each recoding.
 
