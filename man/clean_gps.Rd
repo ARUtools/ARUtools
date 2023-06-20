@@ -26,6 +26,9 @@ distance (should be one with m).}
 compare distance among GPS points. Only valid if `dist_cutoff` is not
 `Inf`.}
 
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
+
 \item{verbose}{Logical. Show extra loading information. Default `FALSE`.}
 }
 \value{

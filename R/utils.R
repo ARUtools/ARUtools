@@ -1,4 +1,10 @@
-
+#' List files in the project directory
+#'
+#' Grabs a list of files and directories based on the subset definied.
+#' Loose wrapper around `fs::dir_ls()`
+#'
+#' @noRd
+#'
 list_files <- function(project_dir, subset, subset_type,
                        type = c("file", "directory")) {
   fs::dir_ls(project_dir, type = type,
@@ -8,7 +14,19 @@ list_files <- function(project_dir, subset, subset_type,
              recurse = TRUE)
 }
 
-
+#' Extract and replace a pattern
+#'
+#' Grab a pattern (dropping everything else), then replace it with a cleaned up
+#' version.
+#'
+#' @param string Character string
+#' @param pattern Named character vector. Names are what are extracted, contents
+#'   what it is replaced with.
+#'
+#' @examples
+#' extract_replace("ARU1000/SM1000/4562.wav", c("SM[0-9]{1,4}" = "SongMeter"))
+#'
+#' @noRd
 extract_replace <- function(string, pattern) {
   string |>
     stringr::str_extract(
@@ -17,6 +35,15 @@ extract_replace <- function(string, pattern) {
     stringr::str_replace_all(stringr::regex(pattern, ignore_case = TRUE))
 }
 
+#' Report/flag missing data
+#'
+#' @param missing Numeric. Number of missing data points.
+#' @param total Numeric. Total data points.
+#' @param name Character. Name of missing data.
+#' @param what Character. What was done to the data? (e.g., extracted, detected,
+#'   etc.)
+#'
+#' @noRd
 report_missing <- function(missing, total, name, what = "detected") {
   msg <- NULL
   if(missing > 0) {
@@ -27,6 +54,20 @@ report_missing <- function(missing, total, name, what = "detected") {
   msg
 }
 
+#' Join data by date range
+#'
+#' @param x Data frame. To be joined
+#' @param y Data frame. To be joined
+#' @param by Character vector. Non-date/time columns to use in the join.
+#' @param id Character. Column(s) that identify a record.
+#' @param col Character. Date/time column to use in the join (in `x`)
+#' @param int Character. Name of the column with the date/time interval to use in joining. (in `y`)
+#' @param check_col Character. Name of the column to create to identify multiple matches.
+#'
+#' Join `x` and `y` by date/times in `x` being within the date/time interval in `y`
+#' (within a set of unique `by` variables)
+#'
+#' @noRd
 date_join <- function(x, y, by, id, col = "date", int = "date_range",
                       check_col = "...n") {
 

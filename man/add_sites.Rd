@@ -46,9 +46,10 @@ non-essential updates.}
 A data frame of metadata with site-level data joined in.
 }
 \description{
-Uses dates to join site-level data to the meta data. If the sites data has
-only single dates, then a buffer before and after is used to determine which
-recordings belong to that site observation.
+Uses dates to join site-level data (coordinates and site ids) to the meta
+data. If the site data have only single dates, then a buffer before and after
+is used to determine which recordings belong to that site observation. Can
+join by site ids alone if set `by_date = NULL`.
 }
 \examples{
 m <- clean_metadata(project_files = example_files)

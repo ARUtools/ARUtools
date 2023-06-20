@@ -1,4 +1,4 @@
-#' Calculate and add time to sunrise/sunset
+#' Calculate time to sunrise/sunset
 #'
 #' Calculate the sunrise/sunset of each sound file for the day of, the day before
 #' and the day after to get the nearest sunrise to the recording.
@@ -132,7 +132,16 @@ calc_ss <- function(dates, tz, suffix = ""){
     tibble::as_tibble()
 }
 
-
+#' Convert sunrise/sunset times to time-to-sunrise/sunset
+#'
+#' Takes the difference between the time of the event and the recording, for
+#' each event (sunrise/sunset, day before/of/after).
+#'
+#' Returns the difference with the smallest absolute difference.
+#'
+#' @param sun_times Data frame with the times of the events and recordings
+#'
+#' @noRd
 calc_ss_diff <- function(sun_times) {
   sun_times |>
     dplyr::mutate(
@@ -151,20 +160,24 @@ calc_ss_diff <- function(sun_times) {
 }
 
 #' Calculate the diff time in minutes
+#'
+#' @param t1 Vector (POSIXct) First times
+#' @param t2 Vector (POSIXct) Times to compare
+#'
 #' @noRd
 sun_diff <- function(t1, t2) {
   as.numeric(difftime(t2, t1, units = "mins"))
 }
 
 
-#' Calculate abs min of a group
+#' Calculate abs min of three values
 #'
 #' Return the value where the absolute is the minimum. Returns only 1, even if
 #' more than one matches the min(abs).
 #'
-#' @param x A value
-#' @param y A value
-#' @param z A value
+#' @param x A value that you can take a minimum of (numeric, date, time, etc).
+#' @param y A value that you can take a minimum of (numeric, date, time, etc).
+#' @param z A value that you can take a minimum of (numeric, date, time, etc).
 #'
 #' @noRd
 min_abs <- function(x, y, z) {

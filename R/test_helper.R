@@ -1,3 +1,8 @@
+#' Helper function for GPS tests
+#'
+#' Creates an example GPS file for testing
+#'
+#' @noRd
 test_gps <- function(lat = "Latitude (decimal degrees)",
                      lon = "Longitude (decimal degrees)",
                      time = "HH:MM:SS",
@@ -18,6 +23,11 @@ test_gps <- function(lat = "Latitude (decimal degrees)",
   p
 }
 
+#' Helper function for meta data tests
+#'
+#' Creates a directory structure with example recording files
+#'
+#' @noRd
 temp_files <- function() {
   purrr::walk(fs::path_temp(example_files),
               ~{fs::dir_create(dirname(.x)); writeLines("test", .x)})

@@ -39,6 +39,9 @@ ARUs are generally *not* deployed/removed at midnight (the official
 start/end of a day) and so noon is used as an approximation for when an ARU
 was deployed or removed. If possible, use specific deployment times to
 avoid this issue.}
+
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
 }
 \value{
 Standardized site index data frame

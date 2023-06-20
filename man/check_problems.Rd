@@ -12,6 +12,9 @@ check_problems(
 )
 }
 \arguments{
+\item{df}{Data frame. Either meta data (`clean_metadata()`) or GPS
+coordinates (`clean_gps()`)}
+
 \item{check}{Character. Character vector of columns to check for missing
 values. Default is `site_id`, `aru_id`, `date`, `date_time`, `longitude`
 and `latitude`.}
@@ -19,7 +22,8 @@ and `latitude`.}
 \item{path}{Logical. Whether to return just the file paths which have missing
 attributes. Default `FALSE`}
 
-\item{date}{Logical.}
+\item{date}{Logical. Whether to summarize output by date (as well as
+`site_id` and `aru_id`. Default `FALSE`.}
 }
 \value{
 A data frame summarizing the metadata by site_id, aru_type, aru_id,

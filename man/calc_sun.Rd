@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_sun.R
 \name{calc_sun}
 \alias{calc_sun}
-\title{Calculate and add time to sunrise/sunset}
+\title{Calculate time to sunrise/sunset}
 \usage{
 calc_sun(meta_sites, aru_tz = "local")
 }

@@ -1,3 +1,48 @@
+
+#' Check for a type of value within options
+#'
+#' @param x Value
+#' @param nm Value name
+#' @param type Value type (text, numeric, logical)
+#' @param opts Value options (if NULL ignored, otherwise must be one of these)
+#' @param not_null Whether value can be NULL or not.
+#' @param n How many values can there be (must there be)
+#'
+#' @noRd
+check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = c(1, Inf)) {
+  nm <- paste0("`", nm, "`")
+  if(not_null && is.null(x)) {
+    rlang::abort(paste(nm, "cannot be `NULL`"), call = NULL)
+  } else if(!is.null(x)) {
+    if((type == "text" && !is.character(x)) ||
+       (type == "numeric" && !is.numeric(x)) ||
+       (type == "logical" && !is.logical(x))) {
+      rlang::abort(paste(nm, "must be", type), call = NULL)
+    } else if(length(n) == 1 && length(x) != n) {
+      rlang::abort(paste(nm, "must have", n, "value(s)"), call = NULL)
+    } else if(length(n) > 1 && !dplyr::between(length(n), n[1], n[2])) {
+      rlang::abort(paste(nm, "must have between", n[1], "and", n[2], "values"), call = NULL)
+    } else if(!is.null(opts) && any(!x %in% opts)) {
+      rlang::abort(paste0(nm, " must be among '",
+                          paste0(opts, collapse = "', '"), "'"))
+    }
+  }
+}
+
+check_text <- function(x, ..., type = "text") {
+  check_value(x, nm = deparse(substitute(x)), ..., type = type)
+}
+
+check_num <- function(x, ..., type = "numeric") {
+  check_value(x, nm = deparse(substitute(x)), ..., type = type)
+}
+
+check_logical <- function(x, ..., type = "logical", n = 1) {
+  check_value(x, nm = deparse(substitute(x)), ..., type = type)
+}
+
+#' Check that input data has the columns required
+#' @noRd
 check_data <- function(df, type, ref) {
 
   if(!is.null(df)) {
@@ -42,6 +87,8 @@ check_data <- function(df, type, ref) {
   }
 }
 
+#' Confirm file extension
+#' @noRd
 check_ext <- function(ext, opts)  {
 
   if(!ext %in% opts) {
@@ -51,40 +98,15 @@ check_ext <- function(ext, opts)  {
   }
 }
 
-
-check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = c(1, Inf)) {
-  nm <- paste0("`", nm, "`")
-  if(not_null && is.null(x)) {
-    rlang::abort(paste(nm, "cannot be `NULL`"), call = NULL)
-  } else if(!is.null(x)) {
-    if((type == "text" && !is.character(x)) ||
-       (type == "numeric" && !is.numeric(x)) ||
-       (type == "logical" && !is.logical(x))) {
-      rlang::abort(paste(nm, "must be", type), call = NULL)
-    } else if(length(n) == 1 && length(x) != n) {
-      rlang::abort(paste(nm, "must have", n, "value(s)"), call = NULL)
-    } else if(length(n) > 1 && !dplyr::between(length(n), n[1], n[2])) {
-      rlang::abort(paste(nm, "must have between", n[1], "and", n[2], "values"), call = NULL)
-    } else if(!is.null(opts) && any(!x %in% opts)) {
-      rlang::abort(paste0(nm, " must be among '",
-                          paste0(opts, collapse = "', '"), "'"))
-    }
-  }
-}
-
-
-check_text <- function(x, ..., type = "text") {
-  check_value(x, nm = deparse(substitute(x)), ..., type = type)
-}
-
-check_num <- function(x, ..., type = "numeric") {
-  check_value(x, nm = deparse(substitute(x)), ..., type = type)
-}
-
-check_logical <- function(x, ..., type = "logical", n = 1) {
-  check_value(x, nm = deparse(substitute(x)), ..., type = type)
-}
-
+#' Check that columns exist in a data frame
+#'
+#' @param df Data frame to check
+#' @param cols Cols to look for
+#' @param name Argument name to use in messages
+#' @param extra Extra messages to return
+#' @param dates Whether to look for date/time columns (can be date, date_time or
+#'   date ranges)
+#' @noRd
 check_cols <- function(df, cols = NULL, name, extra = NULL, dates = FALSE) {
   msg <- vector()
   for(i in cols) {
@@ -106,7 +128,8 @@ check_cols <- function(df, cols = NULL, name, extra = NULL, dates = FALSE) {
                                      msg, extra), call = NULL)
 }
 
-
+#' Check for date formats
+#' @noRd
 check_dates <- function(df, cols, extra = "") {
   msg <- vector()
   for(i in cols) {
@@ -150,8 +173,14 @@ check_UTC <- function(df, cols = "date_time") {
   df
 }
 
-# Let the readr/readxl functions test if the file can be opened
-# Allows both data frames *and* spatial data frames
+#' Check for data frame or file name
+#'
+#' If not a data frame, and not sf, and not character, then error
+#'
+#' - Let the readr/readxl functions test if the file can be opened
+#' - Allows both data frames *and* spatial data frames
+#'
+#' @noRd
 check_df_file <- function(input) {
   if(!is.data.frame(input) & !inherits(input, "sf")) {
     if(!is.character(input)) {
@@ -162,12 +191,21 @@ check_df_file <- function(input) {
   }
 }
 
+#' If spatial sf, ensure POINT geometry
+#' @noRd
 check_points <- function(df) {
   if(!all(sf::st_geometry_type(df) == "POINT")) {
     rlang::abort("Spatial data must use POINT geometries", call = NULL)
   }
 }
 
+#' Find and check the date/time columns to join by
+#'
+#' For use in `add_site()`
+#'
+#' Looks for date/date_time, or date_start/data_end/etc. versions.
+#'
+#' @noRd
 check_date_joins <- function(df, by_date, quiet = FALSE) {
 
   n_single <- stringr::str_subset(names(df), paste0("^", by_date, "$"))
@@ -230,6 +268,17 @@ check_date_joins <- function(df, by_date, quiet = FALSE) {
   use
 }
 
+#' Check columns in join are available
+#'
+#' Used in `add_sites()` to check that `by` and `by_date` don't conflict.
+#'
+#' @param by Character vector. Columns to use in the join
+#' @param df Data frame columns are in
+#' @param cols_omit Character vector. Columns that cannot be used (i.e. because
+#'   actually date columns to be used in by_date)
+#' @param quiet Whether to return non-essential messages.
+#'
+#' @noRd
 check_by <- function(by, df, cols_omit, quiet = FALSE) {
   if(any(cols_omit %in% by)) {
     rlang::abort(
@@ -251,6 +300,9 @@ check_by <- function(by, df, cols_omit, quiet = FALSE) {
   by
 }
 
+#' Check that timezone is valid
+#' Valid means either in `OlsonNames()` or is 'local'
+#' @noRd
 check_tz <- function(tz) {
   nm <- deparse(substitute(tz))
   if(!tz %in% c("local", OlsonNames())) {

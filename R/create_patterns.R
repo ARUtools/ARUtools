@@ -65,7 +65,7 @@ create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits 
 #'
 #' @examples
 #' create_pattern_time()  # Default matches 23_59_59 (_, -, :, as optional separators)
-#' create_pattern_time(sep = "", seconds = FALSE) # Matches 2359 (no seconds no separators)
+#' create_pattern_time(sep = "", seconds = "no") # Matches 2359 (no seconds no separators)
 #'
 #' @export
 #'
@@ -187,6 +187,12 @@ create_pattern_site_id <- function(prefix = c("P", "Q"),
   paste0(prefix, suffix)
 }
 
+#' Create sep pattern from series of options
+#'
+#' @param sep Charaacter vector of separators
+#' @param optional Whether separators are optional or not
+#'
+#' @noRd
 create_pattern_sep <- function(sep, optional = TRUE) {
   check_text(sep)
   check_logical(optional)
@@ -199,6 +205,13 @@ create_pattern_sep <- function(sep, optional = TRUE) {
 }
 
 
+#' Collapse a pattern down
+#'
+#' Turns a vector of patterns into a regular expression: `(x|x)`
+#' Sort the vector in reverse order so that higher numbers (longer patterns) can
+#' be matched first (may not be strictly necessary here).
+#'
+#' @noRd
 pat_collapse <- function(x) {
   if(any(x != "")) {
     paste0("(", paste0("(", rev(sort(x)), ")", collapse = "|"), ")")

@@ -106,7 +106,7 @@ create_pattern_date()  # Default matches 2020-01-01 or 2020_01_01 or 20200101
 create_pattern_date(sep = "") # Matches only 20200101 (no separator allowed)
 
 create_pattern_time()  # Default matches 23_59_59 (_, -, :, as optional separators)
-create_pattern_time(sep = "", seconds = FALSE) # Matches 2359 (no seconds no separators)
+create_pattern_time(sep = "", seconds = "no") # Matches 2359 (no seconds no separators)
 
 create_pattern_dt_sep()  # Default matches 'T' as a required separator
 create_pattern_dt_sep(optional = TRUE) # 'T' as an optional separator

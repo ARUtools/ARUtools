@@ -62,10 +62,11 @@ check_meta <- function(meta, date = FALSE) {
 #' Cleaning metadata can take a series of tries. This function helps summarize
 #' and explore missing metadata (problems).
 #'
+#' @param df Data frame. Either meta data (`clean_metadata()`) or GPS
+#'   coordinates (`clean_gps()`)
 #' @param check Character. Character vector of columns to check for missing
 #'   values. Default is `site_id`, `aru_id`, `date`, `date_time`, `longitude`
 #'   and `latitude`.
-#' @param date Logical.
 #' @param path Logical. Whether to return just the file paths which have missing
 #' attributes. Default `FALSE`
 #'

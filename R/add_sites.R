@@ -1,8 +1,9 @@
 #' Add site-level data to the metadata
 #'
-#' Uses dates to join site-level data to the meta data. If the sites data has
-#' only single dates, then a buffer before and after is used to determine which
-#' recordings belong to that site observation.
+#' Uses dates to join site-level data (coordinates and site ids) to the meta
+#' data. If the site data have only single dates, then a buffer before and after
+#' is used to determine which recordings belong to that site observation. Can
+#' join by site ids alone if set `by_date = NULL`.
 #'
 #' @param sites Data frame. Site-level data from `clean_site_index()`.
 #' @param buffer_before Numeric. Number of hours before a deployment in which to
@@ -91,6 +92,21 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
     dplyr::arrange(dplyr::across(dplyr::any_of(c(by, by_date_cols, "path"))))
 }
 
+#' Calculate buffer date/times around a single date/time
+#'
+#' Creates a date/time range (t1-t2) within which to match sites. If no buffer
+#' provided, uses the time of the previous/next observation.
+#'
+#' @param df Data frame in which to store buffer times
+#' @param buffer_before Numeric. Hours before a date/time to be included
+#' @param buffer_after Numeric. Hours after a date/time to be included
+#' @param by_date_cols Character. Name of the date/time column (`date` or
+#'   `date_time`) to use as the starting point.
+#'
+#' @return df with added columns t1 and t2 which have the start and end times
+#'  for the buffer.
+#'
+#' @noRd
 calc_buffers <- function(df, buffer_before, buffer_after, by_date_cols) {
   # If no buffers, use previous/next observation
   # for first/last, use the equivalent of an -Inf / +Inf date
@@ -118,6 +134,25 @@ calc_buffers <- function(df, buffer_before, buffer_after, by_date_cols) {
   df
 }
 
+#' Prepare site data for merging
+#'
+#' Simplify and reduce the dataset for faster merging
+#'
+#' - Omit date/time columns which are not used
+#'   (i.e. if merging by `date_time`, omit `date`)
+#' - Drop NAs
+#' - If the input data is from `clean_gps()`, remove unnecessary columns
+#' - Keep only unique observations once unnecessary columns have been omitted
+#'
+#' @param sites Data frame. `sites` data processed in `add_sites()`
+#' @param by Character vector. Columns to join by, passed through from
+#'   `add_sites()`
+#' @param by_date_cols Character vector. Names of date/time columns to join by,
+#'   processed in `add_sites()`
+#'
+#' @return sites data simplified
+#'
+#' @noRd
 prep_sites <- function(sites, by, by_date_cols) {
 
   # Omit unused dates
@@ -140,11 +175,33 @@ prep_sites <- function(sites, by, by_date_cols) {
   dplyr::distinct(sites)
 }
 
+#' Prepare meta data for merging
+#'
+#' Subfunction to `add_sites`. Simplify and reduce the dataset for faster
+#' merging
+#'
+#' - Omit gps file records
+#' - Omit columns not used in the merging by sets which are already present in
+#'   sites (faster merging)
+#' - Let users know which columns have been omitted (but only if non-NA)
+#'
+#' @param meta Data frame. `meta` data processed in `add_sites()`
+#' @param cols_sites Character vector. Names of columns in `sites` data
+#'   processed in `add_sites()`
+#' @param by Character vector. Columns to join by, passed through from
+#'   `add_sites()`
+#' @param by_date_cols Character vector. Names of date/time columns to join by,
+#'   processed in `add_sites()`
+#' @param quiet Logical. Whether to show non-critical messages or not.
+#'
+#' @return meta data simplified
+#'
+#' @noRd
 prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
 
   meta <- dplyr::filter(meta, .data$type != "gps")
 
-  # Omit columns from meta not in 'by'/'by_date_cols' (allows easy filling)
+  # Omit columns in both meta and site not in 'by'/'by_date_cols' (allows faster filling)
   omit_cols <- cols_sites[!cols_sites %in% c(by, by_date_cols)]
   omit_cols <- omit_cols[omit_cols %in% names(meta)]
 
@@ -167,6 +224,15 @@ prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
   meta
 }
 
+#' Merge by date/time range
+#'
+#' Clean up/simplify coordinates (if multiple per record), calculate buffers if
+#' required, then merge by date range. Flags recordings with multiple or no
+#' matches.
+#'
+#' @return sites merged into meta data by date range
+#'
+#' @noRd
 add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                            buffer_before, buffer_after, quiet) {
 

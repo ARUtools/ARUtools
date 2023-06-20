@@ -28,6 +28,8 @@
 #'   was deployed or removed. If possible, use specific deployment times to
 #'   avoid this issue.
 #'
+#' @inheritParams common_docs
+#'
 #' @return Standardized site index data frame
 #' @export
 #'
@@ -209,6 +211,8 @@ clean_site_index <- function(site_index,
 #'   `Inf`.
 #' @param verbose Logical. Show extra loading information. Default `FALSE`.
 #'
+#' @inheritParams common_docs
+#'
 #' @return Data frame of site-level metadata.
 #' @export
 #'
@@ -320,6 +324,14 @@ clean_gps_files <- function(meta, quiet, verbose) {
 
 }
 
+#' Load GPS from text or gpx
+#'
+#' @param path Character. File to load
+#' @param skip Numeric. Number of lines to skip in text GPS files
+#' @param gps_ext Character. Extension of the GPS file (to identify GPX files)
+#' @param verbose Logical. Whether to be extra chatty when loading files
+#'
+#' @noRd
 load_gps <- function(path, skip, gps_ext, verbose) {
   if(gps_ext == "gpx") {
     g <- try(sf::st_read(path, layer = "waypoints", quiet = TRUE), silent = TRUE)
@@ -337,7 +349,17 @@ load_gps <- function(path, skip, gps_ext, verbose) {
   g
 }
 
-check_gps_files <- function(gps_files, skip_bad) {
+#' Check text GPS files
+#'
+#' - Read first 5 lines
+#' - Check that can identify column headers
+#' - Get the number of lines to skip
+#' - Return skips and any problems
+#'
+#' @param gps_files Character vector. All GPS files (gpx and text)
+#'
+#' @noRd
+check_gps_files <- function(gps_files) {
 
   # Get text-based GPS logs (i.e. anything but GPX files)
   gps_files <- dplyr::mutate(gps_files,
@@ -379,6 +401,15 @@ check_gps_files <- function(gps_files, skip_bad) {
 }
 
 
+#' Check column for evidence of coordinate directions
+#'
+#' Looks for a single character pattern in the column (usually "N" or "E")
+#' If found, returns TRUE to identify column as a coordinate direction column
+#'
+#' @param col Vector to check
+#' @param pattern Character pattern to look for
+#'
+#' @noRd
 coord_dir <- function(col, pattern) {
   # Not all missing
   !all(is.na(col)) &
@@ -386,6 +417,16 @@ coord_dir <- function(col, pattern) {
     all(stringr::str_detect(col, paste0("^[", pattern, "]{1}$")), na.rm = TRUE)
 }
 
+#' Format loaded GPS coordinates
+#'
+#' - If there was a loading error, return empty data frame
+#' - GPX uses `fmt_gps_gpx()`
+#' - Otherwise uses `fmt_gps_txt()`
+#'
+#' @param df GPS data frame to format
+#' @param gps_ext GPS file extension used to identify GPX files
+#'
+#' @noRd
 fmt_gps <- function(df, gps_ext) {
 
   if(inherits(df, "try-error")) {
