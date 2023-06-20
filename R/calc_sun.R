@@ -35,6 +35,12 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
   check_tz(aru_tz)
   meta_sites <- check_UTC(meta_sites)
 
+  # Make sure date time correct format
+  meta_sites <- dplyr::mutate(
+    meta_sites,
+    date_time = lubridate::as_datetime(.data$date_time),
+    date = lubridate::as_date(.data$date_time))
+
   # If sf, convert to df
   crs <- sf::st_crs(meta_sites)
   m <- sf_to_df(meta_sites)
