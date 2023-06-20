@@ -82,9 +82,9 @@ m <- clean_metadata(project_files = example_files)
 sites <- st_as_sf(example_sites, coords = c("lon", "lat"), crs = 4326) |>
   clean_site_index(col_aru_id = "ARU", 
                    col_site_id = "Sites", 
-                   col_date_time = c("Date_set_out", "Date_removed")) |>
-  slice(-1) # Omit that first site
+                   col_date_time = c("Date_set_out", "Date_removed"))
 
+sites <- sites[-1, ] # Omit that first site
 
 m <- add_sites(m, sites)
 m

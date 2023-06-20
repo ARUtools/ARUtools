@@ -1,4 +1,4 @@
-# dev
+# 0.5.0
 
 * `clean_gps()`
   * can handle GPX files via `sf` now
@@ -37,3 +37,12 @@
 * Vignettes
   * Mini spatial workflow (vignettes/spatial.Rmd)
   * Explaining timezones (vignettes/timezones.Rmd)
+
+# 0.4.0.9000
+* Major overhaul of first half of the workflow
+* Main functions now
+ - `clean_metadata()`
+ - `clean_gps()` / `clean_site_index()`
+ - `add_sites()`
+ - `calc_sun()`
+* Helper functions for checking, and for creating regex patterns 

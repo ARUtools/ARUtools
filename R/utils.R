@@ -94,12 +94,6 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
   all
 }
 
-
-floor_dec <- function(x, digits) {
- floor(x * 10^digits) / 10^digits
-}
-
-
 #' Check if character is easily convertable to Date
 #'
 #' Checks if `lubridate::as_date()` can convert the string.

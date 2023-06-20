@@ -219,7 +219,7 @@ the ids and date/times make sense.
 
 ```{r}
 check_meta(m)
-check_meta(m, by_date = TRUE)
+check_meta(m, date = TRUE)
 check_problems(m)
 
 unique(m$site_id)

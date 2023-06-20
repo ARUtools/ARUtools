@@ -8,5 +8,6 @@ inst\Gen_gex.R
 ^data-raw$
 ^\.github$
 ^CODE_DESIGN.md$
+^RELEASE.R$
 ^misc$
 ^codecov\.yml$

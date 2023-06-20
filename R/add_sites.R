@@ -254,8 +254,8 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
       sites <- sites |>
         dplyr::group_by(dplyr::across(
           .cols = c(dplyr::all_of(by), dplyr::matches("date(_(start|end))?")))) |>
-        dplyr::summarize(sd_lon = sd(.data$longitude),
-                         sd_lat = sd(.data$latitude),
+        dplyr::summarize(sd_lon = stats::sd(.data$longitude),
+                         sd_lat = stats::sd(.data$latitude),
                          longitude = mean(.data$longitude),
                          latitude = mean(.data$latitude)) |>
         dplyr::ungroup()

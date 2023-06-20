@@ -367,7 +367,7 @@ check_gps_files <- function(gps_files) {
 
   gps_txt <- gps_files |>
     dplyr::filter(.data$gps_ext != "gpx") |>
-    dplyr::pull(path)
+    dplyr::pull(.data$path)
 
   lines <- stats::setNames(nm = gps_txt) |>
     purrr::imap(~readr::read_lines(.x, n_max = 5, progress = FALSE))

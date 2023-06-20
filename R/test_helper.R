@@ -29,8 +29,8 @@ test_gps <- function(lat = "Latitude (decimal degrees)",
 #'
 #' @noRd
 temp_files <- function() {
-  purrr::walk(fs::path_temp(example_files),
+  purrr::walk(fs::path_temp(ARUtools::example_files),
               ~{fs::dir_create(dirname(.x)); writeLines("test", .x)})
 
-  fs::path_temp(example_files)
+  fs::path_temp(ARUtools::example_files)
 }

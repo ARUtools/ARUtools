@@ -156,7 +156,7 @@ check_dates <- function(df, cols, extra = "") {
 #' @noRd
 check_UTC <- function(df, cols = "date_time") {
 
-  cols <- setNames(cols, NULL)
+  cols <- stats::setNames(cols, NULL)
   tz <- purrr::map_chr(sf::st_drop_geometry(df[cols]), lubridate::tz)
 
   if(length(unique(tz)) > 1) {

@@ -7,3 +7,7 @@
 covr::package_coverage()  # June 14 2023 - 56% (> 82% for new work)
 
 devtools::build_readme()
+
+
+# For checking mid-point -----------------------
+# Add non-finalized .R files to .Rbuildignore -> JUST FOR CHECKING!
