@@ -3,7 +3,7 @@
 #' A site index file contains information on when specific ARUs were deployed
 #' where. This function cleans a file (csv, xlsx) or data frame in preparation
 #' for adding these details to the output of `clean_metadata()`. It can be used
-#' to specify missing information according to date, such as GPS lat/lons and
+#' to specify missing information according to date, such as GPS lon/lats and
 #' site ids.
 #'
 #' Note that times are assumed to be in 'local' time and a timezone isn't used
@@ -251,7 +251,7 @@ clean_gps <- function(meta = NULL,
   f_zero <- sum(gps$longitude == 0 | gps$latitude == 0, na.rm = TRUE)
   f_gpx <- sum(gps$gps_ext == "gpx" &
                  is.na(gps$date_time) & is.na(gps$date) &
-                 is.na(gps$latitude) & is.na(gps$longitude))
+                 is.na(gps$longitude) & is.na(gps$latitude))
   f_header <- sum(gps$problems_dt | gps$problems_tm | gps$problems_ll, na.rm = TRUE)
 
   if(any(c(f_dt, f_coord, f_zero, f_gpx, f_header) > 0)) {
@@ -265,7 +265,7 @@ clean_gps <- function(meta = NULL,
         paste0("Replacing zero coordinates with NA (", f_zero, "/", n, ")"))
 
       gps <- dplyr::mutate(
-        gps, dplyr::across(c("latitude", "longitude"), ~dplyr::na_if(.x, 0)))
+        gps, dplyr::across(c("longitude", "latitude"), ~dplyr::na_if(.x, 0)))
     }
 
     msg <- c(msg, report_missing(f_header, n, "headers (in text GPS files)"))
@@ -443,15 +443,15 @@ fmt_gps <- function(df, gps_ext) {
 fmt_gps_empty <- function() {
   dplyr::tibble(date = lubridate::NA_Date_,
                 date_time = lubridate::NA_POSIXct_,
-                latitude = NA_real_,
-                longitude = NA_real_)
+                longitude = NA_real_,
+                latitude = NA_real_)
 }
 
 fmt_gps_gpx <- function(df) {
   df_fmt <- df |>
     sf::st_drop_geometry() |>
     dplyr::bind_cols(sf::st_coordinates(df)) |>
-    dplyr::select("date_time" = "time", "latitude" = "Y", "longitude" = "X") |>
+    dplyr::select("date_time" = "time", "longitude" = "X", "latitude" = "Y") |>
     dplyr::mutate(date_time = lubridate::as_datetime(.data$date_time),
                   date = lubridate::as_date(.data$date_time))
 }
@@ -467,8 +467,8 @@ fmt_gps_txt <- function(df) {
     dplyr::filter(.data[[names(df)[1]]] != names(df)[[1]]) |>
 
     dplyr::rename(
-      "latitude" = dplyr::matches(opts$pat_gps_coords[1]),
-      "longitude" = dplyr::matches(opts$pat_gps_coords[2]),
+      "longitude" = dplyr::matches(opts$pat_gps_coords[1]),
+      "latitude" = dplyr::matches(opts$pat_gps_coords[2]),
       "date" = dplyr::matches(opts$pat_gps_date),
       "time" = dplyr::matches(opts$pat_gps_time)) |>
 
@@ -493,22 +493,22 @@ fmt_gps_txt <- function(df) {
                                    c("w" = "-", "e" = "",
                                      "s" = "-", "n" = "")))) |>
       # Apply direction shift (i.e. merge)
-      tidyr::unite("latitude", dplyr::any_of(c("ns", "latitude")), sep = "") |>
-      tidyr::unite("longitude", dplyr::any_of(c("ew", "longitude")), sep = "")
+      tidyr::unite("longitude", dplyr::any_of(c("ew", "longitude")), sep = "") |>
+      tidyr::unite("latitude", dplyr::any_of(c("ns", "latitude")), sep = "")
   }
 
   # Clean up
   df_fmt |>
-    dplyr::mutate(latitude = as.numeric(.data$latitude),
-                  longitude = as.numeric(.data$longitude)) |>
+    dplyr::mutate(longitude = as.numeric(.data$longitude),
+                  latitude = as.numeric(.data$latitude)) |>
     dplyr::select("longitude", "latitude", "date", "date_time")
 }
 
 
 #' Check distances between points from GPS log
 #'
-#' @param gps Data frame of gps sites and coordinates. Requires latitude,
-#'   longitude, and any columns in `dist_by`.
+#' @param gps Data frame of gps sites and coordinates. Requires longitude,
+#'   latitude, and any columns in `dist_by`.
 #' @param crs Numeric. CRS to use for measuring distances. Should be in meters
 #' @param dist_cutoff Distance cutoff in meters. Can be set to Inf to avoid this
 #'   check.
@@ -525,7 +525,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
   if(dist_cutoff < Inf) {
     max_dist <- gps |>
       dplyr::filter(dplyr::if_all(
-        dplyr::any_of(c("latitude", "longitude", dist_by)), ~!is.na(.)))
+        dplyr::any_of(c("longitude", "latitude", dist_by)), ~!is.na(.)))
 
     if(nrow(max_dist) == 0) {
       if(!is.null(dist_by)) {
@@ -539,7 +539,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
       }
     } else {
       n <- max_dist |>
-        dplyr::select(dplyr::all_of(c("latitude", "longitude", dist_by))) |>
+        dplyr::select(dplyr::all_of(c("longitude", "latitude", dist_by))) |>
         dplyr::distinct() |>
         dplyr::count(dplyr::across(dplyr::all_of(dist_by)))
 

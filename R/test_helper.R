@@ -3,8 +3,8 @@
 #' Creates an example GPS file for testing
 #'
 #' @noRd
-test_gps <- function(lat = "Latitude (decimal degrees)",
-                     lon = "Longitude (decimal degrees)",
+test_gps <- function(lon = "Longitude (decimal degrees)",
+                     lat = "Latitude (decimal degrees)",
                      time = "HH:MM:SS",
                      date = "DD/MM/YY", skips = 2, path = "gps.csv") {
 

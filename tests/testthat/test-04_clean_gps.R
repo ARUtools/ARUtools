@@ -12,7 +12,7 @@ test_that("check_gps_files()", {
   expect_named(g, c("path", "skip", "problems_dt", "problems_tm", "problems_ll", "gps_ext"))
   expect_equal(g$skip, 3, ignore_attr = TRUE)
 
-  p <- test_gps("lat", "lon")
+  p <- test_gps("lon", "lat")
   expect_silent(g <- check_gps_files(data.frame(path = p, ext = "csv")))
 
   p <- test_gps(time = "HH:MM")
@@ -21,7 +21,7 @@ test_that("check_gps_files()", {
   p <- test_gps(date = "DD/MM/YY")
   expect_silent(g <- check_gps_files(data.frame(path = p, ext = "csv")))
 
-  p <- test_gps("lat", "lon", "time", "date")
+  p <- test_gps("lon", "lat", "time", "date")
   expect_silent(g <- check_gps_files(data.frame(path = p, ext = "csv")))
 
   # Errors

@@ -13,7 +13,7 @@
 #'   using, for example, `aru_tz = "America/Toronto"`. If on the other hand each
 #'   ARU was calibrated to whichever timezone was local when it was deployed use
 #'   `aru_tz = "local"`. The specific timezone will be calculated individually
-#'   based on the latitude and longitude of each recording.
+#'   based on the longitude and latitude of each recording.
 #'
 #' @inheritParams common_docs
 #'
@@ -53,8 +53,8 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
       tidyr::drop_na() |>
       dplyr::mutate(
         tz = lutz::tz_lookup_coords(
-          lat = .data$latitude,
           lon = .data$longitude,
+          lat = .data$latitude,
           method = 'accurate'))
 
     m <- dplyr::left_join(m, tz, by = c("longitude", "latitude"))
@@ -71,7 +71,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
     tidyr::unnest("times") |>
     dplyr::select(-"dates", -"date_before", -"date_after")
 
-  m <- dplyr::left_join(m, ss, by = c("date", "tz", "latitude", "longitude"))
+  m <- dplyr::left_join(m, ss, by = c("date", "tz", "longitude", "latitude"))
 
   m |>
     calc_ss_diff() |>
@@ -84,7 +84,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
 #'
 #' For day of, day before and day after.
 #'
-#' @param dates Data frame. Containing dates, latitude and longitude
+#' @param dates Data frame. Containing dates, longitude and latitude
 #' @param tz Character. Timezone that the ARUs were set to (i.e. timezone the
 #'   date/times would be in). Must be valide tz from OlsonNames().
 #'
@@ -104,15 +104,15 @@ calc_all_ss <- function(dates, tz){
     dplyr::bind_cols(date = dates$date)
 
   ss_day_of |>
-    dplyr::left_join(ss_day_before, by = c("date", "latitude", "longitude")) |>
-    dplyr::left_join(ss_day_after, by = c("date", "latitude", "longitude"))
+    dplyr::left_join(ss_day_before, by = c("date", "longitude", "latitude")) |>
+    dplyr::left_join(ss_day_after, by = c("date", "longitude", "latitude"))
 }
 
 
 #' Calculate sunrise sunset
 #'
 #' A wrapper around suncalc::getSunlightTimes to ensure
-#'    timezones and lat/lon are correct.
+#'    timezones and longitude/latitude are correct.
 #'
 #' Compared to https://gml.noaa.gov/grad/solcalc/ ==> Good
 #'
@@ -123,7 +123,7 @@ calc_all_ss <- function(dates, tz){
 #'
 #' @noRd
 calc_ss <- function(dates, tz, suffix = ""){
-  dplyr::rename(dates, "lat" = "latitude", "lon" = "longitude") |>
+  dplyr::rename(dates, "lon" = "longitude", "lat" = "latitude") |>
     suncalc::getSunlightTimes(data = _, keep = c("sunrise", "sunset"), tz = tz) |>
     dplyr::mutate(sunrise = lubridate::force_tz(.data$sunrise, "UTC"),
                   sunset = lubridate::force_tz(.data$sunset, "UTC")) |>
@@ -131,8 +131,8 @@ calc_ss <- function(dates, tz, suffix = ""){
       "date{suffix}" := "date",
       "sunrise{suffix}" := "sunrise",
       "sunset{suffix}" := "sunset",
-      "latitude" = "lat",
-      "longitude" = "lon"
+      "longitude" = "lon",
+      "latitude" = "lat"
     ) |>
     dplyr::relocate("longitude", .before = "latitude") |>
     tibble::as_tibble()

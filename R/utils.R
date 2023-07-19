@@ -143,7 +143,7 @@ minmax_q <- function(x, fun) {
 
 #' Convert spatial data frame to non-spatial data frame
 #'
-#' Extract geometry as latitude and longitude columns.
+#' Extract geometry as longitude and latitude columns.
 #'
 #' @noRd
 sf_to_df <- function(sf) {
@@ -176,7 +176,7 @@ df_to_sf <- function(df, sf = NULL, crs = NA) {
   if(!is.null(sf)) crs <- sf::st_crs(sf)
 
   if(!is.na(crs)) {
-    if(any(is.na(df$latitude) | is.na(df$longitude))) {
+    if(any(is.na(df$longitude) | is.na(df$latitude))) {
       rlang::warn(c("Cannot have missing coordinates in spatial data frames",
                     "Returning non-spatial data frame"), call = NULL)
       sf <- df

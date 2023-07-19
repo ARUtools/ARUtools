@@ -9,8 +9,8 @@ example_sites <- data.frame(
                    "2020-05-09", "2020-05-10", "2020-05-11", "2020-05-11", "2020-05-11"),
   ARU = c("BARLT10962", "S4A01234", "BARLT10962", "BARLT11111", "BARLT10962",
           "BARLT10962", "S4A01234", "BARLT10962", "S4A02222", "S4A03333"),
-  lat = c(50.01, 52.68, 48.99, 45.00, 51.05, 52.00, 50.45, 48.999, 45.0, 50.01),
   lon = c(-85.03, -87.45, -90.38, -85.53, -88.45, -90.08, -86.03, -84.45, -91.38, -90.00),
+  lat = c(50.01, 52.68, 48.99, 45.00, 51.05, 52.00, 50.45, 48.999, 45.0, 50.01),
   Plots = rep(c("Plot1", "Plot1", "Plot2", "Plot2", "Plot3"), 2),
   Subplot = rep(c("a", "a", "a", "a", "b"), 2))
 
@@ -48,6 +48,6 @@ example_sites_clean <- clean_site_index(
 usethis::use_data(example_sites_clean, overwrite = TRUE)
 
 example_clean <- clean_metadata(project_files = example_files) |>
-  add_sites(example_clean_sites)
+  add_sites(example_sites_clean)
 
 usethis::use_data(example_clean, overwrite = TRUE)

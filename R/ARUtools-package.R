@@ -21,7 +21,7 @@ rlang::on_load(rlang::local_use_cli())
   options(ARUtools =
             list(pat_gps_date = "date|(DD/MM/YY)",
                  pat_gps_time = "time|(HH/MM(/SS)?)|(HH:MM(:SS)?)", # Optional seconds
-                 pat_gps_coords = c("lat", "lon")
+                 pat_gps_coords = c("lon", "lat")
             )
   )
 }

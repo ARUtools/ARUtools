@@ -41,8 +41,8 @@
 #'   \item{Date_set_out}{Deployment start date}
 #'   \item{Date_removed}{Deployment end date}
 #'   \item{ARU}{ARU ids}
-#'   \item{lat}{Latitude in decimal degrees}
 #'   \item{lon}{Longitude in decimal degrees}
+#'   \item{lat}{Latitude in decimal degrees}
 #'   \item{Plots}{Hypothetical extra plot column}
 #'   \item{Subplot}{Hypothetical extra subplot column}
 #' }
@@ -62,8 +62,8 @@
 #'   \item{date_time_end}{Deployment end date/time}
 #'   \item{date_start}{Deployment start date}
 #'   \item{date_end}{Deployment end date}
-#'   \item{latitude}{Longitude in decimal degrees}
 #'   \item{longitude}{Latitude in decimal degrees}
+#'   \item{latitude}{Longitude in decimal degrees}
 #' }
 #' @source data-raw/data_test.R
 "example_sites_clean"
@@ -84,8 +84,8 @@
 #'   \item{site_id}{Site ids}
 #'   \item{date_time}{Recording date/time}
 #'   \item{date}{Recording date}
-#'   \item{latitude}{Longitude in decimal degrees}
 #'   \item{longitude}{Latitude in decimal degrees}
+#'   \item{latitude}{Longitude in decimal degrees}
 #' }
 #' @source data-raw/data_test.R
 "example_clean"

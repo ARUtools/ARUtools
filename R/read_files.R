@@ -103,7 +103,7 @@ read_summary_SM4 <- function(filename, SiteID_pattern = "SM4A\\d{5}"){
 #' @param list_files List of files in folder_base
 #' @param site_pattern site pattern to separate out siteid
 #'
-#' @return Returns a data frame with lat/lon for each location and date collected
+#' @return Returns a data frame with lon/lat for each location and date collected
 process_gps_SM <- function(folder_base, list_files, site_pattern){
     warn("process_gps_SM is depreciated. Use process_log_SM")
     process_log_SM(folder_base, list_files, site_pattern,
@@ -118,7 +118,7 @@ process_gps_SM <- function(folder_base, list_files, site_pattern){
 #' @param return_gps Logical. Should function return GPS locations?
 #' @param return_log Logical. Should the function return the full log?
 #'
-#' @return Returns a data frame with lat/lon for each location and date collected
+#' @return Returns a data frame with lon/lat for each location and date collected
 #' @export
 process_log_SM <- function(folder_base, list_files, site_pattern, return_gps, return_log){
 

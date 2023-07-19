@@ -80,17 +80,18 @@ bench::mark(
 # GPX - gpx package vs sf ----------------------------
 # SF is MUCH faster and doesn't convert datetimes to timezone specific
 p <- "../ARUtools - Extra/ARUtools_file_examples/James_Bay_Lowlands_Boreal_Shield_Transition_2022/P028/1A_BARLT10962/GPS_log.gpx"
+p <- "../ARUtools - Extra/ARUtools_file_examples/James_Bay_Lowlands_Boreal_Shield_Transition_2022/P028/2A_BARLT13383/GPS_log.gpx"
 bench::mark(
   {
     g1 <- gpx::read_gpx(p)$waypoints |>
-      select("time" = Time, "latitude" = "Latitude", "longitude" = "Longitude") |>
-      mutate(time = lubridate::with_tz(time, "America/Toronto"),
+      dplyr::select("time" = Time, "longitude" = "Longitude", "latitude" = "Latitude") |>
+      dplyr::mutate(time = lubridate::with_tz(time, "America/Toronto"),
              time = lubridate::force_tz(time, "UTC"))
   },
   {
     g2 <- sf::st_read(p, layer = "waypoints")
-    g2 <- bind_cols(sf::st_drop_geometry(g2), sf::st_coordinates(g2)) |>
-      select("time", "latitude" = "Y", "longitude" = "X") |>
-      mutate(time = lubridate::force_tz(time, "UTC"))
+    g2 <- dplyr::bind_cols(sf::st_drop_geometry(g2), sf::st_coordinates(g2)) |>
+      dplyr::select("time", "longitude" = "X", "latitude" = "Y") |>
+      dplyr::mutate(time2 = lubridate::force_tz(time, "UTC"))
   }, check = FALSE
 )

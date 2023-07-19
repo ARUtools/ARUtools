@@ -9,12 +9,12 @@ test_that("add_sites()", {
   expect_equal(dplyr::arrange(meta, file_name),
                dplyr::arrange(m1[names(meta)], file_name))
 
-  # Check that lat/lon added correctly
+  # Check that lon/lat added correctly
   # All site/aru/date/coord combos exist in site index data
-  dts <- dplyr::group_by(example_sites_clean, site_id, aru_id, latitude, longitude) |>
+  dts <- dplyr::group_by(example_sites_clean, site_id, aru_id, longitude, latitude) |>
     dplyr::reframe(date = seq(date_start, date_end, by = "1 day"))
   expect_equal(
-    dplyr::anti_join(dplyr::select(m1, site_id, aru_id, date, latitude, longitude),
+    dplyr::anti_join(dplyr::select(m1, site_id, aru_id, date, longitude, latitude),
                      dts, by = c("site_id", "aru_id", "date")) |> nrow(),
     0)
 

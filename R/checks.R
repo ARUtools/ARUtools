@@ -53,7 +53,7 @@ check_data <- function(df, type, ref) {
 
     e <- paste0("Should be output of `", ref, "`")
 
-    if(inherits(df, "sf")) coords <- NULL else coords <- c("latitude", "longitude")
+    if(inherits(df, "sf")) coords <- NULL else coords <- c("longitude", "latitude")
 
     if(type == "meta") {
       check_cols(

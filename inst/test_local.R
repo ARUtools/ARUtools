@@ -9,7 +9,7 @@ out2 <- out |>
          file_name = WaveFile, date, date_time, type = wav,
          site_id = Plot, aru_type = ARU_type,
          aru_id = Site_ARUid,
-         doy, latitude = latitude_decimal_degrees, longitude = longitude_decimal_degrees,
+         doy, longitude = longitude_decimal_degrees, latitude = latitude_decimal_degrees,
          tz, t2sr = t2sr_min, t2ss = t2ss_min) |>
   mutate(aru_id_old = aru_id,
          id = str_extract(aru_id_old, "^\\d(b|A|C){0,2}(?=_)"),
@@ -28,7 +28,7 @@ m <- clean_metadata(project_files = f,
 #m2 <- add_sites(m, g, buffer_before = 24, buffer_after = 24)
 
 # But since none, just add in coords
-g <- select(out2, site_id, aru_id, latitude, longitude, date) |>
+g <- select(out2, site_id, aru_id, longitude, latitude, date) |>
   distinct()
 m2 <- left_join(m, g)
 

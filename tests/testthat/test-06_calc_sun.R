@@ -80,7 +80,7 @@ test_that("calc_ss_diff()", {
 
 test_that("calc_sun()", {
 
-  # "local" timezone from lat/lon
+  # "local" timezone from lon/lat
   expect_silent(s1 <- calc_sun(example_clean))
   expect_equal(example_clean, dplyr::select(s1, -"tz", -"t2sr", -"t2ss"))
   expect_equal(unique(s1$tz),
