@@ -212,7 +212,7 @@ prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
     report <- omit_cols
     for(i in report) if(all(is.na(meta[[i]]))) report <- report[report != i]
 
-    if(length(report) > 0 & !quiet) {
+    if(length(report) > 0) {
       rlang::inform(c(
         "Some columns in both `meta` and `sites` are not used to join (`by`)",
         "*" = paste0(
@@ -260,15 +260,13 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                          latitude = mean(.data$latitude)) |>
         dplyr::ungroup()
 
-      if(!quiet) {
-        rlang::inform(c(
-          paste0("Multiple coordinates per date at each combination of `",
-                 paste0(by, collapse = "`/`"), "`"),
-          paste0("Taking mean coordinates ",
-                 "(max sd lon ", round(max(sites$sd_lon, na.rm = TRUE), 4),
-                 "; max sd lat ", round(max(sites$sd_lat, na.rm = TRUE), 4), ")"),
-          "Consider using `by = \"date_time\"` for more fine-tuned control"))
-      }
+      rlang::inform(c(
+        paste0("Multiple coordinates per date at each combination of `",
+               paste0(by, collapse = "`/`"), "`"),
+        paste0("Taking mean coordinates ",
+               "(max sd lon ", round(max(sites$sd_lon, na.rm = TRUE), 4),
+               "; max sd lat ", round(max(sites$sd_lat, na.rm = TRUE), 4), ")"),
+        "Consider using `by = \"date_time\"` for more fine-tuned control"))
 
       sites <- dplyr::select(sites, -"sd_lon", -"sd_lat")
     }
