@@ -332,7 +332,7 @@ clean_gps_files <- function(meta, quiet, verbose) {
 #' @param verbose Logical. Whether to be extra chatty when loading files
 #'
 #' @noRd
-load_gps <- function(path, skip, gps_ext, verbose) {
+load_gps <- function(path, skip = NA, gps_ext, verbose = FALSE) {
   if(gps_ext == "gpx") {
     g <- try(sf::st_read(path, layer = "waypoints", quiet = TRUE), silent = TRUE)
   } else {
@@ -369,35 +369,44 @@ check_gps_files <- function(gps_files) {
     dplyr::filter(.data$gps_ext != "gpx") |>
     dplyr::pull(.data$path)
 
-  lines <- stats::setNames(nm = gps_txt) |>
-    purrr::imap(~readr::read_lines(.x, n_max = 5, progress = FALSE))
+  if(length(gps_txt) > 0) {
 
-  # Set patterns
-  opts <- getOption("ARUtools")
-  pattern_date <- stringr::regex(opts$pat_gps_date, ignore_case = TRUE)
-  pattern_time <- stringr::regex(opts$pat_gps_time, ignore_case = TRUE)
-  pattern_coords <- stringr::regex(paste0(opts$pat_gps_coords, collapse = "|"),
-                                   ignore_case = TRUE)
+    lines <- stats::setNames(nm = gps_txt) |>
+      purrr::imap(~readr::read_lines(.x, n_max = 5, progress = FALSE))
 
-  # Get skips
-  skips <- purrr::map(lines,
-                      ~stringr::str_which(.x, pattern_coords) |> dplyr::first())
+    # Set patterns
+    opts <- getOption("ARUtools")
+    pattern_date <- stringr::regex(opts$pat_gps_date, ignore_case = TRUE)
+    pattern_time <- stringr::regex(opts$pat_gps_time, ignore_case = TRUE)
+    pattern_coords <- stringr::regex(paste0(opts$pat_gps_coords, collapse = "|"),
+                                     ignore_case = TRUE)
 
-  # Check for columns
-  dt <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_date)))
-  tm <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_time)))
-  ll <- is.na(skips) | length(skips) == 0
+    # Get skips
+    skips <- purrr::map(lines,
+                        ~stringr::str_which(.x, pattern_coords) |> dplyr::first())
 
-  # Skip if not detected
-  skips[dt | tm | ll] <- NA_integer_
+    # Check for columns
+    dt <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_date)))
+    tm <- purrr::map_lgl(lines, ~!any(stringr::str_detect(.x, pattern_time)))
+    ll <- is.na(skips) | length(skips) == 0
 
-  # Get skips and problems for future reporting
-  dplyr::tibble(path = names(skips),
-                skip = unlist(skips),
-                problems_dt = dt,
-                problems_tm = tm,
-                problems_ll = ll) |>
-    dplyr::full_join(gps_files, by = "path")
+    # Skip if not detected
+    skips[dt | tm | ll] <- NA_integer_
+
+    # Get skips and problems for future reporting
+    gps_files <- dplyr::tibble(path = names(skips),
+                               skip = unlist(skips),
+                               problems_dt = dt,
+                               problems_tm = tm,
+                               problems_ll = ll) |>
+      dplyr::full_join(gps_files, by = "path")
+  } else {
+    gps_files <- dplyr::mutate(gps_files, skip = NA_integer_,
+                               problems_dt = FALSE,
+                               problems_tm = FALSE,
+                               problems_ll = FALSE)
+  }
+  gps_files
 }
 
 
@@ -448,7 +457,7 @@ fmt_gps_empty <- function() {
 }
 
 fmt_gps_gpx <- function(df) {
-  df_fmt <- df |>
+  df |>
     sf::st_drop_geometry() |>
     dplyr::bind_cols(sf::st_coordinates(df)) |>
     dplyr::select("date_time" = "time", "longitude" = "X", "latitude" = "Y") |>

@@ -234,3 +234,21 @@ m1 <- calc_sun(m1, aru_tz = "America/Toronto")
 
 m1
 
+# eg 8 - GPSX files with wonky times ------------------------------------
+d <- "../ARUtools - Extra/ARUtools_file_examples/James_Bay_Lowlands_Boreal_Shield_Transition_2022/"
+
+m <- clean_metadata(project_dir = d) # No dates/sites, as expected
+
+g <- dplyr::filter(m, stringr::str_detect(file_name, "gpx")) |>
+  clean_gps(dist_by = "aru_id")
+
+# Look for weird date/times
+arrange(g, date)
+sum(lubridate::year(g$date) == -1, na.rm = TRUE) # 157 out of
+nrow(g)                                          # 128166
+
+# First file is another problem
+# Second file has wonky time
+load_gps(g$path[2], skip = 0, gps_ext = "gpx") |>
+  arrange(time)
+
