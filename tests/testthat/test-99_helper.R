@@ -117,3 +117,13 @@ test_that("check_file()", {
 
   unlink(p)
 })
+
+test_that("add_wildtrax()", {
+  suppressMessages(m <- clean_metadata(project_files = example_files))
+  expect_false("wildtrax_file_name" %in% names(m))
+  expect_silent(m <- add_wildtrax(m))
+  expect_true("wildtrax_file_name" %in% names(m))
+  expect_equal(m$wildtrax_file_name[1:2],
+               c("P01_1_20200502_050000",
+                 "P01_1_20200503_052000"))
+})

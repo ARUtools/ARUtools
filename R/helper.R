@@ -139,3 +139,28 @@ check_file <- function(file_name, n_max = 10, ...) {
   readr::read_lines(file_name, n_max = n_max, ...)
 }
 
+
+
+#' Add Wildtrax file name to metadata
+#'
+#' Create and append file name appropriate for uploading data to the Wildtrax
+#' system.
+#'
+#' @inheritParams common_docs
+#'
+#' @return Data frame of metadata with appended column of wildtrax appropriate
+#'   file names.
+#' @export
+#'
+#' @examples
+#'
+#' m <- clean_metadata(project_files = example_files)
+#' m <- add_wildtrax(m)
+#' m
+
+add_wildtrax <- function(meta) {
+  dplyr::mutate(
+    meta,
+    wildtrax_file_name = glue::glue(
+      "{site_id}_{format(date_time, '%Y%m%d_%H%M%S')}"))
+}

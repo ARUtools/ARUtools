@@ -119,3 +119,20 @@ test_that("clean_metadata() with multiple patterns in args", {
   expect_equal(m$site_id, c("P01_1", "P02_01"))
 
 })
+
+test_that("clean_metadata() with numeric aru_id", {
+  bad <- example_files |>
+    stringr::str_remove("BARLT|S4A") |>
+    clean_metadata(project_files = _) |>
+    suppressMessages()
+  expect_true(all(is.na(bad$aru_id)))
+
+  good <- example_files |>
+    stringr::str_remove("BARLT|S4A") |>
+    clean_metadata(
+      project_files = _,
+      pattern_aru_id = create_pattern_aru_id(
+        arus = "", n_digits = 5, prefix = "(?<=_)", suffix = "(?=_)")) |>
+    suppressMessages()
+  expect_true(all(!is.na(good$aru_id)))
+})
