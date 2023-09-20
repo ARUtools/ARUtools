@@ -12,8 +12,8 @@ A data frame with 10 rows and 8 columns:
   \item{Date_set_out}{Deployment start date}
   \item{Date_removed}{Deployment end date}
   \item{ARU}{ARU ids}
-  \item{lat}{Latitude in decimal degrees}
   \item{lon}{Longitude in decimal degrees}
+  \item{lat}{Latitude in decimal degrees}
   \item{Plots}{Hypothetical extra plot column}
   \item{Subplot}{Hypothetical extra subplot column}
 }

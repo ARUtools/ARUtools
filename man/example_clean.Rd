@@ -16,8 +16,8 @@ A data frame with 42 rows and 10 columns:
   \item{site_id}{Site ids}
   \item{date_time}{Recording date/time}
   \item{date}{Recording date}
-  \item{latitude}{Longitude in decimal degrees}
   \item{longitude}{Latitude in decimal degrees}
+  \item{latitude}{Longitude in decimal degrees}
 }
 }
 \source{

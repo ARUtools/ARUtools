@@ -30,7 +30,7 @@ Timezones. To ensure that the sunrise/sunset times are calculated
   using, for example, `aru_tz = "America/Toronto"`. If on the other hand each
   ARU was calibrated to whichever timezone was local when it was deployed use
   `aru_tz = "local"`. The specific timezone will be calculated individually
-  based on the latitude and longitude of each recording.
+  based on the longitude and latitude of each recording.
 }
 \examples{
 m <- clean_metadata(project_files = example_files)

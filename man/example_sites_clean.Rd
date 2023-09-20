@@ -14,8 +14,8 @@ A data frame with 10 rows and 8 columns:
   \item{date_time_end}{Deployment end date/time}
   \item{date_start}{Deployment start date}
   \item{date_end}{Deployment end date}
-  \item{latitude}{Longitude in decimal degrees}
   \item{longitude}{Latitude in decimal degrees}
+  \item{latitude}{Longitude in decimal degrees}
 }
 }
 \source{

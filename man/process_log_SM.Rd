@@ -18,7 +18,7 @@ process_log_SM(folder_base, list_files, site_pattern, return_gps, return_log)
 \item{return_log}{Logical. Should the function return the full log?}
 }
 \value{
-Returns a data frame with lat/lon for each location and date collected
+Returns a data frame with lon/lat for each location and date collected
 }
 \description{
 Process log files from SongMeters

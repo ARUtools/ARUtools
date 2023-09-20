@@ -50,7 +50,7 @@ Standardized site index data frame
 A site index file contains information on when specific ARUs were deployed
 where. This function cleans a file (csv, xlsx) or data frame in preparation
 for adding these details to the output of `clean_metadata()`. It can be used
-to specify missing information according to date, such as GPS lat/lons and
+to specify missing information according to date, such as GPS lon/lats and
 site ids.
 }
 \details{
