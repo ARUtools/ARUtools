@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 #| message: false
 library(ARUtools)
 library(sf)
+library(dplyr)
 ```
 
 Here we'll cover some workflows using spatial data. For a general workflow, best
