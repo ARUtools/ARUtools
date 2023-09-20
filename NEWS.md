@@ -1,4 +1,13 @@
-# 0.5.0
+# ARUtools 0.5.1
+
+## New
+* `add_wildtrax()` - New helper function to create and append Wildtrax file names
+
+## Bugs
+* `clean_gps()` - Fixed errors when processing only GPX files
+
+
+# ARUtools 0.5.0
 
 * `clean_gps()`
   * can handle GPX files via `sf` now
@@ -38,7 +47,7 @@
   * Mini spatial workflow (vignettes/spatial.Rmd)
   * Explaining timezones (vignettes/timezones.Rmd)
 
-# 0.4.0.9000
+# ARUtools 0.4.0.9000
 * Major overhaul of first half of the workflow
 * Main functions now
  - `clean_metadata()`

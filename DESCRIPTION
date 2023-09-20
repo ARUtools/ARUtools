@@ -1,9 +1,11 @@
 Package: ARUtools
 Type: Package
 Title: Tools for management of Acoustic Recording Unit (ARU) data
-Version: 0.5.0
-Author: David Hope
-Maintainer: David Hope <david.hope@ec.gc.ca>
+Version: 0.5.1
+Authors@R: c(
+    person("David", "Hope", email = "david.hope@ec.gc.ca", role = c("aut", "cre")),
+    person("Steffi", "LaZerte", email = "sel@steffilazerte.ca", role = c("aut"), 
+           comment = c(ORCID = "0000-0002-7690-8360")))
 Description: Collection of functions and R code for parsing acoustic recording
     unit (ARU) data and for sub-sampling recordings.
 Depends: R (>= 4.0)
