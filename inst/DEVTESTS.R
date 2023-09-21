@@ -242,13 +242,14 @@ m <- clean_metadata(project_dir = d) # No dates/sites, as expected
 g <- dplyr::filter(m, stringr::str_detect(file_name, "gpx")) |>
   clean_gps(dist_by = "aru_id")
 
-check_problems(g, check = "date")
+p <- check_problems(g, check = "date")
+p
 
 # - First file is another problem (NA's across the board)
-load_gps(g$path[1], skip = 0, gps_ext = "gpx")
+load_gps(p$path[1], skip = 0, gps_ext = "gpx")
 
 # - Second file has wonky time (originates from -1-01-01 dates)
-load_gps(g$path[2], skip = 0, gps_ext = "gpx") |>
+load_gps(p$path[2], skip = 0, gps_ext = "gpx") |>
   arrange(time) |>
   select(time, name)
 
