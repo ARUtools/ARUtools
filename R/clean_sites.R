@@ -461,8 +461,15 @@ fmt_gps_gpx <- function(df) {
     sf::st_drop_geometry() |>
     dplyr::bind_cols(sf::st_coordinates(df)) |>
     dplyr::select("date_time" = "time", "longitude" = "X", "latitude" = "Y") |>
-    dplyr::mutate(date_time = lubridate::as_datetime(.data$date_time),
-                  date = lubridate::as_date(.data$date_time))
+    dplyr::mutate(
+      date_time = lubridate::as_datetime(.data$date_time),
+      date = lubridate::as_date(.data$date_time),
+      date_time = dplyr::if_else(lubridate::year(.data$date_time) == -1,
+                                 lubridate::NA_POSIXct_,
+                                 .data$date_time),
+      date = dplyr::if_else(lubridate::year(.data$date) == -1,
+                            lubridate::NA_Date_,
+                            .data$date))
 }
 
 
