@@ -8,7 +8,8 @@ wt_assign_tasks(
   wt_task_template_in,
   interp_hours_file,
   wt_task_output_file,
-  interp_hours_column
+  interp_hours_column,
+  random_seed = NULL
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ wt_assign_tasks(
 \item{wt_task_output_file}{Path to csv of output file for uploading to wildtrax. If left as NULL will not write file}
 
 \item{interp_hours_column}{LazyEval column name with hours for interpreters}
+
+\item{random_seed}{Integer. Random seed to select with. If left NULL will use timestamp}
 }
 \value{
 Returns a list with a tibble of assigned tasks and a summary tibble.

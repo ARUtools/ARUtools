@@ -25,11 +25,14 @@ remotes::install_github("dhope/ARUtools", build_vignettes=TRUE)
 ## Learn to use
 
 If you have used `build_vignettes =T` on installation, you can check out
-the vignettes using:
+the vignettes using: `browseVignettes('ARUtools')`
 
-Current vignettes are: - Getting started with ARUtools: - Customizing
-`clean_metadata()` : - Dealing with Timezones : - Working with spatial
-data :
+Current vignettes are:
+
+    - Getting started with ARUtools: `vignette("ARUtools", package = "ARUtools")`
+    - Customizing `clean_metadata()`: `vignette("customizing", package = "ARUtools")`
+    - Dealing with Timezones: `vignette("timezones", package = "ARUtools")`
+    - Working with spatial data: `vignette("spatial", package = "ARUtools")`
 
 ## Provide feedback
 

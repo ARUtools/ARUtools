@@ -7,6 +7,7 @@ output: github_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval=F,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%"
@@ -33,13 +34,14 @@ remotes::install_github("dhope/ARUtools", build_vignettes=TRUE)
 ## Learn to use
 
 If you have used `build_vignettes =T` on installation, you can check out the vignettes using:
-`r browseVignettes('ARUtools')`
+`browseVignettes('ARUtools')`
 
 Current vignettes are:
-    - Getting started with ARUtools: `r vignette("ARUtools", package = "ARUtools")`
-    - Customizing `clean_metadata()` : `r vignette("customizing", package = "ARUtools")`
-    - Dealing with Timezones : `r vignette("timezones", package = "ARUtools")`
-    - Working with spatial data : `r vignette("spatial", package = "ARUtools")`
+
+    - Getting started with ARUtools: `vignette("ARUtools", package = "ARUtools")`
+    - Customizing `clean_metadata()`: `vignette("customizing", package = "ARUtools")`
+    - Dealing with Timezones: `vignette("timezones", package = "ARUtools")`
+    - Working with spatial data: `vignette("spatial", package = "ARUtools")`
     
     
     
