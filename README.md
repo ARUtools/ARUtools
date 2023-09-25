@@ -4,35 +4,35 @@
 # ARUtools <img src="inst/figures/ARUtools.png" align="right" width="120" />
 
 <!-- badges: start -->
+
+[![Codecov test
+coverage](https://codecov.io/gh/dhope/ARUtools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dhope/ARUtools?branch=main)
 <!-- badges: end -->
 
-The goal of ARUtools is to facilitate the processing of ARU data. It is
-very much a development version now.
+The goal of ARUtools is to facilitate the processing of ARU data. It
+remains a development version for now.
 
 ## Installation
 
-You can install the development version of ARUtools from
+You can install the current version of ARUtools from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("dhope/ARUtools")
+remotes::install_github("dhope/ARUtools", build_vignettes=TRUE)
 ```
 
-## Overview
+## Learn to use
 
-Currently ARUtools can perform 3 main functions:
+If you have used `build_vignettes =T` on installation, you can check out
+the vignettes using:
 
-### Process metadata
+Current vignettes are: - Getting started with ARUtools: - Customizing
+`clean_metadata()` : - Dealing with Timezones : - Working with spatial
+data :
 
-For a given folder structure of ARU recordings from BarLT or Songmeters,
-the `clean_metadata` function is meant to process the files, extract
-locations, and calculate the time to sunrise and sunset.
+## Provide feedback
 
-``` r
-library(ARUtools)
-path_to_folder <- "~/path/to/ARU/data/SM4"
-cleaned_metadata <- clean_metadata(type = "SM4", folder_base = "path_to_folder")
-```
-
-### Select samples
+If you run into problems or have ideas for extensions, please don’t
+hesitate to [submit an
+issue](https://github.com/dhope/ARUtools/issues/new/choose).
