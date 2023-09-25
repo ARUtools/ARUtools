@@ -1,9 +1,11 @@
 Package: ARUtools
 Type: Package
 Title: Tools for management of Acoustic Recording Unit (ARU) data
-Version: 0.4.0
-Author: David Hope
-Maintainer: David Hope <david.hope@ec.gc.ca>
+Version: 0.5.1
+Authors@R: c(
+    person("David", "Hope", email = "david.hope@ec.gc.ca", role = c("aut", "cre")),
+    person("Steffi", "LaZerte", email = "sel@steffilazerte.ca", role = c("aut"), 
+           comment = c(ORCID = "0000-0002-7690-8360")))
 Description: Collection of functions and R code for parsing acoustic recording
     unit (ARU) data and for sub-sampling recordings.
 Depends: R (>= 4.0)
@@ -12,11 +14,9 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     dplyr,
-    coda,
     tibble,
     tidyr,
     sf,
-    janitor,
     purrr,
     stringr,
     lubridate,
@@ -28,17 +28,22 @@ Imports:
     lutz,
     units,
     suncalc,
-    magrittr
+    fs (>= 1.6.1),
+    hms (>= 1.1.2),
+    readxl (>= 1.4.2)
 Suggests: 
     testthat (>= 3.0.0),
     soundecology,
     ggplot2,
-    patchwork,
     tuneR,
     sessioninfo,
     withr,
     job,
     rstudioapi,
-    jsonlite
+    jsonlite,
+    knitr,
+    rmarkdown,
+    covr
 Config/testthat/edition: 3
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr

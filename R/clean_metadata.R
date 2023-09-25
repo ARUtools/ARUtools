@@ -1,246 +1,250 @@
-#' Clean aru metadata
+#' Extract and clean ARU metadata from file names
 #'
-#' @param type BarLT or SM4
-#' @param folder_base Folder base directory
-#' @param included_subfolders Defaults to 'all', which means all subfolders included.
-#'        To include only some folders (at first level only),
-#'        provide a vector with folder names to include.
-#' @param gps_locations GPS locations in lat/lon format with SiteID
-#'                       Must also include timezone (tz) and deploy date.
-#' @param file_split_pattern Regular expression to split sound file name into pieces.
-#'                      May need to adjust if non-standard naming convention is used.
-#' @param site_pattern  Regular expression to extract site name from folder path.
-#' @param ... Extra parameters for devleopment. Currently works with:
-#'                 - file_ext: default is '.wav'
-#'                 - site_in_filename: Logical: default is FALSE
-#'                 - deploy_start_date:  default is 2 days before first recording (dmy format)
-#'                 - check_dists: Logical to check distances from GPS within site. Default is TRUE
-#'                 - dist_cutoff: Cutoff to raise error in distance check. Default is 100 (in meters).
+#' Using regular expressions, metadata is extracted from file names and
+#' directory structure, checked and cleaned.
 #'
-#' @return
+#' Note that times are extracted by first combining the date, date/time
+#' separator and the time patterns. This means that if there is a problem with
+#' this combination, dates might be extracted but date/times will not. This
+#' mismatch can be used to determine which part of a pattern needs to be
+#' tweaked.
+#'
+#' See `vignette("customizing", package = "ARUtools")` for details on
+#' customizing `clean_metadata()` for your project.
+#'
+#' @param file_type Character. Type of file (extension) to summarize. Default
+#'   wav.
+#' @param pattern_site_id Character. Regular expression to extract site ids. See
+#'   `create_pattern_site_id()`. Can be a vector of multiple patterns to match.
+#' @param pattern_aru_id Character. Regular expression to extract ARU ids. See
+#'   `create_pattern_aru_id()`. Can be a vector of multiple patterns to match.
+#' @param pattern_date Character. Regular expression to extract dates. See
+#'   `create_pattern_date()`. Can be a vector of multiple patterns to match.
+#' @param pattern_time Character. Regular expression to extract times. See
+#'   `create_pattern_time()`. Can be a vector of multiple patterns to match.
+#' @param pattern_dt_sep Character. Regular expression to mark separators
+#'   between dates and times. See `create_pattern_dt_sep()`.
+#' @param order_date Character. Order that the date appears in. "ymd"
+#'   (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.
+#'
+#' @inheritParams common_docs
+#'
+#' @return Data frame with extracted metadata
+#'
+#' @examples
+#' clean_metadata(project_files = example_files)
+#' clean_metadata(project_files = example_files, subset = "P02")
+#'
 #' @export
-clean_metadata <- function(type,
-                           folder_base,
-                           included_subfolders = 'all',
-                           gps_locations = NULL,
-                           file_split_pattern = "T|\\-|\\_|\\.",
-                           site_pattern =  "[P|Q]\\d+_\\d",
-                           list_files = NULL,
-                           folder_names =NULL,
-                           WaveFileName_Strings = NULL,
-                           ... ){
-  BarLT <- (grepl("bar", type, ignore.case = T) & grepl("lt", type, ignore.case = T))
-  SM <- (grepl("sm", type, ignore.case = T) & grepl("3|4", type, ignore.case = T))
-  Mixed <- (grepl("mixed", type, ignore.case = T))
-  if(!any(BarLT ,SM, Mixed) ){
-    abort("Currently only BarLT and SM4 ARUs are supported. Will add more as needed.")
-  }
-  list2env(list(...), envir = environment())
-  if(!exists("file_ext")) file_ext <- ".wav"
-  if(!exists("return_full_metadata")) return_full_metadata <- FALSE
-  # browser()
-  # If file list not provided, scan it from base folder.
-  if(is_null(list_files)){
-  list_files <- list.files(folder_base, recursive = T, full.names = F, include.dirs = F)
-  }
-  # Include only subfolders provided if not set to all
-  if(!any(grepl("all", included_subfolders)) | length(included_subfolders)>1) {
-     list_files <- purrr::map(glue::glue("{included_subfolders}/"),
-                                        ~list_files[grepl(.x, list_files)]) |>
-       unlist()}
-  # Check file vector is not empty
-  if(length(list_files)==0){
-       abort(c("You have listed subfolders to include, but no files are returned",
-               "x" = "Folders must be case-sensitive and be only at one level below folder_base",
-               "i" = "Check folder structure using list.dirs(folder_base, full.names = F, recursive = F)")
-       )
-  }
-  list_waves <- list_files[grep(file_ext, list_files)]
-  if(length(list_waves)==0){
-    abort(c("Did not find any wav files. Default is set to '.wav'",
-            "x" = "Sound file locations needed to process.",
-            "i" = "Use file_ext to change file extension for sound files and check folder_base is correct."))
+clean_metadata <- function(
+    project_dir = NULL,
+    project_files = NULL,
+    file_type = "wav",
+    subset = NULL,
+    subset_type = "keep",
+    pattern_site_id = create_pattern_site_id(),
+    pattern_aru_id = create_pattern_aru_id(),
+    pattern_date = create_pattern_date(),
+    pattern_time = create_pattern_time(),
+    pattern_dt_sep = create_pattern_dt_sep(),
+    order_date = "ymd",
+    quiet = FALSE) {
+
+  # Checks
+  check_text(project_dir, not_null = FALSE, n = 1)
+  check_text(project_files, not_null = FALSE)
+  check_text(file_type, n = 1)
+  check_text(subset, not_null = FALSE, n = 1)
+  check_text(subset_type, n = 1)
+  check_text(pattern_site_id)
+  check_text(pattern_aru_id)
+  check_text(pattern_date)
+  check_text(pattern_time)
+  check_text(pattern_dt_sep)
+  check_text(order_date)
+  check_logical(quiet)
+
+
+  # Prepare patterns
+  file_type_pattern <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
+
+  pattern_site_id <-  pat_collapse(pattern_site_id)
+  pattern_aru_id <- pat_collapse(pattern_aru_id)
+  pattern_date <- pat_collapse(pattern_date)
+  pattern_time <- pat_collapse(pattern_time)
+  pattern_dt_sep <- pat_collapse(pattern_dt_sep)
+
+  pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
+
+  # Get file lists
+  if(!is.null(project_dir)) {
+    if(!is.null(project_files)) {
+      rlang::warn("`project_dir` overrides `project_files`", call = NULL)
     }
-  # if(!exists("folder_sep")) {
-  #   if(sum(grepl(list_waves, pattern = "Data"))>0) {folder_sep <- "Data"
-  #   } else if(sum(grepl(list_waves, pattern = "Wav"))>0) {folder_sep <- "Wav"
-  #   } else abort("Tried 'Wav' and 'Data' as folder separators. Please use your own using folder_sep argument")
-  # }
-  # |- BarLT   ----------------
-
-  ## Create file name log (moving this from Prep_dates.R)
-  ll <- stringr::str_split(list_waves, "/") |>
-       purrr::map_int(.f=length) |> unique()
-  if(length(ll)>1)  abort(
-    c("More than one folder structure detected",
-      "x" = "Differing folder structures are likely to lead to errors",
-      "i" = "Run clean_metadata on each folder type separately"))
-
-  if(rlang::is_null(folder_names)) {pathnames <- c(glue::glue("Folder{1:(ll-1)}"), "WaveFilename")
-  } else if(length(folder_names) == ll){
-    if(folder_names[length(folder_names)]!= "WaveFilename")folder_names[length(folder_names)] <-  "WaveFilename"
-    pathnames <-  folder_names
-  } else{abort(
-    c("You have provided a folder_names vector that is not the same length as the number of folders",
-      "x" = glue::glue("folder_names is {length(folder_names)}, while number of folders is {ll}"),
-      "i" = "Run clean_metadata on each folder type separately") ) }
-  if(!exists("site_in_filename")) site_in_filename <- FALSE
-  wav_names_log <- tibble::tibble(filename=list_waves) %>%
-    {if(ll==1){
-      dplyr::mutate(., WaveFilename=filename)
-    } else{
-      tidyr::separate(., remove=F, col = filename, sep = "/",
-                      into = pathnames, extra = 'merge') } }
-  if(is_null(WaveFileName_Strings)){
-  WaveFileName_Strings <- if_else(site_in_filename,
-                                  glue::glue_collapse(c("ARUName",
-                                                        "yyyymmdd",
-                                                        "hhmmss", "utm",
-                                                        "SR_SS",
-                                                        "wav"), sep = ";"),
-                                  glue::glue_collapse(c("yyyymmdd",
-                                                        "hhmmss", "utm",
-                                                        "SR_SS",
-                                                        "wav"), sep = ";") )
+    if(!quiet) rlang::inform("Fetching file list...")
+    project_files <- list_files(project_dir, subset, subset_type,
+                                type = "file")
+  } else if(!is.null(subset)){
+    project_files <- stringr::str_subset(project_files, subset,
+                                         negate = subset_type == "omit")
+  } else if(is.null(project_files)) {
+    rlang::abort("Must provide one of `project_dir` or `project_files`",
+                 call = NULL)
   }
 
-  # Check filenames will separate correctly
-  WaveFileNames_vect <- stringr::str_split(WaveFileName_Strings, ";")[[1]]
-  fileName_sep_list <- stringr::str_split(wav_names_log$WaveFilename,
-                                     pattern =  file_split_pattern)
-  ll_names <-  fileName_sep_list |>
-    purrr::map_int(.f=length) |> unique()
-  if(length(ll_names)>1)  abort(
-    c("More than one filename structure detected",
-      "x" = "Differing filename structures are likely to lead to errors",
-      "i" = "Run clean_metadata on each filename type separately"))
+  # Check for files (either zero or all directories)
+  if(length(project_files) == 0 || all(fs::is_dir(project_files))) {
+    if(is.null(subset)) {
+      msg <- "`project_dir`"
+    } else {
+      msg <- "`project_dir`/`subset`/`subset_type` combination"
+    }
 
-
-  if(length(WaveFileNames_vect)!=ll_names){
-    abort(
-      c("File name structure does not match naming structure.
-        This will likely lead to errors in time and date processing",
-        "x" =
-        glue::glue("WaveFileName_Strings is {length(WaveFileNames_vect)}, while number of file lengths is {ll_names}"),
-        "i" = "Manually specify WaveFileName_Strings as a string separated by ';'"))
+    rlang::abort(c(
+      paste0("There are no files in the ", msg, " you have specified. Note:"),
+      "i" = "Paths are case-sensitive",
+      "i" = "Check folders using `list.dirs(path = PROJECT_DIR)`",
+      "i" = "Check for files using `count_files(project_dir = PROJECT_DIR)`")
+    )
   }
-  fileName_sep <-
-    tibble::as_tibble(x = do.call(rbind, fileName_sep_list), .name_repair = 'minimal')
-  names(fileName_sep) <- WaveFileNames_vect
+
+  # Check for file types
+  n_ext <- sum(stringr::str_detect(project_files, file_type_pattern))
+  if(n_ext == 0){
+    rlang::abort(c(glue::glue("Did not find any '{file_type}' files."),
+                   "i" = "Use `file_type` to change file extension for sound files",
+                   "i" = "Check `project_dir`/`project_files` are correct"))
+  }
 
 
-  wav_names_log <- wav_names_log %>%
-    bind_cols(fileName_sep)  |>
+  # Collect non-file-type files
+  extra <- stringr::str_subset(project_files, file_type_pattern, negate = TRUE)
+  gps <- stringr::str_subset(extra, stringr::regex("gps|summary", ignore_case = TRUE))
+  focal <- stringr::str_subset(project_files, file_type_pattern)
+
+  # Set up file path metadata
+  meta <- dplyr::tibble(
+    dir = fs::path_dir(focal),
+    file_name = fs::path_file(focal),
+    type = tolower(fs::path_ext(focal)))
+
+  if(length(gps) > 1) {
+    meta <- meta |>
+      dplyr::add_row(dir = fs::path_dir(gps),
+                     file_name = fs::path_file(gps),
+                     type = "gps")
+  }
+
+  pattern_aru_type <- c("barlt" = "BarLT",
+                        "SMM" = "SongMeter",
+                        "SM\\d" = "SongMeter",
+                        "S\\dA" = "SongMeter")
+
+  if(!quiet) rlang::inform("Extracting ARU info...")
+
+  # Extract ARU metadata -----------------------
+  meta <- meta |>
     dplyr::mutate(
-      SiteID = stringr::str_extract(filename, site_pattern)) %>%
-    {
-      if(Mixed) {
-        mutate(.,
-               ARU_type = case_when(
-                 grepl("barlt", filename,ignore.case = T )~"BarLT",
-                 grepl("SM\\d", filename,ignore.case = T )~"SongMeter",
-                 grepl("S\\dA", filename,ignore.case = T )~"SongMeter",
-                 TRUE~NA_character_
-               ) )
-      } else if(BarLT){
-        mutate(.,
-               ARU_type ="BarLT"
-               )
-      } else if(SM){
-        mutate(.,
-               ARU_type ="SongMeter"
-        )
-      } else{abort("Error assessing Songmeter type")}
+      path = file.path(.data$dir, .data$file_name),
+      aru_type = extract_replace(.data$file_name, pattern_aru_type),
+      aru_type = dplyr::if_else(is.na(.data$aru_type),
+                                extract_replace(.data$dir, pattern_aru_type),
+                                .data$aru_type),
+      aru_id = stringr::str_extract(.data$file_name, pattern_aru_id),
+      aru_id = dplyr::if_else(is.na(.data$aru_id),
+                              stringr::str_extract(.data$dir, pattern_aru_id),
+                              .data$aru_id))
 
+  meta <- dplyr::mutate(meta, site_id = stringr::str_extract(.data$dir, .env$pattern_site_id))
+
+  pattern_non_date <- paste0("(", pattern_site_id, ")|(",
+                             pattern_aru_id, ")|(",
+                             paste0("(", pattern_aru_type, ")", collapse = "|"),
+                             ")")
+
+
+  # Extract Date/time --------------------------
+  if(!quiet) rlang::inform("Extracting Dates and Times...")
+
+  meta <- meta |>
+    dplyr::mutate(
+      file_left = stringr::str_remove_all(.data$file_name, pattern_non_date),
+      dir_left = stringr::str_remove_all(.data$dir, pattern_non_date),
+
+      # Try file name
+      date_time_chr = stringr::str_extract(.data$file_left, .env$pattern_date_time),
+      # Try dir name
+      date_time_chr = dplyr::if_else(
+        is.na(.data$date_time_chr),
+        stringr::str_extract(.data$dir_left, .env$pattern_date_time),
+        .data$date_time_chr),
+      # Get date_times
+      date_time = lubridate::parse_date_time(
+        .data$date_time_chr,
+        orders = paste(order_date, "HMS"),
+        truncated = 1),
+      date = lubridate::as_date(.data$date_time))
+
+  if(any(is.na(meta$date))) {
+
+    missing <- meta |>
+      dplyr::filter(is.na(.data$date)) |>
+      dplyr::mutate(
+        # Try file name
+        date_chr = stringr::str_extract(.data$file_left, .env$pattern_date),
+        # Try dir name
+        date_chr = dplyr::if_else(
+          is.na(.data$date_chr),
+          stringr::str_extract(.data$dir_left, .env$pattern_date),
+          .data$date_chr),
+        date = lubridate::parse_date_time(.data$date_chr, orders = order_date,
+                                          quiet = TRUE),
+        date = lubridate::as_date(.data$date)) |>
+      dplyr::select("path", "date")
+
+    if(any(!is.na(missing$date))) {
+      # Add dates where missing
+      meta <- dplyr::rows_patch(meta, missing, by = "path")
     }
-
-  if(sum(is.na(wav_names_log$ARU_type))>0){abort("Error assessing ARU type, some rows have NAs")}
-  # browser()
-    BarLTfiles <- dplyr::filter(wav_names_log,ARU_type=="BarLT" )
-
-    if(nrow(BarLTfiles)>0){
-
-    log_files <- list_files[grep("logfile", list_files)]
-    log_data <- purrr::map(glue::glue("{folder_base}/{log_files}"), read_log_barlt) |>
-      purrr::transpose()
-
-    if(!exists("site_in_filename")) site_in_filename <- FALSE
-
-    if(!exists("deploy_start_date")) deploy_start_date <-
-      list_waves |>
-      stringr::str_extract("\\d{8}") |>
-      lubridate::ymd() %>% { min(.) -2 } |>
-      format("%d/%m/%Y") |> lubridate::dmy()
-    if(!exists("check_dists")) check_dists <- TRUE
-
-
-    if(is_null(gps_locations)){
-      if(!exists("dist_cutoff")) dist_cutoff <- 100
-      gps_locations_barLT <- process_gps_barlt(base_folder = folder_base,
-                                         site_pattern = site_pattern,
-                      file_list= list_files,dist_cutoff=dist_cutoff,
-                      deploy_start_date = deploy_start_date,
-                      check_dists)
-    } else{
-
-      gps_locations_barLT <- gps_locations
-    }
-
-
   }
-  # |- SM4   ----------------
-    SMfiles <- dplyr::filter(wav_names_log,ARU_type=="SongMeter" )
 
-    if(nrow(SMfiles)>0){
-      # browser()
-    if(grepl("3", type)) warn("Default site_pattern is set for SM4. Recommend changing based on file structure")
-    if(!exists("site_pattern")) site_pattern <-  "S4A\\d{5}"
-    # file.location <- "//WRIV02DTSTDNT1/RecordStor20172019/BetweenRivers_2019"
+  # Report on details -------------------------
+  # Extra files
+  if(length(extra) > 1) {
+    rlang::inform(
+      c("!" = paste0("Omitted ", length(extra), " extra, non-",
+                     file_type, "/GPS files")))
+  }
 
-      # list.files(folder_base, "_Summary.txt", recursive = T, full.names = T)
+  if(length(gps) > 1) {
+    rlang::inform(c("!" = paste0("Detected ", length(gps), " GPS logs")))
+  }
 
+  # Flag problems
+  f <- dplyr::filter(meta, .data$type == "wav")
+  n <- nrow(f)
+  f_d <- sum(is.na(f$date))
+  f_dt <- sum(is.na(f$date_time))
+  f_type <- sum(is.na(f$aru_type))
+  f_id <- sum(is.na(f$aru_id))
+  f_site <- sum(is.na(f$site_id))
 
+  if(any(c(f_d, f_dt, f_type, f_id, f_site) > 0)) {
+   msg <- c("Identified possible problems with metadata extraction:")
+   msg <- c(msg, report_missing(f_d, n, "dates"))
+   msg <- c(msg, report_missing(f_dt, n, "times"))
+   msg <- c(msg, report_missing(f_type, n, "ARU types"))
+   msg <- c(msg, report_missing(f_id, n, "ARU ids"))
+   msg <- c(msg, report_missing(f_site, n, "sites"))
+   rlang::inform(msg)
+  }
 
-    if(is_null(gps_locations)){
-      gps_locations_SM <- process_gps_SM(folder_base = folder_base, list_files = list_files,
-                                      site_pattern = site_pattern)
-    } else{ gps_locations_SM <- gps_locations}
-    if(!exists("site_in_filename")) site_in_filename <- TRUE
-    }
-
-    if(exists("gps_locations_barLT")& exists("gps_locations_SM")){
-      gps_locations <- bind_rows(gps_locations_barLT, gps_locations_SM)
-    } else if(exists("gps_locations_barLT")& !exists("gps_locations_SM")){
-      gps_locations <- gps_locations_barLT
-    } else if(!exists("gps_locations_barLT")& exists("gps_locations_SM")){
-      gps_locations <- gps_locations_SM
-    } else{abort("Error combining gps locations. Check ARU type")}
-    # if(length(unique(gps_locations$tz ))>1) browser()
-    wav_names_log <- parse_datetimes(wav_names_log,
-                                     tz_loc = unique(gps_locations$tz ))
-
-
-    if(exists("Filter_gps_sites")){
-      if(isTRUE(Filter_gps_sites)){
-        gps_locations <- gps_locations |>
-          dplyr::filter(SiteID %in% wav_names_log$SiteID)
-      }
-    }
-
-    recording_log <- prep_sunrise_sunset(gps_locations = gps_locations,
-                                            wav_names_log = wav_names_log)
-
-
-    # browser()
-
-    if(isTRUE(return_full_metadata)){
-      list(gps_locations = gps_locations,
-           recording_log = recording_log,
-           )
-
-      } else{
-        return(recording_log)
-      }
-
-
+  meta |>
+    dplyr::arrange(.data$type != "gps", !is.na(.data$date_time), .data$path,
+                   .data$site_id, .data$date_time) |>
+    dplyr::select(-"file_left", -"dir_left", -"date_time_chr", -"dir")
 }
+
+
+
+

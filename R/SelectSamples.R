@@ -17,10 +17,10 @@ fun_aru_samp <- function(df, N, os, seed, strat_, selprob_id, x, y, ...) {
          which ranges from 0 to 1. If you wish to base decisions here off the simulation,
          you can adjust the `selection_variable` paramter, which is an unquoted variable name of which
          options are psel, psel_doy, psel_tod, psel_std, psel_scaled, or psel_normalized")
-    arus <- df %>%
-      dplyr::select({{ strat_ }}) %>%
-      dplyr::distinct() %>% # morningChorus
-      .[[strat_]]
+    arus <- df |>
+      dplyr::select({{ strat_ }}) |>
+      dplyr::distinct() # morningChorus
+    arus <- arus[[strat_]]
     # print(arus)
     if(packageVersion("spsurvey")<5){
     Stratdsgn <- vector(mode = "list", length = length(arus))
@@ -55,7 +55,7 @@ fun_aru_samp <- function(df, N, os, seed, strat_, selprob_id, x, y, ...) {
     return(samp)
   }
   if(packageVersion("spsurvey")>=5){
-  sf_df <- df %>%
+  sf_df <- df |>
       sf::st_as_sf(coords = c(paste0(x),paste0(y)), crs = 3395)
 
   # browser()

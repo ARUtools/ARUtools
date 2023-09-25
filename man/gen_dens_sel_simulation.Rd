@@ -25,7 +25,7 @@ Returns either a data frame with selection probabilities or plots of selection p
 Simulate selection probabilities for GRTS
 }
 \examples{
-gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
-              parms = ARUtools::default_selection_parameters,
-             selection_variable = psel_normalized , return_dat=F)
+# gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
+#               parms = ARUtools::default_selection_parameters,
+#             selection_variable = psel_normalized , return_dat=F)
 }

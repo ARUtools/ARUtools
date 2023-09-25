@@ -10,9 +10,9 @@
 #' @export
 #'
 #' @examples
-#' gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
-#'               parms = ARUtools::default_selection_parameters,
-#'              selection_variable = psel_normalized , return_dat=F)
+#' # gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
+#' #               parms = ARUtools::default_selection_parameters,
+#' #             selection_variable = psel_normalized , return_dat=F)
 gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameters,
                                      selection_variable=psel_normalized,
                                      return_dat =F , ...) {
@@ -68,7 +68,7 @@ gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameter
             and should include values for  log_, fun , & off",
              "i" = "Suggest to use`parms` parameter to set values for simulation")
     if(!exists('min'))  abort(a_1)
-    if(exists('min')) if(class(min)!="function") abort(a_1)
+    if(exists('min')) if(!inherits(min, "function")) abort(a_1)
       }
 
 
@@ -140,20 +140,20 @@ calc_sel_pr <- function(.data,ARU_ID_col, min_col, day_col, parms = list(min_ran
   dens_min <- min_fun(seq(min_range[[1]], min_range[[2]]), mean_min, sd_min, log = log_)
   dens_doy <- dnorm(seq(doy_range[[1]], doy_range[[2]]), mean_doy, sd_doy, log=log_)
   # browser()
-  .data %>%
+  .data |>
     dplyr::filter({{day_col}} >= doy_range[[1]] &
              {{day_col}} <= doy_range[[2]] &
              {{min_col}}>= min_range[[1]] &
              {{min_col}}<= min_range[[2]]
-             ) %>%
+             ) |>
     dplyr::mutate(psel_tod = min_fun(round({{min_col}},0), mean_min, sd_min, log = log_)/max(abs(dens_min)),
            psel_doy = dnorm({{day_col}},mean= mean_doy, sd = sd_doy, log=log_)/max(abs(dens_doy)),
            psel = dplyr::case_when(log_~ exp( psel_tod + psel_doy),
                             !log_~ psel_tod * psel_doy),
-           psel_scaled = psel/max(psel)) %>%
-    dplyr::group_by({{ARU_ID_col}}) %>%
+           psel_scaled = psel/max(psel)) |>
+    dplyr::group_by({{ARU_ID_col}}) |>
     dplyr::mutate(psel_std = psel / max(psel),
-                  psel_normalized =  pmax(1e-3,(psel-min(psel))/(max(psel)-min(psel)))) %>%
+                  psel_normalized =  pmax(1e-3,(psel-min(psel))/(max(psel)-min(psel)))) |>
     dplyr::ungroup()
 
 

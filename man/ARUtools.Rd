@@ -8,3 +8,12 @@
 \description{
 ARU tools that some might find useful for working with ARU files.
 }
+\author{
+\strong{Maintainer}: David Hope \email{david.hope@ec.gc.ca}
+
+Authors:
+\itemize{
+  \item Steffi LaZerte \email{sel@steffilazerte.ca} (\href{https://orcid.org/0000-0002-7690-8360}{ORCID})
+}
+
+}

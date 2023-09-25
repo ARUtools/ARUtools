@@ -80,9 +80,9 @@ format_clip_wave <- function(segment_df,in_base_directory,
   }
   outfiles <- glue::glue("{out_base_directory}/{output_subfolders}/{segment_df[[out_filename_col]]}.wav")
   if(all(grepl(in_base_directory, segment_df[[filepath_in_col]]))){
-    browser()
+
     ll <- purrr::map_dbl(segment_df[[filepath_in_col]], get_wav_length, return_numeric = T)
-    infiles <- seg[[filepath_in_col]]
+    infiles <- segment_df[[filepath_in_col]]
   } else{
     ll <- purrr::map_dbl(segment_df[[filepath_in_col]], ~get_wav_length(
       file =  glue::glue("{in_base_directory}/{.x}"),
@@ -110,11 +110,10 @@ format_clip_wave <- function(segment_df,in_base_directory,
 
 
   if(all((segment_df[[length_clip_col]]-2)>= ll) ) {
-    xx <- file.copy(from = glue::glue("{in_dir}/{segment_df[[out_filename_col]]}"),
+    xx <- file.copy(from = infiles,#glue::glue("{in_base_directory}/{segment_df[[out_filename_col]]}"),
               to =  outfiles)
     return(xx)
   }
-
   if(!isTRUE(use_job)){
 
     xx <- purrr::map(1:nrow(segment_df),

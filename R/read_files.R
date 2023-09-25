@@ -50,7 +50,7 @@ read_log_barlt <- function(filename){
 
   dated_logs <- full_file[grepl("^\\d\\d\\/", full_file)] |>
     stringr::str_remove("\xffffffb0") |>
-    stringr::str_conv("UTF-8") %>%
+    stringr::str_conv("UTF-8") |>
     tibble::tibble(row = . ) |>
     tidyr::separate(col = row, into = c("Date", "Time", "Log"),
                     sep = c(10,20), extra = 'merge') |>
@@ -103,7 +103,7 @@ read_summary_SM4 <- function(filename, SiteID_pattern = "SM4A\\d{5}"){
 #' @param list_files List of files in folder_base
 #' @param site_pattern site pattern to separate out siteid
 #'
-#' @return Returns a data frame with lat/lon for each location and date collected
+#' @return Returns a data frame with lon/lat for each location and date collected
 process_gps_SM <- function(folder_base, list_files, site_pattern){
     warn("process_gps_SM is depreciated. Use process_log_SM")
     process_log_SM(folder_base, list_files, site_pattern,
@@ -118,7 +118,7 @@ process_gps_SM <- function(folder_base, list_files, site_pattern){
 #' @param return_gps Logical. Should function return GPS locations?
 #' @param return_log Logical. Should the function return the full log?
 #'
-#' @return Returns a data frame with lat/lon for each location and date collected
+#' @return Returns a data frame with lon/lat for each location and date collected
 #' @export
 process_log_SM <- function(folder_base, list_files, site_pattern, return_gps, return_log){
 
@@ -152,7 +152,7 @@ process_log_SM <- function(folder_base, list_files, site_pattern, return_gps, re
     dplyr::mutate(longitude_decimal_degrees = -1*as.numeric(LON),
                   latitude_decimal_degrees = as.numeric(LAT)) #|>
   )
-    # sf::st_as_sf(coords = c("LON", "LAT"), crs = 4326) %>%
+    # sf::st_as_sf(coords = c("LON", "LAT"), crs = 4326) |>
     # dplyr::bind_cols(
     #   tibble::as_tibble(sf::st_coordinates(.))
     # ) |>
@@ -261,33 +261,7 @@ process_gps_barlt <- function(base_folder, file_list, deploy_start_date,check_di
 }
 
 
-#' Check distances between points from GPS log
-#'
-#' @param gps_log gps log file generated from process_gps_barlt
-#' @param crs_m  CRS for measurement of distances. Should be in meters
-#' @param dist_cutoff Distance cutoff in meters. Can be set to Inf to avoid this check.
-#'
-#' @return Returns a data frame with maximum distances between gps points at site.
-check_gps_distances <- function(gps_log, crs_m = 3161, dist_cutoff = 100){
-  max_distances <-
-  gps_log |>
-    sf::st_as_sf(coords= c("longitude_decimal_degrees",
-                       "latitude_decimal_degrees"),
-             crs = 4326) |>
-    sf::st_transform(crs_m) |>
-    dplyr::group_by(SiteID) %>%
-    dplyr::summarize(max_dist = max(sf::st_distance(geometry, geometry)),
-              .groups = 'drop') |>
-    sf::st_drop_geometry()
 
-  if(any(max_distances$max_dist>units::set_units(dist_cutoff, "m"))) #browser()
-    abort(c("Within Site distance is greater than cuttoff",
-            "x" = "Distance must be less than `dist_cutoff`",
-            "i" = "Set dist_cutoff to Inf to avoid this (e.g. moving ARU)"))
-
-  return(max_distances)
-
-}
 
 
 #' Read barlt gps and check locations

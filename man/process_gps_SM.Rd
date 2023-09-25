@@ -14,7 +14,7 @@ process_gps_SM(folder_base, list_files, site_pattern)
 \item{site_pattern}{site pattern to separate out siteid}
 }
 \value{
-Returns a data frame with lat/lon for each location and date collected
+Returns a data frame with lon/lat for each location and date collected
 }
 \description{
 Process GPS locations for SongMeters

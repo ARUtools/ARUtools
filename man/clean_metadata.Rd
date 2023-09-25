@@ -2,45 +2,81 @@
 % Please edit documentation in R/clean_metadata.R
 \name{clean_metadata}
 \alias{clean_metadata}
-\title{Clean aru metadata}
+\title{Extract and clean ARU metadata from file names}
 \usage{
 clean_metadata(
-  type,
-  folder_base,
-  included_subfolders = "all",
-  gps_locations = NULL,
-  file_split_pattern = "T|\\\\-|\\\\_|\\\\.",
-  site_pattern = "[P|Q]\\\\d+_\\\\d",
-  list_files = NULL,
-  folder_names = NULL,
-  WaveFileName_Strings = NULL,
-  ...
+  project_dir = NULL,
+  project_files = NULL,
+  file_type = "wav",
+  subset = NULL,
+  subset_type = "keep",
+  pattern_site_id = create_pattern_site_id(),
+  pattern_aru_id = create_pattern_aru_id(),
+  pattern_date = create_pattern_date(),
+  pattern_time = create_pattern_time(),
+  pattern_dt_sep = create_pattern_dt_sep(),
+  order_date = "ymd",
+  quiet = FALSE
 )
 }
 \arguments{
-\item{type}{BarLT or SM4}
+\item{project_dir}{Character. Directory where project files are stored. File
+paths will be used to extract information and must actually exist.}
 
-\item{folder_base}{Folder base directory}
+\item{project_files}{Character. Vector of project file paths. These paths can
+be absolute or relative to the working directory, and don't actually need
+to point to existing files unless you plan to use `clean_gps()` or other
+sampling steps down the line. Must be provided if `project_dir` is `NULL`.}
 
-\item{included_subfolders}{Defaults to 'all', which means all subfolders included.
-To include only some folders (at first level only),
-provide a vector with folder names to include.}
+\item{file_type}{Character. Type of file (extension) to summarize. Default
+wav.}
 
-\item{gps_locations}{GPS locations in lat/lon format with SiteID
-Must also include timezone (tz) and deploy date.}
+\item{subset}{Character. Text pattern to mark a subset of files/directories
+to either `keep` or `omit` (see `subset_type`)}
 
-\item{file_split_pattern}{Regular expression to split sound file name into pieces.
-May need to adjust if non-standard naming convention is used.}
+\item{subset_type}{Character. Either `keep` (default) or `omit`
+files/directories which match the pattern in `subset`.}
 
-\item{site_pattern}{Regular expression to extract site name from folder path.}
+\item{pattern_site_id}{Character. Regular expression to extract site ids. See
+`create_pattern_site_id()`. Can be a vector of multiple patterns to match.}
 
-\item{...}{Extra parameters for devleopment. Currently works with:
-- file_ext: default is '.wav'
-- site_in_filename: Logical: default is FALSE
-- deploy_start_date:  default is 2 days before first recording (dmy format)
-- check_dists: Logical to check distances from GPS within site. Default is TRUE
-- dist_cutoff: Cutoff to raise error in distance check. Default is 100 (in meters).}
+\item{pattern_aru_id}{Character. Regular expression to extract ARU ids. See
+`create_pattern_aru_id()`. Can be a vector of multiple patterns to match.}
+
+\item{pattern_date}{Character. Regular expression to extract dates. See
+`create_pattern_date()`. Can be a vector of multiple patterns to match.}
+
+\item{pattern_time}{Character. Regular expression to extract times. See
+`create_pattern_time()`. Can be a vector of multiple patterns to match.}
+
+\item{pattern_dt_sep}{Character. Regular expression to mark separators
+between dates and times. See `create_pattern_dt_sep()`.}
+
+\item{order_date}{Character. Order that the date appears in. "ymd"
+(default), "mdy", or "dmy". Can be a vector of multiple patterns to match.}
+
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
+}
+\value{
+Data frame with extracted metadata
 }
 \description{
-Clean aru metadata
+Using regular expressions, metadata is extracted from file names and
+directory structure, checked and cleaned.
+}
+\details{
+Note that times are extracted by first combining the date, date/time
+separator and the time patterns. This means that if there is a problem with
+this combination, dates might be extracted but date/times will not. This
+mismatch can be used to determine which part of a pattern needs to be
+tweaked.
+
+See `vignette("customizing", package = "ARUtools")` for details on
+customizing `clean_metadata()` for your project.
+}
+\examples{
+clean_metadata(project_files = example_files)
+clean_metadata(project_files = example_files, subset = "P02")
+
 }
