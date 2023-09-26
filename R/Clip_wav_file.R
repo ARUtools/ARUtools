@@ -69,7 +69,7 @@ format_clip_wave <- function(segment_df,in_base_directory,
   if(length(sub_dir_out_col)>1){
     output_subfolders <- segment_df[,sub_dir_out_col] |>
       dplyr::rowwise() |>
-      dplyr::mutate(output = glue::glue_collapse(c_across(), sep = "/")) |>
+      dplyr::mutate(output = glue::glue_collapse(c_across(cols = dplyr::everything()), sep = "/")) |>
       dplyr::ungroup() |>
       dplyr::pull(output)
   } else{output_subfolders <- segment_df[[sub_dir_out_col]]}
