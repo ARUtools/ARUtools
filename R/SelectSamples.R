@@ -73,7 +73,7 @@ fun_aru_samp <- function(df, N, os, seed, strat_, selprob_id, x, y, ...) {
     names(Stratdsgn) <- names(n_os) <- N[[strat_]]
     } else{abort(c("Failed to parse N as data.frame.",
                    "x" = glue::glue("Need to include columns named 'N', 'n_os', and '{strat_}'"),
-                   "i" = "Check format of N as a data frame and try agian.")) }
+                   "i" = glue::glue("Check format of N as a data frame and ensure {strat_} is included in both df and N."))) }
   }else{
   if(length(N)==1){
   Stratdsgn <- rep(N, length(arus))
