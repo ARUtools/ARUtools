@@ -4,14 +4,14 @@ prep_for_wind_detection <- function(wav_files,site_pattern, output_directory, wr
     c("Special characters detected in file paths",
       x = "Wind Detection is may not work") )
   gen_output <- function(file_list){
-    filePaths <- wav_files #|>
+    filePaths <- file_list #|>
     # stringr::str_replace( "J:/", "/cygdrive/j/") |>
     # stringr::str_remove("/[^/]+.wav")
 
-    sites <- wav_files |>
+    sites <- file_list |>
       stringr::str_extract(site_pattern)
 
-    filenames <- wav_files |>
+    filenames <- file_list |>
       stringr::str_extract("/[^/]+.wav") |>
       stringr::str_remove(".wav$") |>
       stringr::str_remove("/")
