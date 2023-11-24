@@ -158,17 +158,20 @@ format_clip_wave <- function(segment_df,in_base_directory,
 
 #' Get the length of a recording in seconds
 #'
-#' @param file Path to wave file
+#' @param wave_file Character. Path to wave file
+#' @param return_numeric Logical. Return numeric or character?
 #'
-#' @return length of recording in seconds
+#' @return Length of recording in seconds
 #' @export
 #'
 #' @examples
 #' f <- tempfile()
 #' wav <- download.file("https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav", destfile = f)
 #' get_wav_length(f)
-get_wav_length <- function(file, return_numeric= F){
-  audio <- tuneR::readWave(file, header = T)
-  if(return_numeric) return( round(audio$samples / audio$sample.rate, 2))
-  else return(glue::glue("{round(audio$samples / audio$sample.rate, 2)} seconds"))
+
+get_wav_length <- function(wave_file, return_numeric = FALSE){
+  audio <- tuneR::readWave(file, header = TRUE)
+  l <- round(audio$samples / audio$sample.rate, 2)
+  if(!return_numeric) l <- glue::glue("{l} seconds")
+  l
 }

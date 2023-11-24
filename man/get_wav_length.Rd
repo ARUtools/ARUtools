@@ -4,13 +4,15 @@
 \alias{get_wav_length}
 \title{Get the length of a recording in seconds}
 \usage{
-get_wav_length(file, return_numeric = F)
+get_wav_length(wave_file, return_numeric = FALSE)
 }
 \arguments{
-\item{file}{Path to wave file}
+\item{wave_file}{Character. Path to wave file}
+
+\item{return_numeric}{Logical. Return numeric or character?}
 }
 \value{
-length of recording in seconds
+Length of recording in seconds
 }
 \description{
 Get the length of a recording in seconds
