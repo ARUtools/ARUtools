@@ -172,3 +172,51 @@ get_wav_length <- function(file, return_numeric= F){
   if(return_numeric) return( round(audio$samples / audio$sample.rate, 2))
   else return(glue::glue("{round(audio$samples / audio$sample.rate, 2)} seconds"))
 }
+
+#' Get the file info from a recording
+#'
+#' @param file Path to  file
+#' @param use_exfir Logical use the exifr package, which is slower, but returns more information and allows use of flac files.
+#'
+#' @return tibble with file information. use_exifr creates data, but takes longer.
+#' @export
+#'
+#' @examples
+#' f <- tempfile()
+#' wav <- download.file("https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav", destfile = f)
+#' get_file_info(f)
+#' get_file_info(f, use_exifr = TRUE)
+get_file_info <- function(file, use_exifr = FALSE){
+  if(!file.exists(file)){
+    rlang::abort(glue::glue("File {file} does not exist. Check 'file' is a direct path to the file"))}
+  if(stringr::str_ends(file, ".flac")) use_exifr <- TRUE
+  if(!isTRUE(use_exifr)){
+    audio <- rlang::try_fetch(tuneR::readWave(file, header = T) |>
+                                tibble::as_tibble() |>
+                                dplyr::mutate(path = file,
+                                              duration_seconds = samples/sample.rate),
+                     error = function(cnd){
+                       warn(glue::glue("File {file} failed to load."))
+                       return(tibble::tibble(
+                         path = file
+                       ))
+                     }
+    )
+
+  }
+  if(isTRUE(use_exifr)){
+    audio <- rlang::try_fetch(exifr::read_exif(file) |>
+                                rename(path = SourceFile),
+                              error = function(cnd){
+                                warn(glue::glue("File {file} failed to load."))
+                                return(tibble::tibble(
+                                  path = file
+                                ))
+                              }
+    )
+  }
+  return( audio)
+}
+
+
+
