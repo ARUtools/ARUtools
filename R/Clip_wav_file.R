@@ -1,157 +1,174 @@
-#' Clip single wave file to length from given start time in recording
+#' Clip single wave file
 #'
-#' @param in_file
-#' @param out_file
-#' @param length_clip
-#' @param StartTime
-#' @param warn
-#' @param l
+#' Clip and copy a single wave files to a given length. See `clip_wave()` for
+#' processing multiple files.
 #'
-#' @return
+#' @param path_in Character. Path to the wave file to clip.
+#' @param path_out Character. Path to copy the new clipped wave file to.
+#' @param clip_length Numeric. Length of new clip in seconds.
+#' @param start_time Numeric. Time in seconds where new clip should start.
+#'   Default 0 (start).
+#' @param wave_length Numeric. Length of the wave file in seconds (if `NULL`,
+#'   default, will be calculated).
+#' @param overwrite Logical. Whether to overwrite existing files when creating
+#'   new clipped wave files. Default (`FALSE`) will error if the file already
+#'   exists.
+#'
+#' @return TRUE if successful
 #' @export
 #'
 #' @examples
-format_clip_wave_single <- function(in_file, out_file, length_clip, StartTime, warn=T, l=NULL){
-  if(length(in_file)>1){rlang::abort(c("seg is of length greater than 1",
-                               "x" = "Currently can only process one file at a time",
-                               "i" = "Use purrr::map or lapply to iterate along rows for multiple files.
-                               Future developments will fix this."))}
+#' \dontrun{
+#' # Create test wave file
+#' f <- temp_wavs(1)
+#'
+#' # Clip file and check it out
+#' clip_wave_single(f, "new_file.wav", clip_length = 1)
+#' tuneR::readWave("new_file.wav")
+#' unlink("new_file.wav")
+#' }
 
-  if(isTRUE(warn) & isTRUE(interactive())) {
-    yn <- menu(c("Yes", "No"),
-               title = glue::glue("Current function will copy {in_file} to {out_file}.
-               This will overwrite any existing file there.\n
-                                Do you want to continue?"))
-    if(yn!=1) return("Function cancelled")
+clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
+                             wave_length = NULL, overwrite = FALSE) {
+
+  # Checks
+  if(length(path_in) > 1) {
+    rlang::abort(c("More than one file supplied",
+                   "x" = "`clip_wave_single` processes one file at a time",
+                   "i" = "See `clip_wave` to process multiple files."),
+                 call = NULL)
   }
-  if(is.null(l))  l <- get_wav_length(in_file, return_numeric = T)
-
-  if(length_clip>= l){
-
-    file.copy(from = in_file,
-              to =  out_file)
-  } else{
-    in_wav <-
-      tuneR::readWave(
-        in_file, from = StartTime,
-        to = StartTime + length_clip,
-        units = 'seconds')
-    tuneR::writeWave(in_wav,
-                     out_file)
-    return(TRUE)
+  if(length(path_out) > 1) {
+    rlang::abort("Can only have one output file", call = NULL)
   }
+  check_num(start_time, n = c(0, Inf))
+
+  if(!overwrite && fs::file_exists(path_out)) {
+    rlang::abort(
+      c("`overwrite` is FALSE but `path_out` already exists: ",
+        "!" = path_out,
+        "*" = "Either use `overwrite = TRUE` or move the file"),
+      call = NULL)
+  } else if (overwrite) {
+    fs::file_delete(path_out)
+  }
+
+  # No clipping if clip length the same as the file
+  if(is.null(wave_length)) wave_length <- get_wav_length(path_in, return_numeric = TRUE)
+
+  if(clip_length >= wave_length && start_time == 0) {
+    fs::file_copy(path = path_in, new_path = path_out)
+  } else {
+    wav_clipped <- tuneR::readWave(
+      path_in, from = start_time,
+      to = start_time + clip_length,
+      units = 'seconds')
+    tuneR::writeWave(wav_clipped, path_out)
+  }
+
+  TRUE
 }
 
 
-#' Process multiple wav files by copying them with a new filename or clipping
-#' to a given length.
+#' Clip multiple wave files and format names
 #'
-#' @param segment_df   Data frame with details of file locations.
-#' @param in_base_directory String. Directory where wav files are read from.
-#' @param out_base_directory String. Directory to output files to
-#' @param length_clip_col String with column name for the length of clip in seconds
-#' @param sub_dir_out_col String or vector of strings with column name for directories to output to, nested in out_base_directory
-#' @param filepath_in_col String with column name for path to file, either nested in base directory or absolute
-#' @param out_filename_col String with column name for output filename
-#' @param filewarn Logical. Default to TRUE. Should function provide warnings about file movements
-#' @param use_job Logical. Default to FALSE. Use the {job} package to copy files.
+#' Process multiple wave files by copying them with a new filename and/or
+#' clipping to a given length.
 #'
-#' @return logical or logical vector of status of file copy.
+#' @param waves Data frame. Details of file locations.
+#' @param dir_in Character. Directory wave files are read from. Default is
+#'   `NULL` meaning the current working directory.
+#' @param dir_out Character. Directory to output files to.
+#' @param col_path_in Character. Column name that contains the current file paths. Default `path`.
+#'   **Note: file paths must be either relative to `dir_in` or absolute**.
+#' @param col_subdir_out Character. Column name(s) that contain the
+#'   subdirectory(ies) in which to put output files. Default `subdir_out`.
+#' @param col_filename_out Character. Column name that contains the output
+#'   filenames. Default `filename_out`.
+#' @param col_clip_length Character. Column name that contains the length of the
+#'   new clip. Default `length`.
+#' @param col_start_time Character. Column name that contains the start time of
+#'   the new clip. Default `start_time`
+#' @param overwrite Logical. Overwrite pre-existing files when clipping and moving. (Default `FALSE`)
+#' @param create_dir Logical. Whether to create directory structure for newly
+#'   formatted and clipped wave files.
+#' @param diff_limit Numeric. How much longer in seconds clip lengths can be
+#'   compared to file lengths before triggering an error. Default `30`.
+#' @param use_job Logical. Use the {job} package to copy files (Default `FALSE`)
+#'
+#' @return TRUE if successful
 #' @export
 #'
-format_clip_wave <- function(segment_df,in_base_directory,
-                     out_base_directory,
-                     length_clip_col, sub_dir_out_col, filepath_in_col,
-                     out_filename_col,
-                     filewarn=T, use_job=F, ...){
-  list2env(list(...), envir = environment())
-  if(!exists("diff_limit")) diff_limit <- 30
-  if(length(sub_dir_out_col)>1){
-    output_subfolders <- segment_df[,sub_dir_out_col] |>
-      dplyr::rowwise() |>
-      dplyr::mutate(output = glue::glue_collapse(c_across(cols = dplyr::everything()), sep = "/")) |>
-      dplyr::ungroup() |>
-      dplyr::pull(output)
-  } else{output_subfolders <- segment_df[[sub_dir_out_col]]}
-  if(any(!grepl(".wav$", segment_df[[filepath_in_col]] )) ){
-    rlang::abort(c("Non-wav file found in files.",
-                   "x"="Only wav files are processed by format_clip_wave",
-                   "i" = "Check file names are correct.") )
-  }
-  outfiles <- glue::glue("{out_base_directory}/{output_subfolders}/{segment_df[[out_filename_col]]}.wav")
-  if(all(grepl(in_base_directory, segment_df[[filepath_in_col]]))){
+#' @examples
+#'
+#' \dontrun{
+#' w <- data.frame(path = temp_wavs(n = 4),
+#'                 subdir_out = c("test1", "test2", "test3", "test4"),
+#'                 subsubdir_out = c("a", "b", "c", "d"),
+#'                 filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
+#'                 length = c(1, 1, 1, 2),
+#'                 start_time = c(1.2, 0.5, 1, 0))
+#'
+#' clip_wave(w, dir_out = "clean",
+#'           col_subdir_out = c("subdir_out", "subsubdir_out"))
+#'
+#' unlink("clean", recursive = TRUE) # Remove this new 'clean' directory
+#' }
+#'
+#'
+#'
+clip_wave <- function(waves,
+                      dir_out,
+                      dir_in = NULL,
+                      col_path_in = "path",
+                      col_subdir_out = "subdir_out",
+                      col_filename_out = "filename_out",
+                      col_clip_length = "length",
+                      col_start_time = "start_time",
+                      overwrite = FALSE,
+                      create_dir = TRUE,
+                      diff_limit = 30,
+                      use_job = FALSE) {
 
-    ll <- purrr::map_dbl(segment_df[[filepath_in_col]], get_wav_length, return_numeric = T)
-    infiles <- segment_df[[filepath_in_col]]
-  } else{
-    ll <- purrr::map_dbl(segment_df[[filepath_in_col]], ~get_wav_length(
-      file =  glue::glue("{in_base_directory}/{.x}"),
-      return_numeric = T) )
-    infiles <- glue::glue("{in_base_directory}/{segment_df[[filepath_in_col]]}")
-  }
-  if(length(infiles)!=length(outfiles)) browser()
-  if(nrow(segment_df)==1) {
-    x <- format_clip_wave_single(in_file = infiles,
-                                 out_file= outfiles,
-                                 length_clip = segment_df[[length_clip_col]],
-                                 StartTime = segment_df[["StartTime"]],
-                                 warn=filewarn, l=ll)
-    return(x)
-  }
-
-  if(any((segment_df[[length_clip_col]]-diff_limit)>= ll) ){
-    err <- which((segment_df[[length_clip_col]]-diff_limit)>= ll)
-    rlang::abort(c(glue::glue("One of the files is {diff_limit} seconds or more shorter than requested"),
-                 "i"= "Check file lengths. You can adjust the limit with diff_limit = 30 (default) ",
-                 "x"=glue::glue("File: {segment_df[err,][[filepath_in_col]]}, Segment requests: {segment_df[[length_clip_col]][err]}s,File lengths: {ll[err]}s")
-                                ))
-
-  }
+  # Checks
+  if(missing(dir_out)) rlang::abort(paste0("Require an output directory",
+                                           "(`dir_out`)"), call = NULL)
+  check_cols(waves, cols = c(col_path_in, col_subdir_out, col_filename_out,
+                             col_clip_length, col_start_time))
 
 
-  if(all((segment_df[[length_clip_col]]-2)>= ll) ) {
-    xx <- file.copy(from = infiles,#glue::glue("{in_base_directory}/{segment_df[[out_filename_col]]}"),
-              to =  outfiles)
-    return(xx)
-  }
-  if(!isTRUE(use_job)){
+  # Prepare processing df
+  wv <- dplyr::tibble(.rows = 4)
 
-    xx <- purrr::map(1:nrow(segment_df),
-                     ~format_clip_wave_single(
-                       in_file = infiles[[.x]],
-                       out_file= outfiles[[.x]],
-                       length_clip = segment_df[[length_clip_col]][[.x]],
-                       StartTime = segment_df[["StartTime"]][[.x]],
-                       warn=filewarn, l=ll[[.x]]
-                     ) )
-    return(xx)
-  }
+  # Check and complete input paths
+  wv[["path_in"]] <- check_wave_path_in(waves[[col_path_in]], dir_in)
 
-  if(isTRUE(use_job)){
-    job::job({
-      xx <- purrr::map(1:nrow(segment_df),
-                       ~format_clip_wave_single(
-                         in_file = infiles[[.x]],
-                         out_file= outfiles[[.x]],
-                         length_clip = segment_df[[length_clip_col]][[.x]],
-                         StartTime = segment_df[["StartTime"]][[.x]],
-                         warn=filewarn, l=ll[[.x]]
-                       ) )
-      },
-      import =
-      c(infiles,
-                 outfiles,
-                 segment_df,
-                 length_clip_col,
-                 filewarn,
-                 ll),
-      packages = c("ARUtools"))
+  # Get output paths
+  wv[["path_out"]] <- check_wave_path_out(waves[col_subdir_out],
+                                          wv[["path_in"]],
+                                          dir_out,
+                                          create_dir)
+
+  # Check wave lengths
+  wv[["wave_length"]] <- check_wave_lengths(wv[["path_in"]],
+                                            clip_lengths = waves[[col_clip_length]],
+                                            start_times = waves[[col_start_time]],
+                                            diff_limit = diff_limit)
+
+  # Get the final arguments
+  wv[["clip_length"]] <- waves[[col_clip_length]]
+  wv[["start_time"]] <- waves[[col_start_time]]
+  wv[["overwrite"]] <- overwrite
+
+  if(!use_job) {
+    purrr::pmap(wv, clip_wave_single)
+  } else {
+    job::job(purrr::pmap(wv, clip_wave_single),
+             import = wv,
+             packages = "ARUtools")
   }
 
-
-
-
-
+  TRUE
 }
 
 
@@ -169,9 +186,97 @@ format_clip_wave <- function(segment_df,in_base_directory,
 #' wav <- download.file("https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav", destfile = f)
 #' get_wav_length(f)
 
-get_wav_length <- function(wave_file, return_numeric = FALSE){
-  audio <- tuneR::readWave(file, header = TRUE)
+get_wav_length <- function(wave_file, return_numeric = FALSE) {
+  audio <- tuneR::readWave(wave_file, header = TRUE)
   l <- round(audio$samples / audio$sample.rate, 2)
   if(!return_numeric) l <- glue::glue("{l} seconds")
   l
+}
+
+
+check_wave_path_in <- function(path_in, dir_in) {
+  abs_path_in <- fs::is_absolute_path(path_in)
+  if(length(unique(abs_path_in)) != 1) {
+    rlang::abort(paste0("All wave file paths must be either absolute or ",
+                        "relative (not a mix of the two)"), call = NULL)
+  } else if (all(abs_path_in) && !is.null(dir_in)) {
+    rlang::warn("All wave file paths are absolute, ignoring `dir_in`.", call = NULL)
+  } else if (all(!abs_path_in)) {
+    if(is.null(dir_in)) {
+      path_in <- fs::path_wd(path_in)
+    } else path_in <- fs::path(dir_in, path_in)
+  }
+
+  # Check that file paths exist
+  if(any(missing <- !fs::file_exists(path_in))) {
+    rlang::abort(
+      c(paste0(
+        "Some wave files could not be found relative to ",
+        if(is.null(dir_in)) fs::path_wd() else dir_in,
+        ":\n"),
+        stats::setNames(names(missing), rep("*", length(missing)))),
+      call = NULL
+    )
+  }
+
+  # Check file types
+  if(any(!fs::path_ext(path_in) %in% c("wav", "wave"))) {
+    r <- path_in[!fs::path_ext(path_in) %in% c("wav", "wave")]
+    if(length(r) > 5) r <- c(r[1:5], "...")
+    r <- paste0(r, collapse = "\n") |>
+      stats::setNames("*")
+
+    rlang::abort(c("Non-wav file found in files.",
+                   "x" = "Only wav files are processed by `clip_wave()`",
+                   "i" = "Check file names are correct",
+                   r), call = NULL)
+  }
+  path_in
+}
+
+check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir) {
+
+  dir_out <- fs::path(dir_out, purrr::pmap_chr(subdirs, fs::path))
+  path_out <- fs::path(dir_out, fs::path_file(path_in))
+
+  # Create dirs if they do not exist
+  if(create_dir) {
+    fs::dir_create(dir_out)
+  } else if(!all(fs::dir_exists(dir_out))) {
+    err <- dir_out[!fs::dir_exists(dir_out)]
+    rlang::abort(
+      c("Not all output directories exist",
+        "!" = "Either create them before hand or set `create_dir = TRUE`",
+        stats::setNames(err, rep("x", length(err)))),
+      call = NULL)
+  }
+  path_out
+}
+
+check_wave_lengths <- function(path_in, clip_lengths, start_times, diff_limit) {
+
+  wave_lengths <- purrr::map_dbl(path_in, get_wav_length, return_numeric = T)
+  clip_lengths <- clip_lengths + start_times
+
+  # Check that starts before end of wave file
+  if(any(start_times > wave_lengths)) {
+    err <- path_in[start_times >= wave_lengths]
+    rlang::abort(
+      c("Some wave files have a clip start time greater than the length of the wave",
+        stats::setNames(err, rep("x", length(err)))),
+      call = NULL)
+  }
+
+  # Check that requested clip length less than wave file length +/- wiggle room
+  # (accounting for start time)
+  if(any((clip_lengths - diff_limit) >= wave_lengths)){
+    err <- path_in[(clip_lengths - diff_limit) >= wave_lengths]
+    rlang::abort(
+      c(glue::glue("Some wave files are >={diff_limit}s shorter than the requested clip length given the `start_time`."),
+      "i"= "Check file lengths. You can adjust the discrepency limit with `diff_limit` (default 30s)",
+      stats::setNames(err, rep("x", length(err)))
+    ), call = NULL)
+  }
+
+  wave_lengths
 }
