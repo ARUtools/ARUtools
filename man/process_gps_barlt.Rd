@@ -25,6 +25,6 @@ Returns a data frame with lat/lon for each location and date collected
 }
 \description{
 Extracts out lat/lon locations from gps log files
-  will drop locations before a given date, but does
-  not drop duplicate locations
+will drop locations before a given date, but does
+not drop duplicate locations
 }

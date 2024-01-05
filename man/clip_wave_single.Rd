@@ -23,18 +23,18 @@ clip_wave_single(
 \item{start_time}{Numeric. Time in seconds where new clip should start.
 Default 0 (start).}
 
-\item{wave_length}{Numeric. Length of the wave file in seconds (if `NULL`,
+\item{wave_length}{Numeric. Length of the wave file in seconds (if \code{NULL},
 default, will be calculated).}
 
 \item{overwrite}{Logical. Whether to overwrite existing files when creating
-new clipped wave files. Default (`FALSE`) will error if the file already
+new clipped wave files. Default (\code{FALSE}) will error if the file already
 exists.}
 }
 \value{
 TRUE if successful
 }
 \description{
-Clip and copy a single wave files to a given length. See `clip_wave()` for
+Clip and copy a single wave files to a given length. See \code{clip_wave()} for
 processing multiple files.
 }
 \examples{

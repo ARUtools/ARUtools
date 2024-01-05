@@ -5,19 +5,21 @@
 \alias{example_clean}
 \title{Example cleaned recording meta data}
 \format{
-## `example_clean`
+\subsection{\code{example_clean}}{
+
 A data frame with 42 rows and 10 columns:
 \describe{
-  \item{file_name}{Name of the file}
-  \item{type}{File type}
-  \item{path}{Relative file path including file name}
-  \item{aru_type}{ARU model}
-  \item{aru_id}{ARU ids}
-  \item{site_id}{Site ids}
-  \item{date_time}{Recording date/time}
-  \item{date}{Recording date}
-  \item{longitude}{Latitude in decimal degrees}
-  \item{latitude}{Longitude in decimal degrees}
+\item{file_name}{Name of the file}
+\item{type}{File type}
+\item{path}{Relative file path including file name}
+\item{aru_type}{ARU model}
+\item{aru_id}{ARU ids}
+\item{site_id}{Site ids}
+\item{date_time}{Recording date/time}
+\item{date}{Recording date}
+\item{longitude}{Latitude in decimal degrees}
+\item{latitude}{Longitude in decimal degrees}
+}
 }
 }
 \source{

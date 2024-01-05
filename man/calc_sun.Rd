@@ -8,15 +8,15 @@ calc_sun(meta_sites, aru_tz = "local")
 }
 \arguments{
 \item{meta_sites}{(Spatial) Data frame. Recording metadata with added
-coordinates. Output of `clean_metadata()` and then `add_sites()` (with
-either `clean_gps()` or `clean_site_index()`).}
+coordinates. Output of \code{clean_metadata()} and then \code{add_sites()} (with
+either \code{clean_gps()} or \code{clean_site_index()}).}
 
 \item{aru_tz}{Character. Must be either "local" or a timezone listed in
-`OlsonNames()`. See Details.}
+\code{OlsonNames()}. See Details.}
 }
 \value{
-Data frame with metadata and added timezone of recording time (`tz`),
- and time to sunrise/sunset (`t2sr`, `t2ss`).
+Data frame with metadata and added timezone of recording time (\code{tz}),
+and time to sunrise/sunset (\code{t2sr}, \code{t2ss}).
 }
 \description{
 Calculate the sunrise/sunset of each sound file for the day of, the day before
@@ -24,13 +24,13 @@ and the day after to get the nearest sunrise to the recording.
 }
 \details{
 Timezones. To ensure that the sunrise/sunset times are calculated
-  correctly relative to the time of the recording, we need to know the
-  timezone of the date/time of the recording. If ARUs were calibrated with a
-  specific timezone before going into the field, that can be specified by
-  using, for example, `aru_tz = "America/Toronto"`. If on the other hand each
-  ARU was calibrated to whichever timezone was local when it was deployed use
-  `aru_tz = "local"`. The specific timezone will be calculated individually
-  based on the longitude and latitude of each recording.
+correctly relative to the time of the recording, we need to know the
+timezone of the date/time of the recording. If ARUs were calibrated with a
+specific timezone before going into the field, that can be specified by
+using, for example, \code{aru_tz = "America/Toronto"}. If on the other hand each
+ARU was calibrated to whichever timezone was local when it was deployed use
+\code{aru_tz = "local"}. The specific timezone will be calculated individually
+based on the longitude and latitude of each recording.
 }
 \examples{
 m <- clean_metadata(project_files = example_files)

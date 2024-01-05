@@ -19,23 +19,23 @@ clean_site_index(
 \item{site_index}{Data frame (can be spatial) or file path. Site index data
 to clean. If file path, must be to a local csv or xlsx file.}
 
-\item{col_aru_id}{Character. Column name that contains ARU ids. Default `aru_id`.}
+\item{col_aru_id}{Character. Column name that contains ARU ids. Default \code{aru_id}.}
 
 \item{col_site_id}{Character. Column name that contains site ids.}
 
 \item{col_date_time}{Character. Column name that contains dates or
 date/times. Can be vector of two names if there are both 'start' and 'end'
-columns. Can be `NULL` to ignore dates.}
+columns. Can be \code{NULL} to ignore dates.}
 
 \item{col_coords}{Character. Column names that contain longitude and
-latitude (in that order). Ignored if `site_index` is spatial.}
+latitude (in that order). Ignored if \code{site_index} is spatial.}
 
 \item{col_extra}{Character. Column names for extra data to include. If a named
 vector, will rename the columns (see examples).}
 
 \item{resolve_overlaps}{Logical. Whether or not to resolve date overlaps by
-shifting the start/end dates to noon (default `TRUE`). This assumes that
-ARUs are generally *not* deployed/removed at midnight (the official
+shifting the start/end dates to noon (default \code{TRUE}). This assumes that
+ARUs are generally \emph{not} deployed/removed at midnight (the official
 start/end of a day) and so noon is used as an approximation for when an ARU
 was deployed or removed. If possible, use specific deployment times to
 avoid this issue.}
@@ -49,7 +49,7 @@ Standardized site index data frame
 \description{
 A site index file contains information on when specific ARUs were deployed
 where. This function cleans a file (csv, xlsx) or data frame in preparation
-for adding these details to the output of `clean_metadata()`. It can be used
+for adding these details to the output of \code{clean_metadata()}. It can be used
 to specify missing information according to date, such as GPS lon/lats and
 site ids.
 }

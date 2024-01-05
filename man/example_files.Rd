@@ -5,8 +5,10 @@
 \alias{example_files}
 \title{Example recording files}
 \format{
-## `example_files`
+\subsection{\code{example_files}}{
+
 A vector with 42 file paths
+}
 }
 \source{
 data-raw/data_test.R

@@ -25,32 +25,32 @@ paths will be used to extract information and must actually exist.}
 
 \item{project_files}{Character. Vector of project file paths. These paths can
 be absolute or relative to the working directory, and don't actually need
-to point to existing files unless you plan to use `clean_gps()` or other
-sampling steps down the line. Must be provided if `project_dir` is `NULL`.}
+to point to existing files unless you plan to use \code{clean_gps()} or other
+sampling steps down the line. Must be provided if \code{project_dir} is \code{NULL}.}
 
 \item{file_type}{Character. Type of file (extension) to summarize. Default
 wav.}
 
 \item{subset}{Character. Text pattern to mark a subset of files/directories
-to either `keep` or `omit` (see `subset_type`)}
+to either \code{keep} or \code{omit} (see \code{subset_type})}
 
-\item{subset_type}{Character. Either `keep` (default) or `omit`
-files/directories which match the pattern in `subset`.}
+\item{subset_type}{Character. Either \code{keep} (default) or \code{omit}
+files/directories which match the pattern in \code{subset}.}
 
 \item{pattern_site_id}{Character. Regular expression to extract site ids. See
-`create_pattern_site_id()`. Can be a vector of multiple patterns to match.}
+\code{create_pattern_site_id()}. Can be a vector of multiple patterns to match.}
 
 \item{pattern_aru_id}{Character. Regular expression to extract ARU ids. See
-`create_pattern_aru_id()`. Can be a vector of multiple patterns to match.}
+\code{create_pattern_aru_id()}. Can be a vector of multiple patterns to match.}
 
 \item{pattern_date}{Character. Regular expression to extract dates. See
-`create_pattern_date()`. Can be a vector of multiple patterns to match.}
+\code{create_pattern_date()}. Can be a vector of multiple patterns to match.}
 
 \item{pattern_time}{Character. Regular expression to extract times. See
-`create_pattern_time()`. Can be a vector of multiple patterns to match.}
+\code{create_pattern_time()}. Can be a vector of multiple patterns to match.}
 
 \item{pattern_dt_sep}{Character. Regular expression to mark separators
-between dates and times. See `create_pattern_dt_sep()`.}
+between dates and times. See \code{create_pattern_dt_sep()}.}
 
 \item{order_date}{Character. Order that the date appears in. "ymd"
 (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.}
@@ -72,8 +72,8 @@ this combination, dates might be extracted but date/times will not. This
 mismatch can be used to determine which part of a pattern needs to be
 tweaked.
 
-See `vignette("customizing", package = "ARUtools")` for details on
-customizing `clean_metadata()` for your project.
+See \code{vignette("customizing", package = "ARUtools")} for details on
+customizing \code{clean_metadata()} for your project.
 }
 \examples{
 clean_metadata(project_files = example_files)

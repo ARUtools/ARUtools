@@ -5,17 +5,19 @@
 \alias{example_sites_clean}
 \title{Example cleaned site-level meta data}
 \format{
-## `example_sites_clean`
+\subsection{\code{example_sites_clean}}{
+
 A data frame with 10 rows and 8 columns:
 \describe{
-  \item{site_id}{Site ids}
-  \item{aru_id}{ARU ids}
-  \item{date_time_start}{Deployment start date/time}
-  \item{date_time_end}{Deployment end date/time}
-  \item{date_start}{Deployment start date}
-  \item{date_end}{Deployment end date}
-  \item{longitude}{Latitude in decimal degrees}
-  \item{latitude}{Longitude in decimal degrees}
+\item{site_id}{Site ids}
+\item{aru_id}{ARU ids}
+\item{date_time_start}{Deployment start date/time}
+\item{date_time_end}{Deployment end date/time}
+\item{date_start}{Deployment start date}
+\item{date_end}{Deployment end date}
+\item{longitude}{Latitude in decimal degrees}
+\item{latitude}{Longitude in decimal degrees}
+}
 }
 }
 \source{

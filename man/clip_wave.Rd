@@ -22,35 +22,35 @@ clip_wave(
 \arguments{
 \item{waves}{Data frame. Details of file locations.}
 
-\item{dir_out}{Character. Directory to output files to.}
+\item{dir_out}{Character. Output directory.}
 
 \item{dir_in}{Character. Directory wave files are read from. Default is
-`NULL` meaning the current working directory.}
+\code{NULL} meaning the current working directory.}
 
-\item{col_path_in}{Character. Column name that contains the current file paths. Default `path`.
-**Note: file paths must be either relative to `dir_in` or absolute**.}
+\item{col_path_in}{Character. Column name that contains the current file paths. Default \code{path}.
+\strong{Note: file paths must be either relative to \code{dir_in} or absolute}.}
 
 \item{col_subdir_out}{Character. Column name(s) that contain the
-subdirectory(ies) in which to put output files. Default `subdir_out`.}
+subdirectory(ies) in which to put output files. Default \code{subdir_out}.}
 
 \item{col_filename_out}{Character. Column name that contains the output
-filenames. Default `filename_out`.}
+filenames. Default \code{filename_out}.}
 
 \item{col_clip_length}{Character. Column name that contains the length of the
-new clip. Default `length`.}
+new clip. Default \code{length}.}
 
 \item{col_start_time}{Character. Column name that contains the start time of
-the new clip. Default `start_time`}
+the new clip. Default \code{start_time}}
 
-\item{overwrite}{Logical. Overwrite pre-existing files when clipping and moving. (Default `FALSE`)}
+\item{overwrite}{Logical. Overwrite pre-existing files when clipping and moving. (Default \code{FALSE})}
 
 \item{create_dir}{Logical. Whether to create directory structure for newly
 formatted and clipped wave files.}
 
 \item{diff_limit}{Numeric. How much longer in seconds clip lengths can be
-compared to file lengths before triggering an error. Default `30`.}
+compared to file lengths before triggering an error. Default \code{30}.}
 
-\item{use_job}{Logical. Use the {job} package to copy files (Default `FALSE`)}
+\item{use_job}{Logical. Use the {job} package to copy files (Default \code{FALSE})}
 }
 \value{
 TRUE if successful

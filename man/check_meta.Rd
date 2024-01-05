@@ -2,15 +2,15 @@
 % Please edit documentation in R/helper.R
 \name{check_meta}
 \alias{check_meta}
-\title{Check output of `clean_metadata()`}
+\title{Check output of \code{clean_metadata()}}
 \usage{
 check_meta(meta, date = FALSE)
 }
 \arguments{
-\item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
+\item{meta}{Data frame. Recording metadata. Output of \code{clean_metadata()}.}
 
 \item{date}{Logical. Whether to summarize output by date (as well as
-`site_id` and `aru_id`. Default `FALSE`.}
+\code{site_id} and \code{aru_id}. Default \code{FALSE}.}
 }
 \value{
 A data frame summarizing the metadata by site_id, aru_type, aru_id,

@@ -11,12 +11,12 @@ check_file(file_name, n_max = 10, ...)
 
 \item{n_max}{Numeric. Number of lines in the file to show. Default 10.}
 
-\item{...}{Arguments passed on to `readr::read_lines()`}
+\item{...}{Arguments passed on to \code{readr::read_lines()}}
 }
 \description{
 Shows the first few lines in a text file. Useful for trying to understand
 problems in GPS files.
 }
 \details{
-Wrapper around `readr::read_lines(n_max)`.
+Wrapper around \code{readr::read_lines(n_max)}.
 }

@@ -3,20 +3,22 @@
 \docType{data}
 \name{default_selection_parameters}
 \alias{default_selection_parameters}
-\title{Default parameters for use in `gen_dens_sel_simulation` and `calc_sel_pr`}
+\title{Default parameters for use in \code{gen_dens_sel_simulation} and \code{calc_sel_pr}}
 \format{
-## `default_selection_parameters`
+\subsection{\code{default_selection_parameters}}{
+
 A list with 9 objects:
 \describe{
-  \item{min_range}{Range of minutes relative to sun event}
-  \item{doy_range}{Range of day of year}
-  \item{mean_min}{Average minutes to sun event in selection}
-  \item{sd_min}{Standard deviation in distribution for selection distrution minutes to sun event}
-  \item{mean_doy}{Average day of year for selection}
-  \item{sd_doy}{Standard deviation of day of year for selection}
-  \item{off}{Offset to shift for time of day.}
-  \item{log_}{Log the density in the selection function?}
-  \item{fun}{Selection function. Options are 'lognorm','norm', or 'cauchy'.}
+\item{min_range}{Range of minutes relative to sun event}
+\item{doy_range}{Range of day of year}
+\item{mean_min}{Average minutes to sun event in selection}
+\item{sd_min}{Standard deviation in distribution for selection distrution minutes to sun event}
+\item{mean_doy}{Average day of year for selection}
+\item{sd_doy}{Standard deviation of day of year for selection}
+\item{off}{Offset to shift for time of day.}
+\item{log_}{Log the density in the selection function?}
+\item{fun}{Selection function. Options are 'lognorm','norm', or 'cauchy'.}
+}
 }
 }
 \source{

@@ -23,7 +23,7 @@ calc_sel_pr(
 \item{day_col}{Day column. Should not be quoted.}
 
 \item{parms}{list of parameters. See defaults for examples.
- Should include min_range, doy_range, mean_min, sd_min,
+Should include min_range, doy_range, mean_min, sd_min,
 mean_doy, sd_doy, off, log_, fun.}
 }
 \value{

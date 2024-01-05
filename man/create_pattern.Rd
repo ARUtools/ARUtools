@@ -54,36 +54,36 @@ Allows matching on different date/time patterns.}
 model specific).}
 
 \item{n_digits}{Numeric vector. Number of digits expected to follow the
-`arus` pattern. Can be one or two (a range).}
+\code{arus} pattern. Can be one or two (a range).}
 
 \item{prefix}{Character vector. Prefix(es) for site ids.}
 
 \item{suffix}{Character vector. Suffix(es) for site ids.}
 
-\item{p_digits}{Numeric vector. Number(s) of digits following the `prefix`.}
+\item{p_digits}{Numeric vector. Number(s) of digits following the \code{prefix}.}
 
-\item{s_digits}{Numeric vector. Number(s) of digits following the `suffix`.}
+\item{s_digits}{Numeric vector. Number(s) of digits following the \code{suffix}.}
 
 \item{test}{Character vector. Examples of text to test.}
 
 \item{pattern}{Character. Regular expression pattern to test.}
 }
 \value{
-Either a pattern (`create_pattern_xxx()`) or the text extracted by a
-  pattern (`test_pattern()`)
+Either a pattern (\code{create_pattern_xxx()}) or the text extracted by a
+pattern (\code{test_pattern()})
 }
 \description{
 Helper functions to create regular expression patterns to match different
 metadata in file paths.
 }
 \details{
-By default `create_pattern_aru_id()` matches many common ARU patterns like
-`BARLT0000`, `S4A0000`, `SM40000`, `SMM0000`, `SMA0000`.
+By default \code{create_pattern_aru_id()} matches many common ARU patterns like
+\code{BARLT0000}, \code{S4A0000}, \code{SM40000}, \code{SMM0000}, \code{SMA0000}.
 
-`test_pattern()` is a helper function to see what a regular expression
+\code{test_pattern()} is a helper function to see what a regular expression
 pattern will pick out of some example text. Can be used to see if your
 pattern grabs what you want. This is just a simple wrapper around
-`stringr::str_extract()`.
+\code{stringr::str_extract()}.
 }
 \section{Functions}{
 \itemize{

@@ -7,11 +7,11 @@
 add_wildtrax(meta)
 }
 \arguments{
-\item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
+\item{meta}{Data frame. Recording metadata. Output of \code{clean_metadata()}.}
 }
 \value{
 Data frame of metadata with appended column of wildtrax appropriate
-  file names.
+file names.
 }
 \description{
 Create and append file name appropriate for uploading data to the Wildtrax
