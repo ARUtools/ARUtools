@@ -42,15 +42,75 @@ test_that("clip_wave()", {
 
   # Create dummy wave files for testing
   w <- data.frame(path = temp_wavs(),
-                  subdir_out = c("test1", "test2", "test1", "test2", "test1", "test2"),
-                  subsubdir_out = c("a", "a", "b", "b", "c", "d"),
+                  treat = c("test1", "test2", "test1", "test2", "test1", "test2"),
+                  site = c("a", "a", "b", "b", "c", "c"),
                   filename_out = paste0("wave", 1:6, ".wav"),
-                  length = c(1, 1, 2, 1.5, 0.5, 0.75),
-                  start_time = c(1.2, 0.5, 1, 0, 0.5,  0.3))
+                  clip_length = c(1,     1, 2, 1.5, 0.5, 0.75),
+                  start_time =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
 
-  clip_wave(w, dir_out = "clean", col_subdir_out = c("subdir_out", "subsubdir_out"))
+  # Require correct inputs
+  expect_error(clip_wave(w), "Require an output directory")
+  expect_error(clip_wave(w, dir_out = test_path("clean")),
+               "Column 'subdir_out' does not exist")
 
-    # Clean up
+  expect_silent(clip_wave(w, dir_out = test_path("clean"),
+                          col_subdir_out = c("treat", "site")))
+  expect_true(fs::file_exists(test_path("clean/test1/a/file1.wav")))
+
+  # Check clip lengths
+  expect_equal(get_wav_length(test_path("clean/test1/a/file1.wav"), TRUE), w$clip_length[1])
+  expect_equal(get_wav_length(test_path("clean/test2/a/file2.wav"), TRUE), w$clip_length[2])
+
+  # Max clip length possible, but less than 30s so no error
+  expect_equal(get_wav_length(test_path("clean/test1/b/file3.wav"), TRUE), get_wav_length(w$path[3], TRUE) - 1)
+  expect_equal(get_wav_length(test_path("clean/test2/b/file4.wav"), TRUE), w$clip_length[4])
+  expect_equal(get_wav_length(test_path("clean/test1/c/file5.wav"), TRUE), w$clip_length[5])
+  expect_equal(get_wav_length(test_path("clean/test2/c/file6.wav"), TRUE), w$clip_length[6])
+
+  # Clean up
   unlink(temp_wavs())
-  unlink("clean", recursive = TRUE) # Remove this new 'clean' directory
+  unlink(test_path("clean"), recursive = TRUE) # Remove this new 'clean' directory
+})
+
+test_that("clip_wave() column names", {
+  # Create dummy wave files for testing
+  w <- data.frame(wave_path = temp_wavs(),
+                  subdir_out = c("test1", "test2", "test1", "test2", "test1", "test2"),
+                  subsubdir_out = c("a", "a", "b", "b", "c", "c"),
+                  new_file = paste0("wave", 1:6, ".wav"),
+                  sample = c(1,     1, 2, 1.5, 0.5, 0.75),
+                  start =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
+
+  expect_silent(clip_wave(w, dir_out = test_path("clean"),
+                          col_path_in = "wave_path",
+                          col_clip_length = "sample",
+                          col_start_time = "start",
+                          col_filename_out = "new_file",
+                          col_subdir_out = c("subdir_out", "subsubdir_out")))
+  expect_true(fs::file_exists(test_path("clean/test1/a/file1.wav")))
+
+
+  # Clean up
+  unlink(temp_wavs())
+  unlink(test_path("clean"), recursive = TRUE) # Remove this new 'clean' directory
+})
+
+test_that("clip_wave() diff_limit", {
+  # Create dummy wave files for testing
+  w <- data.frame(path = temp_wavs(),
+                  subdir_out = c("test1", "test2", "test1", "test2", "test1", "test2"),
+                  filename_out = paste0("wave", 1:6, ".wav"),
+                  clip_length = c(1,     1, 2, 1.5, 0.5, 0.75),
+                  start_time =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
+
+  expect_error(clip_wave(w, dir_out = test_path("clean"), diff_limit = 0.5),
+               "Some wave files are >=0.5s shorter than the requested clip")
+  expect_false(fs::file_exists(test_path("clean/test1/file1.wav")))
+
+  #clip_wave(w, dir_out = test_path("clean"), use_job = TRUE)
+  #job::job({clip_wave(w, dir_out = test_path("clean"))})
+
+  # Clean up
+  unlink(temp_wavs())
+  unlink(test_path("clean"), recursive = TRUE) # Remove this new 'clean' directory
 })

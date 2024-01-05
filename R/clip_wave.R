@@ -106,7 +106,7 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #'                 subdir_out = c("test1", "test2", "test3", "test4"),
 #'                 subsubdir_out = c("a", "b", "c", "d"),
 #'                 filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
-#'                 length = c(1, 1, 1, 2),
+#'                 clip_length = c(1, 1, 1, 2),
 #'                 start_time = c(1.2, 0.5, 1, 0))
 #'
 #' clip_wave(w, dir_out = "clean",
@@ -123,7 +123,7 @@ clip_wave <- function(waves,
                       col_path_in = "path",
                       col_subdir_out = "subdir_out",
                       col_filename_out = "filename_out",
-                      col_clip_length = "length",
+                      col_clip_length = "clip_length",
                       col_start_time = "start_time",
                       overwrite = FALSE,
                       create_dir = TRUE,
@@ -131,14 +131,14 @@ clip_wave <- function(waves,
                       use_job = FALSE) {
 
   # Checks
-  if(missing(dir_out)) rlang::abort(paste0("Require an output directory",
+  if(missing(dir_out)) rlang::abort(paste0("Require an output directory ",
                                            "(`dir_out`)"), call = NULL)
   check_cols(waves, cols = c(col_path_in, col_subdir_out, col_filename_out,
-                             col_clip_length, col_start_time))
-
+                             col_clip_length, col_start_time),
+             name = "waves")
 
   # Prepare processing df
-  wv <- dplyr::tibble(.rows = 4)
+  wv <- dplyr::tibble(.rows = nrow(waves))
 
   # Check and complete input paths
   wv[["path_in"]] <- check_wave_path_in(waves[[col_path_in]], dir_in)
@@ -163,8 +163,8 @@ clip_wave <- function(waves,
   if(!use_job) {
     purrr::pmap(wv, clip_wave_single)
   } else {
-    job::job(purrr::pmap(wv, clip_wave_single),
-             import = wv,
+    job::job({purrr::pmap(wv, clip_wave_single)},
+             import = c(wv),
              packages = "ARUtools")
   }
 
@@ -195,6 +195,7 @@ get_wav_length <- function(wave_file, return_numeric = FALSE) {
 
 
 check_wave_path_in <- function(path_in, dir_in) {
+
   abs_path_in <- fs::is_absolute_path(path_in)
   if(length(unique(abs_path_in)) != 1) {
     rlang::abort(paste0("All wave file paths must be either absolute or ",
@@ -211,10 +212,8 @@ check_wave_path_in <- function(path_in, dir_in) {
   if(any(missing <- !fs::file_exists(path_in))) {
     rlang::abort(
       c(paste0(
-        "Some wave files could not be found relative to ",
-        if(is.null(dir_in)) fs::path_wd() else dir_in,
-        ":\n"),
-        stats::setNames(names(missing), rep("*", length(missing)))),
+        "Some wave files could not be found:\n"),
+        stats::setNames(names(missing[missing]), rep("*", sum(missing)))),
       call = NULL
     )
   }
