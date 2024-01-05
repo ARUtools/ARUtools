@@ -114,3 +114,30 @@ test_that("clip_wave() diff_limit", {
   unlink(temp_wavs())
   unlink(test_path("clean"), recursive = TRUE) # Remove this new 'clean' directory
 })
+
+
+test_that("sox_spectro()", {
+
+  expect_error(sox_spectro("test_wave.wav"), "Cannot find wave file")
+
+  # Prep sample file
+  w <- tuneR::sine(440, duration = 300000)
+  t <- test_path("test_wave.wav")
+  d <- test_path("Spectrograms")
+  tuneR::writeWave(w, t)
+
+  # Create spectrograms
+  expect_message(sox_spectro(t, dir_out = d), "Writing spectrogram")
+  expect_true(fs::file_exists(fs::path(d, "spectro_test_wave.png")))
+  expect_silent(sox_spectro(t, dir_out = d, rate = NULL, quiet = TRUE))
+  expect_message(sox_spectro(t, dir_out = d, start = 2, end = 3))
+  expect_message(sox_spectro(t, dir_out = d, start = "0:01", end = "0:04"))
+  expect_message(sox_spectro(t, dir_out = d, prepend = ""))
+  expect_true(fs::file_exists(fs::path(d, "test_wave.png")))
+  expect_message(sox_spectro(t, dry_run = TRUE), "-n  rate 20k spectrogram -o")
+
+  # Clean up
+  unlink(test_path("test_wave.wav"))
+  unlink(test_path("Spectrograms"), recursive = TRUE)
+})
+

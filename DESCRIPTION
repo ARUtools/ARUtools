@@ -30,7 +30,8 @@ Imports:
     suncalc,
     fs (>= 1.6.1),
     hms (>= 1.1.2),
-    readxl (>= 1.4.2)
+    readxl (>= 1.4.2),
+    seewave (>= 2.2.3)
 Suggests: 
     testthat (>= 3.0.0),
     soundecology,
