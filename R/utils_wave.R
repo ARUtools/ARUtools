@@ -280,3 +280,178 @@ check_wave_lengths <- function(path_in, clip_lengths, start_times, diff_limit) {
 
   wave_lengths
 }
+
+#' Create spectrogram image from wave file
+#'
+#' Using the external program `SoX` (the Swiss Army knife of sound processing
+#' programs), create a spectrogram image file. Note that you must have `SoX`
+#' installed to use this function. Spectrograms will be silently overwritten.
+#'
+#' Most arguments are passed through to the `sox` command.
+#' - width and height correspond to the `-x` and `-y` options for the
+#'   `spectrogram` effect.
+#' - `start` and `end` are used by the `trim` effect
+#' - `rate` is passed on to the `rate` effect
+#'
+#' Based on code from Sam Hache.
+#'
+#' @param prepend Character. Text to add to the start of the output file.
+#'   Defaults to "spectro_".
+#' @param width Numeric. Width of the spectrogram image in pixels.
+#' @param height Numeric. Height of the spectrogram image in pixels.
+#' @param start Numeric/Character. Start the spectrogram at this time (seconds
+#'   or HH:MM:SS format).
+#' @param end Numeric/Character. End time the spectrogram at this time (seconds
+#'   or HH:MM:SS format).
+#' @param rate Numeric. Audio sampling rate to display (used by the `rate`
+#'   effect in `sox`). This effectively limits the upper frequency of the
+#'   spectrogram to rate/2. The default ("20k"), limits the spectrogram to
+#'   10kHz. Use `rate = NULL` for no limiting.
+#' @param dry_run Logical. If `TRUE` show the sox command, but do not run (for
+#'   debugging and understanding precise details).
+#'
+#' @return Does not return anything, but creates a spectrogram image in
+#'   `dir_out`.
+#' @export
+#'
+#' @examples
+#' # Prep sample file
+#' w <- tuneR::sine(440, duration = 300000)
+#' tuneR::writeWave(w, "test_wave.wav")
+#'
+#' # Create spectrograms
+#' sox_spectro("test_wave.wav")
+#' sox_spectro("test_wave.wav", rate = NULL)
+#' sox_spectro("test_wave.wav", start = 2, end = 3)
+#' sox_spectro("test_wave.wav", start = "0:01", end = "0:04")
+#' sox_spectro("test_wave.wav", prepend = "")
+#'
+#' # Clean up
+#' unlink("test_wave.wav")
+#' unlink("Spectrograms", recursive = TRUE)
+
+sox_spectro <- function(path, dir_out = "Spectrograms",
+                        prepend = "spectro_",
+                        width = NULL, height = NULL,
+                        start = NULL, end = NULL,
+                        rate = "20k", dry_run = FALSE,
+                        quiet = FALSE) {
+
+  if(!fs::file_exists(path)) {
+    rlang::abort(paste0("Cannot find wave file ", path), call = NULL)
+  }
+
+  # Create output path
+  path_out <- path |>
+    fs::path_file() |>
+    fs::path_ext_set("png")
+  path_out <- fs::path(dir_out, glue::glue("{prepend}{path_out}"))
+  fs::dir_create(fs::path_dir(path_out))
+
+  # Trim if required
+  if(!is.null(start) || !is.null(end)) {
+    if(is.null(start)) start <- 0
+    if(is.null(end)) end <- get_wav_length(path, TRUE)
+    trim <- glue::glue("trim {start} ={end}")
+  } else trim <- ""
+
+  # Get rate if required
+  if(!is.null(rate)) rate <- glue::glue("rate {rate}") else rate <- ""
+
+  # Create sox command
+  cmd <- glue::glue("{path} -n {trim} {rate} spectrogram -o {path_out}")
+  if(!is.null(width)) cmd <- glue::glue("{cmd} -x {width}")
+  if(!is.null(height)) cmd <- glue::glue("{cmd} -y {height}")
+
+  if(dry_run) {
+    rlang::inform(cmd)
+  } else {
+    if(!quiet) rlang::inform(glue::glue("Writing spectrogram to {path_out}"))
+    seewave::sox(cmd)
+  }
+}
+
+
+#' Get acoustic complexity values
+#'
+#' Wrapper for soundecology package to calculate
+#'
+#' @param min_freq Numeric. Minimum frequency for acoustic complexity (see
+#'   [soundecology::acoustic_complexity()])
+#' @param max_freq Numeric. Maximum frequency for acoustic complexity (see
+#'   [soundecology::acoustic_complexity()])
+#' @param units Character. Wave file units for reading the file. Defaults to
+#'   "samples" (see [tuneR:readWave()]).
+#'
+#' @inheritParams common_docs
+#'
+#' @return
+#' Returns a data frame with acoustic indices. Those prefaced with
+#'
+#' - `complx_` are from [soundecology::acoustic_complexity()]
+#' - `bio_` are from [soundecology::bioacoustic_index()]
+#' - `div_` are from [soundecology::acoustic_diversity()]
+#'
+#' @export
+#'
+#' @examples
+#' w <- tuneR::sine(440, duration = 300000) # > 5s
+#' tuneR::writeWave(w, "test_wave.wav")
+#' acoustic_indices("test_wave.wav")
+#' acoustic_indices("test_wave.wav", quiet = TRUE)
+#' unlink("test_wave.wav")
+
+acoustic_indices <- function(path, min_freq = NA, max_freq = NA, units = "samples",
+                             quiet = FALSE) {
+  if(!requireNamespace("soundecology", quietly = TRUE) ||
+     !requireNamespace("tuneR", quietly = TRUE)) {
+    rlang::abort(
+      c("Packages \"soundecology\" and \"tuneR\" must be installed to use `acoustic_indices()`",
+        "Install with `install.packages(c(\"soundecology\", \"tuneR\"))`"),
+      call = NULL
+    )
+  }
+
+  file_name <- fs::path_file(path)
+  if(!quiet) message(glue::glue("Calculating acoustic indices for {file_name}\n"))
+
+  wave <- tuneR::readWave(path, units = units)
+
+  complexity <- try(
+    soundecology::acoustic_complexity(wave, min_freq = min_freq, max_freq = max_freq),
+    silent = TRUE) |>
+    suppressCat(quiet)
+
+  if(inherits(complexity, "try-error")) {
+    if(get_wav_length(path, TRUE) < 5) {
+      rlang::abort(
+        c("Error in `acoustic_complexity()` from the soundecology package",
+          "i" = "Consider using a wave file >=5s long."),
+        call = NULL)
+    } else {
+      rlang::abort(
+        c("Error in `acoustic_complexity()` from the soundecology package:",
+          complexity),
+        call = NULL
+      )
+    }
+  }
+
+  complexity <- dplyr::as_tibble(complexity[1:4]) |>
+    dplyr::rename_with(\(x) paste0("complx_", x))
+  bioindex <- soundecology::bioacoustic_index(wave) |>
+    suppressCat(quiet) |>
+    dplyr::as_tibble() |>
+    dplyr::rename_with(\(x) paste0("bio_", x))
+  diversity <- soundecology::acoustic_diversity(wave) |>
+    suppressCat(quiet) |>
+    dplyr::as_tibble() |>
+    dplyr::rename_with(\(x) paste0("div_", x))
+
+  tibble::tibble(file = file_name) |>
+    dplyr::bind_cols(complexity) |>
+    dplyr::bind_cols(bioindex) |>
+    dplyr::bind_cols(diversity)
+}
+
+
