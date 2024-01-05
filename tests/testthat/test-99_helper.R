@@ -127,3 +127,15 @@ test_that("add_wildtrax()", {
                c("P01_1_20200502_050000",
                  "P01_1_20200503_052000"))
 })
+
+test_that("acoustic_indices()", {
+  w <- tuneR::sine(440, duration = 300000) # > 5s
+  tuneR::writeWave(w, "test_wave.wav")
+
+  invisible(capture.output(expect_message(acoustic_indices("test_wave.wav"))))
+  expect_silent(a <- acoustic_indices("test_wave.wav", quiet = TRUE))
+  expect_s3_class(a, "data.frame")
+  expect_named(a)
+
+  unlink("test_wave.wav")
+})
