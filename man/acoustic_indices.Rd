@@ -13,7 +13,7 @@ acoustic_indices(
 )
 }
 \arguments{
-\item{path}{Character. Location of wave file}
+\item{path}{Character. Path to wave file.}
 
 \item{min_freq}{Numeric. Minimum frequency for acoustic complexity (see
 \code{\link[soundecology:acoustic_complexity_index]{soundecology::acoustic_complexity()}})}
@@ -23,6 +23,9 @@ acoustic_indices(
 
 \item{units}{Character. Wave file units for reading the file. Defaults to
 "samples" (see \code{\link[=tuneR:readWave]{tuneR:readWave()}}).}
+
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
 }
 \value{
 Returns a data frame with acoustic indices. Those prefaced with

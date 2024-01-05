@@ -2,13 +2,14 @@
 #'
 #' Wrapper for soundecology package to calculate
 #'
-#' @param path Character. Location of wave file
 #' @param min_freq Numeric. Minimum frequency for acoustic complexity (see
 #'   [soundecology::acoustic_complexity()])
 #' @param max_freq Numeric. Maximum frequency for acoustic complexity (see
 #'   [soundecology::acoustic_complexity()])
 #' @param units Character. Wave file units for reading the file. Defaults to
 #'   "samples" (see [tuneR:readWave()]).
+#'
+#' @inheritParams common_docs
 #'
 #' @return
 #' Returns a data frame with acoustic indices. Those prefaced with

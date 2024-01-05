@@ -78,7 +78,6 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #' @param waves Data frame. Details of file locations.
 #' @param dir_in Character. Directory wave files are read from. Default is
 #'   `NULL` meaning the current working directory.
-#' @param dir_out Character. Directory to output files to.
 #' @param col_path_in Character. Column name that contains the current file paths. Default `path`.
 #'   **Note: file paths must be either relative to `dir_in` or absolute**.
 #' @param col_subdir_out Character. Column name(s) that contain the
@@ -95,6 +94,8 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #' @param diff_limit Numeric. How much longer in seconds clip lengths can be
 #'   compared to file lengths before triggering an error. Default `30`.
 #' @param use_job Logical. Use the {job} package to copy files (Default `FALSE`)
+#'
+#' @inheritParams common_docs
 #'
 #' @return TRUE if successful
 #' @export
@@ -175,7 +176,7 @@ clip_wave <- function(waves,
 
 #' Get the length of a recording in seconds
 #'
-#' @param wave_file Character. Path to wave file
+#' @param path Character. Path to wave file.
 #' @param return_numeric Logical. Return numeric or character?
 #'
 #' @return Length of recording in seconds
@@ -186,8 +187,8 @@ clip_wave <- function(waves,
 #' wav <- download.file("https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav", destfile = f)
 #' get_wav_length(f)
 
-get_wav_length <- function(wave_file, return_numeric = FALSE) {
-  audio <- tuneR::readWave(wave_file, header = TRUE)
+get_wav_length <- function(path, return_numeric = FALSE) {
+  audio <- tuneR::readWave(path, header = TRUE)
   l <- round(audio$samples / audio$sample.rate, 2)
   if(!return_numeric) l <- glue::glue("{l} seconds")
   l
