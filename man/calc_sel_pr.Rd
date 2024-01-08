@@ -5,30 +5,40 @@
 \title{Calculate Inclusion Probabilities}
 \usage{
 calc_sel_pr(
-  .data,
-  ARU_ID_col,
-  min_col,
-  day_col,
-  parms = list(min_range = c(-60, 300), doy_range = c(150, 180), mean_min = 30, sd_min =
-    30, mean_doy = 0, sd_doy = 10, off = 0, log_ = FALSE, fun = "norm")
+  meta,
+  col_aru_id = "aru_id",
+  col_min = "t2sr",
+  col_date = "date",
+  params = sel_pr_params()
 )
 }
 \arguments{
-\item{.data}{Data frame with Date, times, and ARU IDs}
+\item{meta}{Data frame. Recording metadata. Output of \code{clean_metadata()}.}
 
-\item{ARU_ID_col}{ARU id column. Should not be quoted.}
+\item{col_aru_id}{Character. Column name that contains ARU ids. Default \code{aru_id}.}
 
-\item{min_col}{Minutes column. Should not be quoted.}
+\item{col_min}{Minutes column. Should not be quoted.}
 
-\item{day_col}{Day column. Should not be quoted.}
+\item{col_date}{Day column. Should not be quoted.}
 
-\item{parms}{list of parameters. See defaults for examples.
+\item{params}{list of parameters. See defaults for examples.
 Should include min_range, doy_range, mean_min, sd_min,
 mean_doy, sd_doy, off, log_, fun.}
+
+\item{.data}{Data frame with Date, times, and ARU IDs}
 }
 \value{
 Returns .data with selection probability columns
 }
 \description{
 Calculate Inclusion Probabilities
+}
+\examples{
+m <- clean_metadata(project_files = example_files)
+s <- clean_site_index(example_sites_clean,
+                      col_date = c("date_time_start", "date_time_end"))
+m <- add_sites(m, s)
+m <- calc_sun(m)
+calc_sel_pr(m, params = sel_pr_params(doy_range = c(110, 180)))
+
 }

@@ -194,3 +194,30 @@ suppressCat <- function(code, quiet = FALSE) {
   if(quiet) invisible(capture.output(x <- {code})) else x <- {code}
   x
 }
+
+is_whole <- function(x, tolerance = 0.00001) {
+  if(is.numeric(x)) {
+    abs(x - round(x)) < tolerance
+  } else FALSE
+}
+
+#' Set seed unless NULL
+#'
+#' Wrapper around `withr::with_seed()` to ensure that if `seed` is `NULL`, it
+#' is just *quietly* ignored (otherwise `withr` sends a warning)
+#'
+#' @param seed Numeric. Seed to use.
+#' @param code Code. Code to be evaluated with the seed.
+#' @noRd
+#' @examples
+#'
+#' set_seed(NULL, sample(1:10, 2))
+#' set_seed(NULL, sample(1:10, 2))
+#' set_seed(NULL, sample(1:10, 2))
+#'
+#' set_seed(123, sample(1:10, 2))
+#' set_seed(123, sample(1:10, 2))
+#' set_seed(123, sample(1:10, 2))
+set_seed <- function(seed, code) {
+  if(is.null(seed)) code else withr::with_seed(seed, code)
+}

@@ -31,20 +31,21 @@ Imports:
     fs (>= 1.6.1),
     hms (>= 1.1.2),
     readxl (>= 1.4.2),
-    seewave (>= 2.2.3)
+    seewave (>= 2.2.3),
+    withr
 Suggests: 
     testthat (>= 3.0.0),
     soundecology,
     ggplot2,
     tuneR,
     sessioninfo,
-    withr,
     job,
     rstudioapi,
     jsonlite,
     knitr,
     rmarkdown,
-    covr
+    covr,
+    vdiffr (>= 1.0.0)
 Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)

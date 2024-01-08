@@ -10,16 +10,20 @@
 #' @export
 #'
 #' @examples
-#' # gen_dens_sel_simulation(min =  -70:240,doy = 121:201,
-#' #               parms = ARUtools::default_selection_parameters,
-#' #             selection_variable = psel_normalized , return_dat=F)
-gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameters,
-                                     selection_variable=psel_normalized,
-                                     return_dat =F , ...) {
+#' gen_dens_sel_simulation(#min =  -70:240,doy = 121:201,
+#'                params = ARUtools::default_selection_parameters,
+#'              selection_variable = psel_normalized , return_dat=F)
+#'
+gen_dens_sel_simulation <- function(
+    params = ARUtools::default_selection_parameters,
+    selection_variable = "psel_normalized",
+    return_data = FALSE, ...) {
+
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop(
-      "Package \"ggplot2\" must be installed to use this function.",
-      call. = FALSE
+    rlang::abort(
+      c("Package \"ggplot2\" must be installed to use this function",
+        "!" = "Use `install.packages(\"ggplot2\") to install"),
+      call = NULL
     )
   }
   warn("Since version 0.4 default selection parameter in gen_dens_sel_simulation is psel_normalize,
@@ -71,19 +75,14 @@ gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameter
     if(exists('min')) if(!inherits(min, "function")) abort(a_1)
       }
 
-
-
   all <- expand.grid(doy = seq(parms$doy_range[[1]],parms$doy_range[[2]]),
                      min = seq(parms$min_range[[1]],parms$min_range[[2]]),
-                     location=1) |>
-    calc_sel_pr(ARU_ID_col = location,
-                min_col = min,
-                day_col = doy,
-                parms = parms) |>
+                     aru_id=1) |>
+    calc_sel_pr(col_min = "min", col_date = "doy", params = parms) |>
     dplyr::mutate(
-      date = lubridate::ymd("2022-01-01") + doy)
+      date = lubridate::ymd("2022-01-01") + doy - 1)
 
-  if(isTRUE(return_dat))(return(all))
+  if(isTRUE(return_data))(return(all))
   ggplot2::theme_set(ggplot2::theme_minimal(base_size = 14, base_family = "Roboto Condensed"))
 
   p1 <- ggplot2::ggplot(all, ggplot2::aes(date, psel_doy)) + ggplot2::geom_line() +
@@ -94,7 +93,7 @@ gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameter
                ggplot2::aes(date,
                    min,
                    fill =
-                     {{selection_variable}}
+                     .data[[selection_variable]]
                )
   ) +
     ggplot2::geom_tile() +
@@ -114,53 +113,112 @@ gen_dens_sel_simulation <- function( parms=ARUtools::default_selection_parameter
 #' Calculate Inclusion Probabilities
 #'
 #' @param .data Data frame with Date, times, and ARU IDs
-#' @param ARU_ID_col ARU id column. Should not be quoted.
-#' @param min_col Minutes column. Should not be quoted.
-#' @param day_col Day column. Should not be quoted.
-#' @param parms list of parameters. See defaults for examples.
+#' @param col_min Minutes column. Should not be quoted.
+#' @param col_date Day column. Should not be quoted.
+#' @param params list of parameters. See defaults for examples.
 #'                 Should include min_range, doy_range, mean_min, sd_min,
 #'                mean_doy, sd_doy, off, log_, fun.
 #'
+#' @inheritParams common_docs
+#'
 #' @return   Returns .data with selection probability columns
 #' @export
-calc_sel_pr <- function(.data,ARU_ID_col, min_col, day_col, parms = list(min_range = c(-60, 300),
-                                                                         doy_range = c(150, 180),
-                                                                         mean_min = 30, sd_min = 30,
-                                                              mean_doy = 0, sd_doy = 10,off=0,
-                                                              log_ = FALSE, fun = "norm")){
+#'
+#' @examples
+#' m <- clean_metadata(project_files = example_files)
+#' s <- clean_site_index(example_sites_clean,
+#'                       col_date = c("date_time_start", "date_time_end"))
+#' m <- add_sites(m, s)
+#' m <- calc_sun(m)
+#' calc_sel_pr(m, params = sel_pr_params(doy_range = c(110, 180)))
+#'
 
-  list2env(parms, envir = environment())
-  min_fun <- switch (fun,
-                     "lognorm" = function(x, m, sd, log) dlnorm(x+off,log(m+off), sd, log),
-                     "norm" = dnorm,
-                     "cauchy"=dcauchy
+calc_sel_pr <- function(meta,
+                        col_aru_id = "aru_id",
+                        col_min = "t2sr",
+                        col_date = "date",
+                        params = sel_pr_params()) {
+
+  list2env(params, envir = environment())
+
+  meta <- check_doy(meta, col_date)
+
+  min_fun <- switch(
+    fun,
+    "lognorm" = function(x, m, sd, log) dlnorm(x + off, log(m + off), sd, log),
+    "norm" = dnorm,
+    "cauchy"= dcauchy
   )
-  # min_range <- range(pull(.data,{{min_col}}) )
-  # doy_range <- range(pull(.data,{{min_col}}) )
-  dens_min <- min_fun(seq(min_range[[1]], min_range[[2]]), mean_min, sd_min, log = log_)
-  dens_doy <- dnorm(seq(doy_range[[1]], doy_range[[2]]), mean_doy, sd_doy, log=log_)
-  # browser()
-  .data |>
-    dplyr::filter({{day_col}} >= doy_range[[1]] &
-             {{day_col}} <= doy_range[[2]] &
-             {{min_col}}>= min_range[[1]] &
-             {{min_col}}<= min_range[[2]]
-             ) |>
-    dplyr::mutate(psel_tod = min_fun(round({{min_col}},0), mean_min, sd_min, log = log_)/max(abs(dens_min)),
-           psel_doy = dnorm({{day_col}},mean= mean_doy, sd = sd_doy, log=log_)/max(abs(dens_doy)),
-           psel = dplyr::case_when(log_~ exp( psel_tod + psel_doy),
-                            !log_~ psel_tod * psel_doy),
-           psel_scaled = psel/max(psel)) |>
-    dplyr::group_by({{ARU_ID_col}}) |>
-    dplyr::mutate(psel_std = psel / max(psel),
-                  psel_normalized =  pmax(1e-3,(psel-min(psel))/(max(psel)-min(psel)))) |>
+  # min_range <- range(pull(meta, {{min_col}}) )
+  # doy_range <- range(pull(meta, {{min_col}}) )
+
+  dens_min <- min_fun(seq(min_range[[1]], min_range[[2]]), mean_min, sd_min, log = return_log)
+  dens_doy <-   dnorm(seq(doy_range[[1]], doy_range[[2]]), mean_doy, sd_doy, log = return_log)
+
+  sp <- meta |>
+    dplyr::filter(.data[["doy"]] >= doy_range[[1]] &
+                    .data[["doy"]] <= doy_range[[2]] &
+                    .data[[col_min]] >= min_range[[1]] &
+                    .data[[col_min]] <= min_range[[2]]
+    )
+
+  if(nrow(sp) == 0) rlang::abort(
+    "No selections possible within this range of dates and times", call = NULL)
+
+  fun_psel <- function(x1, x2, return_log) if(return_log) exp(x1 + x2) else x1 * x2
+
+  sp |>
+    dplyr::mutate(
+      psel_tod = min_fun(round(.data[[col_min]], 0), mean_min, sd_min, log = return_log) / max(abs(dens_min)),
+      psel_doy = dnorm(.data[["doy"]], mean = mean_doy, sd = sd_doy, log = return_log) / max(abs(dens_doy)),
+      psel = fun_psel(.data[["psel_tod"]], .data[["psel_doy"]], return_log),
+      psel_scaled = .data[["psel"]] / max(.data[["psel"]])) |>
+    dplyr::group_by(.data[[col_aru_id]]) |>
+    dplyr::mutate(
+      psel_std = .data[["psel"]] / max(.data[["psel"]]),
+      psel_normalized = pmax(
+        1e-3,
+        (.data[["psel"]] - min(.data[["psel"]])) / (max(.data[["psel"]]) - min(.data[["psel"]]))
+      )
+    ) |>
     dplyr::ungroup()
-
-
-
 }
 
 
+sel_pr_params <- function(min_range = c(-60, 300), doy_range = c(150, 180),
+                          mean_min = 30, sd_min = 30, mean_doy = 0, sd_doy = 10,
+                          off = 0, return_log = FALSE, fun = "norm") {
+
+  # TODO: Add checks for valid parameters
+  # TODO: Which defaults to use? (currently the ones form calc_sel_pr())
+
+  # From calc_sel_pr
+  list(min_range = c(-60, 300),
+       doy_range = c(150, 180),
+       mean_min = 30,
+       sd_min = 30,
+       mean_doy = 0,
+       sd_doy = 10,
+       off = 0,
+       return_log = FALSE,
+       fun = "norm")
+
+  # From default_selection_parameters
+  list(min_range = c(-70, 240), # Range of minutes relative to sun event
+       doy_range = c(121, 201), # Range of day of year
+       mean_min = 30, # Average minutes to sun event in selection
+       sd_min = 60, # Standard deviation in distribution for
+       mean_doy = 161, # Average day of year for selection
+       sd_doy = 20, # Standard deviation of day of year for selection
+       off = 0, # Offset to shift for time of day.
+       return_log = TRUE, # Log the density in the selection function?
+       fun = "norm" # Selection function. Options are 'lognorm','norm', or 'cauchy'.
+  )
+
+  list(min_range = min_range, doy_range = doy_range,
+       mean_min = mean_min, sd_min = sd_min, mean_doy = mean_doy, sd_doy = sd_doy,
+       off = off, return_log = return_log, fun = fun)
+}
 
 
  # gen_dens_sel_simulation(min =  seq(-60,60*4 ),

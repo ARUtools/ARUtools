@@ -144,6 +144,30 @@ check_dates <- function(df, cols, extra = "") {
   if(length(msg) > 0) rlang::abort(c("Problems with dates: ", msg), call = NULL)
 }
 
+#' Check for doy formats
+#' @noRd
+check_doy <- function(df, col) {
+
+  # Convert to DOY if a date or date-time
+  if(lubridate::is.Date(df[[col]]) || lubridate::is.POSIXct(df[[col]])) {
+    df <- dplyr::mutate(df, doy = lubridate::yday(.data[[col]]))
+
+  # Fail if not all whole or date
+  } else if (!all(is_whole(df[[col]]))) {
+    rlang::abort(
+      paste0("Column `", col, "` must contain dates, date-times, or day-of-year values"),
+      call = NULL)
+
+  # Check range if integer column
+  } else if(!(min(df[[col]]) >= 1 && max(df[[col]]) <= 366)) {
+    rlang::abort(
+      paste0("Column `", col, "` contains integers, but the range doesn't ",
+             "reflect days-of-the-year (1-366)"),
+      call = NULL)
+  }
+  df
+}
+
 #' Check that datetimes are UTC
 #'
 #' If non-UTC timezone, let user know that we're forcing the tz label to UTC.
