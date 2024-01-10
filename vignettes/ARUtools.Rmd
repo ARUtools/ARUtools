@@ -1,6 +1,11 @@
 ---
 title: "Getting started with ARUtools"
 output: rmarkdown::html_vignette
+description: >
+  If you're just digging into procesing your ARU files or want 
+  to plan your folder structure, start here. You'll get a sense of 
+  what you need to have prepared before you start and how to read in the
+  file metadata from your ARU files.
 vignette: >
   %\VignetteIndexEntry{Getting started with ARUtools}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,22 +17,39 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
 
+The ARUtools package aims to make processing of large quantities of acoustic 
+recordings easier through automation of metadata processing and sub-sampling of recordings.
 
+
+Prior to working on your ARU recordings or meta data you must:
+
+ * Know your goals of interpreting recordings
+ 
+ * Transferred your recordings to a suitable and organized location for processing
+ 
+ * Prepare your site information so it can be linked with the recordings
+ 
+
+This introduction will walk through the first few steps of extracting the metadata,
+adding site information, and calculating sunrise and sunset information.
+
+## Read file metadata 
 ```{r}
 #| message: false
 library(ARUtools)
 ```
 
-Let's use some example data to get started
+Let's use some example data to get started. 
 
 ```{r}
 example_files
 ```
 
 This is a list of hypothetical ARU files from different sites, and using different
-ARUs.
+ARUs. This is fairly messily organized data in that there is no clear structure to the folders and there appear to be unneeded characters in the files. However give the standard structure of site names, ARU ID codes, and datetime stamps, we can extract that information from the file structure alone.
 
 First things first, we'll clean up the meta data associated with the files.
 
@@ -43,12 +65,23 @@ default arguments.
 m
 ```
 
+
+If you were reading directly from files you would assign a base directory and then have 
+`clean_metadata` read the files in that folder and sub-folders.
+
+```{r eval=FALSE}
+base_directory <- "/path/to/project/files/"
+m <- clean_metadata(project_dir = base_directory)
+```
+
+
+## Add coordinates
 Next, we want to add our coordinates to this data. 
 
 If your data has GPS logs included, they would have been detected in the above step
 and you could now use `g <- clean_gps(m)` to create a list of GPS coordinates.
 
-However, ARU GPS logs can be tricky, so it is recommended that you
+However, many models of ARUs do not have an internal GPS and those that do, may not accurately record the location where the ARU is deployed to. Therefore we recommend that you
 create a site index file to manually record deployment locations, like this one.
 
 ```{r}
@@ -56,7 +89,8 @@ example_sites
 ```
 
 While you can simply specify a single date, it is recommended that you use both
-a start date and an end date for the best matching.
+a start date and an end date for the best matching. This is critical if you are moving
+your ARUs during a season.
 
 Now let's clean up this list so we can add these sites to our metadata.
 
@@ -127,6 +161,9 @@ m <- add_sites(m, sites)
 m
 ```
 
+
+## Calculate times to sunrise and sunset
+
 Great! We have all the site-related information to describe that recording.
 
 Now to prepare for our selection procedure, the last thing we need to do is 
@@ -153,8 +190,15 @@ In our example, let's assume that the ARUs were set up in each location they
 were deployed. So we'll use `tz = "local"`, the default setting.
 ```{r}
 m <- calc_sun(m)
-m
+dplyr::glimpse(m)
 ```
 
-Tada! Now we have a complete set of cleaned metadata associated with each recoding.
+Tada! Now we have a complete set of cleaned metadata associated with each recording.
+
+
+
+## Next steps
+
+Now that we have a set of cleaned metadata the next step is to 
+
 
