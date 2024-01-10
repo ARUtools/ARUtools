@@ -80,7 +80,7 @@ There are also other good packages that may be of use to you:
 
 - [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) (R)
 - [seewave](https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html)
-  18) 
+  (R)
 - [emu](https://github.com/QutEcoacoustics/emu) (command line)
 - [SoX](https://sourceforge.net/projects/sox/) (command line)
 - [Sound-Extraction](https://github.com/prayagnshah/Sound-Extraction)
