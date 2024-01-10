@@ -88,7 +88,7 @@ simulate_selection_probs <- function(
     p <- (p1 + p2) / p3 &
       ggplot2::theme_minimal(base_size = 14)
 
-    print(p)
+    if(return_params) print(p) # Print if not returning
   }
 
   if(return_params) r <- params else r <- p

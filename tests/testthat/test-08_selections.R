@@ -2,15 +2,15 @@
 test_that("simulate_selection_probs()", {
 
   # Return params
-  expect_silent(g <- simulate_selection_probs())
+  expect_silent(g <- simulate_selection_probs(plot = FALSE))
   expect_type(g, "list")
   expect_named(g, c("min_range", "min_mean", "min_sd",
                     "day_range", "day_mean", "day_sd", "offset",
                     "return_log", "selection_fun"))
 
-  expect_silent(g <- simulate_selection_probs(selection_fun = "lognorm", offset = 71))
-  expect_silent(g <- simulate_selection_probs(selection_fun = "cauchy"))
-  expect_silent(g <- simulate_selection_probs(return_log = FALSE))
+  expect_silent(g <- simulate_selection_probs(selection_fun = "lognorm", offset = 71, plot = FALSE))
+  expect_silent(g <- simulate_selection_probs(selection_fun = "cauchy", plot = FALSE))
+  expect_silent(g <- simulate_selection_probs(return_log = FALSE, plot = FALSE))
 
   # Plots - Defaults
   withr::with_seed(123, expect_silent(g <- simulate_selection_probs(return_params = FALSE)))
