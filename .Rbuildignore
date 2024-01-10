@@ -24,3 +24,6 @@ inst\Gen_gex.R
 #^R/soxHex.R$
 #^R/wind_detection_functions.R$
 #^doc$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
