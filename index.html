@@ -59,7 +59,14 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/dhope/ARUtools/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -71,32 +78,70 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of ARUtools is to facilitate the processing of ARU data. It remains a development version for now.</p>
+<!-- badges: end -->
+<p>The goal of ARUtools is to facilitate the processing of ARU data and subsampling of recordings. It remains a development version for now. What this means for you as a user is that function names and variable names may change between versions and some functions may become defunct.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the current version of ARUtools from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes") # Uncomment if you don't have remotes installed.</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dhope/ARUtools"</span>, build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="learn-to-use">Learn to use<a class="anchor" aria-label="anchor" href="#learn-to-use"></a>
 </h2>
-<p>If you have used <code>build_vignettes =T</code> on installation, you can check out the vignettes using: <code>browseVignettes('ARUtools')</code></p>
-<p>Current vignettes are:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> Getting started with ARUtools<span class="sc">:</span> <span class="st">`</span><span class="at">vignette("ARUtools", package = "ARUtools")</span><span class="st">`</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> Customizing <span class="st">`</span><span class="at">clean_metadata()</span><span class="st">`</span><span class="sc">:</span> <span class="st">`</span><span class="at">vignette("customizing", package = "ARUtools")</span><span class="st">`</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> Dealing with Timezones<span class="sc">:</span> <span class="st">`</span><span class="at">vignette("timezones", package = "ARUtools")</span><span class="st">`</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> Working with spatial data<span class="sc">:</span> <span class="st">`</span><span class="at">vignette("spatial", package = "ARUtools")</span><span class="st">`</span></span></code></pre></div>
+<p>The easiest way to dig into using the <code>ARUtools</code> package is using the <a href="https://davidhope.ca/ARUtools/" class="external-link">documentation webpage</a></p>
+<p>There currently are four vignettes that will help you get up and running with cleaning ARU metadata</p>
+<ul>
+<li><a href="https://davidhope.ca/ARUtools/articles/ARUtools.html" class="external-link">Getting started with ARUtools</a></li>
+<li><a href="https://davidhope.ca/ARUtools/articles/customizing.html" class="external-link">Customizing <code>clean_metadata()</code></a></li>
+<li><a href="https://davidhope.ca/ARUtools/articles/customizing.html" class="external-link">Dealing with timezones</a></li>
+<li><a href="https://davidhope.ca/ARUtools/articles/spatial.html" class="external-link">Working with spatial data</a></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="provide-feedback">Provide feedback<a class="anchor" aria-label="anchor" href="#provide-feedback"></a>
 </h2>
 <p>If you run into problems or have ideas for extensions, please don’t hesitate to <a href="https://github.com/dhope/ARUtools/issues/new/choose" class="external-link">submit an issue</a>.</p>
 </div>
+<div class="section level2">
+<h2 id="motivation-and-limitations">Motivation and limitations<a class="anchor" aria-label="anchor" href="#motivation-and-limitations"></a>
+</h2>
+<p>This package initially started its life as a series of scripts to process recordings from multiple large projects around monitoring migratory bird populations in Ontario’s North.</p>
+<p>Moving from scripts to package stemmed from following the wise advice from Hadley Wickham:</p>
+<blockquote>
+<p><a href="https://r4ds.hadley.nz/functions.html#introduction" class="external-link">A good rule of thumb is to consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code)</a>.</p>
+</blockquote>
+<p>With multiple projects, each with their own data issues, it became clear that this would either require copy/pasting a lot of code and likely break something or developing a series of functions that could be shared across projects (i.e. a package).</p>
+<p>While that initial version of the code was usable by me and only me, if you’re using the package, it is because of the fantastic work of <a href="https://github.com/steffilazerte" class="external-link">Steffi LaZerte</a> who translated my mess into the user-friendly functions you see today.</p>
+<p>However, due to the variable nature of data management, it is possible that <code>ARUtools</code> may not work well for your project. If you run into issues, please do submit an issue.</p>
+<p>There are also other good packages that may be of use to you:</p>
+<ul>
+<li>
+<a href="https://abbiodiversity.github.io/wildRtrax/" class="external-link">wildRtrax</a> (R)</li>
+<li>
+<a href="https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html" class="external-link">seewave</a>
+<ol start="18" style="list-style-type: decimal"><li>
+</li></ol>
+</li>
+<li>
+<a href="https://github.com/QutEcoacoustics/emu" class="external-link">emu</a> (command line)</li>
+<li>
+<a href="https://sourceforge.net/projects/sox/" class="external-link">SoX</a> (command line)</li>
+<li>
+<a href="https://github.com/prayagnshah/Sound-Extraction" class="external-link">Sound-Extraction</a> (python)</li>
+</ul>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+</div>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/dhope/ARUtools/" class="external-link">Browse source code</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
