@@ -184,22 +184,30 @@ check_selection_params <- function(params) {
   #   always be within the range?
   # - Should offset be always set to `min(min_range) + 1`?
 
-  # Check parameters values
-  check_num(params[["min_range"]], n = 2)
-  check_num(params[["min_mean"]], n = 1)
-  check_num(params[["min_sd"]], n = 1)
-  day_range <- check_doy(params[["day_range"]])
-  #day_mean <- check_doy(params[["day_mean"]])
-  check_num(params[["day_sd"]], n = 1)
-  check_num(params[["offset"]], n = 1)
-  check_text(params[["selection_fun"]], n = 1, opts = c("norm", "lognorm", "cauchy"))
+  # Get params as environment objects
+  list2env(params, envir = environment())
 
-  check_logical(params[["return_log"]])
-  if(params[["offset"]] != 0 & params[["selection_fun"]] != "lognorm") {
+  # Check parameters values
+  check_num(min_range, n = 2)
+  check_num(min_mean, n = 1)
+  check_num(min_sd, n = 1)
+  day_range <- check_doy(day_range)
+  day_mean <- check_doy(day_mean)
+  check_num(day_sd, n = 1)
+  check_num(offset, n = 1)
+  check_text(selection_fun, n = 1, opts = c("norm", "lognorm", "cauchy"))
+
+  check_logical(return_log)
+  if(offset != 0 & selection_fun != "lognorm") {
     rlang::inform(
       c("Ignoring `offset`",
         "i" = paste("`offset` is only relevant when `selection_fun = `lognorm`",
                     "to shift the minutes range to > 0")))
   }
-  params
+
+  list(
+    min_range = min_range, min_mean = min_mean, min_sd = min_sd,
+    day_range = day_range, day_mean = day_mean, day_sd = day_sd,
+    offset = offset, return_log = return_log,
+    selection_fun = selection_fun)
 }

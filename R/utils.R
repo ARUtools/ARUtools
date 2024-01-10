@@ -111,6 +111,7 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
 #'
 #' @noRd
 is_dateable <- function(x) {
+  if(is.numeric(x)) return(FALSE)
   tryCatch(
     expr = {
       lubridate::as_date(x)

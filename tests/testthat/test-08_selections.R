@@ -12,6 +12,14 @@ test_that("simulate_selection_probs()", {
   expect_silent(g <- simulate_selection_probs(selection_fun = "cauchy", plot = FALSE))
   expect_silent(g <- simulate_selection_probs(return_log = FALSE, plot = FALSE))
 
+  # Dates
+  expect_silent(g <- simulate_selection_probs(day_range = c("2023-01-01", "2023-09-01"),
+                                              day_mean = "2023-06-02", plot = FALSE))
+  expect_equal(g$day_range, lubridate::yday(c("2023-01-01", "2023-09-01")))
+  expect_equal(g$day_mean, lubridate::yday("2023-06-02"))
+  expect_silent(g <- simulate_selection_probs(day_range = c(1, 244), plot = FALSE))
+  expect_equal(g$day_range, c(1, 244))
+
   # Plots - Defaults
   withr::with_seed(123, expect_silent(g <- simulate_selection_probs(return_params = FALSE)))
   vdiffr::expect_doppelganger("simulate_selection_probs1", g)

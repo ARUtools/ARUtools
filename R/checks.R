@@ -149,7 +149,7 @@ check_dates <- function(df, cols, extra = "") {
 check_doy <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
 
   # Convert to DOY if a date or date-time
-  if(lubridate::is.Date(x) || lubridate::is.POSIXct(x)) {
+  if(lubridate::is.Date(x) || lubridate::is.POSIXct(x) || is_dateable(x)) {
     x <- lubridate::yday(x)
 
   # Fail if not all whole or date
