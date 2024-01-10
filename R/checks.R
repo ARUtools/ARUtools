@@ -71,13 +71,13 @@ check_data <- function(df, type, ref) {
       check_cols(
         df, c("site_id", "aru_id", coords),
         dates = TRUE,
-        name = "meta",
+        name = "meta_sites",
         extra = e)
     } else if (type == "meta_sun") {
       check_cols(
         df, c("site_id", "aru_id", coords, "tz", "t2sr", "t2ss"),
         dates = TRUE,
-        name = "meta",
+        name = "meta_sun",
         extra = e)
     }
 

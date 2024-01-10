@@ -156,5 +156,5 @@ m <- calc_sun(m)
 m
 ```
 
-Tada! Now we have a complete set of cleaned metadata associated with each recoding.
+Tada! Now we have a complete set of cleaned metadata associated with each recording.
 

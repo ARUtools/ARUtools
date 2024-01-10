@@ -1,7 +1,7 @@
 test_that("Does not work outside interactive session.", {
   expect_error({
     with_interactive({
-    create_directory_structure(c("A", "B", "C"),
+    create_dirs(c("A", "B", "C"),
                                            c("One", "TWO", "THREE"),
                                            test_path())
   }, value = F )},
