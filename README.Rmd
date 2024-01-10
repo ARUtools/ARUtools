@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ARUtools <img src="inst/figures/ARUtools.png" align="right" width="120" />
+# ARUtools <img src="https://raw.githubusercontent.com/dhope/ARUtools/main/inst/figures/ARUtools.png" align="right" width="120" />
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/dhope/ARUtools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dhope/ARUtools?branch=main)

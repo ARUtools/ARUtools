@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ARUtools <img src="inst/figures/ARUtools.png" align="right" width="120" />
+# ARUtools <img src="https://raw.githubusercontent.com/dhope/ARUtools/main/inst/figures/ARUtools.png" align="right" width="120" />
 
 <!-- badges: start -->
 
