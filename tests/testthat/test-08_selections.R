@@ -63,14 +63,7 @@ test_that("calc_selection_probs()", {
   m <- add_sites(m, s, quiet = TRUE)
   m <- calc_sun(m)
 
-  p <- simulate_selection_probs(day_range = c(110, 180),
-                                min_range = c(-60, 300),
-                                min_mean = 30, min_sd = 30,
-                                day_mean = 0, day_sd = 10,
-                                selection_fun = "norm",
-                                return_log = FALSE,
-                                plot = FALSE)
-
+  p <- simulate_selection_probs(plot = FALSE)
   withr::with_seed(123, expect_silent(pr1 <- calc_selection_probs(m, params = p)))
   expect_snapshot_value(pr1, style = "json2", tolerance = 0.0005)
 
