@@ -8,6 +8,13 @@
 \description{
 ARU tools that some might find useful for working with ARU files.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://davidhope.ca/ARUtools/}
+}
+
+}
 \author{
 \strong{Maintainer}: David Hope \email{david.hope@ec.gc.ca}
 
