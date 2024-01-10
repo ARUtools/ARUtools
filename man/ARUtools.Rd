@@ -16,7 +16,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: David Hope \email{david.hope@ec.gc.ca}
+\strong{Maintainer}: David Hope \email{david.hope@ec.gc.ca} (\href{https://orcid.org/0000-0002-2140-4261}{ORCID})
 
 Authors:
 \itemize{

@@ -1,4 +1,14 @@
 url: http://davidhope.ca/ARUtools/
 template:
   bootstrap: 5
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
+repo:
+  url:
+    home: https://github.com/dhope/ARUtools/
+    source: https://github.com/dhope/ARUtools/blob/HEAD/
+    issue: https://github.com/dhope/ARUtools/issues/
+    user: https://github.com/dhope
 

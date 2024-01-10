@@ -1,16 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ARUtools <img src="https://raw.githubusercontent.com/dhope/ARUtools/main/inst/figures/ARUtools.png" align="right" width="120" />
+# ARUtools <img src="https://raw.githubusercontent.com/dhope/ARUtools/main/inst/figures/ARUtools.png" align="right" width="120"/>
 
 <!-- badges: start -->
 
 [![Codecov test
 coverage](https://codecov.io/gh/dhope/ARUtools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dhope/ARUtools?branch=main)
+
 <!-- badges: end -->
 
-The goal of ARUtools is to facilitate the processing of ARU data. It
-remains a development version for now.
+The goal of ARUtools is to facilitate the processing of ARU data and
+subsampling of recordings. It remains a development version for now.
+What this means for you as a user is that function names and variable
+names may change between versions and some functions may become defunct.
 
 ## Installation
 
@@ -18,24 +21,67 @@ You can install the current version of ARUtools from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("remotes")
+# install.packages("remotes") # Uncomment if you don't have remotes installed.
 remotes::install_github("dhope/ARUtools", build_vignettes=TRUE)
 ```
 
 ## Learn to use
 
-If you have used `build_vignettes =T` on installation, you can check out
-the vignettes using: `browseVignettes('ARUtools')`
+The easiest way to dig into using the `ARUtools` package is using the
+[documentation webpage](https://davidhope.ca/ARUtools/)
 
-Current vignettes are:
+There currently are four vignettes that will help you get up and running
+with cleaning ARU metadata
 
-    - Getting started with ARUtools: `vignette("ARUtools", package = "ARUtools")`
-    - Customizing `clean_metadata()`: `vignette("customizing", package = "ARUtools")`
-    - Dealing with Timezones: `vignette("timezones", package = "ARUtools")`
-    - Working with spatial data: `vignette("spatial", package = "ARUtools")`
+- [Getting started with
+  ARUtools](https://davidhope.ca/ARUtools/articles/ARUtools.html)
+- [Customizing
+  `clean_metadata()`](https://davidhope.ca/ARUtools/articles/customizing.html)
+- [Dealing with
+  timezones](https://davidhope.ca/ARUtools/articles/customizing.html)
+- [Working with spatial
+  data](https://davidhope.ca/ARUtools/articles/spatial.html)
 
 ## Provide feedback
 
 If you run into problems or have ideas for extensions, please don’t
 hesitate to [submit an
 issue](https://github.com/dhope/ARUtools/issues/new/choose).
+
+## Motivation and limitations
+
+This package initially started its life as a series of scripts to
+process recordings from multiple large projects around monitoring
+migratory bird populations in Ontario’s North.
+
+Moving from scripts to package stemmed from following the wise advice
+from Hadley Wickham:
+
+> [A good rule of thumb is to consider writing a function whenever
+> you’ve copied and pasted a block of code more than twice (i.e. you now
+> have three copies of the same
+> code)](https://r4ds.hadley.nz/functions.html#introduction).
+
+With multiple projects, each with their own data issues, it became clear
+that this would either require copy/pasting a lot of code and likely
+break something or developing a series of functions that could be shared
+across projects (i.e. a package).
+
+While that initial version of the code was usable by me and only me, if
+you’re using the package, it is because of the fantastic work of [Steffi
+LaZerte](https://github.com/steffilazerte) who translated my mess into
+the user-friendly functions you see today.
+
+However, due to the variable nature of data management, it is possible
+that `ARUtools` may not work well for your project. If you run into
+issues, please do submit an issue.
+
+There are also other good packages that may be of use to you:
+
+- [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) (R)
+- [seewave](https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html)
+  18) 
+- [emu](https://github.com/QutEcoacoustics/emu) (command line)
+- [SoX](https://sourceforge.net/projects/sox/) (command line)
+- [Sound-Extraction](https://github.com/prayagnshah/Sound-Extraction)
+  (python)
