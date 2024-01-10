@@ -146,26 +146,26 @@ check_dates <- function(df, cols, extra = "") {
 
 #' Check for doy formats
 #' @noRd
-check_doy <- function(df, col) {
+check_doy <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
 
   # Convert to DOY if a date or date-time
-  if(lubridate::is.Date(df[[col]]) || lubridate::is.POSIXct(df[[col]])) {
-    df <- dplyr::mutate(df, doy = lubridate::yday(.data[[col]]))
+  if(lubridate::is.Date(x) || lubridate::is.POSIXct(x)) {
+    x <- lubridate::yday(x)
 
   # Fail if not all whole or date
-  } else if (!all(is_whole(df[[col]]))) {
+  } else if (!all(is_whole(x))) {
     rlang::abort(
-      paste0("Column `", col, "` must contain dates, date-times, or day-of-year values"),
-      call = NULL)
+      paste0("`", arg, "` must contain dates, date-times, or day-of-year values"),
+      call = call)
 
   # Check range if integer column
-  } else if(!(min(df[[col]]) >= 1 && max(df[[col]]) <= 366)) {
+  } else if(!(min(x) >= 1 && max(x) <= 366)) {
     rlang::abort(
-      paste0("Column `", col, "` contains integers, but the range doesn't ",
-             "reflect days-of-the-year (1-366)"),
-      call = NULL)
+      paste0("`", arg, "` contains integers, but the range doesn't ",
+            "reflect days-of-the-year (1-366)"),
+      call = call)
   }
-  df
+  x
 }
 
 #' Check that datetimes are UTC

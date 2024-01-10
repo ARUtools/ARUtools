@@ -12,7 +12,6 @@
 #'
 #' @param site_index Data frame (can be spatial) or file path. Site index data
 #'   to clean. If file path, must be to a local csv or xlsx file.
-#' @param col_site_id Character. Column name that contains site ids.
 #' @param col_date_time Character. Column name that contains dates or
 #'   date/times. Can be vector of two names if there are both 'start' and 'end'
 #'   columns. Can be `NULL` to ignore dates.

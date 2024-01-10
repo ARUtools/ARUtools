@@ -52,26 +52,25 @@ test_that("check_dates()", {
 
 test_that("check_doy()", {
 
-  dt <- data.frame(
-    site = LETTERS[1:10],
-    doy1 = 1:10,
-    doy2 = -5:4,
-    date = lubridate::as_date(1:10, origin = "2023-01-01") - lubridate::days(1))
-  dt$date_time <- lubridate::as_datetime(dt$date)
+  site <- LETTERS[1:10]
+  doy1 <- 1:10
+  doy2 <- -5:4
+  date <- lubridate::as_date(1:10, origin = "2023-01-01") - lubridate::days(1)
+  date_time <- lubridate::as_datetime(date)
 
   # Error
-  expect_error(d <- check_doy(dt, "site"), "Column `site` must contain dates")
-  expect_error(d <- check_doy(dt, "doy2"), "Column `doy2` contains integers, but")
+  expect_error(d <- check_doy(site), "`site` must contain dates")
+  expect_error(d <- check_doy(doy2), "`doy2` contains integers, but")
 
   # No change with DOY
-  expect_silent(d <- check_doy(dt, "doy1"))
-  expect_equal(d, dt)
+  expect_silent(d <- check_doy(doy1))
+  expect_equal(d, doy1)
 
   # Create `doy` column with date or datetime
-  expect_silent(d <- check_doy(dt, "date"))
-  expect_equal(d, dplyr::mutate(dt, doy = doy1))
-  expect_silent(d <- check_doy(dt, "date_time"))
-  expect_equal(d, dplyr::mutate(dt, doy = doy1))
+  expect_silent(d <- check_doy(date))
+  expect_equal(d, doy1)
+  expect_silent(d <- check_doy(date_time))
+  expect_equal(d, doy1)
 
 })
 
