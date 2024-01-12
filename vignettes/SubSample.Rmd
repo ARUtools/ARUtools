@@ -108,7 +108,7 @@ To deal with this issue we allow the user to specify selection weights based on
 the time to sunrise (or sunset) as well as the day of year. 
 
 **Note:** This is an active area of development and you can expect the process of
-assigning variables to be much simpler in the next update.s
+assigning variables to be much simpler in the next update.
 
 
 ```{r}
@@ -123,10 +123,14 @@ params <- list(min_range = c(-70, 240),
 
 
 
-```{r}
-ARUtools::gen_dens_sel_simulation(parms = params)
+To visualize the selection parameters use `gen_dens_sel_simulation`. This will show you how the sample weights 
+will change over time and time to sunrise/sunset.
+
+```{r fig.height=6, out.height=8, warning=FALSE}
+gen_dens_sel_simulation(parms = params) 
 ```
 
+Once you have your parameters set up, you can use them to calculate the sampling weights from the metadata.
 
 ```{r}
 
@@ -143,9 +147,10 @@ full_selection_probs <-
 ```
 
 
+Below you can see the selection weights `psel_normalized` 
 
 
-```{r}
+```{r, echo=FALSE}
 library(ggplot2)
 ggplot(full_selection_probs, aes(doy, t2sr, colour = psel_normalized)) + 
   geom_point() +
