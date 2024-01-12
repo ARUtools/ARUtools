@@ -49,14 +49,10 @@ The easiest way to dig into using the `ARUtools` package is using the
 There currently are four vignettes that will help you get up and running
 with cleaning ARU metadata
 
--   [Getting started with
-    ARUtools](https://davidhope.ca/ARUtools/articles/ARUtools.html)
--   [Customizing
-    `clean_metadata()`](https://davidhope.ca/ARUtools/articles/customizing.html)
--   [Dealing with
-    timezones](https://davidhope.ca/ARUtools/articles/customizing.html)
--   [Working with spatial
-    data](https://davidhope.ca/ARUtools/articles/spatial.html)
+-   [Getting started with ARUtools](https://davidhope.ca/ARUtools/articles/ARUtools.html)
+-   [Customizing `clean_metadata()`](https://davidhope.ca/ARUtools/articles/customizing.html)
+-   [Dealing with timezones](https://davidhope.ca/ARUtools/articles/customizing.html)
+-   [Working with spatial data](https://davidhope.ca/ARUtools/articles/spatial.html)
 
 ## Provide feedback
 
@@ -95,7 +91,7 @@ issues, please do submit an issue.
 There are also other good packages that may be of use to you:
 
 -   [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) (R)
--   [seewave](https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html)  (R)
+-   [seewave](https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html) (R)
 -   [emu](https://github.com/QutEcoacoustics/emu) (command line)
 -   [SoX](https://sourceforge.net/projects/sox/) (command line)
 -   [Sound-Extraction](https://github.com/prayagnshah/Sound-Extraction) (python)

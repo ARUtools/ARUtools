@@ -199,6 +199,7 @@ Tada! Now we have a complete set of cleaned metadata associated with each record
 
 ## Next steps
 
-Now that we have a set of cleaned metadata the next step is to 
+Now that we have a set of cleaned metadata the next step is to select recordings.
+To do this using a random sampling approach check out the [Sub-sampling](addlink/later)
 
 

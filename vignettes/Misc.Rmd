@@ -1,0 +1,30 @@
+---
+title: "Setting up your project"
+output: rmarkdown::html_vignette
+description: >
+  This article covers the aditional steps important in dealing with
+  ARU recordings, however they often fall outside the standard workflow.
+vignette: >
+  %\VignetteIndexEntry{Setting up your project}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+```
+
+
+## Setting up your folder structure
+
+## Wind processing
+
+## Assign tasks
+
+## Misc functions
+soxSpectrogram()
+play_random_track()
