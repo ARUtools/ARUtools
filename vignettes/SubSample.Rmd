@@ -129,6 +129,7 @@ will change over time and time to sunrise/sunset.
 ```{r fig.height=6, out.height=8, warning=FALSE}
 gen_dens_sel_simulation(parms = params) 
 ```
+## Calculate selection weights
 
 Once you have your parameters set up, you can use them to calculate the sampling weights from the metadata.
 
@@ -147,7 +148,10 @@ full_selection_probs <-
 ```
 
 
-Below you can see the selection weights `psel_normalized` 
+Below you can see the selection weights `psel_normalized`. The highest selection
+weights should match the output from `gen_dens_sel_simulation()`. Not that as our
+schedule is set to start based on time, the time to sunrise that the recordings
+occur differ by sites.
 
 
 ```{r, echo=FALSE}
@@ -157,6 +161,15 @@ ggplot(full_selection_probs, aes(doy, t2sr, colour = psel_normalized)) +
   scale_colour_viridis_c() + facet_wrap(~site_id)
 ```
 
+
+## Assign sample size
+
+The next step is to assign sample sizes. This can be done on a per site basis or
+across the board. Here I use a 2% sampling rate, but your own subsampling intensity
+will depend on project goals.You can also set an oversample to draw extra samples
+in case some samples are unusable (e.g. due to wind).
+
+
 ```{r}
 sample_size <- count(full_selection_probs,  site_id) |> 
   transmute(site_id,
@@ -165,6 +178,37 @@ sample_size <- count(full_selection_probs,  site_id) |>
          )
 ```
 
+The figure below can provide a coarse rule of thumb on how many minutes of 
+recordings you might need or number of samples. It of course has many assumptions
+including knowledge of probability of observing per minute, that this probability
+will change by date, time of day, conspecific behaviour, weather, etc.
+
+```{r, echo=F}
+p_obs <- 
+  tidyr::expand_grid(p_obs = seq(0.01, 0.99, by = 0.01),
+                     n_obs = 1:20) |> 
+  mutate(p_total= 1-exp(-p_obs*n_obs)) |> 
+  ggplot(aes(n_obs, p_obs, fill = p_total), colour =NA) +
+  geom_raster() +
+  scale_fill_viridis_c() +
+  labs(x = "Number of minutes observed", y = "Probably of observing per minute",
+       fill = "Total\nprobability\nof\ndetection")
+p_obs
+```
+
+
+## Draw subsample
+
+### GRTS
+
+There are a few ways to subsample recordings. `ARUtools` has imported the [grts()](https://usepa.github.io/spsurvey/articles/sampling.html) 
+(Generalized Random Tessellation Stratified algorithm)
+function from [spsurvey](https://usepa.github.io/spsurvey/) package. We developed 
+a wrapper around the function to simplify it's usage for our particular use case.
+
+GRTS allows us to sample using a dispersed samples, while maintaining a stochastic
+element to sampling. In our case we are selecting samples dispersed across dates
+and time in the dates.
 
 
 ```{r}
@@ -180,5 +224,227 @@ grts_res <- fun_aru_samp(full_selection_probs,
                          x = 'doy',y = 't2sr')
 
 grts_res$sites_base
+```
+
+### slice_sample
+
+If you don't want to sample using `grts()` you can just use
+`dplyr::slice_sample()`.
+
+```{r}
+withr::with_seed(2024,{
+random_sample <- 
+  full_selection_probs |> 
+  dplyr::slice_sample( n = 4,by = site_id,
+                       weight_by = psel_normalized,
+                      replace = F)
+  
+} ) 
+```
+
+<details> <summary>
+If you want to set site specific sample sizes, you can use some dplyr tricks to
+handle that: </summary>
+```{r eval=F}
+withr::with_seed(2024,{
+random_sample_stratified <- 
+  full_selection_probs |> 
+  left_join(sample_size,by = join_by(site_id)) |> 
+  nest_by(site_id, N) |> 
+  rowwise() |> 
+  mutate(sample = list(dplyr::slice_sample(.data =data,
+                                      n = .data$N,
+                                      weight_by = psel_normalized,
+                      replace = F)) ) |> 
+  dplyr::select(site_id, sample) |> 
+  tidyr::unnest(sample)
+  
+} ) 
+
+```
+
+</details>
+
+Oversamples with random sampling, just involves dropping recordings you've selected and
+drawing some more.
+
+```{r}
+oversample <- filter(full_selection_probs, 
+                     !path %in% random_sample$path) |> 
+  dplyr::slice_sample( n = 2,by = site_id,
+                       weight_by = psel_normalized,
+                      replace = F)
+  
+```
+
+
+
+### Compare methods
+
+Looking at the draws, you may notice the `grts` results are more spaced out, while
+the random sample, contains more clumping, which is characteristic of random sampling.
+
+```{r, echo=F}
+filter(full_selection_probs, path %in% grts_res$sites_base$path) |> 
+ggplot(aes(doy,t2sr)) + geom_point() +
+  xlim(range(full_selection_probs$doy))+
+  ylim(range(full_selection_probs$t2sr)) +
+  labs(x="Day of Year", y = "Time to sunrise", title = "GRTS selection")
+
+
+```
+
+```{r, echo=F}
+random_sample |> 
+  mutate(z=1) |> 
+ggplot(aes(doy,t2sr)) + geom_point() +
+  xlim(range(full_selection_probs$doy))+
+  ylim(range(full_selection_probs$t2sr)) +
+  labs(x="Day of Year", y = "Time to sunrise", title = "Random selection")
+
+```
+
+## Assigning recording lengths
+
+While some surveys may include all full recordings, others may only interpret
+a portion of some recordings, allowing for more recordings to be at least partially
+interpreted.
+
+To assign lengths, we can repeat the same process as above sequentially assigning 
+lengths or more simply just assign them all at once.
+
+```{r}
+
+random_sample$length <- sample(x = c("5min", "3min", "1min"),
+                               size =  nrow(random_sample), replace = T)
+janitor::tabyl(random_sample, length, site_id)
+```
+This however creates the issue that some sites will have less and some more of each length.
+
+
+```{r}
+withr::with_seed(569,{
+  
+sample5min <- slice_sample(random_sample,
+                           n=1, by = site_id, weight_by = psel_normalized) 
+
+sample3min <- slice_sample(random_sample |> 
+                             filter(!path %in% sample5min$path),
+                           n=1, by = site_id, weight_by = psel_normalized)
+
+
+random_sample_with_lengths <- random_sample |> 
+  mutate(Length_group =
+           case_when(path %in% sample5min$path ~ "5min",
+                     path %in% sample3min$path ~ "3min",
+                     TRUE~"1min"
+           ),
+         ,
+         length_clip = as.numeric(str_extract(Length_group, "^\\d"))*60)  })
+
+janitor::tabyl(random_sample_with_lengths, Length_group, site_id)
+
+```
+# Assign start times
+
+ARUtools includes the function `get_wav_length`, which will return the length of 
+a 'wav' file in seconds.
+
+```{r, eval=F}
+random_sample_with_lengths$length_clip <- map(1:nrow(random_sample_with_lengths),
+                                              ~get_wav_length(random_sample_with_lengths$path[[.x]], 
+                                                              return_numeric = T))
+```
+This can be used to safely add a random start time to your recordings if you don't
+want to all start at zero.
+
+For this document we will assume all recordings are 5 minutes.
+```{r}
+random_sample_with_lengths$length <- 5*60
+```
+
+
+```{r, eval=T}
+
+
+
+random_sample_with_lengths <- 
+  random_sample_with_lengths |> 
+  rowwise() |> 
+  mutate(StartTime = case_when(Length_group == "5min"~0,
+                                 TRUE~runif(1, 0,
+                                          pmax(0,
+                                               length - length_clip)))
+  ) |> ungroup()
+
+
+```
+
+```{r, echo=F}
+ggplot(random_sample_with_lengths, aes(StartTime, fill = Length_group)) +
+  geom_histogram(binwidth = 10)
+```
+
+
+
+
+## Format output filename
+
+Finally we can format the filenames for wildtrax, which processes sites,
+dates, and times based on file name.
+
+
+```{r}
+final_selection <- random_sample_with_lengths |> 
+  add_wildtrax()
+
+final_selection |> 
+  head() |> 
+  dplyr::select(path, wildtrax_file_name)
+
+```
+
+
+## Clip and copy files for upload
+
+The `format_clip_wave` will rename, clip and copy your file to a location 
+that can then be used for uploading to Wildtrax. 
+
+Setting up a subset of folders will allow you to copy files to an organized folder 
+structure which can help with checking for errors prior to uploading.
+
+```{r, eval=F}
+out_directory <- "/path/to/upload/directory/"
+dir.create(out_directory, recursive = T)
+ul_tab <- expand_grid(period =c('Dawn'), # Add 'Dusk' if using more than one time period
+                      length = unique(selected_recordings$Length_group))
+purrr::map(glue::glue("{out_directory}/{ul_tab$period}/{ul_tab$length}"), 
+           dir.create,recursive = T)
+```
+
+
+
+If you have a large number of files, you may want to run this separately for files
+that require clipping and those that do not as it will run much quicker for the
+files that do not need to be clipped.
+
+You can use the option `use_job=T` to allow the use of the `job` package, which 
+will launch a background job if the copying will take a long time.
+
+```{r eval=F}
+
+
+log_output <- 
+  format_clip_wave(
+    segment_df = final_selection,
+    in_base_directory = "",out_base_directory =  out_directory, 
+    length_clip_col = "length_clip", 
+    sub_dir_out_col = c("Time_period", "Length_group"), 
+    filepath_in_col = "path",
+    out_filename_col ="wildtrax_file_name",  
+    use_job = F, filewarn = F)
+
+
+
 ```
 
