@@ -69,6 +69,8 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
 #' @param output_directory
 #' @param write_output
 #'
+#' @export
+#'
 #' @return
 #'
 wind_detection_pre_processing <- function(wav_vector,site_pattern,
