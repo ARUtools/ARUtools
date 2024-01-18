@@ -80,7 +80,7 @@ site_info <- simple_deploy |>
 
 ## Clean metadata
 
-To clean the metadata we can use the same code found in `vignette("ARUtools")`. 
+To clean the metadata we can use the same code found in the [Getting Started](https://davidhope.ca/ARUtools/articles/ARUtools.html) vignette. 
 I have used a pipe to save space here, but you can see the details in the 
 `vignette("ARUtools")`.
 
@@ -129,14 +129,13 @@ will change over time and time to sunrise/sunset.
 ```{r fig.height=6, out.height=8, warning=FALSE}
 gen_dens_sel_simulation(parms = params) 
 ```
+
+
 ## Calculate selection weights
 
 Once you have your parameters set up, you can use them to calculate the sampling weights from the metadata.
 
 ```{r}
-
-
-
 full_selection_probs <- 
   metadata |> 
   calc_sel_pr(
@@ -144,7 +143,6 @@ full_selection_probs <-
     min_col = t2sr, 
     day_col = doy,
     parms = params)
-
 ```
 
 
@@ -212,10 +210,6 @@ and time in the dates.
 
 
 ```{r}
-
-
-
-# Select Samples
 grts_res <- fun_aru_samp(full_selection_probs, 
                          N = sample_size,
                          strat_ = "site_id",
@@ -223,7 +217,7 @@ grts_res <- fun_aru_samp(full_selection_probs,
                          selprob_id = "psel_normalized",
                          x = 'doy',y = 't2sr')
 
-grts_res$sites_base
+dplyr::glimpse(grts_res$sites_base)
 ```
 
 ### slice_sample
@@ -351,9 +345,11 @@ ARUtools includes the function `get_wav_length`, which will return the length of
 a 'wav' file in seconds.
 
 ```{r, eval=F}
-random_sample_with_lengths$length_clip <- map(1:nrow(random_sample_with_lengths),
-                                              ~get_wav_length(random_sample_with_lengths$path[[.x]], 
-                                                              return_numeric = T))
+random_sample_with_lengths$length_clip <-
+  map(1:nrow(random_sample_with_lengths),
+      ~get_wav_length(
+        file = random_sample_with_lengths$path[[.x]], 
+        return_numeric = T))
 ```
 This can be used to safely add a random start time to your recordings if you don't
 want to all start at zero.
@@ -365,9 +361,6 @@ random_sample_with_lengths$length <- 5*60
 
 
 ```{r, eval=T}
-
-
-
 random_sample_with_lengths <- 
   random_sample_with_lengths |> 
   rowwise() |> 
@@ -376,8 +369,6 @@ random_sample_with_lengths <-
                                           pmax(0,
                                                length - length_clip)))
   ) |> ungroup()
-
-
 ```
 
 ```{r, echo=F}
@@ -432,8 +423,6 @@ You can use the option `use_job=T` to allow the use of the `job` package, which
 will launch a background job if the copying will take a long time.
 
 ```{r eval=F}
-
-
 log_output <- 
   format_clip_wave(
     segment_df = final_selection,
@@ -443,8 +432,11 @@ log_output <-
     filepath_in_col = "path",
     out_filename_col ="wildtrax_file_name",  
     use_job = F, filewarn = F)
-
-
-
 ```
+
+
+
+That's it, your output folder should now have your selected files, properly named for wildtrax and ready to upload.
+
+
 
