@@ -35,10 +35,10 @@ wt_assign_tasks <- function(wt_task_template_in, interp_hours_file, wt_task_outp
 
   task_summary <-
   dplyr::summarize(
-    assigned_tasks,hrs=sum(as.numeric(taskLength))/60/60 ,
+    assigned_tasks,hrs_assigned=sum(as.numeric(taskLength))/60/60 ,
     .by = transcriber) |>
     dplyr::left_join(hours, by = dplyr::join_by(transcriber)) |>
-    dplyr::mutate(updated_hrs_remain = {{interp_hours_column}}-hrs) #|> gt::gt()
+    dplyr::mutate(updated_hrs_remain = {{interp_hours_column}}-hrs_assigned) #|> gt::gt()
 
   return(list(assigned_tasks = assigned_tasks,
               task_summary =task_summary
