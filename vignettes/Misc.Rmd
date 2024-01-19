@@ -12,6 +12,7 @@ vignette: >
 
 ```{r, include = FALSE}
 library(ARUtools)
+library(dplyr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -91,7 +92,7 @@ Once you have run `WindNoiseDetection` you can read the results in using
 example_json <- system.file("extdata", "P71-1__20210606T232500-0400_SS.json", package = "ARUtools")
 
 wind_summary <- wind_detection_summarize_json(example_json)
-glimpse(wind_summary)
+dplyr::glimpse(wind_summary)
 ```
 
 
@@ -107,8 +108,8 @@ You will also need a template for observers with the number of hours they will
 be interpreting. This doesn't have to match exactly the time in a project as the 
 relative amounts are used.
 
-```{r}
-in_tasks <- tempfile(fileext = ".csv")
+```{r, eval=F}
+in_tasks <- fs::file_temp("Input_task_file", ext = ".csv")
 task_template <- wildRtrax::wt_make_aru_tasks(example_clean |> 
                                mutate(
                                  recording_date_time = date_time,
@@ -116,10 +117,10 @@ task_template <- wildRtrax::wt_make_aru_tasks(example_clean |>
                                  length_seconds = 300), 
                              output = in_tasks,
                                task_method = '1SPT', task_length = 300)
+```
 
-out_tasks <- 
-  tempfile(fileext = ".csv") 
 
+```{r}
 template_observers <- 
   "https://raw.githubusercontent.com/dhope/Shiny_select/main/data/InterpreterHours_Template.csv"
 
@@ -130,8 +131,8 @@ Once you have the files you need, you can run `wt_assign_tasks()` to randomly as
 tasks to interpreters based on the amount of effort they can put in.
 
 ```{r}
-task_output <- wt_assign_tasks(wt_task_template_in = in_tasks, 
-                wt_task_output_file = NULL,#out_tasks,
+task_output <- wt_assign_tasks(wt_task_template_in = task_template, 
+                wt_task_output_file = NULL,
                 interp_hours_file = template_observers,
                 interp_hours_column = hrs, 
                 random_seed = 65416

@@ -1,5 +1,5 @@
 ---
-title: "Subsampling your recordings"
+title: "Subsampling recordings"
 output: 
   rmarkdown::html_vignette:
     code_folding: s

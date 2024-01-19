@@ -19,15 +19,37 @@ A data frame with 42 rows and 10 columns:
   \item{longitude}{Latitude in decimal degrees}
   \item{latitude}{Longitude in decimal degrees}
 }
+
+## `task_template`
+A data frame with 42 rows and 10 columns:
+\describe{
+  \item{file_name}{Name of the file}
+  \item{type}{File type}
+  \item{path}{Relative file path including file name}
+  \item{aru_type}{ARU model}
+  \item{aru_id}{ARU ids}
+  \item{site_id}{Site ids}
+  \item{date_time}{Recording date/time}
+  \item{date}{Recording date}
+  \item{longitude}{Latitude in decimal degrees}
+  \item{latitude}{Longitude in decimal degrees}
+}
 }
 \source{
 data-raw/data_test.R
+
+data-raw/data_test.R
 }
 \usage{
+example_clean
+
 example_clean
 }
 \description{
 A data frame with examples of correctly formatted metadata with added
 site-level information
+
+A data frame with tasks generated from `example_clean` using
+the wildRtrax::wt_make_aru_tasks() function
 }
 \keyword{datasets}

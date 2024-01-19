@@ -5,8 +5,8 @@ example_sites <- data.frame(
   Sites = sites,
   Date_set_out = c("2020-05-01", "2020-05-03", "2020-05-05", "2020-05-05", "2020-05-06",
                    "2020-05-08", "2020-05-08", "2020-05-10", "2020-05-10", "2020-05-10"),
-  Date_removed = c("2020-05-03", "2020-05-05", "2020-05-06", "2020-05-07", "2020-05-07",
-                   "2020-05-09", "2020-05-10", "2020-05-11", "2020-05-11", "2020-05-11"),
+  Date_removed = c("2020-07-03", "2020-07-05", "2020-07-06", "2020-07-07", "2020-07-07",
+                   "2020-07-09", "2020-07-10", "2020-07-11", "2020-07-11", "2020-07-11"),
   ARU = c("BARLT10962", "S4A01234", "BARLT10962", "BARLT11111", "BARLT10962",
           "BARLT10962", "S4A01234", "BARLT10962", "S4A02222", "S4A03333"),
   lon = c(-85.03, -87.45, -90.38, -85.53, -88.45, -90.08, -86.03, -84.45, -91.38, -90.00),
@@ -23,16 +23,24 @@ dates <- example_sites |>
   select(Sites, ARU, Date_set_out, Date_removed) |>
   group_by(Sites, ARU) |>
   reframe(date = seq(lubridate::as_date(Date_set_out) + lubridate::days(1),
-                     lubridate::as_date(Date_removed), by = "1 day")) |>
+                     lubridate::as_date(Date_removed), by = "1 day")) %>%
   mutate(date_time = date +
-           rep(lubridate::minutes(c(300, 320, 325, 450, 600, 300, 205)), 2),
+           lubridate::minutes(sample(x = c(300, 320, 325, 450, 600, 300, 205),
+                              size=
+                                  nrow(.),
+                              replace=T) ),
          date_time = format(date_time, "%Y%m%dT%H%M%S"))
 
 
-example_files <- tidyr::expand_grid(random, select(example_sites, Sites, ARU)) |>
+example_files <-  dplyr::select(example_sites, Sites, ARU) |>
   dplyr::left_join(dates, by = c("Sites", "ARU"), relationship = "many-to-many") |>
   dplyr::rowwise() |>
-  dplyr::mutate(f = paste0(random, "_", ARU, "_", Sites, "/", Sites, "_", date_time, "_ARU.wav")) |>
+  dplyr::mutate(f = paste0(sample(random, size = 1),
+                           "/", ARU, "_",
+                           Sites, "/",
+                           Sites, "_",
+                           date_time,
+                           "_ARU.wav")) |>
   dplyr::pull(f)
 
 usethis::use_data(example_files, overwrite = TRUE)

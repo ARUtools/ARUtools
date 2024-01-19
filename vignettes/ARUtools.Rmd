@@ -45,7 +45,7 @@ library(ARUtools)
 Let's use some example data to get started. 
 
 ```{r}
-example_files
+head(example_files)
 ```
 
 This is a list of hypothetical ARU files from different sites, and using different
