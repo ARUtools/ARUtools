@@ -23,7 +23,7 @@ dates <- example_sites |>
   select(Sites, ARU, Date_set_out, Date_removed) |>
   group_by(Sites, ARU) |>
   reframe(date = seq(lubridate::as_date(Date_set_out) + lubridate::days(1),
-                     lubridate::as_date(Date_removed), by = "1 day")) %>%
+                     lubridate::as_date(Date_removed) - lubridate::days(1), by = "1 day")) %>%
   mutate(date_time = date +
            lubridate::minutes(sample(x = c(300, 320, 325, 450, 600, 300, 205),
                               size=
