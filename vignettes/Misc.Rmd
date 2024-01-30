@@ -138,7 +138,7 @@ task_output <- wt_assign_tasks(wt_task_template_in = task_template,
                 random_seed = 65416
                 )
 
-gt::gt(task_output$task_summary)
+task_output$task_summary
 
 ```
 
