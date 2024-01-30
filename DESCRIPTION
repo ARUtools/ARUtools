@@ -44,10 +44,7 @@ Suggests:
     jsonlite,
     knitr,
     rmarkdown,
-    covr,
-    wildRtrax,
-    janitor
-Remotes: ABbiodiversity/wildRtrax
+    covr
 Config/testthat/edition: 3
 RoxygenNote: 7.3.0
 VignetteBuilder: knitr
