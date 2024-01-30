@@ -10,10 +10,15 @@
 #' @export
 wt_assign_tasks <- function(wt_task_template_in, interp_hours_file, wt_task_output_file,
                             interp_hours_column, random_seed = NULL){
+  if(is.data.frame(wt_task_template_in)){
+    tasks <- wt_task_template_in
+  } else if (is.character(wt_task_template_in)){
 
   tasks <- readr::read_csv(wt_task_template_in,
                     col_types = glue::glue_collapse(rep("c", 13)),
                     na = character())
+
+  } else{rlang::abort("wt_task_template_in requires a data.frame or path to file")}
   hours <- readr::read_csv(interp_hours_file) |>
     dplyr::filter(!is.na({{interp_hours_column}})) |>
     dplyr::mutate(phrs = {{interp_hours_column}}/sum({{interp_hours_column}}))
@@ -35,10 +40,10 @@ wt_assign_tasks <- function(wt_task_template_in, interp_hours_file, wt_task_outp
 
   task_summary <-
   dplyr::summarize(
-    assigned_tasks,hrs=sum(as.numeric(taskLength))/60/60 ,
+    assigned_tasks,hrs_assigned=sum(as.numeric(taskLength))/60/60 ,
     .by = transcriber) |>
     dplyr::left_join(hours, by = dplyr::join_by(transcriber)) |>
-    dplyr::mutate(updated_hrs_remain = {{interp_hours_column}}-hrs) #|> gt::gt()
+    dplyr::mutate(updated_hrs_remain = {{interp_hours_column}}-hrs_assigned) #|> gt::gt()
 
   return(list(assigned_tasks = assigned_tasks,
               task_summary =task_summary

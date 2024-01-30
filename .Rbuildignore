@@ -27,3 +27,5 @@ inst\Gen_gex.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^doc$
+^Meta$

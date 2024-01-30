@@ -19,15 +19,38 @@ A data frame with 42 rows and 10 columns:
   \item{longitude}{Latitude in decimal degrees}
   \item{latitude}{Longitude in decimal degrees}
 }
+
+## `task_template`
+A data frame with 14 rows and 13 columns:
+\describe{
+  \item{location}{Site location name}
+  \item{recording_date_time}{Date time of the recording}
+  \item{method}{Method of interpretation (generally '1SPT')}
+  \item{taskLength}{Length of recording in seconds}
+  \item{transcriber}{Transcriber ID, to be filled in with function}
+  \item{rain}{Empty character for filling in WildTrax}
+  \item{wind}{Empty character for filling in WildTrax}
+  \item{industryNoise}{Empty character for filling in WildTrax}
+  \item{audioQuality}{Empty character for filling in WildTrax}
+  \item{taskComments}{Empty character for filling in WildTrax}
+  \item{internal_task_id}{Empty character for filling in WildTrax}
+}
 }
 \source{
 data-raw/data_test.R
+
+data-raw/task_template.R
 }
 \usage{
+example_clean
+
 example_clean
 }
 \description{
 A data frame with examples of correctly formatted metadata with added
 site-level information
+
+A data frame with tasks generated from `example_clean` using
+the wildRtrax::wt_make_aru_tasks() function
 }
 \keyword{datasets}
