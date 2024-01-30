@@ -111,7 +111,7 @@ relative amounts are used.
 ```{r, eval=F}
 in_tasks <- fs::file_temp("Input_task_file", ext = ".csv")
 task_template <- wildRtrax::wt_make_aru_tasks(example_clean |> 
-                               mutate(
+                               dplyr::mutate(
                                  recording_date_time = date_time,
                                  file_path = path, location = site_id,
                                  length_seconds = 300), 
