@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ARUtools <img src="https://raw.githubusercontent.com/dhope/ARUtools/main/inst/figures/ARUtools.png" align="right" width="120"/>
+# ARUtools <a href="http://davidhope.ca/ARUtools/"><img src="man/figures/logo.png" align="right" height="139" alt="ARUtools website" /></a>
 
 <!-- badges: start -->
 
@@ -33,14 +33,12 @@ The easiest way to dig into using the `ARUtools` package is using the
 There currently are four vignettes that will help you get up and running
 with cleaning ARU metadata
 
-- [Getting started with
-  ARUtools](https://davidhope.ca/ARUtools/articles/ARUtools.html)
-- [Customizing
-  `clean_metadata()`](https://davidhope.ca/ARUtools/articles/customizing.html)
-- [Dealing with
-  timezones](https://davidhope.ca/ARUtools/articles/customizing.html)
-- [Working with spatial
-  data](https://davidhope.ca/ARUtools/articles/spatial.html)
+- Getting started with ARUtools (`vignette("ARUtools")`)
+- Customizing `clean_metadata()` (`vignette("customizing")`)
+- Dealing with timezones (`vignette("timezones")`)
+- Working with spatial data (`vignette("spatial")`)
+- Subsampling recordings (`vignette("SubSample")`)
+- Other useful functions (`vignette("Misc")` )
 
 ## Provide feedback
 
@@ -81,6 +79,7 @@ There are also other good packages that may be of use to you:
 - [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) (R)
 - [seewave](https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html)
   (R)
+- [warbleR](https://github.com/maRce10/warbleR) (R)
 - [emu](https://github.com/QutEcoacoustics/emu) (command line)
 - [SoX](https://sourceforge.net/projects/sox/) (command line)
 - [Sound-Extraction](https://github.com/prayagnshah/Sound-Extraction)

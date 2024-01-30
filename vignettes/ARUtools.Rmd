@@ -195,11 +195,13 @@ dplyr::glimpse(m)
 
 Tada! Now we have a complete set of cleaned metadata associated with each recording.
 
-
+This is a very simple example and much of the pain in large projects comes from
+complications, so be sure to check out `vignette("customizing")` and `vignette("spatial")`
+to dig into some of these issues.
 
 ## Next steps
 
 Now that we have a set of cleaned metadata the next step is to select recordings.
-To do this using a random sampling approach check out the [Sub-sampling](addlink/later)
+To do this using a random sampling approach check out the subsampling article `vignette("SubSample")`.
 
 

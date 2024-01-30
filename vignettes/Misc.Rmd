@@ -1,11 +1,11 @@
 ---
-title: "Setting up your project"
+title: "Other useful functions"
 output: rmarkdown::html_vignette
 description: >
   This article covers the aditional steps important in dealing with
   ARU recordings, however they often fall outside the standard workflow.
 vignette: >
-  %\VignetteIndexEntry{Setting up your project}
+  %\VignetteIndexEntry{Other useful functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

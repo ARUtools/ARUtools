@@ -81,8 +81,8 @@ site_info <- simple_deploy |>
 ## Clean metadata
 
 To clean the metadata we can use the same code found in the [Getting Started](https://davidhope.ca/ARUtools/articles/ARUtools.html) vignette. 
-I have used a pipe to save space here, but you can see the details in the 
-`vignette("ARUtools")`.
+I have used a pipe to save space here, but you can see the details in the linked
+article (`vignette("ARUtools")`).
 
 ```{r}
 sites <- clean_site_index(site_info,
@@ -164,7 +164,7 @@ ggplot(full_selection_probs, aes(doy, t2sr, colour = psel_normalized)) +
 
 The next step is to assign sample sizes. This can be done on a per site basis or
 across the board. Here I use a 2% sampling rate, but your own subsampling intensity
-will depend on project goals.You can also set an oversample to draw extra samples
+will depend on project goals. You can also set an oversample to draw extra samples
 in case some samples are unusable (e.g. due to wind).
 
 
@@ -381,7 +381,7 @@ ggplot(random_sample_with_lengths, aes(StartTime, fill = Length_group)) +
 
 ## Format output filename
 
-Finally we can format the filenames for wildtrax, which processes sites,
+Finally we can format the filenames for [Wildtrax](https://portal.wildtrax.ca/), which processes sites,
 dates, and times based on file name.
 
 
@@ -399,7 +399,7 @@ final_selection |>
 ## Clip and copy files for upload
 
 The `format_clip_wave` will rename, clip and copy your file to a location 
-that can then be used for uploading to Wildtrax. 
+that can then be used for uploading to [Wildtrax](https://portal.wildtrax.ca/) 
 
 Setting up a subset of folders will allow you to copy files to an organized folder 
 structure which can help with checking for errors prior to uploading.
@@ -436,7 +436,7 @@ log_output <-
 
 
 
-That's it, your output folder should now have your selected files, properly named for wildtrax and ready to upload.
+That's it, your output folder should now have your selected files, properly named for [Wildtrax](https://portal.wildtrax.ca/) and ready to upload.
 
 
 
