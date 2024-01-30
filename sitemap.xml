@@ -13,6 +13,12 @@
     <loc>http://davidhope.ca/ARUtools/articles/ARUtools.html</loc>
   </url>
   <url>
+    <loc>http://davidhope.ca/ARUtools/articles/Misc.html</loc>
+  </url>
+  <url>
+    <loc>http://davidhope.ca/ARUtools/articles/SubSample.html</loc>
+  </url>
+  <url>
     <loc>http://davidhope.ca/ARUtools/articles/customizing.html</loc>
   </url>
   <url>
@@ -119,6 +125,9 @@
   </url>
   <url>
     <loc>http://davidhope.ca/ARUtools/reference/play_random_track.html</loc>
+  </url>
+  <url>
+    <loc>http://davidhope.ca/ARUtools/reference/prep_for_wind_detection.html</loc>
   </url>
   <url>
     <loc>http://davidhope.ca/ARUtools/reference/process_gps_SM.html</loc>
