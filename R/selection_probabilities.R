@@ -180,8 +180,6 @@ calc_selection_probs <- function(meta_sun,
 check_selection_params <- function(params) {
 
   # TODO: Are there some relationships that should be checked?
-  # - I.e. can you have a min_range of -30, 60, but a mean of 90? Should the mean
-  #   always be within the range?
   # - Should offset be always set to `min(min_range) + 1`?
 
   # Get params as environment objects
@@ -190,10 +188,10 @@ check_selection_params <- function(params) {
   # Check parameters values
   check_num(min_range, n = 2)
   check_num(min_mean, n = 1)
-  check_num(min_sd, n = 1)
+  check_num(min_sd, n = 1, range = c(0, Inf))
   day_range <- check_doy(day_range)
   day_mean <- check_doy(day_mean)
-  check_num(day_sd, n = 1)
+  check_num(day_sd, n = 1, range = c(0, Inf))
   check_num(offset, n = 1)
   check_text(selection_fun, n = 1, opts = c("norm", "lognorm", "cauchy"))
 

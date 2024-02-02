@@ -19,7 +19,11 @@ test_that("check_value()", {
   expect_silent(check_value(1, "x", opts = 1, type = "numeric"))
   expect_error(check_value(1:3, "x", type = "numeric", n = 1), "must have 1")
   expect_error(check_value(NULL, "x", type = "numeric"), "cannot be `NULL`")
-  expect_error(check_value(1, "x", opts = 2, type = "numeric"), "must be among")
+  expect_error(check_value(1, "x", opts = c(2, 4), type = "numeric"), "must be among")
+
+  expect_silent(check_value(1:3, "x", type = "numeric", range = c(0, Inf)))
+  expect_error(check_value(1:3, "x", type = "numeric", range = c(4, Inf)),
+               "must be between")
 })
 
 test_that("check_cols()", {

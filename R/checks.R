@@ -9,7 +9,8 @@
 #' @param n How many values can there be (must there be)
 #'
 #' @noRd
-check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = c(1, Inf)) {
+check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = c(1, Inf),
+                        range = NULL) {
   nm <- paste0("`", nm, "`")
   if(not_null && is.null(x)) {
     rlang::abort(paste(nm, "cannot be `NULL`"), call = NULL)
@@ -24,7 +25,10 @@ check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = c(1, Inf)
       rlang::abort(paste(nm, "must have between", n[1], "and", n[2], "values"), call = NULL)
     } else if(!is.null(opts) && any(!x %in% opts)) {
       rlang::abort(paste0(nm, " must be among '",
-                          paste0(opts, collapse = "', '"), "'"))
+                          paste0(opts, collapse = "', '"), "'"), call = NULL)
+    } else if(!is.null(range) && any(!dplyr::between(x, range[1], range[2]))) {
+      rlang::abort(paste0(nm, " must be between ",
+                          paste0(range, collapse = " and ")), call = NULL)
     }
   }
 }
