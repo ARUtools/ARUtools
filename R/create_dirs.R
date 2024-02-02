@@ -1,48 +1,60 @@
-#' Create directory structure for ARU folders
+#' Create directory structure for recording folders
 #'
-#' @param hexagons Character vector. Hexagon or cluster names for folder names.
-#' @param aru_ids  Character vector. ARU unit ids. Should include the
-#'   hexagon/cluster id in the name.
+#' Create a set of nested folders for storing ARU recordings by plots and sites.
+#'
+#' @param plots Character vector. Hexagon or cluster names for folder names.
+#' @param site_ids  Character vector. Site IDs. Should include the plot/cluster
+#'   id in the name.
 #' @param base_dir Character. Base directory to build directory structure in.
+#' @param expect_dir Logical. Expect that directories may already exist? Default
+#'   (`FALSE`) is to stop if directories to be created already exist.
 #'
-#' @return Does not return anything if run. If cancelled returns string notification.
+#' @return Does not return anything if run.
 #' @export
 #'
 #' @examples
 #' # Default is to do a dry-run (don't actually create the directories)
-#' create_dirs(hexagons = c("site1", "site2", "site3"),
-#'             aru_ids = c("site1_sm01", "site1_sm02", "site2_sm03", "site2_sm04",
-#'                         "site3_sm05", "site3_sm06"),
+#' create_dirs(plots = c("river1", "river2", "river3"),
+#'             site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+#'                          "river3_sm05", "river3_sm06"),
 #'             base_dir = "Recordings")
 #'
 #' # Get a list of directories which would be created
-#' create_dirs(hexagons = c("site1", "site2", "site3"),
-#'             aru_ids = c("site1_sm01", "site1_sm02", "site2_sm03", "site2_sm04",
-#'                         "site3_sm05", "site3_sm06"),
+#' create_dirs(plots = c("river1", "river2", "river3"),
+#'             site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+#'                          "river3_sm05", "river3_sm06"),
 #'             base_dir = "Recordings", dir_list = TRUE)
 #'
 #' \dontrun{
 #' # Create directories AND return a list of those created
-#' d <- create_dirs(hexagons = c("site1", "site2", "site3"),
-#'                  aru_ids = c("site1_sm01", "site1_sm02", "site2_sm03", "site2_sm04",
-#'                              "site3_sm05", "site3_sm06"),
+#' d <- create_dirs(plots = c("river1", "river2", "river3"),
+#'                  site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+#'                               "river3_sm05", "river3_sm06"),
 #'                  base_dir = "Recordings", dir_list = TRUE,
 #'                  dry_run = FALSE)
 #' d
 #' }
 
-create_dirs <- function(hexagons, aru_ids, base_dir = NULL, dir_list = FALSE,
-                        dry_run = TRUE) {
+create_dirs <- function(plots, site_ids, base_dir = NULL, dir_list = FALSE,
+                        dry_run = TRUE, expect_dirs = FALSE) {
 
   # Get absolute path so user can be *really* sure they want to do this
   if(is.null(base_dir)) base_dir <- fs::path_wd() else base_dir <- fs::path_abs(base_dir)
 
   # Calculate directories
   d <- vector()
-  for(h in hexagons) d <- c(d, fs::path(base_dir, h, stringr::str_subset(aru_ids, h)))
+  for(p in plots) d <- c(d, fs::path(base_dir, p, stringr::str_subset(site_ids, p)))
 
   # Create directories
   if(!dry_run) {
+
+    if(!expect_dirs & any(fs::dir_exists(d))) {
+      rlang::abort(
+      c("Trying to create directories that already exist",
+        "i" = "If you're certain this is correct, use `expect_dirs = TRUE`"),
+      call = caller_env())
+    }
+
     fs::dir_create(d)
 
     if(rlang::is_installed("sessioninfo")) {
@@ -53,6 +65,12 @@ create_dirs <- function(hexagons, aru_ids, base_dir = NULL, dir_list = FALSE,
   } else {
     msg <- "This is a dry run, no directories are created"
     if(!dir_list) msg <- c(msg, "i" = "Use `dir_list = TRUE` to return a list of directories to be created")
+    if(!expect_dirs & any(fs::dir_exists(d))) {
+      msg <- c(msg,
+               "i" = "This will create directories that already exist",
+               "*" = "If you're certain this is correct, use `expect_dirs = TRUE`")
+    }
+
     rlang::inform(msg)
   }
   if(dir_list) d

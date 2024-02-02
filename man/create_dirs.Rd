@@ -2,48 +2,52 @@
 % Please edit documentation in R/create_dirs.R
 \name{create_dirs}
 \alias{create_dirs}
-\title{Create directory structure for ARU folders}
+\title{Create directory structure for recording folders}
 \usage{
 create_dirs(
-  hexagons,
-  aru_ids,
+  plots,
+  site_ids,
   base_dir = NULL,
   dir_list = FALSE,
-  dry_run = TRUE
+  dry_run = TRUE,
+  expect_dirs = FALSE
 )
 }
 \arguments{
-\item{hexagons}{Character vector. Hexagon or cluster names for folder names.}
+\item{plots}{Character vector. Hexagon or cluster names for folder names.}
 
-\item{aru_ids}{Character vector. ARU unit ids. Should include the
-hexagon/cluster id in the name.}
+\item{site_ids}{Character vector. Site IDs. Should include the plot/cluster
+id in the name.}
 
 \item{base_dir}{Character. Base directory to build directory structure in.}
+
+\item{expect_dir}{Logical. Expect that directories may already exist? Default
+(\code{FALSE}) is to stop if directories to be created already exist.}
 }
 \value{
-Does not return anything if run. If cancelled returns string notification.
+Does not return anything if run.
 }
 \description{
-Create directory structure for ARU folders
+Create a set of nested folders for storing ARU recordings by plots and sites.
 }
 \examples{
 # Default is to do a dry-run (don't actually create the directories)
-create_dirs(hexagons = c("site1", "site2", "site3"),
-            aru_ids = c("site1_sm01", "site1_sm02", "site2_sm03", "site2_sm04",
-                        "site3_sm05", "site3_sm06"),
+create_dirs(plots = c("river1", "river2", "river3"),
+            site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+                         "river3_sm05", "river3_sm06"),
             base_dir = "Recordings")
 
 # Get a list of directories which would be created
-create_dirs(hexagons = c("site1", "site2", "site3"),
-            aru_ids = c("site1_sm01", "site1_sm02", "site2_sm03", "site2_sm04",
-                        "site3_sm05", "site3_sm06"),
+create_dirs(plots = c("river1", "river2", "river3"),
+            site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+                         "river3_sm05", "river3_sm06"),
             base_dir = "Recordings", dir_list = TRUE)
 
 \dontrun{
 # Create directories AND return a list of those created
-d <- create_dirs(hexagons = c("site1", "site2", "site3"),
-                 aru_ids = c("site1_sm01", "site1_sm02", "site2_sm03", "site2_sm04",
-                             "site3_sm05", "site3_sm06"),
+d <- create_dirs(plots = c("river1", "river2", "river3"),
+                 site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+                              "river3_sm05", "river3_sm06"),
                  base_dir = "Recordings", dir_list = TRUE,
                  dry_run = FALSE)
 d
