@@ -1,4 +1,4 @@
-# calc_selection_probs()
+# calc_selection_weights()
 
     {
       "type": "list",
