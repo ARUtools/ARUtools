@@ -16,7 +16,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["site_id", "t2sr", "date", "doy", "psel_tod", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+          "value": ["site_id", "t2sr", "date", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
         }
       },
       "value": [

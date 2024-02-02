@@ -20,7 +20,7 @@
 #' @param selection_fun Character. Selection function to use. Options are
 #'   `lognorm`,`norm` (default), or `cauchy`.
 #' @param selection_var Character. Selection variable to plot
-#'   (if `plot = TRUE`). Options are are `psel`, `psel_doy`, `psel_tod`,
+#'   (if `plot = TRUE`). Options are are `psel`, `psel_doy`, `psel_min`,
 #'   `psel_std`, `psel_scaled`, or `psel_normalized` (default).
 #' @param return_params Logical. Return parameter list for use in
 #'   calc_selection_probs()?
@@ -61,7 +61,7 @@ simulate_selection_probs <- function(
   check_logical(return_params)
   check_logical(plot)
   check_text(selection_var, n = 1,
-             opts = c("psel_normalized", "psel", "psel_day", "psel_tod",
+             opts = c("psel_normalized", "psel", "psel_day", "psel_min",
                       "psel_std", "psel_scaled", "psel_normalized"))
 
   # Simulate probabilities
@@ -76,7 +76,7 @@ simulate_selection_probs <- function(
       ggplot2::geom_line() +
       ggplot2::labs(x = "Date", y = "Selection probability (date)")
 
-    p2 <- ggplot2::ggplot(probs, ggplot2::aes(min, psel_tod)) +
+    p2 <- ggplot2::ggplot(probs, ggplot2::aes(min, psel_min)) +
       ggplot2::geom_line() +
       ggplot2::labs(x = "Time to sun event", y = "Selection probability (time)")
 
@@ -162,9 +162,9 @@ calc_selection_probs <- function(meta_sun,
   # Calculate selection probabilities
   sp |>
     dplyr::mutate(
-      psel_tod = min_fun(round(.data[[col_min]], 0), min_mean, min_sd, log = return_log) / max(abs(dens_min)),
+      psel_min = min_fun(round(.data[[col_min]], 0), min_mean, min_sd, log = return_log) / max(abs(dens_min)),
       psel_doy = dnorm(.data[["doy"]], mean = day_mean, sd = day_sd, log = return_log) / max(abs(dens_doy)),
-      psel = fun_psel(.data[["psel_tod"]], .data[["psel_doy"]], return_log),
+      psel = fun_psel(.data[["psel_min"]], .data[["psel_doy"]], return_log),
       psel_scaled = .data[["psel"]] / max(.data[["psel"]])) |>
     dplyr::group_by(.data[[col_site_id]]) |>
     dplyr::mutate(
