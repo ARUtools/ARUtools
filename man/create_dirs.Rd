@@ -21,7 +21,7 @@ id in the name.}
 
 \item{base_dir}{Character. Base directory to build directory structure in.}
 
-\item{expect_dir}{Logical. Expect that directories may already exist? Default
+\item{expect_dirs}{Logical. Expect that directories may already exist? Default
 (\code{FALSE}) is to stop if directories to be created already exist.}
 }
 \value{

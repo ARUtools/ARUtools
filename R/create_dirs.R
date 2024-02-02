@@ -6,7 +6,7 @@
 #' @param site_ids  Character vector. Site IDs. Should include the plot/cluster
 #'   id in the name.
 #' @param base_dir Character. Base directory to build directory structure in.
-#' @param expect_dir Logical. Expect that directories may already exist? Default
+#' @param expect_dirs Logical. Expect that directories may already exist? Default
 #'   (`FALSE`) is to stop if directories to be created already exist.
 #'
 #' @return Does not return anything if run.
