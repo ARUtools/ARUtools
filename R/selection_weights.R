@@ -155,6 +155,14 @@ calc_selection_weights <- function(meta_sun,
     "cauchy"= dcauchy
   )
 
+  # Check offset
+  if((min(meta_sun[[col_min]]) + offset) <= 0 && selection_fun == "lognorm") {
+    rlang::abort(
+      paste0("If `selection_fun = 'lognorm'` and any `min` values are less than 0\n",
+             "you must provide an `offset` large enough to ensure all values are greater than 0."),
+      call = NULL)
+  }
+
   dens_min <- min_fun(seq(min_range[1], min_range[2]), min_mean, min_sd, log = return_log)
   dens_doy <-   dnorm(seq(day_range[1], day_range[2]), day_mean, day_sd, log = return_log)
   fun_psel <- function(x1, x2, return_log) if(return_log) exp(x1 + x2) else x1 * x2
@@ -178,9 +186,6 @@ calc_selection_weights <- function(meta_sun,
 }
 
 check_selection_params <- function(params) {
-
-  # TODO: Are there some relationships that should be checked?
-  # - Should offset be always set to `min(min_range) + 1`?
 
   # Get params as environment objects
   list2env(params, envir = environment())
