@@ -39,7 +39,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
   meta_sites <- dplyr::mutate(
     meta_sites,
     date_time = lubridate::as_datetime(.data$date_time),
-    date = lubridate::as_date(.data$date_time))
+    date = lubridate::as_date(.data$date))
 
   # If sf, convert to df
   crs <- sf::st_crs(meta_sites)

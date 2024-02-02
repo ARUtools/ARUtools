@@ -132,4 +132,12 @@ test_that("calc_sun() errors etc.", {
   expect_equal(unique(s1$tz),
                c("America/Toronto", "America/Detroit", "America/Winnipeg",
                  "America/Chicago"))
+
+  # Don't replace dates
+  e <- example_clean
+  e$date_time[1:5] <- NA
+  expect_silent(s2 <- calc_sun(e))
+  expect_equal(e$date_time, s2$date_time)
+  expect_equal(e$date, s2$date)
+  expect_equal(is.na(e$date_time), is.na(s2$t2sr))
 })
