@@ -21,7 +21,7 @@ to clean. If file path, must be to a local csv or xlsx file.}
 
 \item{col_aru_id}{Character. Column name that contains ARU ids. Default \code{aru_id}.}
 
-\item{col_site_id}{Character. Column name that contains site ids.}
+\item{col_site_id}{Character. Column name that contains site ids. Deafult \code{site_id}.}
 
 \item{col_date_time}{Character. Column name that contains dates or
 date/times. Can be vector of two names if there are both 'start' and 'end'
