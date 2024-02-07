@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ARUtools <a href="http://davidhope.ca/ARUtools/"><img src="man/figures/logo.png" align="right" height="139" alt="ARUtools website" /></a>
+# ARUtools <a href="http://arutools.github.io/ARUtools/"><img src="man/figures/logo.png" align="right" height="139" alt="ARUtools website" /></a>
 
 <!-- badges: start -->
 
@@ -18,19 +18,21 @@ names may change between versions and some functions may become defunct.
 ## Installation
 
 You can install the current version of ARUtools from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/) with the code below. You will need to have
+[Rtools](https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html)
+installed first:
 
 ``` r
-# install.packages("remotes") # Uncomment if you don't have remotes installed.
-remotes::install_github("dhope/ARUtools", build_vignettes=TRUE)
+# install.packages("pak") # Uncomment if you don't have remotes installed.
+pak::pak("dhope/ARUtools", build_vignettes=TRUE)
 ```
 
 ## Learn to use
 
 The easiest way to dig into using the `ARUtools` package is using the
-[documentation webpage](https://davidhope.ca/ARUtools/)
+[documentation webpage](https://arutools.github.io/ARUtools/)
 
-There currently are four vignettes that will help you get up and running
+There currently are six vignettes that will help you get up and running
 with cleaning ARU metadata
 
 - Getting started with ARUtools (`vignette("ARUtools")`)
