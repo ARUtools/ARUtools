@@ -24,7 +24,7 @@ installed first:
 
 ``` r
 # install.packages("pak") # Uncomment if you don't have remotes installed.
-pak::pak("arutools/ARUtools", build_vignettes=TRUE)
+pak::pak("arutools/ARUtools")
 ```
 
 ## Learn to use
