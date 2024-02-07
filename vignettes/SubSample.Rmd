@@ -80,7 +80,7 @@ site_info <- simple_deploy |>
 
 ## Clean metadata
 
-To clean the metadata we can use the same code found in the [Getting Started](https://davidhope.ca/ARUtools/articles/ARUtools.html) vignette. 
+To clean the metadata we can use the same code found in the [Getting Started](https://arutools.github.io/ARUtools/articles/ARUtools.html) vignette. 
 I have used a pipe to save space here, but you can see the details in the linked
 article (`vignette("ARUtools")`).
 
