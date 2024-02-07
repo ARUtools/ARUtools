@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Codecov test
-coverage](https://codecov.io/gh/dhope/ARUtools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dhope/ARUtools?branch=main)
+coverage](https://codecov.io/gh/arutools/ARUtools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/arutools/ARUtools?branch=main)
 
 <!-- badges: end -->
 
@@ -24,7 +24,7 @@ installed first:
 
 ``` r
 # install.packages("pak") # Uncomment if you don't have remotes installed.
-pak::pak("dhope/ARUtools", build_vignettes=TRUE)
+pak::pak("arutools/ARUtools", build_vignettes=TRUE)
 ```
 
 ## Learn to use
@@ -46,7 +46,7 @@ with cleaning ARU metadata
 
 If you run into problems or have ideas for extensions, please don’t
 hesitate to [submit an
-issue](https://github.com/dhope/ARUtools/issues/new/choose).
+issue](https://github.com/arutools/ARUtools/issues/new/choose).
 
 ## Motivation and limitations
 
