@@ -1,6 +1,8 @@
 url: http://arutools.github.io/ARUtools/
 template:
   bootstrap: 5
+development:
+  mode: auto
 navbar:
   structure:
     left:  [intro, reference, articles, tutorials, news]
