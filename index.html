@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,16 +98,16 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the current version of ARUtools from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the current version of ARUtools from <a href="https://github.com/" class="external-link">GitHub</a> with the code below. You will need to have <a href="https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html" class="external-link">Rtools</a> installed first:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes") # Uncomment if you don't have remotes installed.</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dhope/ARUtools"</span>, build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak") # Uncomment if you don't have remotes installed.</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"dhope/ARUtools"</span>, build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="learn-to-use">Learn to use<a class="anchor" aria-label="anchor" href="#learn-to-use"></a>
 </h2>
-<p>The easiest way to dig into using the <code>ARUtools</code> package is using the <a href="https://davidhope.ca/ARUtools/" class="external-link">documentation webpage</a></p>
-<p>There currently are four vignettes that will help you get up and running with cleaning ARU metadata</p>
+<p>The easiest way to dig into using the <code>ARUtools</code> package is using the <a href="https://arutools.github.io/ARUtools/" class="external-link">documentation webpage</a></p>
+<p>There currently are six vignettes that will help you get up and running with cleaning ARU metadata</p>
 <ul>
 <li>Getting started with ARUtools (<code><a href="articles/ARUtools.html">vignette("ARUtools")</a></code>)</li>
 <li>Customizing <code><a href="reference/clean_metadata.html">clean_metadata()</a></code> (<code><a href="articles/customizing.html">vignette("customizing")</a></code>)</li>
@@ -184,12 +184,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://app.codecov.io/gh/dhope/ARUtools?branch=main" class="external-link"><img src="https://codecov.io/gh/dhope/ARUtools/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>
