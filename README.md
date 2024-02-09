@@ -17,7 +17,14 @@ names may change between versions and some functions may become defunct.
 
 ## Installation
 
-You can install the current version of ARUtools from
+You can install the current version of ARUtools from the
+[R-universe](https://arutools.r-universe.dev/) repository.
+
+``` r
+install.packages('ARUtools', repos = 'https://arutools.r-universe.dev/')
+```
+
+Alternatively you can install the package from
 [GitHub](https://github.com/) with the code below. You will need to have
 [Rtools](https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html)
 installed first:
