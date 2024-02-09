@@ -5,7 +5,7 @@ citEntry(
   title    = "ARUtools: a package for ARU data",
   author   = "David Hope, Steffi LaZerte",
   year     = 2023,
-  url      = "www.github.com/dhope/ARUtools",
+  url      = "www.github.com/arutools/ARUtools",
   textVersion = paste(
   "Hope, David and Steffi LaZerte. ARUtools: a package for ARU data. www.github.com/dhope/ARUtools"
   )

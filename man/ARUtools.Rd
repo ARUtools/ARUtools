@@ -11,7 +11,7 @@ ARU tools that some might find useful for working with ARU files.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://davidhope.ca/ARUtools/}
+  \item \url{http://arutools.github.io/ARUtools/}
 }
 
 }
