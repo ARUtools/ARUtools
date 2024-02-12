@@ -26,7 +26,9 @@ You can install the current version of ARUtools from the
 [R-universe](https://arutools.r-universe.dev/) repository.
 
 ``` r
-install.packages("ARUtools", repos = c("https://arutools.r-universe.dev", "https://cran.r-project.org"))
+install.packages("ARUtools",
+                 repos = c("https://arutools.r-universe.dev",
+                           "https://cran.r-project.org") )
 ```
 
 Alternatively you can install the package from
