@@ -57,11 +57,11 @@ test_that("sim_selection_weights()", {
 
 test_that("calc_selection_weights()", {
 
-  m <- clean_metadata(project_files = example_files, quiet = TRUE)
   s <- clean_site_index(example_sites_clean,
                         col_date = c("date_time_start", "date_time_end"))
-  m <- add_sites(m, s, quiet = TRUE)
-  m <- calc_sun(m)
+  m <- clean_metadata(project_files = example_files, quiet = TRUE) |>
+    add_sites(s, quiet = TRUE) |>
+    calc_sun()
 
   p <- sim_selection_weights(plot = FALSE)
   withr::with_seed(123, expect_silent(pr1 <- calc_selection_weights(m, params = p)))
@@ -71,7 +71,7 @@ test_that("calc_selection_weights()", {
   m$doy <- lubridate::yday(m$date)
   withr::with_seed(123, expect_silent(pr2 <- calc_selection_weights(m, params = p, col_day = "doy")))
 
-  expect_equal(dplyr::select(pr1, -"date"), pr2)
+  expect_equal(pr1, pr2)
 
   # Check lognormal and offsets
   p <- sim_selection_weights(plot = FALSE, selection_fun = "lognorm")

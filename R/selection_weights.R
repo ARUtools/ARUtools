@@ -33,7 +33,7 @@
 #' @export
 #'
 #' @examples
-#' params <- simulate_selection_weights()
+#' params <- sim_selection_weights()
 
 sim_selection_weights <- function(
     min_range = c(-70, 240), min_mean = 30, min_sd = 60,
@@ -72,15 +72,19 @@ sim_selection_weights <- function(
       calc_selection_weights(params = params, col_min = "min") |>
       dplyr::mutate(date = lubridate::ymd("2022-01-01") + date - 1)
 
-    p1 <- ggplot2::ggplot(weights, ggplot2::aes(date, psel_doy)) +
+    p1 <- ggplot2::ggplot(
+      weights, ggplot2::aes(.data[["date"]], .data[["psel_doy"]])) +
       ggplot2::geom_line() +
       ggplot2::labs(x = "Date", y = "Selection weight (date)")
 
-    p2 <- ggplot2::ggplot(weights, ggplot2::aes(min, psel_min)) +
+    p2 <- ggplot2::ggplot(
+      weights, ggplot2::aes(.data[["min"]], .data[["psel_min"]])) +
       ggplot2::geom_line() +
       ggplot2::labs(x = "Time to sun event", y = "Selection weight (time)")
 
-    p3 <- ggplot2::ggplot(weights, ggplot2::aes(date, min, fill = .data[[selection_var]])) +
+    p3 <- ggplot2::ggplot(
+      weights, ggplot2::aes(.data[["date"]], .data[["min"]],
+                            fill = .data[[selection_var]])) +
       ggplot2::geom_tile() +
       ggplot2::scale_fill_viridis_c() +
       ggplot2::labs(x = "Date", y = "Time", fill = "Selection\nWeight")
@@ -100,7 +104,8 @@ sim_selection_weights <- function(
 #' Calculate Selection Weights
 #'
 #' @param meta_sun (Spatial) Data frame. Recording meta data with time to
-#'   sunrise/sunset. Output of `calc_sun()`. Must have at least `col_min`, `col_day`, and `col_site_id`
+#'   sunrise/sunset. Output of `calc_sun()`. Must have at least `col_min`,
+#'   `col_day`, and `col_site_id`
 #' @param col_min Minutes column. Should not be quoted.
 #' @param col_day Day column. Should not be quoted.
 #' @param params list of parameters. See defaults for examples.
@@ -119,7 +124,7 @@ sim_selection_weights <- function(
 #' m <- add_sites(m, s)
 #' m <- calc_sun(m)
 #'
-#' params <- selection_params()
+#' params <- sim_selection_weights()
 #' calc_selection_weights(m, params = params)
 
 calc_selection_weights <- function(meta_sun,
@@ -133,10 +138,20 @@ calc_selection_weights <- function(meta_sun,
   params <- check_selection_params(params)
 
   # Get params as environment objects
-  list2env(params, envir = environment())
+  # (done this way to avoid 'no visible binding notes')
+  min_range <- params$min_range
+  min_mean <- params$min_mean
+  min_sd <- params$min_sd
+  day_range <- params$day_range
+  day_mean <- params$day_mean
+  day_sd <- params$day_sd
+  offset <- params$offset
+  return_log <- params$return_log
+  selection_fun <- params$selection_fun
+
 
   # Prepare selection weights data frame
-  sp <- dplyr::select(meta_sun, dplyr::all_of(c(col_site_id, col_min, col_day))) |>
+  sp <- meta_sun |>
     dplyr::mutate(doy = check_doy(.data[[col_day]])) |>
     dplyr::filter(.data[["doy"]] >= day_range[[1]],
                   .data[["doy"]] <= day_range[[2]],
@@ -150,9 +165,9 @@ calc_selection_weights <- function(meta_sun,
   # Prepare selection functions
   min_fun <- switch(
     selection_fun,
-    "lognorm" = function(x, m, sd, log) dlnorm(x + offset, log(m + offset), sd, log),
-    "norm" = dnorm,
-    "cauchy"= dcauchy
+    "lognorm" = function(x, m, sd, log) stats::dlnorm(x + offset, log(m + offset), sd, log),
+    "norm" = stats::dnorm,
+    "cauchy"= stats::dcauchy
   )
 
   # Check offset
@@ -164,14 +179,14 @@ calc_selection_weights <- function(meta_sun,
   }
 
   dens_min <- min_fun(seq(min_range[1], min_range[2]), min_mean, min_sd, log = return_log)
-  dens_doy <-   dnorm(seq(day_range[1], day_range[2]), day_mean, day_sd, log = return_log)
+  dens_doy <-   stats::dnorm(seq(day_range[1], day_range[2]), day_mean, day_sd, log = return_log)
   fun_psel <- function(x1, x2, return_log) if(return_log) exp(x1 + x2) else x1 * x2
 
   # Calculate selection weights
   sp |>
     dplyr::mutate(
       psel_min = min_fun(round(.data[[col_min]], 0), min_mean, min_sd, log = return_log) / max(abs(dens_min)),
-      psel_doy = dnorm(.data[["doy"]], mean = day_mean, sd = day_sd, log = return_log) / max(abs(dens_doy)),
+      psel_doy = stats::dnorm(.data[["doy"]], mean = day_mean, sd = day_sd, log = return_log) / max(abs(dens_doy)),
       psel = fun_psel(.data[["psel_min"]], .data[["psel_doy"]], return_log),
       psel_scaled = .data[["psel"]] / max(.data[["psel"]])) |>
     dplyr::group_by(.data[[col_site_id]]) |>
@@ -183,34 +198,28 @@ calc_selection_weights <- function(meta_sun,
       )
     ) |>
     dplyr::ungroup()
+
 }
 
 check_selection_params <- function(params) {
 
-  # Get params as environment objects
-  list2env(params, envir = environment())
-
   # Check parameters values
-  check_num(min_range, n = 2)
-  check_num(min_mean, n = 1)
-  check_num(min_sd, n = 1, range = c(0, Inf))
-  day_range <- check_doy(day_range)
-  day_mean <- check_doy(day_mean)
-  check_num(day_sd, n = 1, range = c(0, Inf))
-  check_num(offset, n = 1)
-  check_text(selection_fun, n = 1, opts = c("norm", "lognorm", "cauchy"))
+  check_num(params$min_range, n = 2)
+  check_num(params$min_mean, n = 1)
+  check_num(params$min_sd, n = 1, range = c(0, Inf))
+  params$day_range <- check_doy(params$day_range)
+  params$day_mean <- check_doy(params$day_mean)
+  check_num(params$day_sd, n = 1, range = c(0, Inf))
+  check_num(params$offset, n = 1)
+  check_text(params$selection_fun, n = 1, opts = c("norm", "lognorm", "cauchy"))
 
-  check_logical(return_log)
-  if(offset != 0 & selection_fun != "lognorm") {
+  check_logical(params$return_log)
+  if(params$offset != 0 & params$selection_fun != "lognorm") {
     rlang::inform(
       c("Ignoring `offset`",
         "i" = paste("`offset` is only relevant when `selection_fun = `lognorm`",
                     "to shift the minutes range to > 0")))
   }
 
-  list(
-    min_range = min_range, min_mean = min_mean, min_sd = min_sd,
-    day_range = day_range, day_mean = day_mean, day_sd = day_sd,
-    offset = offset, return_log = return_log,
-    selection_fun = selection_fun)
+  params
 }
