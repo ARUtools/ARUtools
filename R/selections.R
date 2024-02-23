@@ -206,7 +206,8 @@ calc_selection_weights <- function(meta_sun,
       psel_std = .data[["psel"]] / max(.data[["psel"]]),
       psel_normalized = pmax(
         1e-3,
-        (.data[["psel"]] - min(.data[["psel"]])) / (max(.data[["psel"]]) - min(.data[["psel"]]))
+        (.data[["psel"]] - min(.data[["psel"]])) / (max(.data[["psel"]]) - min(.data[["psel"]])),
+        na.rm = TRUE
       )
     ) |>
     dplyr::ungroup()
