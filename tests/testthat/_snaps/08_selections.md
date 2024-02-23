@@ -16,7 +16,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+          "value": ["file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2sr", "t2ss", "doy", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
         }
       },
       "value": [
@@ -106,6 +106,11 @@
           "type": "double",
           "attributes": {},
           "value": [124, 124, 124, 125, 126, 125, 126, 125, 126, 127, 127, 127, 130, 130, 130, 130, 131, 130, 131, 130, 131, 132, 132, 132, 132, 132, 132]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr"]
         },
         {
           "type": "double",

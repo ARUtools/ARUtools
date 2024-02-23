@@ -17,9 +17,9 @@ calc_selection_weights(
 sunrise/sunset. Output of \code{calc_sun()}. Must have at least \code{col_min},
 \code{col_day}, and \code{col_site_id}}
 
-\item{params}{list of parameters. See defaults for examples.
-Should include min_range, doy_range, mean_min, sd_min,
-mean_doy, sd_doy, off, log_, fun.}
+\item{params}{List. Parameters created by \code{sim_selection_weights()}, containing
+\code{min_range}, \code{min_mean}, \code{min_sd}, \code{day_range}, \code{day_mean}, \code{day_sd},
+\code{offset}, \code{return_log}, \code{selection_fun}.}
 
 \item{col_site_id}{Character. Column name that contains site ids. Deafult \code{site_id}.}
 
@@ -28,17 +28,27 @@ mean_doy, sd_doy, off, log_, fun.}
 \item{col_day}{Day column. Should not be quoted.}
 }
 \value{
-Returns data with selection weights columns
+Returns data with appended selection weights columns:
+\itemize{
+\item \code{psel_by} - The minutes column used
+\item \code{psel_min} - Probability of selection by time of day (min column)
+\item \code{psel_doy} - Probability of selection by day of year
+\item \code{psel} - Probability of selection overall
+\item \code{psel_scaled} - Probability of selection scaled overall
+\item \code{psel_std} - Probability of selection standardized within a site
+\item \code{psel_normalized} - Probability of selection normalized within a site
+}
 }
 \description{
-Calculate Selection Weights
+Calculate selection weights for a series of recordings based on the selection
+parameters defined by \code{sim_selection_weights()}.
 }
 \examples{
-m <- clean_metadata(project_files = example_files)
 s <- clean_site_index(example_sites_clean,
                       col_date_time = c("date_time_start", "date_time_end"))
-m <- add_sites(m, s)
-m <- calc_sun(m)
+m <- clean_metadata(project_files = example_files) |>
+  add_sites(s) |>
+  calc_sun()
 
 params <- sim_selection_weights()
 calc_selection_weights(m, params = params)

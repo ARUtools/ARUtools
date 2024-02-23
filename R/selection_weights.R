@@ -103,26 +103,37 @@ sim_selection_weights <- function(
 
 #' Calculate Selection Weights
 #'
+#' Calculate selection weights for a series of recordings based on the selection
+#' parameters defined by `sim_selection_weights()`.
+#'
 #' @param meta_sun (Spatial) Data frame. Recording meta data with time to
 #'   sunrise/sunset. Output of `calc_sun()`. Must have at least `col_min`,
 #'   `col_day`, and `col_site_id`
 #' @param col_min Minutes column. Should not be quoted.
 #' @param col_day Day column. Should not be quoted.
-#' @param params list of parameters. See defaults for examples.
-#'                 Should include min_range, doy_range, mean_min, sd_min,
-#'                mean_doy, sd_doy, off, log_, fun.
+#' @param params List. Parameters created by `sim_selection_weights()`, containing
+#'    `min_range`, `min_mean`, `min_sd`, `day_range`, `day_mean`, `day_sd`,
+#'    `offset`, `return_log`, `selection_fun`.
 #'
 #' @inheritParams common_docs
 #'
-#' @return   Returns data with selection weights columns
+#' @return   Returns data with appended selection weights columns:
+#'   - `psel_by` - The minutes column used
+#'   - `psel_min` - Probability of selection by time of day (min column)
+#'   - `psel_doy` - Probability of selection by day of year
+#'   - `psel` - Probability of selection overall
+#'   - `psel_scaled` - Probability of selection scaled overall
+#'   - `psel_std` - Probability of selection standardized within a site
+#'   - `psel_normalized` - Probability of selection normalized within a site
+#'
 #' @export
 #'
 #' @examples
-#' m <- clean_metadata(project_files = example_files)
 #' s <- clean_site_index(example_sites_clean,
 #'                       col_date_time = c("date_time_start", "date_time_end"))
-#' m <- add_sites(m, s)
-#' m <- calc_sun(m)
+#' m <- clean_metadata(project_files = example_files) |>
+#'   add_sites(s) |>
+#'   calc_sun()
 #'
 #' params <- sim_selection_weights()
 #' calc_selection_weights(m, params = params)
@@ -185,6 +196,7 @@ calc_selection_weights <- function(meta_sun,
   # Calculate selection weights
   sp |>
     dplyr::mutate(
+      psel_by = .env$col_min,
       psel_min = min_fun(round(.data[[col_min]], 0), min_mean, min_sd, log = return_log) / max(abs(dens_min)),
       psel_doy = stats::dnorm(.data[["doy"]], mean = day_mean, sd = day_sd, log = return_log) / max(abs(dens_doy)),
       psel = fun_psel(.data[["psel_min"]], .data[["psel_doy"]], return_log),
