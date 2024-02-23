@@ -1,112 +1,225 @@
-#' Run the model function
+#' Sample recordings
 #'
-#' @param df Data frame to use with ARU information and selection probabilities
-#' @param N Number of samples per stratum
-#' @param os Oversample proportion
-#' @param seed random number seed
-#' @param strat_ Stratum ID. This is the column grts runs on
-#' @param selprob_id Selection probability column
-#' @param x Column in df for x (I've been using doy)
-#' @param y Column in df for y -time of day or time to sunrise/sunset
+#' Sample recordings based on selection weights from `calc_selection_weights()`
+#' using `spsurvey::grts()`. If non-spatial, data will be converted to a spatial
+#' data frame for sampling using the specified `crs`.
+#'
+#' @param meta_weights (Spatial) Data frame. Recording meta data selection
+#'   weights. Output of `calc_selection_weights()`. Must have at least
+#'   `col_site_id` and `col_sel_weights`. If non-spatial, must also have
+#'   `latitude` and `longitude`.
+#' @param n Numeric, Data frame, Vector, or List. Number of base samples to
+#'   choose. For stratification by site, a named vector/list of samples per site, or
+#'   a data frame with columns `n` for samples, `n_os` for oversamples and the
+#'   column matching that identified by `col_site_id`.
+#' @param os Numeric, Vector, or List. Over sample size (proportional) or named
+#'   vector/list of number of samples per site Ignored if `n` is a data
+#'   frame.
+#' @param col_site_id Column. Unquoted name of column containing site strata IDs
+#'   (defaults to `site_id`).
+#' @param col_sel_weights Column. Unquoted name of column identifying selection
+#'   weights (defaults to `psel_std`)
+#' @param crs Numeric. CRS to use for converting data to spatial (if required).
+#' @param seed Numeric. Random seed to use for random sampling. Seed only
+#'   applies to specific sampling events (does not change seed in the
+#'   environment). `NULL` does not set a seed.
+#' @param ... Extra named arguments passed on to `spsurvey::grts()`.
+
 #'
 #' @return A sampling run from grts
 #' @export
+#' @examples
+#' m <- clean_metadata(project_files = example_files)
+#' s <- clean_site_index(example_sites_clean,
+#'                       col_date_time = c("date_time_start", "date_time_end"))
+#' m <- add_sites(m, s)
+#' m <- calc_sun(m)
 #'
-fun_aru_samp <- function(df, N, os, seed, strat_, selprob_id, x, y, ...) {
-    warn("Since version 0.4 default selection parameter in gen_dens_sel_simulation is psel_normalize,
-         which ranges from 0 to 1. If you wish to base decisions here off the simulation,
-         you can adjust the `selection_variable` paramter, which is an unquoted variable name of which
-         options are psel, psel_doy, psel_tod, psel_std, psel_scaled, or psel_normalized")
-    arus <- df |>
-      dplyr::select({{ strat_ }}) |>
-      dplyr::distinct() # morningChorus
-    arus <- arus[[strat_]]
-    # print(arus)
-    if(packageVersion("spsurvey")<5){
-    Stratdsgn <- vector(mode = "list", length = length(arus))
-    names(Stratdsgn) <- arus
-    for (a in arus) {
-      Stratdsgn[[a]] <- list(
-        panel = c(PanelOne = N),
-        over = N * os,
-        seltype = "Continuous"
-      )
+#' params <- sim_selection_weights()
+#' w <- calc_selection_weights(m, params = params)
+#'
+#' # No stratification by site
+#' samples <- sample_recordings(w, n = 10, os = 0.1)
+#'
+#' # Stratification by site defined by...
+#'
+#' # lists
+#' samples <- sample_recordings(w, n = list(P01_1 = 2, P02_1 = 5, P03_1 = 2), os = 0.2)
+#'
+#' # vectors
+#' samples <- sample_recordings(w, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 2), os = 0.2)
+#'
+#' # data frame
+#' samples <- sample_recordings(
+#'   w,
+#'   n = data.frame(site_id = c("P01_1", "P02_1", "P03_1"),
+#'                  n = c(2, 5, 2),
+#'                  n_os = c(0, 0, 1)))
+#'
+
+sample_recordings <- function(meta_weights,
+                              n, os = NULL,
+                              col_site_id = site_id,
+                              col_sel_weights = psel_std,
+                              crs = 3161,
+                              seed = NULL, ...) {
+
+  col_site_id <- enquo(col_site_id)
+  col_sel_weights <- enquo(col_sel_weights)
+  sites_name <- nse_name(col_site_id)
+
+  # TODO: CHECKS
+  check_cols(meta_weights, enquos(col_site_id, col_sel_weights), name = "meta_weights")
+  if(is.data.frame(n)) check_cols(n, c(sites_name, "n", "n_os"), name = "n")
+
+  if(!rlang::is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
+    rlang::abort(
+      "`os` as a single value is a proportion, and must range between 0 and 1",
+      call = NULL)
+  }
+
+  if(is.null(os) && !inherits(n, "data.frame")) {
+    rlang::abort(
+      "`os` can only be NULL if `n` is a data frame with a column `n_os`",
+      call = NULL)
+  }
+
+  meta_weights_sf <- df_to_sf(meta_weights, crs = crs)
+
+  # Assemble n and os (based on BASSR::run_grts_on_BASS() ---------------------
+
+  # Check for stratification - Create a list of problems
+  s <- c(inherits(n, "data.frame") | length(n) > 1 | rlang::is_named(n)) # Stratification exists in samples
+
+  # Not stratified
+  if (all(!s)) {
+
+    if(!quo_is_null(col_site_id)) {
+      warn("No stratification by site included in `n` or `os`. Ignoring `col_site_id`", call = NULL)
+    }
+
+    if(length(os) > 1) {
+      rlang::abort("`os` must be a single value unless using stratification by site",
+                   call = NULL)
+    }
+
+    sites_name <- NULL
+    n_sites <- rep(n, length(n))
+    n_os <- round(n * os)
+    if(n_os == 0) n_os <- NULL
+
+    # Stratified
+  } else {
+
+    # Missing site column name
+    if(quo_is_null(col_site_id)) {
+      abort_strat("`col_site_id` must contain site names matching those in `n`")
+    }
+
+    # Missing appropriate n object
+    if(!(inherits(n, "data.frame") |
+         length(n) > 1 |
+         rlang::is_named(n))) {
+      abort_strat()
     }
 
 
-    set.seed(seed)
+    sites <- meta_weights |>
+      dplyr::pull({{ col_site_id }}) |>
+      unique()
 
-    samp <- spsurvey::grts(
-      design = Stratdsgn,
-      DesignID = "ARU_Sample",
-      type.frame = "finite",
-      stratum_var = strat_, # "ARU_ID",
-      # type.frame = "area",
-      src.frame = "att.frame", # "shapefile",
-      # in.shape="output/Sample_Frame_w_Legacy_LCC",
-      att.frame = df, # morningChorus,
-      mdcaty = selprob_id, # "psel_tod",
-      xcoord = x, #' doy',
-      startlev = 1,
-      id = FileID,
-      ycoord = y, # "min_to_Sunrise",
-      shapefile = F
-    )
-    return(samp)
-  }
-  if(packageVersion("spsurvey")>=5){
-  sf_df <- df |>
-      sf::st_as_sf(coords = c(paste0(x),paste0(y)), crs = 3395)
+    # Get n_site and n_os depending on inputs
 
-  # browser()
-  mindis <-  NULL
-  maxtry <-  10
-  DesignID <-  "Sample"
-  list2env(list(...), envir = environment())
+    # Check data frame
+    if(inherits(n, "data.frame")) {
 
-  print(c(mindis, maxtry, DesignID))
-  # browser()
-  if(is.data.frame(N)){
-    if(all(c("N", "n_os") %in% names(N),arus %in% N[[strat_]] )  ) {
-    Stratdsgn <- N$N
-    n_os <- N$n_os
-    names(Stratdsgn) <- names(n_os) <- N[[strat_]]
-    } else{abort(c("Failed to parse N as data.frame.",
-                   "x" = glue::glue("Need to include columns named 'N', 'n_os', and '{strat_}'"),
-                   "i" = glue::glue("Check format of N as a data frame and ensure {strat_} is included in both df and N."))) }
-  }else{
-  if(length(N)==1){
-  Stratdsgn <- rep(N, length(arus))
-  if(length(os)==1){
-    if(os==0) n_os <- NULL
-    else n_os <-  rep(round(N*os), length(arus))
-  } else{n_os <- os}
-  if(!is.null(n_os))names(Stratdsgn) <- names(n_os) <- arus
-  else names(Stratdsgn)  <- arus
+      # Problem: Wrong strata
+      n_sites <- dplyr::pull(n, {{ col_site_id }})
+      if(!all(n_sites %in% sites)) abort_strat()
 
-  } else if ( all(arus %in% names(N)) ){
-    Stratdsgn <- N
-    if(length(os)==1){
-    if(n_os==0){ n_os <- NULL
-    } else  n_os <- lapply(FUN = function(x) x * os, X = Stratdsgn )
-    } else if (!is_null(names(N)) & all(arus %in% names(N)) ){
-      n_os <- os
-    } else {simpleError("OS should either be single value or list with all strata ID. Not all Strata found in OS and OS has length >1")}
-  } else {simpleError("N should either be single value or list with all strata ID. Not all Strata found in N and N has length >1")}
+      # Convert from data frame
+      n_os <- as.list(n$n_os) |>
+        stats::setNames(n_sites)
+      n <- as.list(n$n) |>
+        stats::setNames(n_sites)
+
+    } else {
+      # Check list (convert if vector)
+      n <- as.list(n)
+      if(length(os) > 1) os <- as.list(os)
+
+      # Problem: List not named correctly
+      if(!(rlang::is_named(n) && all(names(n) %in% sites))) {
+        abort_strat()
+      }
+
+      # Problem: List not named correctly (and not length = 1)
+      if(!((rlang::is_named(os) && all(names(os) %in% sites)) ||
+           length(os) == 1)) {
+        abort_strat("`os` must be a single value, or a vector/list named by strata")
+      }
+
+      if(!rlang::is_named(os) && length(os) == 1) {
+        n_os <- lapply(n, \(x) round(x * os))
+
+        # If all 0, use NULL
+        if(all(vapply(n_os, \(x) x == 0, logical(1)))) n_os <- NULL
+      } else n_os <- os
+    }
+
+    # Problem: Chose stratification, but only one strata
+    if(length(n) == 1 || (rlang::is_named(n_os) && length(n_os) == 1)) {
+      abort_strat("There is only one stratum")
+    }
   }
 
-
-  set.seed(seed)
-  samp <- spsurvey::grts(sframe = sf_df,n_over = n_os,
-                         n_base = Stratdsgn,
-                         stratum_var = paste0(strat_),mindis = mindis,
-                         DesignID = DesignID,
-                         maxtry = maxtry,
-                         # caty_n = stratum_var,
-                         aux_var =  selprob_id)
-
-
-
-  return(samp)
+  # Check sample sizes
+  msg <- NULL
+  n_check <- unlist(n) + unlist(n_os)
+  if(length(n_check) == 1) {
+    if(n_check > nrow(meta_weights)) {
+      msg <- c("i" = paste0(n_check, " samples, but only ", nrow(meta_weights), " data"))
+    }
+  } else {
+    cnts <- sf::st_drop_geometry(meta_weights) |>
+      dplyr::count({{ col_site_id }}) |>
+      tibble::deframe()
+    if(any(n_check > cnts[names(n)])) {
+      msg <- c("i" = paste0("Selected more samples than exist in some sites (",
+                            paste0(names(n)[n_check > cnts[names(n)]], collapse = ", "), ")"))
+    }
   }
+
+  if(!is.null(msg)) abort(c("Cannot sample (n + oversampling) more points than there are in the data", msg),
+                          call = NULL)
+
+  set_seed(seed, {
+    spsurvey::grts(sframe = meta_weights_sf,
+                   n_over = n_os,
+                   n_base = n,
+                   stratum_var = sites_name,
+                   DesignID = "sample",
+                   aux_var =  nse_name(col_sel_weights),
+                   ...)
+  })
+
+}
+
+
+#' Abort during stratification
+#'
+#' Wrapper around `rlang::abort()` for consistent messaging when stratification
+#' arguments are not correct.
+#'
+#' @param msg Alternative message if required (otherwise returns default message
+#'   regarding the `n` parameter)
+#'
+#' @noRd
+abort_strat <- function(msg = NULL) {
+  m <- "Not all requirements met for sampling with stratification by site"
+  if(is.null(msg)) {
+    msg <- paste0("`n` must be a data frame with appropriate ",
+                  "columns, or vector/list named by site")
+  }
+  rlang::abort(c(m, "x" = msg), call = NULL)
 }

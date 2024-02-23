@@ -81,3 +81,57 @@ test_that("calc_selection_weights()", {
   withr::with_seed(123, expect_silent(calc_selection_weights(m, params = p, col_day = "doy")))
 })
 
+test_that("sample_recordings()", {
+  s <- clean_site_index(example_sites_clean,
+                        col_date = c("date_time_start", "date_time_end"))
+  m <- clean_metadata(project_files = example_files, quiet = TRUE) |>
+    add_sites(s, quiet = TRUE) |>
+    calc_sun() |>
+    calc_selection_weights(params = sim_selection_weights(plot = FALSE))
+
+  m_sf <- df_to_sf(m, crs = 3161)
+
+  # No stratification
+  expect_silent(r1 <- sample_recordings(m, n = 12, os = 0.2, col_site_id = NULL, seed = 1234))
+  expect_warning(r2 <- sample_recordings(m, n = 12, os = 0.2, seed = 1234))
+  expect_silent(r3 <- sample_recordings(m_sf, n = 12, os = 0.2, col_site_id = NULL, seed = 1234))
+
+  expect_equal(r1, r2)
+  expect_equal(r1, r3)
+
+  expect_s3_class(r1, "sp_design")
+  expect_named(r1, c("sites_legacy", "sites_base", "sites_over",
+                       "sites_near", "design"))
+  sbase <- r1[["sites_base"]]
+  expect_s3_class(sbase, "data.frame")
+  expect_equal(nrow(sbase), 12)
+  expect_true(all(sbase$site_id %in% m$site_id))
+
+  expect_equal(nrow(r1[["sites_over"]]), round(12 * 0.2))
+  expect_null(r1[["sites_legacy"]])
+  expect_null(r1[["sites_near"]])
+
+  # Stratify by site
+  expect_silent(r4 <- sample_recordings(m, n = list(P01_1 = 2, P02_1 = 5, P03_1 = 2), os = 0.2, seed = 1234))
+  expect_silent(r5 <- sample_recordings(m_sf, n = list(P01_1 = 2, P02_1 = 5, P03_1 = 2), os = 0.2, seed = 1234))
+  expect_silent(r6 <- sample_recordings(m, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 2), os = 0.2, seed = 1234))
+  expect_silent(r7 <- sample_recordings(m, n = data.frame(site_id = c("P01_1", "P02_1", "P03_1"),
+                                                          n = c(2, 5, 2),
+                                                          n_os = c(0, 1, 0)),
+                                        seed = 1234))
+  expect_equal(r4, r5)
+  expect_equal(r4, r6)
+  expect_equal(r4, r7)
+
+  # Errors
+  expect_error(sample_recordings(m, n = 30, os = 0.2, col_site_id = NULL),
+               "samples, but only")
+  expect_error(sample_recordings(m, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 5), os = 0.2),
+               "Selected more samples than exist in some sites")
+
+
+  # Snapshots cannot be tested interactively
+  expect_snapshot_value(r1, style = "json2", tolerance = 0.0005)
+  expect_snapshot_value(r4, style = "json2", tolerance = 0.0005)
+
+})

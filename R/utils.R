@@ -148,7 +148,7 @@ minmax_q <- function(x, fun) {
 #'
 #' @noRd
 sf_to_df <- function(sf) {
-  if(inherits(sf, "sf")){
+  if(inherits(sf, "sf")) {
     sf <- sf::st_transform(sf, crs = 4326)
 
     df <- sf |>
@@ -176,7 +176,7 @@ sf_to_df <- function(sf) {
 df_to_sf <- function(df, sf = NULL, crs = NA) {
   if(!is.null(sf)) crs <- sf::st_crs(sf)
 
-  if(!is.na(crs)) {
+  if(!is.na(crs) && !inherits(df, "sf")) {
     if(any(is.na(df$longitude) | is.na(df$latitude))) {
       rlang::warn(c("Cannot have missing coordinates in spatial data frames",
                     "Returning non-spatial data frame"), call = NULL)
