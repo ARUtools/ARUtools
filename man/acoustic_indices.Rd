@@ -22,7 +22,7 @@ acoustic_indices(
 \code{\link[soundecology:acoustic_complexity_index]{soundecology::acoustic_complexity()}})}
 
 \item{units}{Character. Wave file units for reading the file. Defaults to
-"samples" (see \code{\link[=tuneR:readWave]{tuneR:readWave()}}).}
+"samples" (see \code{\link[tuneR:readWave]{tuneR::readWave()}}).}
 
 \item{quiet}{Logical. Whether to suppress progress messages and other
 non-essential updates.}

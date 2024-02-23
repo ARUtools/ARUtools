@@ -192,7 +192,7 @@ df_to_sf <- function(df, sf = NULL, crs = NA) {
 }
 
 suppressCat <- function(code, quiet = FALSE) {
-  if(quiet) invisible(capture.output(x <- {code})) else x <- {code}
+  if(quiet) invisible(utils::capture.output(x <- {code})) else x <- {code}
   x
 }
 

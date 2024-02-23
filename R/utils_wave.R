@@ -381,7 +381,7 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
 #' @param max_freq Numeric. Maximum frequency for acoustic complexity (see
 #'   [soundecology::acoustic_complexity()])
 #' @param units Character. Wave file units for reading the file. Defaults to
-#'   "samples" (see [tuneR:readWave()]).
+#'   "samples" (see [tuneR::readWave()]).
 #'
 #' @inheritParams common_docs
 #'

@@ -523,7 +523,7 @@ fmt_gps_txt <- function(df) {
 #'
 #' @param gps Data frame of gps sites and coordinates. Requires longitude,
 #'   latitude, and any columns in `dist_by`.
-#' @param crs Numeric. CRS to use for measuring distances. Should be in meters
+#' @param crs Numeric. CRS to use for measuring distances. Should be in metres
 #' @param dist_cutoff Distance cutoff in meters. Can be set to Inf to avoid this
 #'   check.
 #' @param dist_by Character. Column names to use in grouping GPS points before
