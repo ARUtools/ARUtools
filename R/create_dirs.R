@@ -6,6 +6,10 @@
 #' @param site_ids  Character vector. Site IDs. Should include the plot/cluster
 #'   id in the name.
 #' @param base_dir Character. Base directory to build directory structure in.
+#' @param dir_list Logical. Whether to return a vector of directories (to be)
+#'   created (defaults to `FALSE`).
+#' @param dry_run Logical. Whether to do a dry-run of the process (i.e. do not
+#'   actually create directories; defaults to `TRUE`)
 #' @param expect_dirs Logical. Expect that directories may already exist? Default
 #'   (`FALSE`) is to stop if directories to be created already exist.
 #'
@@ -60,7 +64,7 @@ create_dirs <- function(plots, site_ids, base_dir = NULL, dir_list = FALSE,
     if(rlang::is_installed("sessioninfo")) {
       readr::write_lines(sessioninfo::session_info(), glue::glue("{base_dir}/session_info.md"))
     } else {
-      readr::write_lines(sessionInfo(), glue::glue("{base_dir}/session_info.md"))
+      readr::write_lines(sessioninfo::session_info(), glue::glue("{base_dir}/session_info.md"))
     }
   } else {
     msg <- "This is a dry run, no directories are created"

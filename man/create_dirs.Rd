@@ -21,6 +21,12 @@ id in the name.}
 
 \item{base_dir}{Character. Base directory to build directory structure in.}
 
+\item{dir_list}{Logical. Whether to return a vector of directories (to be)
+created (defaults to \code{FALSE}).}
+
+\item{dry_run}{Logical. Whether to do a dry-run of the process (i.e. do not
+actually create directories; defaults to \code{TRUE})}
+
 \item{expect_dirs}{Logical. Expect that directories may already exist? Default
 (\code{FALSE}) is to stop if directories to be created already exist.}
 }
