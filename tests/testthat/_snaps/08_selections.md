@@ -171,7 +171,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -194,7 +194,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -207,7 +207,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -229,12 +229,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [-84.45, -86.03, -87.45, -90.38, -86.03, -90.08, -84.45, -86.03, -87.45, -91.38, -85.03, -87.45]
+              "value": [0.00118578, 0.00116781, 0.00118578, 0.00112289, 0.00116781, 0.00111391, 0.00118578, 0.00117679, 0.00114086, 0.00113188, 0.00116781, 0.00118578]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [48.999, 50.45, 52.68, 48.99, 50.45, 52, 48.999, 50.45, 52.68, 45, 50.01, 52.68]
+              "value": [-0.00037878, 0.00003241, 0.00215526, -0.00042731, 0.00003241, -0.00048128, -0.00037878, 0.00077429, 0.00187325, 0.00072003, -0.00037019, 0.00215526]
             },
             {
               "type": "character",
@@ -244,12 +244,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [2.22708462, 2.3097112, 2.35891989, 2.22708462, 2.3097112, 2.22708462, 2.22708462, 2.22708462, 2.35891989, 2.22708462, 2.22708462, 2.35891989]
+              "value": [2.22708462, 2.22708462, 2.22708462, 2.35891989, 2.22708462, 2.22708462, 2.22708462, 2.22708462, 2.22708462, 2.22708462, 2.3097112, 2.22708462]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.44901752, 0.43295456, 0.42392283, 0.44901752, 0.43295456, 0.44901752, 0.44901752, 0.44901752, 0.42392283, 0.44901752, 0.44901752, 0.42392283]
+              "value": [0.44901752, 0.44901752, 0.44901752, 0.42392283, 0.44901752, 0.44901752, 0.44901752, 0.44901752, 0.44901752, 0.44901752, 0.43295456, 0.44901752]
             },
             {
               "type": "character",
@@ -259,12 +259,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [1, 0.96422644, 0.94411202, 1, 0.96422644, 1, 1, 1, 0.94411202, 1, 1, 0.94411202]
+              "value": [1, 1, 1, 0.94411202, 1, 1, 1, 1, 1, 1, 0.96422644, 1]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["P08_1_20200511T100000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P08_1_20200511T100000_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P02_1_20200504T052500_ARU.wav"]
+              "value": ["P09_1_20200511T050000_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P08_1_20200511T100000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P08_1_20200511T100000_ARU.wav"]
             },
             {
               "type": "character",
@@ -274,22 +274,22 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["a_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav", "a_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "o_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "j_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "o_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "o_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav"]
+              "value": ["a_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "a_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "o_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "o_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "o_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "j_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "a_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["BarLT", "SongMeter", "SongMeter", "BarLT", "SongMeter", "BarLT", "BarLT", "SongMeter", "SongMeter", "SongMeter", "BarLT", "SongMeter"]
+              "value": ["SongMeter", "BarLT", "BarLT", "SongMeter", "BarLT", "BarLT", "SongMeter", "SongMeter", "BarLT", "SongMeter", "SongMeter", "BarLT"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "S4A01234", "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "S4A02222", "BARLT10962", "S4A01234"]
+              "value": ["S4A02222", "BARLT10962", "BARLT10962", "S4A01234", "BARLT10962", "BARLT10962", "S4A02222", "S4A01234", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["P08_1", "P07_1", "P02_1", "P03_1", "P07_1", "P06_1", "P08_1", "P07_1", "P02_1", "P09_1", "P01_1", "P02_1"]
+              "value": ["P09_1", "P06_1", "P08_1", "P02_1", "P06_1", "P01_1", "P09_1", "P07_1", "P03_1", "P02_1", "P07_1", "P08_1"]
             },
             {
               "type": "double",
@@ -305,7 +305,7 @@
                   "value": ["UTC"]
                 }
               },
-              "value": [1589191200, 1589001900, 1588569900, 1588759200, 1589001900, 1589001600, 1589191200, 1589095800, 1588569900, 1589173200, 1588483200, 1588569900]
+              "value": [1589173200, 1589001600, 1589191200, 1588569900, 1589001600, 1588483200, 1589173200, 1589095800, 1588759200, 1588663800, 1589001900, 1589191200]
             },
             {
               "type": "double",
@@ -316,57 +316,62 @@
                   "value": ["Date"]
                 }
               },
-              "value": [18393, 18391, 18386, 18388, 18391, 18391, 18393, 18392, 18386, 18393, 18385, 18386]
+              "value": [18393, 18391, 18393, 18386, 18391, 18385, 18393, 18392, 18388, 18387, 18391, 18393]
+            },
+            {
+              "type": "double",
+              "attributes": {},
+              "value": [-91.38, -90.08, -84.45, -87.45, -90.08, -85.03, -91.38, -86.03, -90.38, -87.45, -86.03, -84.45]
+            },
+            {
+              "type": "double",
+              "attributes": {},
+              "value": [45, 52, 48.999, 52.68, 52, 50.01, 45, 50.45, 48.99, 52.68, 50.45, 48.999]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["America/Toronto", "America/Toronto", "America/Toronto", "America/Toronto", "America/Toronto", "America/Winnipeg", "America/Toronto", "America/Toronto", "America/Toronto", "America/Chicago", "America/Toronto", "America/Toronto"]
+              "value": ["America/Chicago", "America/Winnipeg", "America/Toronto", "America/Toronto", "America/Winnipeg", "America/Toronto", "America/Chicago", "America/Toronto", "America/Toronto", "America/Toronto", "America/Toronto", "America/Toronto"]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [238.31666667, -40.93333333, -47.25, 207.13333333, -40.93333333, 3.58333333, 238.31666667, 85.61666667, -47.25, -41.88333333, -53.21666667, -47.25]
+              "value": [516.65, 521.93333333, -669.31666667, 483.41666667, 521.93333333, 498.41666667, 516.65, 612.23333333, -685.88333333, 606.68333333, 488.75, -669.31666667]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr"]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-669.31666667, 488.75, 483.41666667, -685.88333333, 488.75, 521.93333333, -669.31666667, 612.23333333, 483.41666667, 516.65, 498.41666667, 483.41666667]
+              "value": [-0.5147367, -0.45852417, -0.98957549, -0.52402648, -0.45852417, -0.53599721, -0.5147367, -0.48919915, -0.84075194, -0.48126855, -0.51295356, -0.98957549]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [132, 130, 125, 127, 130, 130, 132, 131, 125, 132, 124, 125]
+              "value": [-0.82546313, -0.85039697, -0.82546313, -0.92000393, -0.85039697, -0.93517202, -0.82546313, -0.83772227, -0.89091445, -0.90525141, -0.85039697, -0.82546313]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-0.98957549, -0.51295356, -0.52402648, -0.84075194, -0.51295356, -0.45852417, -0.98957549, -0.48919915, -0.52402648, -0.5147367, -0.53599721, -0.52402648]
+              "value": [0.26179335, 0.27011131, 0.16283162, 0.23597476, 0.27011131, 0.22965681, 0.26179335, 0.26529273, 0.17698923, 0.24994361, 0.25580227, 0.16283162]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-0.82546313, -0.85039697, -0.92000393, -0.89091445, -0.85039697, -0.85039697, -0.82546313, -0.83772227, -0.92000393, -0.82546313, -0.93517202, -0.92000393]
+              "value": [0.96920542, 1, 0.60283154, 0.87362044, 1, 0.85023024, 0.96920542, 0.98216075, 0.65524553, 0.92533557, 0.94702537, 0.60283154]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.16283162, 0.25580227, 0.23597476, 0.17698923, 0.25580227, 0.27011131, 0.16283162, 0.26529273, 0.23597476, 0.26179335, 0.22965681, 0.23597476]
+              "value": [1, 1, 1, 0.94411202, 1, 1, 1, 1, 1, 1, 0.96422644, 1]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.60283154, 0.94702537, 0.87362044, 0.65524553, 0.94702537, 1, 0.60283154, 0.98216075, 0.87362044, 0.96920542, 0.85023024, 0.87362044]
-            },
-            {
-              "type": "double",
-              "attributes": {},
-              "value": [1, 0.96422644, 0.94411202, 1, 0.96422644, 1, 1, 1, 0.94411202, 1, 1, 0.94411202]
-            },
-            {
-              "type": "double",
-              "attributes": {},
-              "value": ["NaN", 0.001, 0.001, "NaN", 0.001, "NaN", "NaN", 1, 0.001, "NaN", "NaN", 0.001]
+              "value": ["NaN", "NaN", "NaN", 0.001, "NaN", "NaN", "NaN", 1, "NaN", 1, 0.001, "NaN"]
             },
             {
               "type": "list",
@@ -395,7 +400,7 @@
                       "value": ["bbox"]
                     }
                   },
-                  "value": [427866.72388268, 12063887.17557167, 970121.15372838, 12897505.49960899]
+                  "value": [124, -53.21666667, 132, 238.31666667]
                 },
                 "crs": {
                   "type": "list",
@@ -415,12 +420,12 @@
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["EPSG:3161"]
+                      "value": ["EPSG:3395"]
                     },
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["PROJCRS[\"NAD83 / Ontario MNR Lambert\",\n    BASEGEOGCRS[\"NAD83\",\n        DATUM[\"North American Datum 1983\",\n            ELLIPSOID[\"GRS 1980\",6378137,298.257222101,\n                LENGTHUNIT[\"metre\",1]]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4269]],\n    CONVERSION[\"Ontario MNR Lambert\",\n        METHOD[\"Lambert Conic Conformal (2SP)\",\n            ID[\"EPSG\",9802]],\n        PARAMETER[\"Latitude of false origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8821]],\n        PARAMETER[\"Longitude of false origin\",-85,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8822]],\n        PARAMETER[\"Latitude of 1st standard parallel\",44.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8823]],\n        PARAMETER[\"Latitude of 2nd standard parallel\",53.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8824]],\n        PARAMETER[\"Easting at false origin\",930000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8826]],\n        PARAMETER[\"Northing at false origin\",6430000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8827]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Province-wide spatial data management.\"],\n        AREA[\"Canada - Ontario.\"],\n        BBOX[41.67,-95.16,56.9,-74.35]],\n    ID[\"EPSG\",3161]]"]
+                      "value": ["PROJCRS[\"WGS 84 / World Mercator\",\n    BASEGEOGCRS[\"WGS 84\",\n        ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n            MEMBER[\"World Geodetic System 1984 (Transit)\"],\n            MEMBER[\"World Geodetic System 1984 (G730)\"],\n            MEMBER[\"World Geodetic System 1984 (G873)\"],\n            MEMBER[\"World Geodetic System 1984 (G1150)\"],\n            MEMBER[\"World Geodetic System 1984 (G1674)\"],\n            MEMBER[\"World Geodetic System 1984 (G1762)\"],\n            MEMBER[\"World Geodetic System 1984 (G2139)\"],\n            ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                LENGTHUNIT[\"metre\",1]],\n            ENSEMBLEACCURACY[2.0]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4326]],\n    CONVERSION[\"World Mercator\",\n        METHOD[\"Mercator (variant A)\",\n            ID[\"EPSG\",9804]],\n        PARAMETER[\"Latitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",1,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Very small scale conformal mapping.\"],\n        AREA[\"World between 80°S and 84°N.\"],\n        BBOX[-80,-180,84,180]],\n    ID[\"EPSG\",3395]]"]
                     }
                   ]
                 },
@@ -440,7 +445,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [970121.15372838, 12486474.2531918]
+                  "value": [132, -41.88333333]
                 },
                 {
                   "type": "double",
@@ -451,7 +456,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [857050.92422645, 12647728.19049777]
+                  "value": [130, 3.58333333]
                 },
                 {
                   "type": "double",
@@ -462,7 +467,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [132, 238.31666667]
                 },
                 {
                   "type": "double",
@@ -473,7 +478,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [537797.09894598, 12499248.2902157]
+                  "value": [125, -47.25]
                 },
                 {
                   "type": "double",
@@ -484,7 +489,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [857050.92422645, 12647728.19049777]
+                  "value": [130, 3.58333333]
                 },
                 {
                   "type": "double",
@@ -495,7 +500,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [581985.6499293, 12830932.68160174]
+                  "value": [124, -53.21666667]
                 },
                 {
                   "type": "double",
@@ -506,7 +511,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [970121.15372838, 12486474.2531918]
+                  "value": [132, -41.88333333]
                 },
                 {
                   "type": "double",
@@ -517,7 +522,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [857050.92422645, 12647728.19049777]
+                  "value": [131, 85.61666667]
                 },
                 {
                   "type": "double",
@@ -528,7 +533,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [127, 207.13333333]
                 },
                 {
                   "type": "double",
@@ -539,7 +544,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [427866.72388268, 12063887.17557167]
+                  "value": [126, 79.61666667]
                 },
                 {
                   "type": "double",
@@ -550,7 +555,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [927855.89924228, 12598430.87102781]
+                  "value": [130, -40.93333333]
                 },
                 {
                   "type": "double",
@@ -561,7 +566,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [132, 238.31666667]
                 }
               ]
             }
@@ -573,7 +578,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -596,7 +601,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -609,7 +614,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -631,12 +636,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [-90.38, -91.38]
+              "value": [0.00112289, 0.00113188]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [48.99, 45]
+              "value": [-0.00042731, 0.00072003]
             },
             {
               "type": "character",
@@ -646,12 +651,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [2.22708462, 2.22708462]
+              "value": [2.35891989, 2.22708462]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.44901752, 0.44901752]
+              "value": [0.42392283, 0.44901752]
             },
             {
               "type": "character",
@@ -661,12 +666,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [1, 1]
+              "value": [0.94411202, 1]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["P03_1_20200506T100000_ARU.wav", "P09_1_20200511T050000_ARU.wav"]
+              "value": ["P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav"]
             },
             {
               "type": "character",
@@ -676,22 +681,22 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["a_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "j_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav"]
+              "value": ["a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["BarLT", "SongMeter"]
+              "value": ["SongMeter", "SongMeter"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["BARLT10962", "S4A02222"]
+              "value": ["S4A01234", "S4A01234"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["P03_1", "P09_1"]
+              "value": ["P02_1", "P02_1"]
             },
             {
               "type": "double",
@@ -707,7 +712,7 @@
                   "value": ["UTC"]
                 }
               },
-              "value": [1588759200, 1589173200]
+              "value": [1588569900, 1588663800]
             },
             {
               "type": "double",
@@ -718,57 +723,62 @@
                   "value": ["Date"]
                 }
               },
-              "value": [18388, 18393]
+              "value": [18386, 18387]
+            },
+            {
+              "type": "double",
+              "attributes": {},
+              "value": [-87.45, -87.45]
+            },
+            {
+              "type": "double",
+              "attributes": {},
+              "value": [52.68, 52.68]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["America/Toronto", "America/Chicago"]
+              "value": ["America/Toronto", "America/Toronto"]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [207.13333333, -41.88333333]
+              "value": [483.41666667, 606.68333333]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["t2sr", "t2sr"]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-685.88333333, 516.65]
+              "value": [-0.52402648, -0.48126855]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [127, 132]
+              "value": [-0.92000393, -0.90525141]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-0.84075194, -0.5147367]
+              "value": [0.23597476, 0.24994361]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-0.89091445, -0.82546313]
+              "value": [0.87362044, 0.92533557]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.17698923, 0.26179335]
+              "value": [0.94411202, 1]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.65524553, 0.96920542]
-            },
-            {
-              "type": "double",
-              "attributes": {},
-              "value": [1, 1]
-            },
-            {
-              "type": "double",
-              "attributes": {},
-              "value": ["NaN", "NaN"]
+              "value": [0.001, 1]
             },
             {
               "type": "list",
@@ -797,7 +807,7 @@
                       "value": ["bbox"]
                     }
                   },
-                  "value": [427866.72388268, 12063887.17557167, 537797.09894598, 12499248.2902157]
+                  "value": [125, -47.25, 126, 79.61666667]
                 },
                 "crs": {
                   "type": "list",
@@ -817,12 +827,12 @@
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["EPSG:3161"]
+                      "value": ["EPSG:3395"]
                     },
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["PROJCRS[\"NAD83 / Ontario MNR Lambert\",\n    BASEGEOGCRS[\"NAD83\",\n        DATUM[\"North American Datum 1983\",\n            ELLIPSOID[\"GRS 1980\",6378137,298.257222101,\n                LENGTHUNIT[\"metre\",1]]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4269]],\n    CONVERSION[\"Ontario MNR Lambert\",\n        METHOD[\"Lambert Conic Conformal (2SP)\",\n            ID[\"EPSG\",9802]],\n        PARAMETER[\"Latitude of false origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8821]],\n        PARAMETER[\"Longitude of false origin\",-85,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8822]],\n        PARAMETER[\"Latitude of 1st standard parallel\",44.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8823]],\n        PARAMETER[\"Latitude of 2nd standard parallel\",53.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8824]],\n        PARAMETER[\"Easting at false origin\",930000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8826]],\n        PARAMETER[\"Northing at false origin\",6430000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8827]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Province-wide spatial data management.\"],\n        AREA[\"Canada - Ontario.\"],\n        BBOX[41.67,-95.16,56.9,-74.35]],\n    ID[\"EPSG\",3161]]"]
+                      "value": ["PROJCRS[\"WGS 84 / World Mercator\",\n    BASEGEOGCRS[\"WGS 84\",\n        ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n            MEMBER[\"World Geodetic System 1984 (Transit)\"],\n            MEMBER[\"World Geodetic System 1984 (G730)\"],\n            MEMBER[\"World Geodetic System 1984 (G873)\"],\n            MEMBER[\"World Geodetic System 1984 (G1150)\"],\n            MEMBER[\"World Geodetic System 1984 (G1674)\"],\n            MEMBER[\"World Geodetic System 1984 (G1762)\"],\n            MEMBER[\"World Geodetic System 1984 (G2139)\"],\n            ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                LENGTHUNIT[\"metre\",1]],\n            ENSEMBLEACCURACY[2.0]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4326]],\n    CONVERSION[\"World Mercator\",\n        METHOD[\"Mercator (variant A)\",\n            ID[\"EPSG\",9804]],\n        PARAMETER[\"Latitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",1,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Very small scale conformal mapping.\"],\n        AREA[\"World between 80°S and 84°N.\"],\n        BBOX[-80,-180,84,180]],\n    ID[\"EPSG\",3395]]"]
                     }
                   ]
                 },
@@ -842,7 +852,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [537797.09894598, 12499248.2902157]
+                  "value": [125, -47.25]
                 },
                 {
                   "type": "double",
@@ -853,7 +863,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [427866.72388268, 12063887.17557167]
+                  "value": [126, 79.61666667]
                 }
               ]
             }
@@ -989,7 +999,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -1012,7 +1022,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -1025,7 +1035,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -1047,12 +1057,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [-85.03, -85.03, -87.45, -87.45, -87.45, -87.45, -87.45, -90.38, -90.38]
+              "value": [0.00111391, 0.00111391, 0.00112289, 0.00112289, 0.00113188, 0.00113188, 0.00112289, 0.00114086, 0.00114086]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [50.01, 50.01, 52.68, 52.68, 52.68, 52.68, 52.68, 48.99, 48.99]
+              "value": [-0.00048128, -0.00048128, -0.00042731, -0.00042731, 0.00072003, 0.00072003, -0.00042731, 0.00187325, 0.00187325]
             },
             {
               "type": "character",
@@ -1077,12 +1087,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [1, 1, 0.94411202, 1, 1, 0.94411202, 0.94411202, 1, 1]
+              "value": [1, 1, 0.94411202, 0.94411202, 1, 1, 0.94411202, 1, 1]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["P01_1_20200503T052000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P03_1_20200506T100000_ARU.wav"]
+              "value": ["P01_1_20200503T052000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P03_1_20200506T100000_ARU.wav"]
             },
             {
               "type": "character",
@@ -1092,7 +1102,7 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["a_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "j_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "o_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav"]
+              "value": ["a_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "j_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "o_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav"]
             },
             {
               "type": "character",
@@ -1123,7 +1133,7 @@
                   "value": ["UTC"]
                 }
               },
-              "value": [1588483200, 1588483200, 1588569900, 1588663800, 1588663800, 1588569900, 1588569900, 1588759200, 1588759200]
+              "value": [1588483200, 1588483200, 1588569900, 1588569900, 1588663800, 1588663800, 1588569900, 1588759200, 1588759200]
             },
             {
               "type": "double",
@@ -1134,7 +1144,17 @@
                   "value": ["Date"]
                 }
               },
-              "value": [18385, 18385, 18386, 18387, 18387, 18386, 18386, 18388, 18388]
+              "value": [18385, 18385, 18386, 18386, 18387, 18387, 18386, 18388, 18388]
+            },
+            {
+              "type": "double",
+              "attributes": {},
+              "value": [-85.03, -85.03, -87.45, -87.45, -87.45, -87.45, -87.45, -90.38, -90.38]
+            },
+            {
+              "type": "double",
+              "attributes": {},
+              "value": [50.01, 50.01, 52.68, 52.68, 52.68, 52.68, 52.68, 48.99, 48.99]
             },
             {
               "type": "character",
@@ -1144,47 +1164,42 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [-53.21666667, -53.21666667, -47.25, 79.61666667, 79.61666667, -47.25, -47.25, 207.13333333, 207.13333333]
+              "value": [498.41666667, 498.41666667, 483.41666667, 483.41666667, 606.68333333, 606.68333333, 483.41666667, -685.88333333, -685.88333333]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr", "t2sr"]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [498.41666667, 498.41666667, 483.41666667, 606.68333333, 606.68333333, 483.41666667, 483.41666667, -685.88333333, -685.88333333]
+              "value": [-0.53599721, -0.53599721, -0.52402648, -0.52402648, -0.48126855, -0.48126855, -0.52402648, -0.84075194, -0.84075194]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [124, 124, 125, 126, 126, 125, 125, 127, 127]
+              "value": [-0.93517202, -0.93517202, -0.92000393, -0.92000393, -0.90525141, -0.90525141, -0.92000393, -0.89091445, -0.89091445]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-0.53599721, -0.53599721, -0.52402648, -0.48126855, -0.48126855, -0.52402648, -0.52402648, -0.84075194, -0.84075194]
+              "value": [0.22965681, 0.22965681, 0.23597476, 0.23597476, 0.24994361, 0.24994361, 0.23597476, 0.17698923, 0.17698923]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [-0.93517202, -0.93517202, -0.92000393, -0.90525141, -0.90525141, -0.92000393, -0.92000393, -0.89091445, -0.89091445]
+              "value": [0.85023024, 0.85023024, 0.87362044, 0.87362044, 0.92533557, 0.92533557, 0.87362044, 0.65524553, 0.65524553]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.22965681, 0.22965681, 0.23597476, 0.24994361, 0.24994361, 0.23597476, 0.23597476, 0.17698923, 0.17698923]
+              "value": [1, 1, 0.94411202, 0.94411202, 1, 1, 0.94411202, 1, 1]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [0.85023024, 0.85023024, 0.87362044, 0.92533557, 0.92533557, 0.87362044, 0.87362044, 0.65524553, 0.65524553]
-            },
-            {
-              "type": "double",
-              "attributes": {},
-              "value": [1, 1, 0.94411202, 1, 1, 0.94411202, 0.94411202, 1, 1]
-            },
-            {
-              "type": "double",
-              "attributes": {},
-              "value": ["NaN", "NaN", 0.001, 1, 1, 0.001, 0.001, "NaN", "NaN"]
+              "value": ["NaN", "NaN", 0.001, 0.001, 1, 1, 0.001, "NaN", "NaN"]
             },
             {
               "type": "list",
@@ -1213,7 +1228,7 @@
                       "value": ["bbox"]
                     }
                   },
-                  "value": [537797.09894598, 12499248.2902157, 927855.89924228, 12897505.49960899]
+                  "value": [124, -53.21666667, 127, 207.13333333]
                 },
                 "crs": {
                   "type": "list",
@@ -1233,12 +1248,12 @@
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["EPSG:3161"]
+                      "value": ["EPSG:3395"]
                     },
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["PROJCRS[\"NAD83 / Ontario MNR Lambert\",\n    BASEGEOGCRS[\"NAD83\",\n        DATUM[\"North American Datum 1983\",\n            ELLIPSOID[\"GRS 1980\",6378137,298.257222101,\n                LENGTHUNIT[\"metre\",1]]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4269]],\n    CONVERSION[\"Ontario MNR Lambert\",\n        METHOD[\"Lambert Conic Conformal (2SP)\",\n            ID[\"EPSG\",9802]],\n        PARAMETER[\"Latitude of false origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8821]],\n        PARAMETER[\"Longitude of false origin\",-85,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8822]],\n        PARAMETER[\"Latitude of 1st standard parallel\",44.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8823]],\n        PARAMETER[\"Latitude of 2nd standard parallel\",53.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8824]],\n        PARAMETER[\"Easting at false origin\",930000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8826]],\n        PARAMETER[\"Northing at false origin\",6430000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8827]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Province-wide spatial data management.\"],\n        AREA[\"Canada - Ontario.\"],\n        BBOX[41.67,-95.16,56.9,-74.35]],\n    ID[\"EPSG\",3161]]"]
+                      "value": ["PROJCRS[\"WGS 84 / World Mercator\",\n    BASEGEOGCRS[\"WGS 84\",\n        ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n            MEMBER[\"World Geodetic System 1984 (Transit)\"],\n            MEMBER[\"World Geodetic System 1984 (G730)\"],\n            MEMBER[\"World Geodetic System 1984 (G873)\"],\n            MEMBER[\"World Geodetic System 1984 (G1150)\"],\n            MEMBER[\"World Geodetic System 1984 (G1674)\"],\n            MEMBER[\"World Geodetic System 1984 (G1762)\"],\n            MEMBER[\"World Geodetic System 1984 (G2139)\"],\n            ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                LENGTHUNIT[\"metre\",1]],\n            ENSEMBLEACCURACY[2.0]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4326]],\n    CONVERSION[\"World Mercator\",\n        METHOD[\"Mercator (variant A)\",\n            ID[\"EPSG\",9804]],\n        PARAMETER[\"Latitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",1,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Very small scale conformal mapping.\"],\n        AREA[\"World between 80°S and 84°N.\"],\n        BBOX[-80,-180,84,180]],\n    ID[\"EPSG\",3395]]"]
                     }
                   ]
                 },
@@ -1258,7 +1273,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [927855.89924228, 12598430.87102781]
+                  "value": [124, -53.21666667]
                 },
                 {
                   "type": "double",
@@ -1269,7 +1284,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [927855.89924228, 12598430.87102781]
+                  "value": [124, -53.21666667]
                 },
                 {
                   "type": "double",
@@ -1280,7 +1295,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [125, -47.25]
                 },
                 {
                   "type": "double",
@@ -1291,7 +1306,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [125, -47.25]
                 },
                 {
                   "type": "double",
@@ -1302,7 +1317,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [126, 79.61666667]
                 },
                 {
                   "type": "double",
@@ -1313,7 +1328,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [126, 79.61666667]
                 },
                 {
                   "type": "double",
@@ -1324,7 +1339,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [125, -47.25]
                 },
                 {
                   "type": "double",
@@ -1335,7 +1350,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [537797.09894598, 12499248.2902157]
+                  "value": [127, 207.13333333]
                 },
                 {
                   "type": "double",
@@ -1346,7 +1361,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [537797.09894598, 12499248.2902157]
+                  "value": [127, 207.13333333]
                 }
               ]
             }
@@ -1358,7 +1373,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -1381,7 +1396,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "tz", "t2sr", "t2ss", "doy", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -1394,7 +1409,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -1416,12 +1431,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [-87.45]
+              "value": [0.00113188]
             },
             {
               "type": "double",
               "attributes": {},
-              "value": [52.68]
+              "value": [0.00072003]
             },
             {
               "type": "character",
@@ -1506,6 +1521,16 @@
               "value": [18387]
             },
             {
+              "type": "double",
+              "attributes": {},
+              "value": [-87.45]
+            },
+            {
+              "type": "double",
+              "attributes": {},
+              "value": [52.68]
+            },
+            {
               "type": "character",
               "attributes": {},
               "value": ["America/Toronto"]
@@ -1513,17 +1538,12 @@
             {
               "type": "double",
               "attributes": {},
-              "value": [79.61666667]
-            },
-            {
-              "type": "double",
-              "attributes": {},
               "value": [606.68333333]
             },
             {
-              "type": "double",
+              "type": "character",
               "attributes": {},
-              "value": [126]
+              "value": ["t2sr"]
             },
             {
               "type": "double",
@@ -1582,7 +1602,7 @@
                       "value": ["bbox"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899, 764502.63146004, 12897505.49960899]
+                  "value": [126, 79.61666667, 126, 79.61666667]
                 },
                 "crs": {
                   "type": "list",
@@ -1602,12 +1622,12 @@
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["EPSG:3161"]
+                      "value": ["EPSG:3395"]
                     },
                     {
                       "type": "character",
                       "attributes": {},
-                      "value": ["PROJCRS[\"NAD83 / Ontario MNR Lambert\",\n    BASEGEOGCRS[\"NAD83\",\n        DATUM[\"North American Datum 1983\",\n            ELLIPSOID[\"GRS 1980\",6378137,298.257222101,\n                LENGTHUNIT[\"metre\",1]]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4269]],\n    CONVERSION[\"Ontario MNR Lambert\",\n        METHOD[\"Lambert Conic Conformal (2SP)\",\n            ID[\"EPSG\",9802]],\n        PARAMETER[\"Latitude of false origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8821]],\n        PARAMETER[\"Longitude of false origin\",-85,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8822]],\n        PARAMETER[\"Latitude of 1st standard parallel\",44.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8823]],\n        PARAMETER[\"Latitude of 2nd standard parallel\",53.5,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8824]],\n        PARAMETER[\"Easting at false origin\",930000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8826]],\n        PARAMETER[\"Northing at false origin\",6430000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8827]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Province-wide spatial data management.\"],\n        AREA[\"Canada - Ontario.\"],\n        BBOX[41.67,-95.16,56.9,-74.35]],\n    ID[\"EPSG\",3161]]"]
+                      "value": ["PROJCRS[\"WGS 84 / World Mercator\",\n    BASEGEOGCRS[\"WGS 84\",\n        ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n            MEMBER[\"World Geodetic System 1984 (Transit)\"],\n            MEMBER[\"World Geodetic System 1984 (G730)\"],\n            MEMBER[\"World Geodetic System 1984 (G873)\"],\n            MEMBER[\"World Geodetic System 1984 (G1150)\"],\n            MEMBER[\"World Geodetic System 1984 (G1674)\"],\n            MEMBER[\"World Geodetic System 1984 (G1762)\"],\n            MEMBER[\"World Geodetic System 1984 (G2139)\"],\n            ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                LENGTHUNIT[\"metre\",1]],\n            ENSEMBLEACCURACY[2.0]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4326]],\n    CONVERSION[\"World Mercator\",\n        METHOD[\"Mercator (variant A)\",\n            ID[\"EPSG\",9804]],\n        PARAMETER[\"Latitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",1,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Very small scale conformal mapping.\"],\n        AREA[\"World between 80°S and 84°N.\"],\n        BBOX[-80,-180,84,180]],\n    ID[\"EPSG\",3395]]"]
                     }
                   ]
                 },
@@ -1627,7 +1647,7 @@
                       "value": ["XY", "POINT", "sfg"]
                     }
                   },
-                  "value": [764502.63146004, 12897505.49960899]
+                  "value": [126, 79.61666667]
                 }
               ]
             }

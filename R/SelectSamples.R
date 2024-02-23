@@ -5,9 +5,9 @@
 #' data frame for sampling using the specified `crs`.
 #'
 #' @param meta_weights (Spatial) Data frame. Recording meta data selection
-#'   weights. Output of `calc_selection_weights()`. Must have at least
-#'   `col_site_id` and `col_sel_weights`. If non-spatial, must also have
-#'   `latitude` and `longitude`.
+#'   weights. Output of `calc_selection_weights()`. Must have at least the
+#'   columns identified by `col_site_id` and `col_sel_weights`, as well as the
+#'   probability of selection columns (those starting with `psel`) and `doy`.
 #' @param n Numeric, Data frame, Vector, or List. Number of base samples to
 #'   choose. For stratification by site, a named vector/list of samples per site, or
 #'   a data frame with columns `n` for samples, `n_os` for oversamples and the
@@ -19,7 +19,6 @@
 #'   (defaults to `site_id`).
 #' @param col_sel_weights Column. Unquoted name of column identifying selection
 #'   weights (defaults to `psel_std`)
-#' @param crs Numeric. CRS to use for converting data to spatial (if required).
 #' @param seed Numeric. Random seed to use for random sampling. Seed only
 #'   applies to specific sampling events (does not change seed in the
 #'   environment). `NULL` does not set a seed.
@@ -29,17 +28,17 @@
 #' @return A sampling run from grts
 #' @export
 #' @examples
-#' m <- clean_metadata(project_files = example_files)
 #' s <- clean_site_index(example_sites_clean,
 #'                       col_date_time = c("date_time_start", "date_time_end"))
-#' m <- add_sites(m, s)
-#' m <- calc_sun(m)
+#' m <- clean_metadata(project_files = example_files) |>
+#'   add_sites(s) |>
+#'   calc_sun()
 #'
 #' params <- sim_selection_weights()
 #' w <- calc_selection_weights(m, params = params)
 #'
 #' # No stratification by site
-#' samples <- sample_recordings(w, n = 10, os = 0.1)
+#' samples <- sample_recordings(w, n = 10, os = 0.1, col_site_id = NULL)
 #'
 #' # Stratification by site defined by...
 #'
@@ -61,7 +60,6 @@ sample_recordings <- function(meta_weights,
                               n, os = NULL,
                               col_site_id = site_id,
                               col_sel_weights = psel_std,
-                              crs = 3161,
                               seed = NULL, ...) {
 
   col_site_id <- enquo(col_site_id)
@@ -84,7 +82,13 @@ sample_recordings <- function(meta_weights,
       call = NULL)
   }
 
-  meta_weights_sf <- df_to_sf(meta_weights, crs = crs)
+  # If sf, convert to df
+  meta_weights <- sf_to_df(meta_weights)
+
+  # Convert to time-spatial
+  meta_weights_sf <- sf::st_as_sf(meta_weights,
+                                  coords = c("doy", meta_weights$psel_by[1]),
+                                  crs = 3395)
 
   # Assemble n and os (based on BASSR::run_grts_on_BASS() ---------------------
 
@@ -122,7 +126,6 @@ sample_recordings <- function(meta_weights,
          rlang::is_named(n))) {
       abort_strat()
     }
-
 
     sites <- meta_weights |>
       dplyr::pull({{ col_site_id }}) |>

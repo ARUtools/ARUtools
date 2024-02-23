@@ -97,7 +97,7 @@ test_that("sample_recordings()", {
   expect_silent(r3 <- sample_recordings(m_sf, n = 12, os = 0.2, col_site_id = NULL, seed = 1234))
 
   expect_equal(r1, r2)
-  expect_equal(r1, r3)
+  expect_equal(r1, r3, list_as_map = TRUE) # Ignore order
 
   expect_s3_class(r1, "sp_design")
   expect_named(r1, c("sites_legacy", "sites_base", "sites_over",
@@ -119,7 +119,7 @@ test_that("sample_recordings()", {
                                                           n = c(2, 5, 2),
                                                           n_os = c(0, 1, 0)),
                                         seed = 1234))
-  expect_equal(r4, r5)
+  expect_equal(r4, r5, list_as_map = TRUE) # Ignore order
   expect_equal(r4, r6)
   expect_equal(r4, r7)
 

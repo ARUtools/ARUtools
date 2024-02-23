@@ -10,16 +10,15 @@ sample_recordings(
   os = NULL,
   col_site_id = site_id,
   col_sel_weights = psel_std,
-  crs = 3161,
   seed = NULL,
   ...
 )
 }
 \arguments{
 \item{meta_weights}{(Spatial) Data frame. Recording meta data selection
-weights. Output of \code{calc_selection_weights()}. Must have at least
-\code{col_site_id} and \code{col_sel_weights}. If non-spatial, must also have
-\code{latitude} and \code{longitude}.}
+weights. Output of \code{calc_selection_weights()}. Must have at least the
+columns identified by \code{col_site_id} and \code{col_sel_weights}, as well as the
+probability of selection columns (those starting with \code{psel}) and \code{doy}.}
 
 \item{n}{Numeric, Data frame, Vector, or List. Number of base samples to
 choose. For stratification by site, a named vector/list of samples per site, or
@@ -36,8 +35,6 @@ frame.}
 \item{col_sel_weights}{Column. Unquoted name of column identifying selection
 weights (defaults to \code{psel_std})}
 
-\item{crs}{Numeric. CRS to use for converting data to spatial (if required).}
-
 \item{seed}{Numeric. Random seed to use for random sampling. Seed only
 applies to specific sampling events (does not change seed in the
 environment). \code{NULL} does not set a seed.}
@@ -53,17 +50,17 @@ using \code{spsurvey::grts()}. If non-spatial, data will be converted to a spati
 data frame for sampling using the specified \code{crs}.
 }
 \examples{
-m <- clean_metadata(project_files = example_files)
 s <- clean_site_index(example_sites_clean,
                       col_date_time = c("date_time_start", "date_time_end"))
-m <- add_sites(m, s)
-m <- calc_sun(m)
+m <- clean_metadata(project_files = example_files) |>
+  add_sites(s) |>
+  calc_sun()
 
 params <- sim_selection_weights()
 w <- calc_selection_weights(m, params = params)
 
 # No stratification by site
-samples <- sample_recordings(w, n = 10, os = 0.1)
+samples <- sample_recordings(w, n = 10, os = 0.1, col_site_id = NULL)
 
 # Stratification by site defined by...
 
