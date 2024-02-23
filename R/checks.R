@@ -113,6 +113,13 @@ check_ext <- function(ext, opts)  {
 #' @noRd
 check_cols <- function(df, cols = NULL, name, extra = NULL, dates = FALSE) {
   msg <- vector()
+
+  # Catch NSE as character vectors
+  if(is_quosures(cols)) {
+    cols <- cols[!sapply(cols, quo_is_null)] # Drop NULLs
+    cols <- names(exprs_auto_name(cols))
+  }
+
   for(i in cols) {
     if(!is.null(i) && !any(tolower(i) %in% names(df))) {
       msg <- c(msg, paste0("Column '", i, "' does not exist"))

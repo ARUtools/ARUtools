@@ -222,3 +222,8 @@ is_whole <- function(x, tolerance = 0.00001) {
 set_seed <- function(seed, code) {
   if(is.null(seed)) code else withr::with_seed(seed, code)
 }
+
+
+nse_name <- function(col) {
+  names(exprs_auto_name(list(col)))
+}

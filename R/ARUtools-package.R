@@ -24,4 +24,13 @@ rlang::on_load(rlang::local_use_cli())
                  pat_gps_coords = c("lon", "lat")
             )
   )
+  # CRAN Note avoidance
+  if(getRversion() >= "2.15.1")
+    utils::globalVariables(
+      # Vars used in Non-Standard Evaluations, declare here to
+      # avoid notes
+      c("site_id", "psel_std" # Defaults for NSE columns col_site_id, col_sel_weight in sample_recordings()
+      )
+    )
+
 }
