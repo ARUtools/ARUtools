@@ -11,10 +11,44 @@ test_that("get_wav_length", {
   unlink(f)
 })
 
+test_that("check_wave_path_in()", {
+  f <- c("test.wav", "/home/user/test.wav")
+  expect_error(check_wave_path_in(c("test.wav", "/home/user/test.wav")),
+               "All wave file paths must be either absolute or relative")
+  expect_warning(check_wave_path_in(c("/test.wav", "/test2.wav"), dir_in = "."),
+                 "All wave file paths are absolute") |>
+    expect_error("Some wave files could not be found")
+
+
+  t <- list.files(test_path(), ".R") # grab tests files as examples
+  expect_error(check_wave_path_in(t, dir_in = test_path()),
+               "Non-wav file found in files")
+})
+
+test_that("check_wave_path_out()", {
+  expect_error(check_wave_path_out(subdirs = list("non_existant_dir"), path_in = ".",
+                                   dir_out = ".", create_dir = FALSE),
+               "Not all output directories exist")
+})
+
+test_that("check_wave_lengths()", {
+  f <- temp_wavs(2)
+
+  expect_error(check_wave_lengths(path_in = f, clip_lengths = 10,
+                                  start_times = 0, diff_limit = 0.5),
+               "Some wave files are >=0.5s shorter than the requested clip")
+  unlink(f)
+})
+
 test_that("clip_wave_single()", {
 
   # Create a dummy wave file for testing
-  f <- temp_wavs(1)
+  f <- temp_wavs(2)
+
+  expect_error(clip_wave_single(f), "More than one file supplied")
+  f <- f[1]
+  expect_error(clip_wave_single(f, path_out = c("test", "test2")),
+               "Can only have one output file")
 
   expect_silent(clip_wave_single(f, test_path("temp.wav"), clip_length = 1, start_time = 0.5))
   expect_error(clip_wave_single(f, test_path("temp.wav"), clip_length = 1, start_time = 0.5),

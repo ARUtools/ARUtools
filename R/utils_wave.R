@@ -223,8 +223,7 @@ check_wave_path_in <- function(path_in, dir_in) {
   if(any(!fs::path_ext(path_in) %in% c("wav", "wave"))) {
     r <- path_in[!fs::path_ext(path_in) %in% c("wav", "wave")]
     if(length(r) > 5) r <- c(r[1:5], "...")
-    r <- paste0(r, collapse = "\n") |>
-      stats::setNames("*")
+    r <- set_names(r, "*")
 
     rlang::abort(c("Non-wav file found in files.",
                    "x" = "Only wav files are processed by `clip_wave()`",
@@ -239,10 +238,12 @@ check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir) {
   dir_out <- fs::path(dir_out, purrr::pmap_chr(subdirs, fs::path))
   path_out <- fs::path(dir_out, fs::path_file(path_in))
 
-  # Create dirs if they do not exist
+
   if(create_dir) {
+    # Create dirs if they do not exist
     fs::dir_create(dir_out)
   } else if(!all(fs::dir_exists(dir_out))) {
+    # Alert if missing dirs
     err <- dir_out[!fs::dir_exists(dir_out)]
     rlang::abort(
       c("Not all output directories exist",

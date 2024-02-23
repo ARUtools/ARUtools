@@ -97,7 +97,7 @@ test_that("sample_recordings()", {
   expect_silent(r3 <- sample_recordings(m_sf, n = 12, os = 0.2, col_site_id = NULL, seed = 1234))
 
   expect_equal(r1, r2)
-  expect_equal(r1, r3, list_as_map = TRUE) # Ignore order
+  expect_equal(r1, r3, list_as_map = TRUE)
 
   expect_s3_class(r1, "sp_design")
   expect_named(r1, c("sites_legacy", "sites_base", "sites_over",
@@ -119,15 +119,25 @@ test_that("sample_recordings()", {
                                                           n = c(2, 5, 2),
                                                           n_os = c(0, 1, 0)),
                                         seed = 1234))
-  expect_equal(r4, r5, list_as_map = TRUE) # Ignore order
+  expect_equal(r4, r5, list_as_map = TRUE)
   expect_equal(r4, r6)
   expect_equal(r4, r7)
 
   # Errors
   expect_error(sample_recordings(m, n = 30, os = 0.2, col_site_id = NULL),
+               "Cannot sample \\(n \\+ oversampling\\) more points than there are in the data")
+  expect_error(sample_recordings(m, n = 5, os = c(0.2, 0.5), col_site_id = NULL),
+               "`os` must be a single value unless using stratification")
+  expect_error(sample_recordings(m, n = 30, os = 0.2, col_site_id = NULL),
                "samples, but only")
   expect_error(sample_recordings(m, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 5), os = 0.2),
                "Selected more samples than exist in some sites")
+  expect_error(sample_recordings(m, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 2)),
+               "`os` can only be NULL if")
+  expect_error(sample_recordings(m, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 2), os = 2),
+               "`os` as a single value is a proportion")
+  expect_error(sample_recordings(m, n = c(PXX_1 = 2, P02_1 = 5, P03_1 = 2), os = 0.1),
+               "Not all requirements met for sampling with stratification by site")
 
 
   # Snapshots cannot be tested interactively

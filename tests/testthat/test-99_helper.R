@@ -139,3 +139,16 @@ test_that("acoustic_indices()", {
 
   unlink("test_wave.wav")
 })
+
+test_that("acoustic_indices() errors", {
+  w <- tuneR::sine(440, duration = 30000) # < 5s
+  tuneR::writeWave(w, "test_wave.wav")
+
+  invisible(capture.output(
+    expect_error(acoustic_indices("test_wave.wav"),
+                 "Error in `acoustic_complexity\\(\\)` from the soundecology package") |>
+      expect_message("Calculating acoustic indices")
+  ))
+
+  unlink("test_wave.wav")
+})

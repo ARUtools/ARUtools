@@ -42,6 +42,13 @@ test_that("create_dirs()", {
                                 dry_run = FALSE),
                "Trying to create directories")
 
+  expect_message(d <- create_dirs(plots = c("river1", "river2", "river3"),
+                                  site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+                                               "river3_sm05", "river3_sm06"),
+                                  base_dir = bd, dir_list = TRUE,
+                                  dry_run = TRUE),
+                 "This will create directories that already exist")
+
   expect_silent(d <- create_dirs(plots = c("river1", "river2", "river3"),
                                  site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
                                               "river3_sm05", "river3_sm06"),
