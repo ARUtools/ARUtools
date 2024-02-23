@@ -21,7 +21,9 @@ First we'll load the packages we want to work with
 ```{r setup}
 #| message: false
 library(ARUtools)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
 library(glue)
 ```
 
