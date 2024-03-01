@@ -29,7 +29,7 @@ column matching that identified by \code{col_site_id}.}
 vector/list of number of samples per site Ignored if \code{n} is a data
 frame.}
 
-\item{col_site_id}{Column. Unquoted name of column containing site strata IDs
+\item{col_site_id}{Column. Unquoted column containing site strata IDs
 (defaults to \code{site_id}).}
 
 \item{col_sel_weights}{Column. Unquoted name of column identifying selection
@@ -51,7 +51,7 @@ data frame for sampling using the specified \code{crs}.
 }
 \examples{
 s <- clean_site_index(example_sites_clean,
-                      col_date_time = c("date_time_start", "date_time_end"))
+                      name_date_time = c("date_time_start", "date_time_end"))
 m <- clean_metadata(project_files = example_files) |>
   add_sites(s) |>
   calc_sun()

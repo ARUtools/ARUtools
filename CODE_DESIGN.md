@@ -19,11 +19,15 @@ making collaboration and future modifications easier.
   - `aru_id`, `aru_type`, `site_id`
   - `longitude`, `latitude`
   - `tz`, `t2sr`, `t2ss`
-- `add_sites()` does allow adding and keeping extra columns (`col_extra = ...`)
-- Functions that could legitamitely use different standardized column names 
+- `add_sites()` does allow adding and keeping extra columns (`name_extra = ...`)
+- Functions that could legitimately use different standardized column names 
   (ie. selection functions and clip wave functions) use NSE and name arguments are defined as `col_COLNAME`
 - Non-NSE col arguments are defined as `name_COLNAME`, including when converted
   to character within a function for use in other ways.
+- NSE col names can be referenced with {{ }} in tidyverse functions, but occasionally 
+  they must be `enquo()`d before use in other functions (like `nse_name()`, or
+  `quo_is_null()` for example). Therefore in those cases they are `enquo()`d right at the 
+  start of the function (e.g., `sample_recordings()`)
 
 ## Regular Expression patterns
 - Patterns that are expected to vary (i.e file names) have helper functions

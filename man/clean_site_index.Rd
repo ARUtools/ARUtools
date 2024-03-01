@@ -6,32 +6,35 @@
 \usage{
 clean_site_index(
   site_index,
-  col_aru_id = "aru_id",
-  col_site_id = "site_id",
-  col_date_time = "date",
-  col_coords = c("longitude", "latitude"),
-  col_extra = NULL,
+  name_aru_id = "aru_id",
+  name_site_id = "site_id",
+  name_date_time = "date",
+  name_coords = c("longitude", "latitude"),
+  name_extra = NULL,
   resolve_overlaps = TRUE,
   quiet = FALSE
 )
 }
 \arguments{
-\item{site_index}{Data frame (can be spatial) or file path. Site index data
+\item{site_index}{(Spatial) Data frame or file path. Site index data
 to clean. If file path, must be to a local csv or xlsx file.}
 
-\item{col_aru_id}{Character. Column name that contains ARU ids. Default \code{aru_id}.}
+\item{name_aru_id}{Character. Name of the column that contains ARU ids.
+Default \code{"aru_id"}.}
 
-\item{col_site_id}{Character. Column name that contains site ids. Deafult \code{site_id}.}
+\item{name_site_id}{Character. Name of the column that contains site ids.
+Default \code{"site_id"}.}
 
-\item{col_date_time}{Character. Column name that contains dates or
+\item{name_date_time}{Character. Column name that contains dates or
 date/times. Can be vector of two names if there are both 'start' and 'end'
-columns. Can be \code{NULL} to ignore dates.}
+columns. Can be \code{NULL} to ignore dates. Default \code{"date"}.}
 
-\item{col_coords}{Character. Column names that contain longitude and
-latitude (in that order). Ignored if \code{site_index} is spatial.}
+\item{name_coords}{Character. Column names that contain longitude and
+latitude (in that order). Ignored if \code{site_index} is spatial. Default
+\code{c("longitude", "latitude")}}
 
-\item{col_extra}{Character. Column names for extra data to include. If a named
-vector, will rename the columns (see examples).}
+\item{name_extra}{Character. Column names for extra data to include. If a named
+vector, will rename the columns (see examples). Default \code{NULL}.}
 
 \item{resolve_overlaps}{Logical. Whether or not to resolve date overlaps by
 shifting the start/end dates to noon (default \code{TRUE}). This assumes that
@@ -61,25 +64,25 @@ from different timezones to be processed at the same time.
 \examples{
 
 s <- clean_site_index(example_sites,
-                      col_aru_id = "ARU",
-                      col_site_id = "Sites",
-                      col_date_time = c("Date_set_out", "Date_removed"),
-                      col_coords = c("lon", "lat"))
+                      name_aru_id = "ARU",
+                      name_site_id = "Sites",
+                      name_date_time = c("Date_set_out", "Date_removed"),
+                      name_coords = c("lon", "lat"))
 
 s <- clean_site_index(example_sites,
-                      col_aru_id = "ARU",
-                      col_site_id = "Sites",
-                      col_date_time = c("Date_set_out", "Date_removed"),
-                      col_coords = c("lon", "lat"),
-                      col_extra = c("plot" = "Plots"))
+                      name_aru_id = "ARU",
+                      name_site_id = "Sites",
+                      name_date_time = c("Date_set_out", "Date_removed"),
+                      name_coords = c("lon", "lat"),
+                      name_extra = c("plot" = "Plots"))
 
 # Without dates
 eg <- dplyr::select(example_sites, -Date_set_out, -Date_removed)
 s <- clean_site_index(eg,
-                      col_aru_id = "ARU",
-                      col_site_id = "Sites",
-                      col_date_time = NULL,
-                      col_coords = c("lon", "lat"),
-                      col_extra = c("plot" = "Plots"))
+                      name_aru_id = "ARU",
+                      name_site_id = "Sites",
+                      name_date_time = NULL,
+                      name_coords = c("lon", "lat"),
+                      name_extra = c("plot" = "Plots"))
 
 }

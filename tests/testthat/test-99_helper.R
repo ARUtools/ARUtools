@@ -44,6 +44,7 @@ test_that("check_meta()", {
 
 test_that("check_problems() - basic meta", {
   m <- clean_metadata(project_files = example_files, quiet = TRUE)
+  m <- dplyr::arrange(m, match(.data$path, sort(example_files))) # Keep original order for this test
   m$aru_id[c(3, 7, 10)] <- NA_character_
   m$site_id[7] <- m$site_id[3]
 

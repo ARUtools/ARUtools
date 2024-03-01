@@ -54,11 +54,10 @@ test_that("sim_selection_weights()", {
   vdiffr::expect_doppelganger("sim_selection_weights3", g)
 })
 
-
 test_that("calc_selection_weights()", {
 
   s <- clean_site_index(example_sites_clean,
-                        col_date = c("date_time_start", "date_time_end"))
+                        name_date = c("date_time_start", "date_time_end"))
   m <- clean_metadata(project_files = example_files, quiet = TRUE) |>
     add_sites(s, quiet = TRUE) |>
     calc_sun()
@@ -83,7 +82,7 @@ test_that("calc_selection_weights()", {
 
 test_that("sample_recordings()", {
   s <- clean_site_index(example_sites_clean,
-                        col_date = c("date_time_start", "date_time_end"))
+                        name_date = c("date_time_start", "date_time_end"))
   m <- clean_metadata(project_files = example_files, quiet = TRUE) |>
     add_sites(s, quiet = TRUE) |>
     calc_sun() |>

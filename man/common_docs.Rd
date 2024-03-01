@@ -24,9 +24,8 @@ files/directories which match the pattern in \code{subset}.}
 coordinates. Output of \code{clean_metadata()} and then \code{add_sites()} (with
 either \code{clean_gps()} or \code{clean_site_index()}).}
 
-\item{col_site_id}{Character. Column name that contains site ids. Deafult \code{site_id}.}
-
-\item{col_aru_id}{Character. Column name that contains ARU ids. Default \code{aru_id}.}
+\item{col_site_id}{Column. Unquoted column containing site strata IDs
+(defaults to \code{site_id}).}
 
 \item{date}{Logical. Whether to summarize output by date (as well as
 \code{site_id} and \code{aru_id}. Default \code{FALSE}.}

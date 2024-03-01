@@ -54,13 +54,13 @@ join by site ids alone if set \code{by_date = NULL}.
 \examples{
 m <- clean_metadata(project_files = example_files)
 s <- clean_site_index(example_sites_clean,
-                      col_date = c("date_time_start", "date_time_end"))
+                      name_date = c("date_time_start", "date_time_end"))
 m <- add_sites(m, s)
 
 # Without dates (by site only)
 m <- clean_metadata(project_files = example_files)
 eg <- dplyr::select(example_sites_clean, -date_time_start, -date_time_end)
-s <- clean_site_index(eg, col_date_time = NULL)
+s <- clean_site_index(eg, name_date_time = NULL)
 m <- add_sites(m, s, by_date = NULL)
 
 }

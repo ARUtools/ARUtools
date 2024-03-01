@@ -31,11 +31,11 @@ test_that("check_wave_path_out()", {
                "Not all output directories exist")
 })
 
-test_that("check_wave_lengths()", {
+test_that("check_wave_length()", {
   f <- temp_wavs(2)
 
-  expect_error(check_wave_lengths(path_in = f, clip_lengths = 10,
-                                  start_times = 0, diff_limit = 0.5),
+  expect_error(check_wave_length(path_in = f, clip_length = 10,
+                                 start_time = 0, diff_limit = 0.5),
                "Some wave files are >=0.5s shorter than the requested clip")
   unlink(f)
 })
@@ -75,20 +75,19 @@ test_that("clip_wave_single()", {
 test_that("clip_wave()", {
 
   # Create dummy wave files for testing
-  w <- data.frame(path = temp_wavs(),
-                  treat = c("test1", "test2", "test1", "test2", "test1", "test2"),
-                  site = c("a", "a", "b", "b", "c", "c"),
-                  filename_out = paste0("wave", 1:6, ".wav"),
-                  clip_length = c(1,     1, 2, 1.5, 0.5, 0.75),
-                  start_time =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
+  w <- data.frame(
+    path = temp_wavs(),
+    treat = c("test1/a", "test2/a", "test1/b", "test2/b", "test1/c", "test2/c"),
+    filename_out = paste0("wave", 1:6, ".wav"),
+    clip_length = c(1,     1, 2, 1.5, 0.5, 0.75),
+    start_time =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
 
   # Require correct inputs
   expect_error(clip_wave(w), "Require an output directory")
   expect_error(clip_wave(w, dir_out = test_path("clean")),
                "Column 'subdir_out' does not exist")
 
-  expect_silent(clip_wave(w, dir_out = test_path("clean"),
-                          col_subdir_out = c("treat", "site")))
+  expect_silent(clip_wave(w, dir_out = test_path("clean"), col_subdir_out = treat))
   expect_true(fs::file_exists(test_path("clean/test1/a/file1.wav")))
 
   # Check clip lengths
@@ -108,19 +107,19 @@ test_that("clip_wave()", {
 
 test_that("clip_wave() column names", {
   # Create dummy wave files for testing
-  w <- data.frame(wave_path = temp_wavs(),
-                  subdir_out = c("test1", "test2", "test1", "test2", "test1", "test2"),
-                  subsubdir_out = c("a", "a", "b", "b", "c", "c"),
-                  new_file = paste0("wave", 1:6, ".wav"),
-                  sample = c(1,     1, 2, 1.5, 0.5, 0.75),
-                  start =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
+  w <- data.frame(
+    wave_path = temp_wavs(),
+    subdir_out = c("test1/a", "test2/a", "test1/b", "test2/b", "test1/c", "test2/c"),
+    new_file = paste0("wave", 1:6, ".wav"),
+    sample = c(1,     1, 2, 1.5, 0.5, 0.75),
+    start =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
 
   expect_silent(clip_wave(w, dir_out = test_path("clean"),
-                          col_path_in = "wave_path",
-                          col_clip_length = "sample",
-                          col_start_time = "start",
-                          col_filename_out = "new_file",
-                          col_subdir_out = c("subdir_out", "subsubdir_out")))
+                          col_path_in = wave_path,
+                          col_clip_length = sample,
+                          col_start_time = start,
+                          col_filename_out = new_file,
+                          col_subdir_out = subdir_out))
   expect_true(fs::file_exists(test_path("clean/test1/a/file1.wav")))
 
 
@@ -131,11 +130,12 @@ test_that("clip_wave() column names", {
 
 test_that("clip_wave() diff_limit", {
   # Create dummy wave files for testing
-  w <- data.frame(path = temp_wavs(),
-                  subdir_out = c("test1", "test2", "test1", "test2", "test1", "test2"),
-                  filename_out = paste0("wave", 1:6, ".wav"),
-                  clip_length = c(1,     1, 2, 1.5, 0.5, 0.75),
-                  start_time =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
+  w <- data.frame(
+    path = temp_wavs(),
+    subdir_out = c("test1", "test2", "test1", "test2", "test1", "test2"),
+    filename_out = paste0("wave", 1:6, ".wav"),
+    clip_length = c(1,     1, 2, 1.5, 0.5, 0.75),
+    start_time =  c(1.2, 0.5, 1, 0,   0.5,  0.3))
 
   expect_error(clip_wave(w, dir_out = test_path("clean"), diff_limit = 0.5),
                "Some wave files are >=0.5s shorter than the requested clip")

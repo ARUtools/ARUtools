@@ -15,8 +15,8 @@
 #' @param meta_sites (Spatial) Data frame. Recording metadata with added
 #'   coordinates. Output of `clean_metadata()` and then `add_sites()` (with
 #'   either `clean_gps()` or `clean_site_index()`).
-#' @param col_site_id Character. Column name that contains site ids. Deafult `site_id`.
-#' @param col_aru_id Character. Column name that contains ARU ids. Default `aru_id`.
+#' @param col_site_id Column. Unquoted column containing site strata IDs
+#'   (defaults to `site_id`).
 #' @param date Logical. Whether to summarize output by date (as well as
 #'   `site_id` and `aru_id`. Default `FALSE`.
 #' @param path Character. Path to wave file.

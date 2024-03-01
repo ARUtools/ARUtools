@@ -70,10 +70,10 @@ format.
 
 ```{r}
 sites <- clean_site_index(example_sites, 
-                          col_aru_id = "ARU", 
-                          col_site_id = "Sites", 
-                          col_date_time = c("Date_set_out", "Date_removed"),
-                          col_coords = c("lon", "lat"))
+                          name_aru_id = "ARU", 
+                          name_site_id = "Sites", 
+                          name_date_time = c("Date_set_out", "Date_removed"),
+                          name_coords = c("lon", "lat"))
 ```
 
 Hmm, that's an interesting message! This means that some of our deployment
@@ -97,11 +97,11 @@ We can retain these by specifying `cols_extra`.
 
 ```{r}
 sites <- clean_site_index(example_sites, 
-                          col_aru_id = "ARU", 
-                          col_site_id = "Sites", 
-                          col_date_time = c("Date_set_out", "Date_removed"),
-                          col_coords = c("lon", "lat"),
-                          col_extra = c("Plots", "Subplot"))
+                          name_aru_id = "ARU", 
+                          name_site_id = "Sites", 
+                          name_date_time = c("Date_set_out", "Date_removed"),
+                          name_coords = c("lon", "lat"),
+                          name_extra = c("Plots", "Subplot"))
 sites
 ```
 
@@ -109,11 +109,11 @@ We can even be fancy and rename them for consistency by using named vectors.
 
 ```{r}
 sites <- clean_site_index(example_sites, 
-                          col_aru_id = "ARU", 
-                          col_site_id = "Sites", 
-                          col_date_time = c("Date_set_out", "Date_removed"),
-                          col_coords = c("lon", "lat"),
-                          col_extra = c("plot" = "Plots", "subplot" = "Subplot"))
+                          name_aru_id = "ARU", 
+                          name_site_id = "Sites", 
+                          name_date_time = c("Date_set_out", "Date_removed"),
+                          name_coords = c("lon", "lat"),
+                          name_extra = c("plot" = "Plots", "subplot" = "Subplot"))
 sites
 ```
 
