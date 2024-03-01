@@ -8,11 +8,11 @@ clip_wave(
   waves,
   dir_out,
   dir_in = NULL,
-  col_path_in = "path",
-  col_subdir_out = "subdir_out",
-  col_filename_out = "filename_out",
-  col_clip_length = "clip_length",
-  col_start_time = "start_time",
+  col_path_in = path,
+  col_subdir_out = subdir_out,
+  col_filename_out = filename_out,
+  col_clip_length = clip_length,
+  col_start_time = start_time,
   overwrite = FALSE,
   create_dir = TRUE,
   diff_limit = 30,
@@ -27,22 +27,24 @@ clip_wave(
 \item{dir_in}{Character. Directory wave files are read from. Default is
 \code{NULL} meaning the current working directory.}
 
-\item{col_path_in}{Character. Column name that contains the current file paths. Default \code{path}.
+\item{col_path_in}{Column. Unquoted column containing the current file paths.
+Default \code{path}.
 \strong{Note: file paths must be either relative to \code{dir_in} or absolute}.}
 
-\item{col_subdir_out}{Character. Column name(s) that contain the
-subdirectory(ies) in which to put output files. Default \code{subdir_out}.}
+\item{col_subdir_out}{Column. Unquoted column containing the
+subdirectories in which to put output files. Default \code{subdir_out}.}
 
-\item{col_filename_out}{Character. Column name that contains the output
+\item{col_filename_out}{Column. Unquoted column containing the output
 filenames. Default \code{filename_out}.}
 
-\item{col_clip_length}{Character. Column name that contains the length of the
+\item{col_clip_length}{Column. Unquoted column containing the length of the
 new clip. Default \code{length}.}
 
-\item{col_start_time}{Character. Column name that contains the start time of
+\item{col_start_time}{Column. Unquoted column containing the start time of
 the new clip. Default \code{start_time}}
 
-\item{overwrite}{Logical. Overwrite pre-existing files when clipping and moving. (Default \code{FALSE})}
+\item{overwrite}{Logical. Overwrite pre-existing files when clipping and
+moving. (Default \code{FALSE})}
 
 \item{create_dir}{Logical. Whether to create directory structure for newly
 formatted and clipped wave files.}
@@ -60,21 +62,16 @@ Process multiple wave files by copying them with a new filename and/or
 clipping to a given length.
 }
 \examples{
-
 \dontrun{
-w <- data.frame(path = temp_wavs(n = 4),
-                subdir_out = c("test1", "test2", "test3", "test4"),
-                subsubdir_out = c("a", "b", "c", "d"),
-                filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
-                clip_length = c(1, 1, 1, 2),
-                start_time = c(1.2, 0.5, 1, 0))
+w <- data.frame(
+  path = temp_wavs(n = 4),
+  subdir_out = c("test1/a", "test2/a", "test3/c", "test4/d"),
+  filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
+  clip_length = c(1, 1, 1, 2),
+  start_time = c(1.2, 0.5, 1, 0))
 
-clip_wave(w, dir_out = "clean",
-          col_subdir_out = c("subdir_out", "subsubdir_out"))
+clip_wave(w, dir_out = "clean")
 
 unlink("clean", recursive = TRUE) # Remove this new 'clean' directory
 }
-
-
-
 }

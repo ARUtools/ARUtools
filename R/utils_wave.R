@@ -78,17 +78,19 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #' @param waves Data frame. Details of file locations.
 #' @param dir_in Character. Directory wave files are read from. Default is
 #'   `NULL` meaning the current working directory.
-#' @param col_path_in Character. Column name that contains the current file paths. Default `path`.
+#' @param col_path_in Column. Unquoted column containing the current file paths.
+#'   Default `path`.
 #'   **Note: file paths must be either relative to `dir_in` or absolute**.
-#' @param col_subdir_out Character. Column name(s) that contain the
-#'   subdirectory(ies) in which to put output files. Default `subdir_out`.
-#' @param col_filename_out Character. Column name that contains the output
+#' @param col_subdir_out Column. Unquoted column containing the
+#'   subdirectories in which to put output files. Default `subdir_out`.
+#' @param col_filename_out Column. Unquoted column containing the output
 #'   filenames. Default `filename_out`.
-#' @param col_clip_length Character. Column name that contains the length of the
+#' @param col_clip_length Column. Unquoted column containing the length of the
 #'   new clip. Default `length`.
-#' @param col_start_time Character. Column name that contains the start time of
+#' @param col_start_time Column. Unquoted column containing the start time of
 #'   the new clip. Default `start_time`
-#' @param overwrite Logical. Overwrite pre-existing files when clipping and moving. (Default `FALSE`)
+#' @param overwrite Logical. Overwrite pre-existing files when clipping and
+#'   moving. (Default `FALSE`)
 #' @param create_dir Logical. Whether to create directory structure for newly
 #'   formatted and clipped wave files.
 #' @param diff_limit Numeric. How much longer in seconds clip lengths can be
@@ -101,31 +103,27 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
-#' w <- data.frame(path = temp_wavs(n = 4),
-#'                 subdir_out = c("test1", "test2", "test3", "test4"),
-#'                 subsubdir_out = c("a", "b", "c", "d"),
-#'                 filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
-#'                 clip_length = c(1, 1, 1, 2),
-#'                 start_time = c(1.2, 0.5, 1, 0))
+#' w <- data.frame(
+#'   path = temp_wavs(n = 4),
+#'   subdir_out = c("test1/a", "test2/a", "test3/c", "test4/d"),
+#'   filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
+#'   clip_length = c(1, 1, 1, 2),
+#'   start_time = c(1.2, 0.5, 1, 0))
 #'
-#' clip_wave(w, dir_out = "clean",
-#'           col_subdir_out = c("subdir_out", "subsubdir_out"))
+#' clip_wave(w, dir_out = "clean")
 #'
 #' unlink("clean", recursive = TRUE) # Remove this new 'clean' directory
 #' }
-#'
-#'
-#'
+
 clip_wave <- function(waves,
                       dir_out,
                       dir_in = NULL,
-                      col_path_in = "path",
-                      col_subdir_out = "subdir_out",
-                      col_filename_out = "filename_out",
-                      col_clip_length = "clip_length",
-                      col_start_time = "start_time",
+                      col_path_in = path,
+                      col_subdir_out = subdir_out,
+                      col_filename_out = filename_out,
+                      col_clip_length = clip_length,
+                      col_start_time = start_time,
                       overwrite = FALSE,
                       create_dir = TRUE,
                       diff_limit = 30,
@@ -134,32 +132,41 @@ clip_wave <- function(waves,
   # Checks
   if(missing(dir_out)) rlang::abort(paste0("Require an output directory ",
                                            "(`dir_out`)"), call = NULL)
-  check_cols(waves, cols = c(col_path_in, col_subdir_out, col_filename_out,
-                             col_clip_length, col_start_time),
+
+  check_cols(waves,
+             cols = enquos(col_path_in, col_subdir_out, col_filename_out,
+                           col_clip_length, col_start_time),
              name = "waves")
 
   # Prepare processing df
-  wv <- dplyr::tibble(.rows = nrow(waves))
+  #wv <- dplyr::tibble(.rows = nrow(waves))
 
-  # Check and complete input paths
-  wv[["path_in"]] <- check_wave_path_in(waves[[col_path_in]], dir_in)
-
-  # Get output paths
-  wv[["path_out"]] <- check_wave_path_out(waves[col_subdir_out],
-                                          wv[["path_in"]],
-                                          dir_out,
-                                          create_dir)
-
-  # Check wave lengths
-  wv[["wave_length"]] <- check_wave_lengths(wv[["path_in"]],
-                                            clip_lengths = waves[[col_clip_length]],
-                                            start_times = waves[[col_start_time]],
-                                            diff_limit = diff_limit)
-
-  # Get the final arguments
-  wv[["clip_length"]] <- waves[[col_clip_length]]
-  wv[["start_time"]] <- waves[[col_start_time]]
-  wv[["overwrite"]] <- overwrite
+  wv <- waves |>
+    dplyr::select(
+      "path_in" = {{ col_path_in }},
+      "path_out" = {{ col_subdir_out }},
+      "clip_length" =  {{ col_clip_length }},
+      "start_time" = {{ col_start_time }}
+      ) |>
+    dplyr::mutate(
+      # Check and complete input paths
+      path_in = check_wave_path_in(
+        .data[["path_in"]],
+        .env$dir_in),
+      # Get output paths
+      path_out = check_wave_path_out(
+        .data[["path_out"]],
+        .data[["path_in"]],
+        .env$dir_out,
+        .env$create_dir),
+      # Check wave lengths
+      wave_length = check_wave_length(
+        .data[["path_in"]],
+        clip_length = .data[["clip_length"]],
+        start_time = .data[["start_time"]],
+        diff_limit = diff_limit),
+      overwrite = .env$overwrite
+    )
 
   if(!use_job) {
     purrr::pmap(wv, clip_wave_single)
@@ -235,7 +242,7 @@ check_wave_path_in <- function(path_in, dir_in) {
 
 check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir) {
 
-  dir_out <- fs::path(dir_out, purrr::pmap_chr(subdirs, fs::path))
+  dir_out <- fs::path(dir_out, purrr::pmap_chr(list(subdirs), fs::path))
   path_out <- fs::path(dir_out, fs::path_file(path_in))
 
 
@@ -254,14 +261,14 @@ check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir) {
   path_out
 }
 
-check_wave_lengths <- function(path_in, clip_lengths, start_times, diff_limit) {
+check_wave_length <- function(path_in, clip_length, start_time, diff_limit) {
 
-  wave_lengths <- purrr::map_dbl(path_in, get_wav_length, return_numeric = T)
-  clip_lengths <- clip_lengths + start_times
+  wave_length <- purrr::map_dbl(path_in, get_wav_length, return_numeric = T)
+  clip_length <- clip_length + start_time
 
   # Check that starts before end of wave file
-  if(any(start_times > wave_lengths)) {
-    err <- path_in[start_times >= wave_lengths]
+  if(any(start_time > wave_length)) {
+    err <- path_in[start_time >= wave_length]
     rlang::abort(
       c("Some wave files have a clip start time greater than the length of the wave",
         stats::setNames(err, rep("x", length(err)))),
@@ -270,8 +277,8 @@ check_wave_lengths <- function(path_in, clip_lengths, start_times, diff_limit) {
 
   # Check that requested clip length less than wave file length +/- wiggle room
   # (accounting for start time)
-  if(any((clip_lengths - diff_limit) >= wave_lengths)){
-    err <- path_in[(clip_lengths - diff_limit) >= wave_lengths]
+  if(any((clip_length - diff_limit) >= wave_length)){
+    err <- path_in[(clip_length - diff_limit) >= wave_length]
     rlang::abort(
       c(glue::glue("Some wave files are >={diff_limit}s shorter than the requested clip length given the `start_time`."),
       "i"= "Check file lengths. You can adjust the discrepency limit with `diff_limit` (default 30s)",
@@ -279,7 +286,7 @@ check_wave_lengths <- function(path_in, clip_lengths, start_times, diff_limit) {
     ), call = NULL)
   }
 
-  wave_lengths
+  wave_length
 }
 
 #' Create spectrogram image from wave file
