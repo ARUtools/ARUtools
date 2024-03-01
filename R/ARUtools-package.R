@@ -28,8 +28,9 @@ rlang::on_load(rlang::local_use_cli())
   if(getRversion() >= "2.15.1")
     utils::globalVariables(
       # Vars used in Non-Standard Evaluations, declare here to
-      # avoid notes
-      c("site_id", "psel_std" # Defaults for NSE columns col_site_id, col_sel_weight in sample_recordings()
+      # avoid notes. Here are Defaults for various functions
+      c("site_id", "psel_std", "t2sr", # sample_recordings()
+        "path", "subdir_out", "filename_out", "clip_length", "start_time" # clip_wave()
       )
     )
 

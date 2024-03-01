@@ -28,6 +28,8 @@ making collaboration and future modifications easier.
   they must be `enquo()`d before use in other functions (like `nse_name()`, or
   `quo_is_null()` for example). Therefore in those cases they are `enquo()`d right at the 
   start of the function (e.g., `sample_recordings()`)
+- NSE col names with default values must be declared in the .onLoad function of
+  `ARUtools-package.R` to avoid NOTES
 
 ## Regular Expression patterns
 - Patterns that are expected to vary (i.e file names) have helper functions
