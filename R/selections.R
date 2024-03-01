@@ -195,6 +195,11 @@ calc_selection_weights <- function(meta_sun,
   dens_doy <-   stats::dnorm(seq(day_range[1], day_range[2]), day_mean, day_sd, log = return_log)
   fun_psel <- function(x1, x2, return_log) if(return_log) exp(x1 + x2) else x1 * x2
 
+
+  # Arrange
+  # - Match order of starting data (meta_sun)
+  # - No changes from arrange, joins, or groupings, so no need to arrange
+
   # Calculate selection weights
   sp |>
     dplyr::mutate(
