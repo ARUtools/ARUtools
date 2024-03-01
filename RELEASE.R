@@ -18,6 +18,7 @@ covr::report(p)
 
 # June 14 2023 - 56% (> 82% for new work)
 # Feb 23 2024 - 88.64% (each file > 80% coverage)
+# Mar 1 2024 - 88.75% (each file > 84% coverage)
 
 devtools::build_readme()
 

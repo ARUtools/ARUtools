@@ -249,8 +249,7 @@ check_selection_params <- function(params) {
 #' Sample recordings
 #'
 #' Sample recordings based on selection weights from `calc_selection_weights()`
-#' using `spsurvey::grts()`. If non-spatial, data will be converted to a spatial
-#' data frame for sampling using the specified `crs`.
+#' using `spsurvey::grts()`.
 #'
 #' @param meta_weights (Spatial) Data frame. Recording meta data selection
 #'   weights. Output of `calc_selection_weights()`. Must have at least the
@@ -272,7 +271,10 @@ check_selection_params <- function(params) {
 #'
 #' @inheritParams common_docs
 #'
-#' @return A sampling run from grts
+#' @return A sampling run from grts. Note that the included dataset is spatial,
+#'   but is a dummy spatial dataset created by using dates and times to create
+#'   the landscape.
+#'
 #' @export
 #' @examples
 #' s <- clean_site_index(example_sites_clean,

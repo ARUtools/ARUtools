@@ -36,7 +36,9 @@ Returns a data frame with acoustic indices. Those prefaced with
 }
 }
 \description{
-Wrapper for soundecology package to calculate
+Wrapper for soundecology package to calculate acoustic complexity, the
+bioacoustic index, and acoustic diversity. See Value for details about
+these indices.
 }
 \examples{
 w <- tuneR::sine(440, duration = 300000) # > 5s

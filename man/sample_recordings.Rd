@@ -42,12 +42,13 @@ environment). \code{NULL} does not set a seed.}
 \item{...}{Extra named arguments passed on to \code{spsurvey::grts()}.}
 }
 \value{
-A sampling run from grts
+A sampling run from grts. Note that the included dataset is spatial,
+but is a dummy spatial dataset created by using dates and times to create
+the landscape.
 }
 \description{
 Sample recordings based on selection weights from \code{calc_selection_weights()}
-using \code{spsurvey::grts()}. If non-spatial, data will be converted to a spatial
-data frame for sampling using the specified \code{crs}.
+using \code{spsurvey::grts()}.
 }
 \examples{
 s <- clean_site_index(example_sites_clean,

@@ -18,6 +18,10 @@ sox_spectro(
 )
 }
 \arguments{
+\item{path}{Character. Path to wave file.}
+
+\item{dir_out}{Character. Output directory.}
+
 \item{prepend}{Character. Text to add to the start of the output file.
 Defaults to "spectro_".}
 
@@ -38,6 +42,9 @@ spectrogram to rate/2. The default ("20k"), limits the spectrogram to
 
 \item{dry_run}{Logical. If \code{TRUE} show the sox command, but do not run (for
 debugging and understanding precise details).}
+
+\item{quiet}{Logical. Whether to suppress progress messages and other
+non-essential updates.}
 }
 \value{
 Does not return anything, but creates a spectrogram image in

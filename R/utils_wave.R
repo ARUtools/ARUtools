@@ -311,6 +311,8 @@ check_wave_lengths <- function(path_in, clip_lengths, start_times, diff_limit) {
 #' @param dry_run Logical. If `TRUE` show the sox command, but do not run (for
 #'   debugging and understanding precise details).
 #'
+#' @inheritParams common_docs
+#'
 #' @return Does not return anything, but creates a spectrogram image in
 #'   `dir_out`.
 #' @export
@@ -375,7 +377,9 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
 
 #' Get acoustic complexity values
 #'
-#' Wrapper for soundecology package to calculate
+#' Wrapper for soundecology package to calculate acoustic complexity, the
+#' bioacoustic index, and acoustic diversity. See Value for details about
+#' these indices.
 #'
 #' @param min_freq Numeric. Minimum frequency for acoustic complexity (see
 #'   [soundecology::acoustic_complexity()])
