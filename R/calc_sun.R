@@ -62,6 +62,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
     m <- dplyr::mutate(m, tz = .env$aru_tz)
   }
 
+  # Calculate sunrise/sunset
   ss <- dplyr::select(m, "date", "tz", "longitude", "latitude") |>
     dplyr::distinct() |>
     tidyr::drop_na() |>
@@ -73,8 +74,14 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
 
   m <- dplyr::left_join(m, ss, by = c("date", "tz", "longitude", "latitude"))
 
+  # Calculate time to sunrise/sunset
+  m <- calc_ss_diff(m)
+
+  # Arrange
+  # - Match order of starting data (meta_sites)
+  m <- dplyr::arrange(m, match(.data$path, meta_sites$path))
+
   m |>
-    calc_ss_diff() |>
     df_to_sf(crs = crs) |> # If was sf, convert back
     dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss") |>
     dplyr::relocate(dplyr::any_of("geometry"), .after = dplyr::last_col())
