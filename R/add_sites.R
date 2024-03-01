@@ -86,10 +86,14 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
     meta_sites <- dplyr::left_join(meta, sites, by = by)
   }
 
+  # Arrange
+  # - Match order of starting data (meta)
+  # - Order by path order, next by date in GPS data (for multiple rows of data)
+  meta_sites <- dplyr::arrange(meta_sites, match(.data$path, meta$path))
+
   # Finalize
-  meta_sites |>
-    df_to_sf(crs = crs) |>  # If was sf, convert back
-    dplyr::arrange(dplyr::across(dplyr::any_of(c(by, by_date_cols, "path"))))
+  # - If was sf, convert back
+  df_to_sf(meta_sites, crs = crs)
 }
 
 #' Calculate buffer date/times around a single date/time
