@@ -9,10 +9,10 @@ test_that("clean_metadata()", {
   expect_named(m, c("file_name", "type", "path", "aru_type", "aru_id", "site_id",
                     "date_time", "date"))
   expect_equal(nrow(m), length(example_files))
-  expect_equal(unique(m$aru_id), sort(unique(example_clean$aru_id)))
+  expect_equal(unique(m$aru_id), unique(example_clean$aru_id))
   expect_equal(unique(m$type), "wav")
   expect_equal(unique(m$aru_type), c("BarLT", "SongMeter"))
-  expect_equal(sort(unique(m$site_id)), sort(unique(example_clean$site_id)))
+  expect_equal(unique(m$site_id), unique(example_clean$site_id))
   expect_true(all(!is.na(m$date_time)))
   expect_true(all(!is.na(m$date)))
 
@@ -27,8 +27,8 @@ test_that("clean_metadata() with multiple patterns in create_pattern_XXX", {
 
   # Problem date/time, problem site_id
   expect_message(m <- clean_metadata(project_files = f)) |> suppressMessages()
-  expect_equal(m$date_time, lubridate::as_datetime(c(NA, "2020-01-01 09:00:00")))
-  expect_equal(m$site_id, c("P02_0", "P01_1"))
+  expect_equal(m$date_time, lubridate::as_datetime(c("2020-01-01 09:00:00", NA)))
+  expect_equal(m$site_id, c("P01_1", "P02_0"))
 
   # Fix pattern matching of date
   expect_message(
@@ -136,3 +136,4 @@ test_that("clean_metadata() with numeric aru_id", {
     suppressMessages()
   expect_true(all(!is.na(good$aru_id)))
 })
+

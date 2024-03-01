@@ -239,10 +239,15 @@ clean_metadata <- function(
    rlang::inform(msg)
   }
 
-  meta |>
-    dplyr::arrange(.data$type != "gps", !is.na(.data$date_time), .data$path,
-                   .data$site_id, .data$date_time) |>
-    dplyr::select(-"file_left", -"dir_left", -"date_time_chr", -"dir")
+  # Arrange ----------------------------------
+  # - Match order of starting data
+  # - By project_files if provided
+  # - Sorted by path name if project_dir
+  if(is.null(project_dir) & !is.null(project_files)) {
+    meta <- dplyr::arrange(meta, match(.data$path, project_files))
+  } else meta <- dplyr::arrange(meta, .data$path)
+
+  dplyr::select(meta, -"file_left", -"dir_left", -"date_time_chr", -"dir")
 }
 
 
