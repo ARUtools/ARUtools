@@ -160,8 +160,6 @@ clean_site_index <- function(site_index,
      all(site_index$date_time_start == site_index$date_start) &&
      all(site_index$date_time_end == site_index$date_end)) {
 
-    site_index$date_time_end %in% site_index$date_time_start
-
     by_site <- dplyr::group_by(site_index, .data$site_id) |>
       dplyr::filter(.data$date_time_end %in% .data$date_time_start) |>
       nrow()
@@ -183,6 +181,10 @@ clean_site_index <- function(site_index,
       }
     }
   }
+
+  # Arrange
+  # - Match order of starting data
+  # - No changes from arrange, joins, or groupings, so no need to arrange
 
   site_index
 }
@@ -272,7 +274,13 @@ clean_gps <- function(meta = NULL,
     rlang::inform(msg)
   }
 
-  dplyr::select(gps, -dplyr::starts_with("problems_"))
+  # Arrange
+  # - Match order of starting data (meta)
+  # - Order by path order, next by date in GPS data (for multiple rows of data)
+  dplyr::arrange(gps,
+                 match(.data[["path"]], meta$path[meta$type == "gps"]),
+                 .data[["date"]]) |>
+    dplyr::select(-dplyr::starts_with("problems_"))
 }
 
 clean_gps_files <- function(meta, quiet, verbose) {
