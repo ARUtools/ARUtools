@@ -69,16 +69,16 @@ test_that("calc_selection_weights()", {
 
   # Use DOY rather than date
   m$doy <- lubridate::yday(m$date)
-  withr::with_seed(123, expect_silent(pr2 <- calc_selection_weights(m, params = p, col_day = "doy")))
+  withr::with_seed(123, expect_silent(pr2 <- calc_selection_weights(m, params = p, col_day = doy)))
 
   expect_equal(pr1, pr2)
 
   # Check lognormal and offsets
   p <- sim_selection_weights(plot = FALSE, selection_fun = "lognorm")
-  expect_error(calc_selection_weights(m, params = p, col_day = "doy"),
+  expect_error(calc_selection_weights(m, params = p, col_day = doy),
                "you must provide an `offset`")
   p <- sim_selection_weights(plot = FALSE, selection_fun = "lognorm", offset = 200)
-  withr::with_seed(123, expect_silent(calc_selection_weights(m, params = p, col_day = "doy")))
+  withr::with_seed(123, expect_silent(calc_selection_weights(m, params = p, col_day = doy)))
 })
 
 test_that("sample_recordings()", {

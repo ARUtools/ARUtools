@@ -12,7 +12,7 @@ making collaboration and future modifications easier.
 - In the initial cleaning functions (`clean_metadata()`, `clean_site_index()`)
   users can specify existing column names, but they will then be formatted
   to standard names
-- Later functions will not allow users to specify different column names and
+- Later functions will not allow users to specify different column names (generally) and
   they are assumed to be standardized
   - `file_name`, `path`
   - `date`, `date_start`, `date_end`, `date_time`, `date_time_start`, `date_time_end`
@@ -20,6 +20,10 @@ making collaboration and future modifications easier.
   - `longitude`, `latitude`
   - `tz`, `t2sr`, `t2ss`
 - `add_sites()` does allow adding and keeping extra columns (`col_extra = ...`)
+- Functions that could legitamitely use different standardized column names 
+  (ie. selection functions and clip wave functions) use NSE and name arguments are defined as `col_COLNAME`
+- Non-NSE col arguments are defined as `name_COLNAME`, including when converted
+  to character within a function for use in other ways.
 
 ## Regular Expression patterns
 - Patterns that are expected to vary (i.e file names) have helper functions

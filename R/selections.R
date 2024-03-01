@@ -69,7 +69,7 @@ sim_selection_weights <- function(
     weights <- expand.grid(date = seq(day_range[1], day_range[2]),
                            min = seq(min_range[1], min_range[2]),
                            site_id = 1) |>
-      calc_selection_weights(params = params, col_min = "min") |>
+      calc_selection_weights(params = params, col_min = min) |>
       dplyr::mutate(date = lubridate::ymd("2022-01-01") + date - 1)
 
     p1 <- ggplot2::ggplot(
@@ -140,13 +140,15 @@ sim_selection_weights <- function(
 
 calc_selection_weights <- function(meta_sun,
                                    params,
-                                   col_site_id = "site_id",
-                                   col_min = "t2sr",
-                                   col_day = "date") {
+                                   col_site_id = site_id,
+                                   col_min = t2sr,
+                                   col_day = date) {
 
   # Checks
-  check_cols(meta_sun, name = "meta_sun", cols = c(col_site_id, col_min, col_day))
+  # No need for multiple preemptive enclosures (so no `enquo(col...)`)
+  check_cols(meta_sun, name = "meta_sun", cols = enquos(col_site_id, col_min, col_day))
   params <- check_selection_params(params)
+  name_min <- nse_name(enquo(col_min))
 
   # Get params as environment objects
   # (done this way to avoid 'no visible binding notes')
@@ -163,11 +165,11 @@ calc_selection_weights <- function(meta_sun,
 
   # Prepare selection weights data frame
   sp <- meta_sun |>
-    dplyr::mutate(doy = check_doy(.data[[col_day]])) |>
+    dplyr::mutate(doy = check_doy({{ col_day }})) |>
     dplyr::filter(.data[["doy"]] >= day_range[[1]],
                   .data[["doy"]] <= day_range[[2]],
-                  .data[[col_min]] >= min_range[[1]],
-                  .data[[col_min]] <= min_range[[2]])
+                  {{ col_min }} >= min_range[[1]],
+                  {{ col_min }} <= min_range[[2]])
 
   if(nrow(sp) == 0) rlang::abort(
     "No selections possible within this range of dates and times",
@@ -182,7 +184,7 @@ calc_selection_weights <- function(meta_sun,
   )
 
   # Check offset
-  if((min(meta_sun[[col_min]]) + offset) <= 0 && selection_fun == "lognorm") {
+  if((min(dplyr::pull(meta_sun, {{ col_min }})) + offset) <= 0 && selection_fun == "lognorm") {
     rlang::abort(
       paste0("If `selection_fun = 'lognorm'` and any `min` values are less than 0\n",
              "you must provide an `offset` large enough to ensure all values are greater than 0."),
@@ -196,12 +198,12 @@ calc_selection_weights <- function(meta_sun,
   # Calculate selection weights
   sp |>
     dplyr::mutate(
-      psel_by = .env$col_min,
-      psel_min = min_fun(round(.data[[col_min]], 0), min_mean, min_sd, log = return_log) / max(abs(dens_min)),
+      psel_by = name_min, # Keep a record for sample_recordings()
+      psel_min = min_fun(round({{ col_min }}, 0), min_mean, min_sd, log = return_log) / max(abs(dens_min)),
       psel_doy = stats::dnorm(.data[["doy"]], mean = day_mean, sd = day_sd, log = return_log) / max(abs(dens_doy)),
       psel = fun_psel(.data[["psel_min"]], .data[["psel_doy"]], return_log),
       psel_scaled = .data[["psel"]] / max(.data[["psel"]])) |>
-    dplyr::group_by(.data[[col_site_id]]) |>
+    dplyr::group_by({{ col_site_id }}) |>
     dplyr::mutate(
       psel_std = .data[["psel"]] / max(.data[["psel"]]),
       psel_normalized = pmax(
@@ -303,11 +305,11 @@ sample_recordings <- function(meta_weights,
 
   col_site_id <- enquo(col_site_id)
   col_sel_weights <- enquo(col_sel_weights)
-  sites_name <- nse_name(col_site_id)
+  name_site_id <- nse_name(col_site_id)
 
   # TODO: CHECKS
   check_cols(meta_weights, enquos(col_site_id, col_sel_weights), name = "meta_weights")
-  if(is.data.frame(n)) check_cols(n, c(sites_name, "n", "n_os"), name = "n")
+  if(is.data.frame(n)) check_cols(n, c(name_site_id, "n", "n_os"), name = "n")
 
   if(!rlang::is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
     rlang::abort(
@@ -329,7 +331,7 @@ sample_recordings <- function(meta_weights,
                                   coords = c("doy", meta_weights$psel_by[1]),
                                   crs = 3395)
 
-  # Assemble n and os (based on BASSR::run_grts_on_BASS() ---------------------
+  # Assemble n and os (based on BASSR::run_grts_on_BASS()
 
   # Check for stratification - Create a list of problems
   s <- c(inherits(n, "data.frame") | length(n) > 1 | rlang::is_named(n)) # Stratification exists in samples
@@ -346,7 +348,7 @@ sample_recordings <- function(meta_weights,
                    call = NULL)
     }
 
-    sites_name <- NULL
+    name_site_id <- NULL
     n_sites <- rep(n, length(n))
     n_os <- round(n * os)
     if(n_os == 0) n_os <- NULL
@@ -439,7 +441,7 @@ sample_recordings <- function(meta_weights,
     spsurvey::grts(sframe = meta_weights_sf,
                    n_over = n_os,
                    n_base = n,
-                   stratum_var = sites_name,
+                   stratum_var = name_site_id,
                    DesignID = "sample",
                    aux_var =  nse_name(col_sel_weights),
                    ...)
