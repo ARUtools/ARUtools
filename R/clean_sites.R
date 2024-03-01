@@ -10,7 +10,7 @@
 #' (and is removed if present, replaced with UTC). This allows sites
 #' from different timezones to be processed at the same time.
 #'
-#' @param site_index Data frame (can be spatial) or file path. Site index data
+#' @param site_index (Spatial) Data frame or file path. Site index data
 #'   to clean. If file path, must be to a local csv or xlsx file.
 #' @param col_date_time Character. Column name that contains dates or
 #'   date/times. Can be vector of two names if there are both 'start' and 'end'

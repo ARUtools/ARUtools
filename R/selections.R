@@ -109,8 +109,10 @@ sim_selection_weights <- function(
 #' @param meta_sun (Spatial) Data frame. Recording meta data with time to
 #'   sunrise/sunset. Output of `calc_sun()`. Must have at least `col_min`,
 #'   `col_day`, and `col_site_id`
-#' @param col_min Minutes column. Should not be quoted.
-#' @param col_day Day column. Should not be quoted.
+#' @param col_min Column. Unquoted column containing minutes to sunrise (`t2sr`)
+#'   or sunset (`t2ss`) output from `calc_sun()` (defaults to `t2sr`).
+#' @param col_day Column. Unquoted column containing dates or day-of-year (doy)
+#'   to use (defaults to `date`).
 #' @param params List. Parameters created by `sim_selection_weights()`, containing
 #'    `min_range`, `min_mean`, `min_sd`, `day_range`, `day_mean`, `day_sd`,
 #'    `offset`, `return_log`, `selection_fun`.
@@ -261,15 +263,14 @@ check_selection_params <- function(params) {
 #' @param os Numeric, Vector, or List. Over sample size (proportional) or named
 #'   vector/list of number of samples per site Ignored if `n` is a data
 #'   frame.
-#' @param col_site_id Column. Unquoted name of column containing site strata IDs
-#'   (defaults to `site_id`).
 #' @param col_sel_weights Column. Unquoted name of column identifying selection
 #'   weights (defaults to `psel_std`)
 #' @param seed Numeric. Random seed to use for random sampling. Seed only
 #'   applies to specific sampling events (does not change seed in the
 #'   environment). `NULL` does not set a seed.
 #' @param ... Extra named arguments passed on to `spsurvey::grts()`.
-
+#'
+#' @inheritParams common_docs
 #'
 #' @return A sampling run from grts
 #' @export

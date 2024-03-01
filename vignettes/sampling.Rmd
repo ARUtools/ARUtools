@@ -2,7 +2,7 @@
 title: "Sampling recordings"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{sampling}
+  %\VignetteIndexEntry{Sampling recordings}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,6 +25,7 @@ library(dplyr)
 library(purrr)
 library(tidyr)
 library(glue)
+library(lubridate)
 ```
 
 Next we'll prepare our metadata on the recordings, by cleaning, adding site-level

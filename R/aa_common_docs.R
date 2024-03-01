@@ -8,7 +8,7 @@
 #'   to point to existing files unless you plan to use `clean_gps()` or other
 #'   sampling steps down the line. Must be provided if `project_dir` is `NULL`.
 #' @param subset Character. Text pattern to mark a subset of files/directories
-#'   to either `keep` or `omit` (see `subset_type`)
+#'   to either `"keep"` or `"omit"` (see `subset_type`)
 #' @param subset_type Character. Either `keep` (default) or `omit`
 #'   files/directories which match the pattern in `subset`.
 #' @param meta Data frame. Recording metadata. Output of `clean_metadata()`.

@@ -7,9 +7,9 @@
 calc_selection_weights(
   meta_sun,
   params,
-  col_site_id = "site_id",
-  col_min = "t2sr",
-  col_day = "date"
+  col_site_id = site_id,
+  col_min = t2sr,
+  col_day = date
 )
 }
 \arguments{
@@ -21,11 +21,14 @@ sunrise/sunset. Output of \code{calc_sun()}. Must have at least \code{col_min},
 \code{min_range}, \code{min_mean}, \code{min_sd}, \code{day_range}, \code{day_mean}, \code{day_sd},
 \code{offset}, \code{return_log}, \code{selection_fun}.}
 
-\item{col_site_id}{Character. Column name that contains site ids. Deafult \code{site_id}.}
+\item{col_site_id}{Column. Unquoted column containing site strata IDs
+(defaults to \code{site_id}).}
 
-\item{col_min}{Minutes column. Should not be quoted.}
+\item{col_min}{Column. Unquoted column containing minutes to sunrise (\code{t2sr})
+or sunset (\code{t2ss}) output from \code{calc_sun()} (defaults to \code{t2sr}).}
 
-\item{col_day}{Day column. Should not be quoted.}
+\item{col_day}{Column. Unquoted column containing dates or day-of-year (doy)
+to use (defaults to \code{date}).}
 }
 \value{
 Returns data with appended selection weights columns:

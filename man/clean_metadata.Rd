@@ -32,7 +32,7 @@ sampling steps down the line. Must be provided if \code{project_dir} is \code{NU
 wav.}
 
 \item{subset}{Character. Text pattern to mark a subset of files/directories
-to either \code{keep} or \code{omit} (see \code{subset_type})}
+to either \code{"keep"} or \code{"omit"} (see \code{subset_type})}
 
 \item{subset_type}{Character. Either \code{keep} (default) or \code{omit}
 files/directories which match the pattern in \code{subset}.}

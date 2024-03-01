@@ -33,10 +33,10 @@ ARU was calibrated to whichever timezone was local when it was deployed use
 based on the longitude and latitude of each recording.
 }
 \examples{
-m <- clean_metadata(project_files = example_files)
 s <- clean_site_index(example_sites_clean,
                       col_date = c("date_time_start", "date_time_end"))
-m <- add_sites(m, s)
-m <- calc_sun(m)
+m <- clean_metadata(project_files = example_files) |>
+  add_sites(s)
+  calc_sun(m)
 
 }
