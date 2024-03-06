@@ -10,7 +10,7 @@
 #'
 #' @noRd
 check_value <- function(x, nm, type, opts = NULL, not_null = TRUE, n = c(1, Inf),
-                        range = NULL, call = caller_env()) {
+                        range = NULL, call = caller_env(n = 2)) {
   nm <- paste0("`", nm, "`")
   if(not_null && is.null(x)) {
     abort(paste(nm, "cannot be `NULL`"), call = call)
@@ -77,6 +77,11 @@ check_data <- function(df, type, ref, call = caller_env()) {
     } else if (type == "meta_sun") {
       check_names(
         df, c("site_id", "aru_id", coords, "tz", "t2sr", "t2ss"),
+        dates = TRUE,
+        extra = e)
+    } else if (type == "meta_weights") {
+      check_names(
+        df, c("psel_by", df[["psel_by"]][1]),
         dates = TRUE,
         extra = e)
     }

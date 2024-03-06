@@ -313,18 +313,16 @@ sample_recordings <- function(meta_weights,
   col_sel_weights <- enquo(col_sel_weights)
   name_site_id <- nse_names(col_site_id)
 
-  # TODO: CHECKS
+  # Checks
+  check_data(meta_weights, type = "meta_weights", ref = "calc_sleection_weights()")
   check_cols(meta_weights, c(!!enquo(col_site_id), !!enquo(col_sel_weights)))
   if(is.data.frame(n)) check_names(n, c(name_site_id, "n", "n_os"))
+  check_num(seed, not_null = FALSE)
 
   if(!is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
-    abort(
-      "`os` as a single value is a proportion, and must range between 0 and 1")
-  }
-
-  if(is.null(os) && !inherits(n, "data.frame")) {
-    abort(
-      "`os` can only be NULL if `n` is a data frame with a column `n_os`")
+    abort("`os` as a single value is a proportion, and must range between 0 and 1")
+  } else if(is.null(os) && !inherits(n, "data.frame")) {
+    abort("`os` can only be NULL if `n` is a data frame with a column `n_os`")
   }
 
   # If sf, convert to df
