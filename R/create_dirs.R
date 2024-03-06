@@ -13,7 +13,8 @@
 #' @param expect_dirs Logical. Expect that directories may already exist? Default
 #'   (`FALSE`) is to stop if directories to be created already exist.
 #'
-#' @return Does not return anything if run.
+#' @return If `dir_list = TRUE`, returns a list of directories (to be) created.
+#'   If not a dry run, also creates the folder structure.
 #' @export
 #'
 #' @examples

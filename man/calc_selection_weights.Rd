@@ -15,9 +15,9 @@ calc_selection_weights(
 \arguments{
 \item{meta_sun}{(Spatial) Data frame. Recording meta data with time to
 sunrise/sunset. Output of \code{calc_sun()}. Must have at least \code{col_min},
-\code{col_day}, and \code{col_site_id}}
+\code{col_day}, and \code{col_site_id}.}
 
-\item{params}{List. Parameters created by \code{sim_selection_weights()}, containing
+\item{params}{Named list. Parameters created by \code{sim_selection_weights()}, containing
 \code{min_range}, \code{min_mean}, \code{min_sd}, \code{day_range}, \code{day_mean}, \code{day_sd},
 \code{offset}, \code{return_log}, \code{selection_fun}.}
 

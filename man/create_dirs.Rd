@@ -31,7 +31,8 @@ actually create directories; defaults to \code{TRUE})}
 (\code{FALSE}) is to stop if directories to be created already exist.}
 }
 \value{
-Does not return anything if run.
+If \code{dir_list = TRUE}, returns a list of directories (to be) created.
+If not a dry run, also creates the folder structure.
 }
 \description{
 Create a set of nested folders for storing ARU recordings by plots and sites.

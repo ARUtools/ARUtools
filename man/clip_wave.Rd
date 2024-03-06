@@ -41,10 +41,10 @@ filenames. Default \code{filename_out}.}
 new clip. Default \code{length}.}
 
 \item{col_start_time}{Column. Unquoted column containing the start time of
-the new clip. Default \code{start_time}}
+the new clip. Default \code{start_time}.}
 
 \item{overwrite}{Logical. Overwrite pre-existing files when clipping and
-moving. (Default \code{FALSE})}
+moving. Default \code{FALSE}.}
 
 \item{create_dir}{Logical. Whether to create directory structure for newly
 formatted and clipped wave files.}
@@ -52,13 +52,13 @@ formatted and clipped wave files.}
 \item{diff_limit}{Numeric. How much longer in seconds clip lengths can be
 compared to file lengths before triggering an error. Default \code{30}.}
 
-\item{use_job}{Logical. Use the {job} package to copy files (Default \code{FALSE})}
+\item{use_job}{Logical. Use the {job} package to copy files Default \code{FALSE}.}
 }
 \value{
-TRUE if successful
+TRUE if successful and clipped wave files created
 }
 \description{
-Process multiple wave files by copying them with a new filename and/or
+Process multiple wave files by copying them with a new filename and
 clipping to a given length.
 }
 \examples{

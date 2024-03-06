@@ -7,9 +7,10 @@
 #' @param path_out Character. Path to copy the new clipped wave file to.
 #' @param clip_length Numeric. Length of new clip in seconds.
 #' @param start_time Numeric. Time in seconds where new clip should start.
-#'   Default 0 (start).
-#' @param wave_length Numeric. Length of the wave file in seconds (if `NULL`,
-#'   default, will be calculated).
+#'   Default 0.
+#' @param wave_length Numeric. Length of the clipped wave file in seconds (if
+#'   `NULL`, default, will be the length of time from `start_time` to the end of
+#'   the file).
 #' @param overwrite Logical. Whether to overwrite existing files when creating
 #'   new clipped wave files. Default (`FALSE`) will error if the file already
 #'   exists.
@@ -70,7 +71,7 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 
 #' Clip multiple wave files and format names
 #'
-#' Process multiple wave files by copying them with a new filename and/or
+#' Process multiple wave files by copying them with a new filename and
 #' clipping to a given length.
 #'
 #' @param waves Data frame. Details of file locations.
@@ -86,18 +87,18 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #' @param col_clip_length Column. Unquoted column containing the length of the
 #'   new clip. Default `length`.
 #' @param col_start_time Column. Unquoted column containing the start time of
-#'   the new clip. Default `start_time`
+#'   the new clip. Default `start_time`.
 #' @param overwrite Logical. Overwrite pre-existing files when clipping and
-#'   moving. (Default `FALSE`)
+#'   moving. Default `FALSE`.
 #' @param create_dir Logical. Whether to create directory structure for newly
 #'   formatted and clipped wave files.
 #' @param diff_limit Numeric. How much longer in seconds clip lengths can be
 #'   compared to file lengths before triggering an error. Default `30`.
-#' @param use_job Logical. Use the {job} package to copy files (Default `FALSE`)
+#' @param use_job Logical. Use the {job} package to copy files Default `FALSE`.
 #'
 #' @inheritParams common_docs
 #'
-#' @return TRUE if successful
+#' @return TRUE if successful and clipped wave files created
 #' @export
 #'
 #' @examples
@@ -291,7 +292,7 @@ check_wave_length <- function(path_in, clip_length, start_time, diff_limit, call
 #' programs), create a spectrogram image file. Note that you must have `SoX`
 #' installed to use this function. Spectrograms will be silently overwritten.
 #'
-#' Most arguments are passed through to the `sox` command.
+#' Most arguments are passed through to the `seewave::sox()` command.
 #' - width and height correspond to the `-x` and `-y` options for the
 #'   `spectrogram` effect.
 #' - `start` and `end` are used by the `trim` effect
@@ -309,7 +310,7 @@ check_wave_length <- function(path_in, clip_length, start_time, diff_limit, call
 #'   or HH:MM:SS format).
 #' @param rate Numeric. Audio sampling rate to display (used by the `rate`
 #'   effect in `sox`). This effectively limits the upper frequency of the
-#'   spectrogram to rate/2. The default ("20k"), limits the spectrogram to
+#'   spectrogram to rate/2. The default (`"20k"`), limits the spectrogram to
 #'   10kHz. Use `rate = NULL` for no limiting.
 #' @param dry_run Logical. If `TRUE` show the sox command, but do not run (for
 #'   debugging and understanding precise details).

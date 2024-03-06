@@ -21,10 +21,11 @@ clip_wave_single(
 \item{clip_length}{Numeric. Length of new clip in seconds.}
 
 \item{start_time}{Numeric. Time in seconds where new clip should start.
-Default 0 (start).}
+Default 0.}
 
-\item{wave_length}{Numeric. Length of the wave file in seconds (if \code{NULL},
-default, will be calculated).}
+\item{wave_length}{Numeric. Length of the clipped wave file in seconds (if
+\code{NULL}, default, will be the length of time from \code{start_time} to the end of
+the file).}
 
 \item{overwrite}{Logical. Whether to overwrite existing files when creating
 new clipped wave files. Default (\code{FALSE}) will error if the file already

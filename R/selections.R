@@ -18,7 +18,7 @@
 #' @param offset Numeric. Offset to shift for time of day in minutes.
 #' @param return_log Logical. Log the density in the selection function?
 #' @param selection_fun Character. Selection function to use. Options are
-#'   `lognorm`,`norm` (default), or `cauchy`.
+#'   `lognorm`, `norm` (default), or `cauchy`.
 #' @param selection_var Character. Selection variable to plot
 #'   (if `plot = TRUE`). Options are are `psel`, `psel_doy`, `psel_min`,
 #'   `psel_std`, `psel_scaled`, or `psel_normalized` (default).
@@ -106,12 +106,12 @@ sim_selection_weights <- function(
 #'
 #' @param meta_sun (Spatial) Data frame. Recording meta data with time to
 #'   sunrise/sunset. Output of `calc_sun()`. Must have at least `col_min`,
-#'   `col_day`, and `col_site_id`
+#'   `col_day`, and `col_site_id`.
 #' @param col_min Column. Unquoted column containing minutes to sunrise (`t2sr`)
 #'   or sunset (`t2ss`) output from `calc_sun()` (defaults to `t2sr`).
 #' @param col_day Column. Unquoted column containing dates or day-of-year (doy)
 #'   to use (defaults to `date`).
-#' @param params List. Parameters created by `sim_selection_weights()`, containing
+#' @param params Named list. Parameters created by `sim_selection_weights()`, containing
 #'    `min_range`, `min_mean`, `min_sd`, `day_range`, `day_mean`, `day_sd`,
 #'    `offset`, `return_log`, `selection_fun`.
 #'
@@ -271,7 +271,7 @@ check_selection_params <- function(params) {
 #'
 #' @return A sampling run from grts. Note that the included dataset is spatial,
 #'   but is a dummy spatial dataset created by using dates and times to create
-#'   the landscape.
+#'   the spatial landscape.
 #'
 #' @export
 #' @examples

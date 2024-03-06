@@ -42,7 +42,7 @@ of days. Can be Date, Date-time, or DOY (day-of-year, 1-366).}
 \item{return_log}{Logical. Log the density in the selection function?}
 
 \item{selection_fun}{Character. Selection function to use. Options are
-\code{lognorm},\code{norm} (default), or \code{cauchy}.}
+\code{lognorm}, \code{norm} (default), or \code{cauchy}.}
 
 \item{selection_var}{Character. Selection variable to plot
 (if \code{plot = TRUE}). Options are are \code{psel}, \code{psel_doy}, \code{psel_min},

@@ -37,7 +37,7 @@ or HH:MM:SS format).}
 
 \item{rate}{Numeric. Audio sampling rate to display (used by the \code{rate}
 effect in \code{sox}). This effectively limits the upper frequency of the
-spectrogram to rate/2. The default ("20k"), limits the spectrogram to
+spectrogram to rate/2. The default (\code{"20k"}), limits the spectrogram to
 10kHz. Use \code{rate = NULL} for no limiting.}
 
 \item{dry_run}{Logical. If \code{TRUE} show the sox command, but do not run (for
@@ -56,7 +56,7 @@ programs), create a spectrogram image file. Note that you must have \code{SoX}
 installed to use this function. Spectrograms will be silently overwritten.
 }
 \details{
-Most arguments are passed through to the \code{sox} command.
+Most arguments are passed through to the \code{seewave::sox()} command.
 \itemize{
 \item width and height correspond to the \code{-x} and \code{-y} options for the
 \code{spectrogram} effect.

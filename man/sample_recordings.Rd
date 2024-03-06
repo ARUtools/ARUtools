@@ -44,7 +44,7 @@ environment). \code{NULL} does not set a seed.}
 \value{
 A sampling run from grts. Note that the included dataset is spatial,
 but is a dummy spatial dataset created by using dates and times to create
-the landscape.
+the spatial landscape.
 }
 \description{
 Sample recordings based on selection weights from \code{calc_selection_weights()}
