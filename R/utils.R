@@ -173,13 +173,13 @@ sf_to_df <- function(sf) {
 #' data frame for troubleshooting.
 #'
 #' @noRd
-df_to_sf <- function(df, sf = NULL, crs = NA) {
+df_to_sf <- function(df, sf = NULL, crs = NA, call = caller_env()) {
   if(!is.null(sf)) crs <- sf::st_crs(sf)
 
   if(!is.na(crs) && !inherits(df, "sf")) {
     if(any(is.na(df$longitude) | is.na(df$latitude))) {
-      rlang::warn(c("Cannot have missing coordinates in spatial data frames",
-                    "Returning non-spatial data frame"), call = NULL)
+      warn(c("Cannot have missing coordinates in spatial data frames",
+             "Returning non-spatial data frame"), call = call)
       sf <- df
     } else {
       sf <- df |>

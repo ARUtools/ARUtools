@@ -177,7 +177,7 @@ clean_site_index <- function(site_index,
       lubridate::hour(site_index$date_time_end) <- 12
 
       if(!quiet) {
-        rlang::inform(
+        inform(
           c("There are overlapping date ranges",
             "Shifting start/end times to 'noon'",
             #"Use `by_date = \"date_time\"` in `add_sites()`",
@@ -275,7 +275,7 @@ clean_gps <- function(meta = NULL,
     msg <- c(msg, report_missing(f_header, n, "headers (in text GPS files)"))
     msg <- c(msg, report_missing(f_gpx, n, "GPX files", "extracted"))
 
-    rlang::inform(msg)
+    inform(msg)
   }
 
   # Arrange
@@ -287,18 +287,18 @@ clean_gps <- function(meta = NULL,
     dplyr::select(-dplyr::starts_with("problems_"))
 }
 
-clean_gps_files <- function(meta, quiet, verbose) {
+clean_gps_files <- function(meta, quiet, verbose, call = caller_env()) {
 
   gps <- dplyr::filter(meta, .data$type == "gps")
 
   if(nrow(gps) == 0) {
-    rlang::abort(
+    abort(
       "No GPS data provided and no GPS log files recorded in `meta`",
-      call = NULL)
+      call = call)
   }
 
   if(!quiet) {
-    rlang::inform(
+    inform(
       c("Note: GPS log files can be unreliable... ",
         "Consider supplying your own GPS records and using `clean_site_index()`"))
   }
@@ -504,7 +504,7 @@ fmt_gps_txt <- function(df) {
       date_time = lubridate::parse_date_time(
         .data$date_time_chr, orders = c("Ymd HMS", "dmY HMS")),
       date = lubridate::as_date(.data$date_time),
-      )
+    )
 
   # Fix coords - Check and apply -/+ if N/S/E/W columns present
   dir <- dplyr::select(df_fmt, dplyr::where(~coord_dir(.x, "NnSsEeWw")))
@@ -558,7 +558,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
         dist_by <- paste0(", `", paste0(dist_by, collapse = "`, `"), "`")
       } else dist_by <- ""
       if(!quiet) {
-        rlang::inform(
+        inform(
           c("Skipping distance check:",
             paste0("All records missing at least one of ",
                    "`longitude`, `latitude`", dist_by)))
@@ -571,7 +571,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
 
       if(all(n$n == 1)) {
         if(!quiet) {
-          rlang::inform(
+          inform(
             c("Skipping distance check:",
               paste0("No records with more than one set of coordinates per unique `",
                      paste0(dist_by, collapse = "`/`"), "`")))
@@ -590,7 +590,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
           sf::st_drop_geometry()
 
         if(any(max_dist$max_dist > units::set_units(dist_cutoff, "m"))) {
-          rlang::warn(
+          warn(
             c("Within site distances are greater than cutoff",
               "x" = paste0("Distances among ARUs within a site must be less than ",
                            "`dist_cutoff` (currently ", dist_cutoff, "m)"),

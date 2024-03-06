@@ -1,6 +1,6 @@
 prep_for_wind_detection <- function(wav_files,site_pattern, output_directory, write_to_file = FALSE,
                                     chunk_size = NULL){
-  if(any(grepl("[\\(,\\),\\+,\\[,\\]", wav_files))) rlang::warn(
+  if(any(grepl("[\\(,\\),\\+,\\[,\\]", wav_files))) warn(
     c("Special characters detected in file paths",
       x = "Wind Detection is may not work") )
   gen_output <- function(file_list){

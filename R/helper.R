@@ -90,9 +90,8 @@ check_problems <- function(df, check = c("site_id", "aru_id",
                                          "latitude"),
                            path = FALSE, date = FALSE) {
   if(path & date) {
-    rlang::abort(c("`date` summarizes problems, so `path` cannot be returned",
-                   "Use one or the other"),
-                 call = NULL)
+    abort(c("`date` summarizes problems, so `path` cannot be returned",
+            "Use one or the other"))
   }
 
   # If a mix of gps and meta, remove gps

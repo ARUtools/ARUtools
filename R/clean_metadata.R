@@ -79,17 +79,16 @@ clean_metadata <- function(
   # Get file lists
   if(!is.null(project_dir)) {
     if(!is.null(project_files)) {
-      rlang::warn("`project_dir` overrides `project_files`", call = NULL)
+      warn("`project_dir` overrides `project_files`")
     }
-    if(!quiet) rlang::inform("Fetching file list...")
+    if(!quiet) inform("Fetching file list...")
     project_files <- list_files(project_dir, subset, subset_type,
                                 type = "file")
   } else if(!is.null(subset)){
     project_files <- stringr::str_subset(project_files, subset,
                                          negate = subset_type == "omit")
   } else if(is.null(project_files)) {
-    rlang::abort("Must provide one of `project_dir` or `project_files`",
-                 call = NULL)
+    abort("Must provide one of `project_dir` or `project_files`")
   }
 
   # Check for files (either zero or all directories)
@@ -100,7 +99,7 @@ clean_metadata <- function(
       msg <- "`project_dir`/`subset`/`subset_type` combination"
     }
 
-    rlang::abort(c(
+    abort(c(
       paste0("There are no files in the ", msg, " you have specified. Note:"),
       "i" = "Paths are case-sensitive",
       "i" = "Check folders using `list.dirs(path = PROJECT_DIR)`",
@@ -111,9 +110,9 @@ clean_metadata <- function(
   # Check for file types
   n_ext <- sum(stringr::str_detect(project_files, file_type_pattern))
   if(n_ext == 0){
-    rlang::abort(c(glue::glue("Did not find any '{file_type}' files."),
-                   "i" = "Use `file_type` to change file extension for sound files",
-                   "i" = "Check `project_dir`/`project_files` are correct"))
+    abort(c(glue::glue("Did not find any '{file_type}' files."),
+            "i" = "Use `file_type` to change file extension for sound files",
+            "i" = "Check `project_dir`/`project_files` are correct"))
   }
 
 
@@ -140,7 +139,7 @@ clean_metadata <- function(
                         "SM\\d" = "SongMeter",
                         "S\\dA" = "SongMeter")
 
-  if(!quiet) rlang::inform("Extracting ARU info...")
+  if(!quiet) inform("Extracting ARU info...")
 
   # Extract ARU metadata -----------------------
   meta <- meta |>
@@ -164,7 +163,7 @@ clean_metadata <- function(
 
 
   # Extract Date/time --------------------------
-  if(!quiet) rlang::inform("Extracting Dates and Times...")
+  if(!quiet) inform("Extracting Dates and Times...")
 
   meta <- meta |>
     dplyr::mutate(
@@ -211,13 +210,13 @@ clean_metadata <- function(
   # Report on details -------------------------
   # Extra files
   if(length(extra) > 1) {
-    rlang::inform(
+    inform(
       c("!" = paste0("Omitted ", length(extra), " extra, non-",
                      file_type, "/GPS files")))
   }
 
   if(length(gps) > 1) {
-    rlang::inform(c("!" = paste0("Detected ", length(gps), " GPS logs")))
+    inform(c("!" = paste0("Detected ", length(gps), " GPS logs")))
   }
 
   # Flag problems
@@ -230,13 +229,13 @@ clean_metadata <- function(
   f_site <- sum(is.na(f$site_id))
 
   if(any(c(f_d, f_dt, f_type, f_id, f_site) > 0)) {
-   msg <- c("Identified possible problems with metadata extraction:")
-   msg <- c(msg, report_missing(f_d, n, "dates"))
-   msg <- c(msg, report_missing(f_dt, n, "times"))
-   msg <- c(msg, report_missing(f_type, n, "ARU types"))
-   msg <- c(msg, report_missing(f_id, n, "ARU ids"))
-   msg <- c(msg, report_missing(f_site, n, "sites"))
-   rlang::inform(msg)
+    msg <- c("Identified possible problems with metadata extraction:")
+    msg <- c(msg, report_missing(f_d, n, "dates"))
+    msg <- c(msg, report_missing(f_dt, n, "times"))
+    msg <- c(msg, report_missing(f_type, n, "ARU types"))
+    msg <- c(msg, report_missing(f_id, n, "ARU ids"))
+    msg <- c(msg, report_missing(f_site, n, "sites"))
+    inform(msg)
   }
 
   # Arrange ----------------------------------

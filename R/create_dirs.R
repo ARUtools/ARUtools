@@ -53,15 +53,15 @@ create_dirs <- function(plots, site_ids, base_dir = NULL, dir_list = FALSE,
   if(!dry_run) {
 
     if(!expect_dirs & any(fs::dir_exists(d))) {
-      rlang::abort(
-      c("Trying to create directories that already exist",
-        "i" = "If you're certain this is correct, use `expect_dirs = TRUE`"),
-      call = caller_env())
+      abort(
+        c("Trying to create directories that already exist",
+          "i" = "If you're certain this is correct, use `expect_dirs = TRUE`"),
+        call = caller_env())
     }
 
     fs::dir_create(d)
 
-    if(rlang::is_installed("sessioninfo")) {
+    if(is_installed("sessioninfo")) {
       readr::write_lines(sessioninfo::session_info(), glue::glue("{base_dir}/session_info.md"))
     } else {
       readr::write_lines(sessioninfo::session_info(), glue::glue("{base_dir}/session_info.md"))
@@ -75,7 +75,7 @@ create_dirs <- function(plots, site_ids, base_dir = NULL, dir_list = FALSE,
                "*" = "If you're certain this is correct, use `expect_dirs = TRUE`")
     }
 
-    rlang::inform(msg)
+    inform(msg)
   }
   if(dir_list) d
 }

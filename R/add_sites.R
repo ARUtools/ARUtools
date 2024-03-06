@@ -70,10 +70,9 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   # Check that there are columns to add (check after prep_xxx())
   add <- names(sites)[!names(sites) %in% c(by, by_date_cols)]
   if(length(add) < 1) {
-    rlang::abort(paste0(
+    abort(paste0(
       "No new columns in `sites` to add to `meta` ",
-      "(all columns in `by` or used in date matching)"),
-      call = NULL)
+      "(all columns in `by` or used in date matching)"))
   }
 
   # Do the joins
@@ -217,7 +216,7 @@ prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
     for(i in report) if(all(is.na(meta[[i]]))) report <- report[report != i]
 
     if(length(report) > 0) {
-      rlang::inform(c(
+      inform(c(
         "Some columns in both `meta` and `sites` are not used to join (`by`)",
         "*" = paste0(
           "These columns (`", paste0(omit_cols, collapse = "`, `"), "`) ",
@@ -264,7 +263,7 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                          latitude = mean(.data$latitude)) |>
         dplyr::ungroup()
 
-      rlang::inform(c(
+      inform(c(
         paste0("Multiple coordinates per date at each combination of `",
                paste0(by, collapse = "`/`"), "`"),
         paste0("Taking mean coordinates ",
@@ -323,7 +322,7 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                             "/`date_time_start` and `date_end`/`date_time_end` in `sites`"))
     }
 
-    rlang::inform(msg)
+    inform(msg)
   }
 
   dplyr::select(meta_sites, -"...n")

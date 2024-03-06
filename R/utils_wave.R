@@ -33,22 +33,20 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 
   # Checks
   if(length(path_in) > 1) {
-    rlang::abort(c("More than one file supplied",
-                   "x" = "`clip_wave_single` processes one file at a time",
-                   "i" = "See `clip_wave` to process multiple files."),
-                 call = NULL)
+    abort(c("More than one file supplied",
+            "x" = "`clip_wave_single` processes one file at a time",
+            "i" = "See `clip_wave` to process multiple files."))
   }
   if(length(path_out) > 1) {
-    rlang::abort("Can only have one output file", call = NULL)
+    abort("Can only have one output file")
   }
   check_num(start_time, n = c(0, Inf))
 
   if(!overwrite && fs::file_exists(path_out)) {
-    rlang::abort(
+    abort(
       c("`overwrite` is FALSE but `path_out` already exists: ",
         "!" = path_out,
-        "*" = "Either use `overwrite = TRUE` or move the file"),
-      call = NULL)
+        "*" = "Either use `overwrite = TRUE` or move the file"))
   } else if (overwrite) {
     fs::file_delete(path_out)
   }
@@ -131,8 +129,8 @@ clip_wave <- function(waves,
                       use_job = FALSE) {
 
   # Checks
-  if(missing(dir_out)) rlang::abort(paste0("Require an output directory ",
-                                           "(`dir_out`)"), call = NULL)
+  if(missing(dir_out)) abort(paste0("Require an output directory ",
+                                    "(`dir_out`)"))
   check_cols(waves, c(!!enquo(col_path_in), !!enquo(col_subdir_out),
                       !!enquo(col_filename_out), !!enquo(col_clip_length),
                       !!enquo(col_start_time)))
@@ -145,7 +143,7 @@ clip_wave <- function(waves,
       "path_out",
       "clip_length" =  {{ col_clip_length }},
       "start_time" = {{ col_start_time }}
-      ) |>
+    ) |>
     dplyr::mutate(
       # Check and complete input paths
       path_in = check_wave_path_in(
@@ -200,14 +198,14 @@ get_wav_length <- function(path, return_numeric = FALSE) {
 }
 
 
-check_wave_path_in <- function(path_in, dir_in) {
+check_wave_path_in <- function(path_in, dir_in, call = caller_env()) {
 
   abs_path_in <- fs::is_absolute_path(path_in)
   if(length(unique(abs_path_in)) != 1) {
-    rlang::abort(paste0("All wave file paths must be either absolute or ",
-                        "relative (not a mix of the two)"), call = NULL)
+    abort(paste0("All wave file paths must be either absolute or ",
+                 "relative (not a mix of the two)"), call = call)
   } else if (all(abs_path_in) && !is.null(dir_in)) {
-    rlang::warn("All wave file paths are absolute, ignoring `dir_in`.", call = NULL)
+    warn("All wave file paths are absolute, ignoring `dir_in`.", call = call)
   } else if (all(!abs_path_in)) {
     if(is.null(dir_in)) {
       path_in <- fs::path_wd(path_in)
@@ -216,11 +214,11 @@ check_wave_path_in <- function(path_in, dir_in) {
 
   # Check that file paths exist
   if(any(missing <- !fs::file_exists(path_in))) {
-    rlang::abort(
+    abort(
       c(paste0(
         "Some wave files could not be found:\n"),
         stats::setNames(names(missing[missing]), rep("*", sum(missing)))),
-      call = NULL
+      call = call
     )
   }
 
@@ -230,15 +228,15 @@ check_wave_path_in <- function(path_in, dir_in) {
     if(length(r) > 5) r <- c(r[1:5], "...")
     r <- set_names(r, "*")
 
-    rlang::abort(c("Non-wav file found in files.",
-                   "x" = "Only wav files are processed by `clip_wave()`",
-                   "i" = "Check file names are correct",
-                   r), call = NULL)
+    abort(c("Non-wav file found in files.",
+            "x" = "Only wav files are processed by `clip_wave()`",
+            "i" = "Check file names are correct",
+            r), call = call)
   }
   path_in
 }
 
-check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir) {
+check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir, call = caller_env()) {
 
   dir_out <- fs::path(dir_out, purrr::pmap_chr(list(subdirs), fs::path))
   path_out <- fs::path(dir_out, fs::path_file(path_in))
@@ -250,16 +248,16 @@ check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir) {
   } else if(!all(fs::dir_exists(dir_out))) {
     # Alert if missing dirs
     err <- dir_out[!fs::dir_exists(dir_out)]
-    rlang::abort(
+    abort(
       c("Not all output directories exist",
         "!" = "Either create them before hand or set `create_dir = TRUE`",
         stats::setNames(err, rep("x", length(err)))),
-      call = NULL)
+      call = call)
   }
   path_out
 }
 
-check_wave_length <- function(path_in, clip_length, start_time, diff_limit) {
+check_wave_length <- function(path_in, clip_length, start_time, diff_limit, call = caller_env()) {
 
   wave_length <- purrr::map_dbl(path_in, get_wav_length, return_numeric = T)
   clip_length <- clip_length + start_time
@@ -267,21 +265,21 @@ check_wave_length <- function(path_in, clip_length, start_time, diff_limit) {
   # Check that starts before end of wave file
   if(any(start_time > wave_length)) {
     err <- path_in[start_time >= wave_length]
-    rlang::abort(
+    abort(
       c("Some wave files have a clip start time greater than the length of the wave",
         stats::setNames(err, rep("x", length(err)))),
-      call = NULL)
+      call = call)
   }
 
   # Check that requested clip length less than wave file length +/- wiggle room
   # (accounting for start time)
   if(any((clip_length - diff_limit) >= wave_length)){
     err <- path_in[(clip_length - diff_limit) >= wave_length]
-    rlang::abort(
+    abort(
       c(glue::glue("Some wave files are >={diff_limit}s shorter than the requested clip length given the `start_time`."),
-      "i"= "Check file lengths. You can adjust the discrepency limit with `diff_limit` (default 30s)",
-      stats::setNames(err, rep("x", length(err)))
-    ), call = NULL)
+        "i"= "Check file lengths. You can adjust the discrepency limit with `diff_limit` (default 30s)",
+        stats::setNames(err, rep("x", length(err)))
+      ), call = call)
   }
 
   wave_length
@@ -346,7 +344,7 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
                         quiet = FALSE) {
 
   if(!fs::file_exists(path)) {
-    rlang::abort(paste0("Cannot find wave file ", path), call = NULL)
+    abort(paste0("Cannot find wave file ", path))
   }
 
   # Create output path
@@ -372,9 +370,9 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
   if(!is.null(height)) cmd <- glue::glue("{cmd} -y {height}")
 
   if(dry_run) {
-    rlang::inform(cmd)
+    inform(cmd)
   } else {
-    if(!quiet) rlang::inform(glue::glue("Writing spectrogram to {path_out}"))
+    if(!quiet) inform(glue::glue("Writing spectrogram to {path_out}"))
     seewave::sox(cmd)
   }
 }
@@ -415,10 +413,9 @@ acoustic_indices <- function(path, min_freq = NA, max_freq = NA, units = "sample
                              quiet = FALSE) {
   if(!requireNamespace("soundecology", quietly = TRUE) ||
      !requireNamespace("tuneR", quietly = TRUE)) {
-    rlang::abort(
+    abort(
       c("Packages \"soundecology\" and \"tuneR\" must be installed to use `acoustic_indices()`",
-        "Install with `install.packages(c(\"soundecology\", \"tuneR\"))`"),
-      call = NULL
+        "Install with `install.packages(c(\"soundecology\", \"tuneR\"))`")
     )
   }
 
@@ -434,16 +431,13 @@ acoustic_indices <- function(path, min_freq = NA, max_freq = NA, units = "sample
 
   if(inherits(complexity, "try-error")) {
     if(get_wav_length(path, TRUE) < 5) {
-      rlang::abort(
+      abort(
         c("Error in `acoustic_complexity()` from the soundecology package",
-          "i" = "Consider using a wave file >=5s long."),
-        call = NULL)
+          "i" = "Consider using a wave file >=5s long."))
     } else {
-      rlang::abort(
+      abort(
         c("Error in `acoustic_complexity()` from the soundecology package:",
-          complexity),
-        call = NULL
-      )
+          complexity))
     }
   }
 

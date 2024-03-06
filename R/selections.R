@@ -42,11 +42,9 @@ sim_selection_weights <- function(
     selection_var = "psel_normalized", return_params = TRUE, plot = TRUE) {
 
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    rlang::abort(
+    abort(
       c("Package \"ggplot2\" must be installed to use this function",
-        "!" = "Use `install.packages(\"ggplot2\") to install"),
-      call = NULL
-    )
+        "!" = "Use `install.packages(\"ggplot2\") to install"))
   }
 
   # Create parameter list
@@ -140,6 +138,7 @@ sim_selection_weights <- function(
 #' params <- sim_selection_weights()
 #' calc_selection_weights(m, params = params)
 
+
 calc_selection_weights <- function(meta_sun,
                                    params,
                                    col_site_id = site_id,
@@ -173,9 +172,9 @@ calc_selection_weights <- function(meta_sun,
                   {{ col_min }} >= min_range[[1]],
                   {{ col_min }} <= min_range[[2]])
 
-  if(nrow(sp) == 0) rlang::abort(
+  if(nrow(sp) == 0) abort(
     "No selections possible within this range of dates and times",
-    call = rlang::caller_env())
+    call = caller_env())
 
   # Prepare selection functions
   min_fun <- switch(
@@ -187,10 +186,9 @@ calc_selection_weights <- function(meta_sun,
 
   # Check offset
   if((min(dplyr::pull(meta_sun, {{ col_min }})) + offset) <= 0 && selection_fun == "lognorm") {
-    rlang::abort(
+    abort(
       paste0("If `selection_fun = 'lognorm'` and any `min` values are less than 0\n",
-             "you must provide an `offset` large enough to ensure all values are greater than 0."),
-      call = NULL)
+             "you must provide an `offset` large enough to ensure all values are greater than 0."))
   }
 
   dens_min <- min_fun(seq(min_range[1], min_range[2]), min_mean, min_sd, log = return_log)
@@ -237,7 +235,7 @@ check_selection_params <- function(params) {
 
   check_logical(params$return_log)
   if(params$offset != 0 & params$selection_fun != "lognorm") {
-    rlang::inform(
+    inform(
       c("Ignoring `offset`",
         "i" = paste("`offset` is only relevant when `selection_fun = `lognorm`",
                     "to shift the minutes range to > 0")))
@@ -319,16 +317,14 @@ sample_recordings <- function(meta_weights,
   check_cols(meta_weights, c(!!enquo(col_site_id), !!enquo(col_sel_weights)))
   if(is.data.frame(n)) check_names(n, c(name_site_id, "n", "n_os"))
 
-  if(!rlang::is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
-    rlang::abort(
-      "`os` as a single value is a proportion, and must range between 0 and 1",
-      call = NULL)
+  if(!is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
+    abort(
+      "`os` as a single value is a proportion, and must range between 0 and 1")
   }
 
   if(is.null(os) && !inherits(n, "data.frame")) {
-    rlang::abort(
-      "`os` can only be NULL if `n` is a data frame with a column `n_os`",
-      call = NULL)
+    abort(
+      "`os` can only be NULL if `n` is a data frame with a column `n_os`")
   }
 
   # If sf, convert to df
@@ -342,18 +338,17 @@ sample_recordings <- function(meta_weights,
   # Assemble n and os (based on BASSR::run_grts_on_BASS()
 
   # Check for stratification - Create a list of problems
-  s <- c(inherits(n, "data.frame") | length(n) > 1 | rlang::is_named(n)) # Stratification exists in samples
+  s <- c(inherits(n, "data.frame") | length(n) > 1 | is_named(n)) # Stratification exists in samples
 
   # Not stratified
   if (all(!s)) {
 
     if(!quo_is_null(col_site_id)) {
-      warn("No stratification by site included in `n` or `os`. Ignoring `col_site_id`", call = NULL)
+      warn("No stratification by site included in `n` or `os`. Ignoring `col_site_id`")
     }
 
     if(length(os) > 1) {
-      rlang::abort("`os` must be a single value unless using stratification by site",
-                   call = NULL)
+      abort("`os` must be a single value unless using stratification by site")
     }
 
     name_site_id <- NULL
@@ -372,7 +367,7 @@ sample_recordings <- function(meta_weights,
     # Missing appropriate n object
     if(!(inherits(n, "data.frame") |
          length(n) > 1 |
-         rlang::is_named(n))) {
+         is_named(n))) {
       abort_strat()
     }
 
@@ -401,17 +396,17 @@ sample_recordings <- function(meta_weights,
       if(length(os) > 1) os <- as.list(os)
 
       # Problem: List not named correctly
-      if(!(rlang::is_named(n) && all(names(n) %in% sites))) {
+      if(!(is_named(n) && all(names(n) %in% sites))) {
         abort_strat()
       }
 
       # Problem: List not named correctly (and not length = 1)
-      if(!((rlang::is_named(os) && all(names(os) %in% sites)) ||
+      if(!((is_named(os) && all(names(os) %in% sites)) ||
            length(os) == 1)) {
         abort_strat("`os` must be a single value, or a vector/list named by strata")
       }
 
-      if(!rlang::is_named(os) && length(os) == 1) {
+      if(!is_named(os) && length(os) == 1) {
         n_os <- lapply(n, \(x) round(x * os))
 
         # If all 0, use NULL
@@ -420,7 +415,7 @@ sample_recordings <- function(meta_weights,
     }
 
     # Problem: Chose stratification, but only one strata
-    if(length(n) == 1 || (rlang::is_named(n_os) && length(n_os) == 1)) {
+    if(length(n) == 1 || (is_named(n_os) && length(n_os) == 1)) {
       abort_strat("There is only one stratum")
     }
   }
@@ -442,8 +437,7 @@ sample_recordings <- function(meta_weights,
     }
   }
 
-  if(!is.null(msg)) abort(c("Cannot sample (n + oversampling) more points than there are in the data", msg),
-                          call = NULL)
+  if(!is.null(msg)) abort(c("Cannot sample (n + oversampling) more points than there are in the data", msg))
 
   # Declare here to make the call info included in the output of spsurvey::grst
   # slightly more useful
@@ -464,18 +458,18 @@ sample_recordings <- function(meta_weights,
 
 #' Abort during stratification
 #'
-#' Wrapper around `rlang::abort()` for consistent messaging when stratification
+#' Wrapper around `abort()` for consistent messaging when stratification
 #' arguments are not correct.
 #'
 #' @param msg Alternative message if required (otherwise returns default message
 #'   regarding the `n` parameter)
 #'
 #' @noRd
-abort_strat <- function(msg = NULL) {
+abort_strat <- function(msg = NULL, call = caller_env()) {
   m <- "Not all requirements met for sampling with stratification by site"
   if(is.null(msg)) {
     msg <- paste0("`n` must be a data frame with appropriate ",
                   "columns, or vector/list named by site")
   }
-  rlang::abort(c(m, "x" = msg), call = NULL)
+  abort(c(m, "x" = msg), call = call)
 }

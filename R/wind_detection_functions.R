@@ -10,7 +10,7 @@
 #' @return
 wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]+"){
   warn("Function in development. Use at own risk")
-  if(!rlang::is_installed("jsonlite")) rlang::abort("sum_json requires {jsonlite} package")
+  if(!is_installed("jsonlite")) abort("sum_json requires {jsonlite} package")
 
   s <- purrr::safely(jsonlite::read_json)
 

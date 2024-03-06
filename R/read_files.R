@@ -280,7 +280,7 @@ read_and_check_barlt_gps <- function(.x, return_all_locs=F){
 
   if(nrow(csv_tmp)!=1){
     if(!interactive()|isTRUE(return_all_locs)){tmp_action <- 1:nrow(csv_tmp)
-    rlang::warn(glue::glue("Multple locations found for {.x}, but no option to select specifics. Run in interactive session to allow selection."))
+    warn(glue::glue("Multple locations found for {.x}, but no option to select specifics. Run in interactive session to allow selection."))
     } else{
     tmp_action <- coda::multi.menu(c(glue::glue("DMY: {csv_tmp$dd_mm_yy}, Time: {csv_tmp$hh_mm}, Lat: {csv_tmp$latitude_decimal_degrees }, Lon: {csv_tmp$longitude_decimal_degrees}"), "Abort program"),
                        title = glue::glue("Multiple locations detected for {.x}. Which would you like to use?"))
