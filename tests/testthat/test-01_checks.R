@@ -27,27 +27,31 @@ test_that("check_value()", {
 })
 
 test_that("check_cols()", {
+  f <- function(col1, col2) {
+    check_cols(mtcars, c(!!enquo(col1), !!enquo(col2)))
+  }
 
+  expect_silent(f(cyl, mpg))
+  expect_silent(f(cyl, c(am, mpg)))
+
+  expect_error(f(cyl, hi), "Column 'hi' does not exist")
+  expect_error(f(cyl, c(hi, test)), "Column 'hi' does not exist")
+  expect_error(f(cyl, c(hi, test)), "Column 'test' does not exist")
+})
+
+test_that("check_names()", {
   col1 <- "cyl"
   col2 <- "mpg"
   col3 <- "testing"
   col4 <- NULL
 
-  expect_silent(check_cols(mtcars, cols = c(col1, col2), name = "mtcars"))
+  expect_silent(check_names(mtcars, names = c(col1, col2)))
 
-  expect_error(check_cols(mtcars, cols = c(col1, col2, col3), name = "mtcars"),
+  expect_error(check_names(mtcars, names = c(col1, col2, col3)),
                "Column 'testing' does not exist")
 
-  expect_error(check_cols(mtcars, name = "mtcars", dates = TRUE),
+  expect_error(check_names(mtcars, dates = TRUE),
                "No date or date range columns")
-
-
-  f <- function(...) {
-    col5 <- enquos(..., .ignore_empty = "all")
-    check_cols(mtcars, cols = col5, name = "mtcars")
-  }
-  expect_silent(f(cyl, mpg))
-  expect_error(f(cyl, hi), "Column 'hi' does not exist")
 })
 
 test_that("check_dates()", {

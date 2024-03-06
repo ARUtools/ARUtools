@@ -107,11 +107,12 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #' w <- data.frame(
 #'   path = temp_wavs(n = 4),
 #'   subdir_out = c("test1/a", "test2/a", "test3/c", "test4/d"),
+#'   subsub_dir_out = rep("zz", 4),
 #'   filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
 #'   clip_length = c(1, 1, 1, 2),
 #'   start_time = c(1.2, 0.5, 1, 0))
 #'
-#' clip_wave(w, dir_out = "clean")
+#' clip_wave(w, dir_out = "clean", col_subdir_out = c(subdir_out, subsub_dir_out))
 #'
 #' unlink("clean", recursive = TRUE) # Remove this new 'clean' directory
 #' }
@@ -132,19 +133,16 @@ clip_wave <- function(waves,
   # Checks
   if(missing(dir_out)) rlang::abort(paste0("Require an output directory ",
                                            "(`dir_out`)"), call = NULL)
-
-  check_cols(waves,
-             cols = enquos(col_path_in, col_subdir_out, col_filename_out,
-                           col_clip_length, col_start_time),
-             name = "waves")
-
-  # Prepare processing df
-  #wv <- dplyr::tibble(.rows = nrow(waves))
+  check_cols(waves, c(!!enquo(col_path_in), !!enquo(col_subdir_out),
+                      !!enquo(col_filename_out), !!enquo(col_clip_length),
+                      !!enquo(col_start_time)))
 
   wv <- waves |>
+    dplyr::mutate(
+      "path_out" = purrr::pmap_chr(dplyr::pick({{ col_subdir_out }}), fs::path)) |>
     dplyr::select(
       "path_in" = {{ col_path_in }},
-      "path_out" = {{ col_subdir_out }},
+      "path_out",
       "clip_length" =  {{ col_clip_length }},
       "start_time" = {{ col_start_time }}
       ) |>

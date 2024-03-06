@@ -25,7 +25,7 @@ making collaboration and future modifications easier.
 - Non-NSE col arguments are defined as `name_COLNAME`, including when converted
   to character within a function for use in other ways.
 - NSE col names can be referenced with {{ }} in tidyverse functions, but occasionally 
-  they must be `enquo()`d before use in other functions (like `nse_name()`, or
+  they must be `enquo()`d before use in other functions (like `nse_names()`, or
   `quo_is_null()` for example). Therefore in those cases they are `enquo()`d right at the 
   start of the function (e.g., `sample_recordings()`)
 - NSE col names with default values must be declared in the .onLoad function of

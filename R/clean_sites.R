@@ -112,10 +112,9 @@ clean_site_index <- function(site_index,
   site_index <- dplyr::rename_with(site_index, tolower)
 
   # Check cols
-  check_cols(site_index, c(name_site_id, name_date_time, name_aru_id, name_coords,
-                           name_extra),
-             name = "site_index",
-             extra = "See ?clean_site_index")
+  check_names(site_index, c(name_site_id, name_date_time, name_aru_id, name_coords,
+                            name_extra),
+              extra = "See ?clean_site_index")
 
   # Check dates
   check_dates(site_index, name_date_time)

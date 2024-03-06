@@ -148,9 +148,9 @@ calc_selection_weights <- function(meta_sun,
 
   # Checks
   # No need for multiple preemptive enclosures (so no `enquo(col...)`)
-  check_cols(meta_sun, name = "meta_sun", cols = enquos(col_site_id, col_min, col_day))
+  check_cols(meta_sun, cols = c(!!enquo(col_site_id), !!enquo(col_min), !!enquo(col_day)))
   params <- check_selection_params(params)
-  name_min <- nse_name(enquo(col_min))
+  name_min <- nse_names(enquo(col_min))
 
   # Get params as environment objects
   # (done this way to avoid 'no visible binding notes')
@@ -313,11 +313,11 @@ sample_recordings <- function(meta_weights,
 
   col_site_id <- enquo(col_site_id)
   col_sel_weights <- enquo(col_sel_weights)
-  name_site_id <- nse_name(col_site_id)
+  name_site_id <- nse_names(col_site_id)
 
   # TODO: CHECKS
-  check_cols(meta_weights, enquos(col_site_id, col_sel_weights), name = "meta_weights")
-  if(is.data.frame(n)) check_cols(n, c(name_site_id, "n", "n_os"), name = "n")
+  check_cols(meta_weights, c(!!enquo(col_site_id), !!enquo(col_sel_weights)))
+  if(is.data.frame(n)) check_names(n, c(name_site_id, "n", "n_os"))
 
   if(!rlang::is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
     rlang::abort(
@@ -445,13 +445,17 @@ sample_recordings <- function(meta_weights,
   if(!is.null(msg)) abort(c("Cannot sample (n + oversampling) more points than there are in the data", msg),
                           call = NULL)
 
+  # Declare here to make the call info included in the output of spsurvey::grst
+  # slightly more useful
+  col_sel_weights <- nse_names(col_sel_weights)
+
   set_seed(seed, {
     spsurvey::grts(sframe = meta_weights_sf,
                    n_over = n_os,
                    n_base = n,
                    stratum_var = name_site_id,
                    DesignID = "sample",
-                   aux_var =  nse_name(col_sel_weights),
+                   aux_var =  col_sel_weights,
                    ...)
   })
 

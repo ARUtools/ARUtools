@@ -223,7 +223,11 @@ set_seed <- function(seed, code) {
   if(is.null(seed)) code else withr::with_seed(seed, code)
 }
 
-
-nse_name <- function(col) {
-  names(exprs_auto_name(list(col)))
+nse_names <- function(col) {
+  names(exprs_auto_name(col)) |>
+    stringr::str_split(",") |>
+    unlist() |>
+    stringr::str_remove_all("~|c\\(|list\\(|\\,|\\)") |>
+    stringr::str_trim() |>
+    stringr::str_subset(".+")
 }

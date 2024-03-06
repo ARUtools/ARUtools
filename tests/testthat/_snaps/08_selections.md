@@ -885,7 +885,7 @@
             {
               "type": "language",
               "attributes": {},
-              "value": ["spsurvey::grts(sframe = meta_weights_sf, n_base = n, stratum_var = name_site_id, ", "    aux_var = nse_name(col_sel_weights), n_over = n_os, DesignID = \"sample\")"]
+              "value": ["spsurvey::grts(sframe = meta_weights_sf, n_base = n, stratum_var = name_site_id, ", "    aux_var = col_sel_weights, n_over = n_os, DesignID = \"sample\")"]
             },
             {
               "type": "NULL"
@@ -1669,7 +1669,7 @@
             {
               "type": "language",
               "attributes": {},
-              "value": ["spsurvey::grts(sframe = meta_weights_sf, n_base = n, stratum_var = name_site_id, ", "    aux_var = nse_name(col_sel_weights), n_over = n_os, DesignID = \"sample\")"]
+              "value": ["spsurvey::grts(sframe = meta_weights_sf, n_base = n, stratum_var = name_site_id, ", "    aux_var = col_sel_weights, n_over = n_os, DesignID = \"sample\")"]
             },
             {
               "type": "character",

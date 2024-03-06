@@ -66,11 +66,12 @@ clipping to a given length.
 w <- data.frame(
   path = temp_wavs(n = 4),
   subdir_out = c("test1/a", "test2/a", "test3/c", "test4/d"),
+  subsub_dir_out = rep("zz", 4),
   filename_out = c("wave1_clean.wav", "wave2_clean.wav", "wave3_clean.wav", "wave4_clean.wav"),
   clip_length = c(1, 1, 1, 2),
   start_time = c(1.2, 0.5, 1, 0))
 
-clip_wave(w, dir_out = "clean")
+clip_wave(w, dir_out = "clean", col_subdir_out = c(subdir_out, subsub_dir_out))
 
 unlink("clean", recursive = TRUE) # Remove this new 'clean' directory
 }

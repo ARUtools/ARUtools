@@ -60,28 +60,24 @@ check_data <- function(df, type, ref) {
     if(inherits(df, "sf")) coords <- NULL else coords <- c("longitude", "latitude")
 
     if(type == "meta") {
-      check_cols(
+      check_names(
         df, c("file_name", "path", "site_id", "aru_id"),
         dates = TRUE,
-        name = "meta",
         extra = e)
     } else if(type == "sites") {
-      check_cols(
+      check_names(
         df, c("site_id", "aru_id", coords),
         dates = FALSE, # Optional
-        name = "sites",
         extra = e)
     } else if (type == "meta_sites") {
-      check_cols(
+      check_names(
         df, c("site_id", "aru_id", coords),
         dates = TRUE,
-        name = "meta_sites",
         extra = e)
     } else if (type == "meta_sun") {
-      check_cols(
+      check_names(
         df, c("site_id", "aru_id", coords, "tz", "t2sr", "t2ss"),
         dates = TRUE,
-        name = "meta_sun",
         extra = e)
     }
 
@@ -111,16 +107,23 @@ check_ext <- function(ext, opts)  {
 #' @param dates Whether to look for date/time columns (can be date, date_time or
 #'   date ranges)
 #' @noRd
-check_cols <- function(df, cols = NULL, name, extra = NULL, dates = FALSE) {
+check_cols <- function(df, cols, arg = caller_arg(df), call = caller_env()) {
+
+  cols <- nse_names(enquo(cols))
+  cols <- cols[!cols %in% c(names(df), "NULL")]
+
+  if(length(cols) > 0) {
+    msg <- paste0("Column '", cols, "' does not exist")
+    rlang::abort(c(paste0("Problems with data `", arg, "`:"), msg), call = call)
+  }
+}
+
+check_names <- function(df, names = NULL, extra = NULL, dates = FALSE,
+                        arg = caller_arg(df),
+                        call = caller_env()) {
   msg <- vector()
 
-  # Catch NSE as character vectors
-  if(is_quosures(cols)) {
-    cols <- cols[!sapply(cols, quo_is_null)] # Drop NULLs
-    cols <- names(exprs_auto_name(cols))
-  }
-
-  for(i in cols) {
+  for(i in names) {
     if(!is.null(i) && !any(tolower(i) %in% names(df))) {
       msg <- c(msg, paste0("Column '", i, "' does not exist"))
     }
@@ -135,8 +138,11 @@ check_cols <- function(df, cols = NULL, name, extra = NULL, dates = FALSE) {
     }
   }
 
-  if(length(msg) > 0) rlang::abort(c(paste0("Problems with data `", name, "`:"),
-                                     msg, extra), call = NULL)
+  if(length(msg) > 0) {
+    rlang::abort(c(paste0("Problems with data `", arg, "`:"),
+                   msg, extra), call = call)
+  }
+
 }
 
 #' Check for date formats
