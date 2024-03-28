@@ -86,10 +86,10 @@ article (`vignette("ARUtools")`).
 
 ```{r}
 sites <- clean_site_index(site_info,
-                          col_aru_id = "ARU", 
-                          col_site_id = "site_id", 
-                          col_date_time = c("date_time"),
-                          col_coords = c("lon", "lat") )
+                          name_aru_id = "ARU", 
+                          name_site_id = "site_id", 
+                          name_date_time = c("date_time"),
+                          name_coords = c("lon", "lat") )
 metadata <- clean_metadata(project_files = simple_deploy$file_name) |> 
   add_sites( sites) |> 
   calc_sun() |> 
@@ -107,28 +107,22 @@ up breeding birds and not migrants.
 To deal with this issue we allow the user to specify selection weights based on
 the time to sunrise (or sunset) as well as the day of year. 
 
-**Note:** This is an active area of development and you can expect the process of
-assigning variables to be much simpler in the next update.
-
-
-```{r}
-
-params <- list(min_range = c(-70, 240),
-                          doy_range = c(120, lubridate::yday(lubridate::ymd("2021-07-20"))),
-                          mean_min = 30, sd_min = 60,
-                          mean_doy = lubridate::yday(lubridate::ymd("2021-06-10")),
-                          sd_doy = 20,off=0,
-                          log_ = TRUE, fun = "norm") 
-```
-
-
 
 To visualize the selection parameters use `gen_dens_sel_simulation`. This will show you how the sample weights 
 will change over time and time to sunrise/sunset.
 
 ```{r fig.height=6, out.height=8, warning=FALSE}
-gen_dens_sel_simulation(parms = params) 
+p <-  sim_selection_weights(min_range = c(-70, 240),
+                          day_range = c(120, lubridate::yday(lubridate::ymd("2021-07-20"))),
+                          min_mean = 30, min_sd = 60,
+                          day_mean = lubridate::yday(lubridate::ymd("2021-06-10")),
+                          day_sd = 20,offset=0,
+                          return_log = TRUE, selection_fun = "norm") 
 ```
+
+
+
+
 
 
 ## Calculate selection weights
@@ -138,11 +132,11 @@ Once you have your parameters set up, you can use them to calculate the sampling
 ```{r}
 full_selection_probs <- 
   metadata |> 
-  calc_sel_pr(
-    ARU_ID_col = site_id, 
-    min_col = t2sr, 
-    day_col = doy,
-    parms = params)
+  calc_selection_weights(
+    col_site_id = site_id, 
+    col_min = t2sr, 
+    col_day = doy,
+    params = p)
 ```
 
 
@@ -171,8 +165,8 @@ in case some samples are unusable (e.g. due to wind).
 ```{r}
 sample_size <- count(full_selection_probs,  site_id) |> 
   transmute(site_id,
-            N = floor(n*.02),
-         n_os  = ceiling(N*.3)
+            n = floor(n*.02),
+         n_os  = ceiling(n*.3)
          )
 ```
 
@@ -210,12 +204,11 @@ and time in the dates.
 
 
 ```{r}
-grts_res <- fun_aru_samp(full_selection_probs, 
-                         N = sample_size,
-                         strat_ = "site_id",
+grts_res <- sample_recordings(full_selection_probs, 
+                         n = sample_size,
+                         col_site_id =  site_id,
                          seed = 2024, 
-                         selprob_id = "psel_normalized",
-                         x = 'doy',y = 't2sr')
+                         col_sel_weights =  psel_normalized)
 
 dplyr::glimpse(grts_res$sites_base)
 ```
@@ -244,10 +237,10 @@ withr::with_seed(2024,{
 random_sample_stratified <- 
   full_selection_probs |> 
   left_join(sample_size,by = join_by(site_id)) |> 
-  nest_by(site_id, N) |> 
+  nest_by(site_id, n) |> 
   rowwise() |> 
   mutate(sample = list(dplyr::slice_sample(.data =data,
-                                      n = .data$N,
+                                      n = .data$n,
                                       weight_by = psel_normalized,
                       replace = F)) ) |> 
   dplyr::select(site_id, sample) |> 
@@ -363,9 +356,9 @@ a 'wav' file in seconds.
 
 ```{r, eval=F}
 random_sample_with_lengths$length_clip <-
-  map(1:nrow(random_sample_with_lengths),
+  purrr::map(1:nrow(random_sample_with_lengths),
       ~get_wav_length(
-        file = random_sample_with_lengths$path[[.x]], 
+        path = random_sample_with_lengths$path[[.x]], 
         return_numeric = T))
 ```
 This can be used to safely add a random start time to your recordings if you don't

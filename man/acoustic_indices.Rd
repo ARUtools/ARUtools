@@ -16,10 +16,10 @@ acoustic_indices(
 \item{path}{Character. Path to wave file.}
 
 \item{min_freq}{Numeric. Minimum frequency for acoustic complexity (see
-\code{\link[soundecology:acoustic_complexity_index]{soundecology::acoustic_complexity()}})}
+\code{\link[soundecology:acoustic_complexity]{soundecology::acoustic_complexity()}})}
 
 \item{max_freq}{Numeric. Maximum frequency for acoustic complexity (see
-\code{\link[soundecology:acoustic_complexity_index]{soundecology::acoustic_complexity()}})}
+\code{\link[soundecology:acoustic_complexity]{soundecology::acoustic_complexity()}})}
 
 \item{units}{Character. Wave file units for reading the file. Defaults to
 "samples" (see \code{\link[tuneR:readWave]{tuneR::readWave()}}).}
@@ -30,8 +30,8 @@ non-essential updates.}
 \value{
 Returns a data frame with acoustic indices. Those prefaced with
 \itemize{
-\item \code{complx_} are from \code{\link[soundecology:acoustic_complexity_index]{soundecology::acoustic_complexity()}}
-\item \code{bio_} are from \code{\link[soundecology:bioacoust_index]{soundecology::bioacoustic_index()}}
+\item \code{complx_} are from \code{\link[soundecology:acoustic_complexity]{soundecology::acoustic_complexity()}}
+\item \code{bio_} are from \code{\link[soundecology:bioacoustic_index]{soundecology::bioacoustic_index()}}
 \item \code{div_} are from \code{\link[soundecology:acoustic_diversity]{soundecology::acoustic_diversity()}}
 }
 }
