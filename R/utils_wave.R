@@ -453,7 +453,7 @@ acoustic_indices <- function(path, min_freq = NA, max_freq = NA, units = "sample
     dplyr::as_tibble() |>
     dplyr::rename_with(\(x) paste0("div_", x))
 
-  tibble::tibble(file = file_name) |>
+  dplyr::tibble(file = file_name) |>
     dplyr::bind_cols(complexity) |>
     dplyr::bind_cols(bioindex) |>
     dplyr::bind_cols(diversity)

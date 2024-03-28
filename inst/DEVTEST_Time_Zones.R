@@ -1,7 +1,7 @@
 
 library(dplyr)
 
-tz_locs <- tibble::tribble(
+tz_locs <- dplyr::tribble(
   ~tz_rough, ~lat, ~lon,~site_id,
   "Central",54.31810, -90.16277, "ARU1",
   "Eastern", 54.31409, -89.80434, "ARU2",

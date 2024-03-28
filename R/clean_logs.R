@@ -101,7 +101,7 @@ clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_s
 
   # ../ARUtools - Extra/aru_log_files/P352/1A_BARLT16214/logfile.txt
   r |>
-    dplyr::full_join(schedule, by = dplyr::join_by("path", date_time >= schedule_date)) |>
+    dplyr::full_join(schedule, by = dplyr::join_by("path", "date_time" >= "schedule_date")) |>
     dplyr::full_join(meta, by = "path") |>
     dplyr::mutate(file_name = fs::path(.data[["path"]])) |>
     dplyr::relocate("file_name", "path", "event", "date_time") |>
@@ -166,10 +166,11 @@ extract_event_gps <- function(log) {
 extract_event_rec <- function(log) {
   log[["recordings"]] |>
     dplyr::mutate(
-      type = dplyr::if_else(stringr::str_detect(value, "recorded"), "recording_end", "recording_start"),
+      type = dplyr::if_else(stringr::str_detect(.data[["value"]], "recorded"),
+                            "recording_end", "recording_start"),
       value = dplyr::if_else(
-        type == "recording_start",
-        value,
+        .data[["type"]] == "recording_start",
+        .data[["value"]],
         stringr::str_extract(.data[["value"]], "\\d+ (MB|GB|TB)(?= recorded)"))) |>
     # Sometimes the log does not record the start of a recording, so there's a missing entry
     # To deal with this, we label (n) entries in pairs by whether they match/don't match the pre/proceeding type

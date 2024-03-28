@@ -99,7 +99,7 @@ check_ext <- function(ext, opts, call = caller_env())  {
   if(!ext %in% opts) {
     abort(
       paste0("File extension must be one of ", paste0(opts, collapse = ", ")),
-      call = calls)
+      call = call)
   }
 }
 

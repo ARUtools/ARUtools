@@ -428,7 +428,7 @@ sample_recordings <- function(meta_weights,
   } else {
     cnts <- sf::st_drop_geometry(meta_weights) |>
       dplyr::count({{ col_site_id }}) |>
-      tibble::deframe()
+      dplyr::pull("n", name = name_site_id)
     if(any(n_check > cnts[names(n)])) {
       msg <- c("i" = paste0("Selected more samples than exist in some sites (",
                             paste0(names(n)[n_check > cnts[names(n)]], collapse = ", "), ")"))

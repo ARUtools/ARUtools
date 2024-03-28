@@ -142,7 +142,7 @@ calc_ss <- function(dates, tz, suffix = ""){
       "latitude" = "lat"
     ) |>
     dplyr::relocate("longitude", .before = "latitude") |>
-    tibble::as_tibble()
+    dplyr::as_tibble()
 }
 
 #' Convert sunrise/sunset times to time-to-sunrise/sunset
