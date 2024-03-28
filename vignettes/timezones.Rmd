@@ -164,7 +164,8 @@ m_mini <- filter(m, site_id %in% c("P01_1", "P06_1")) |>
   cross_join(data.frame(date_time = c("2020-05-02 05:00:00", 
                                       "2020-05-02 06:00:00",
                                       "2020-05-02 07:00:00"))) |>
-  mutate(date = as_date(date_time))
+  mutate(date = as_date(date_time), 
+         path = paste0(aru_id, "_", site_id, "_", hour(date_time), ".csv"))
 ```
 
 If we now calculate the time to sunrise/sunset (`t2sr` and `t2ss`) we find that
@@ -174,14 +175,16 @@ so the recording at 6am occurs 28.8min before sunrise,
 whereas P01_1's 6am recording occurs only 14.9 min before sunrise.
 
 ```{r}
-calc_sun(m_mini, aru_tz = "America/Toronto")
+calc_sun(m_mini, aru_tz = "America/Toronto") |>
+  arrange(date_time)
 ```
 
-However, if we were to incorrectly assume that the ARU unit in the central timezone
+However, if we were to incorrectly assume that the ARU unit located in the central timezone
 was recording in that timezone, we would get very different results.
 
 ```{r}
-calc_sun(m_mini, aru_tz = "local")
+calc_sun(m_mini, aru_tz = "local") |>
+  arrange(date_time)
 ```
 
 Here all the times to sunrise/sunset for site P06_1 are offset by an hour, because we're assuming the

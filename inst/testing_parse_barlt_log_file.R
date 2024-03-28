@@ -8,7 +8,7 @@ scrape_barlt_log <- function(i){
   if((i+2)>length(breaks) ) next_break <- length(full_file)
   else  next_break <- breaks[min(i+2)]
 
-    this_group <- tibble::tibble(string = full_file[(j+6): min(length(full_file), next_break-1)]) |>
+    this_group <- dplyr::tibble(string = full_file[(j+6): min(length(full_file), next_break-1)]) |>
       dplyr::filter(string!="") |>
       dplyr::mutate(dt_raw = stringr::str_sub(string, 1L, 19L),
                     event = stringr::str_sub(string, 20L, -1L))
@@ -31,7 +31,7 @@ scrape_barlt_log <- function(i){
     names(lines_) <- c("ARU_type","Serial", "Config", "Firmware")
 
 
-    tibble::tibble(ARU_type = lines_["ARU_type"],
+    dplyr::tibble(ARU_type = lines_["ARU_type"],
                    Serial_number = lines_["Serial"],
                    Config = lines_["Config"],
                    Firmware_num = stringr::str_extract(lines_["Firmware"], "\\d+\\.\\d+"),

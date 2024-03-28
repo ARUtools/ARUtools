@@ -23,8 +23,8 @@ wt_assign_tasks <- function(wt_task_template_in, interp_hours_file, wt_task_outp
     dplyr::filter(!is.na({{interp_hours_column}})) |>
     dplyr::mutate(phrs = {{interp_hours_column}}/sum({{interp_hours_column}}))
 
-  if(rlang::is_null(random_seed)) {random_seed <- Sys.time()
-  rlang::warn(glue::glue("random_seed left NULL. Using seed {as.numeric(random_seed)}"))
+  if(is_null(random_seed)) {random_seed <- Sys.time()
+  warn(glue::glue("random_seed left NULL. Using seed {as.numeric(random_seed)}"))
 
   }
   withr::with_seed(random_seed,{
@@ -35,7 +35,7 @@ wt_assign_tasks <- function(wt_task_template_in, interp_hours_file, wt_task_outp
       # dplyr::ungroup()
   })
 
-  if(!rlang::is_null(wt_task_output_file)){
+  if(!is_null(wt_task_output_file)){
     readr::write_csv(x = assigned_tasks, file = wt_task_output_file)}
 
   task_summary <-

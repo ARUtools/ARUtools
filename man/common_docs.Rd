@@ -9,23 +9,30 @@ paths will be used to extract information and must actually exist.}
 
 \item{project_files}{Character. Vector of project file paths. These paths can
 be absolute or relative to the working directory, and don't actually need
-to point to existing files unless you plan to use `clean_gps()` or other
-sampling steps down the line. Must be provided if `project_dir` is `NULL`.}
+to point to existing files unless you plan to use \code{clean_gps()} or other
+sampling steps down the line. Must be provided if \code{project_dir} is \code{NULL}.}
 
 \item{subset}{Character. Text pattern to mark a subset of files/directories
-to either `keep` or `omit` (see `subset_type`)}
+to either \code{"keep"} or \code{"omit"} (see \code{subset_type})}
 
-\item{subset_type}{Character. Either `keep` (default) or `omit`
-files/directories which match the pattern in `subset`.}
+\item{subset_type}{Character. Either \code{keep} (default) or \code{omit}
+files/directories which match the pattern in \code{subset}.}
 
-\item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
+\item{meta}{Data frame. Recording metadata. Output of \code{clean_metadata()}.}
 
 \item{meta_sites}{(Spatial) Data frame. Recording metadata with added
-coordinates. Output of `clean_metadata()` and then `add_sites()` (with
-either `clean_gps()` or `clean_site_index()`).}
+coordinates. Output of \code{clean_metadata()} and then \code{add_sites()} (with
+either \code{clean_gps()} or \code{clean_site_index()}).}
+
+\item{col_site_id}{Column. Unquoted column containing site strata IDs
+(defaults to \code{site_id}).}
 
 \item{date}{Logical. Whether to summarize output by date (as well as
-`site_id` and `aru_id`. Default `FALSE`.}
+\code{site_id} and \code{aru_id}. Default \code{FALSE}.}
+
+\item{path}{Character. Path to wave file.}
+
+\item{dir_out}{Character. Output directory.}
 
 \item{quiet}{Logical. Whether to suppress progress messages and other
 non-essential updates.}
@@ -34,7 +41,7 @@ non-essential updates.}
 Common arguments and documentation for various functions
 }
 \details{
-Use `@inheritParams common_docs` to include the above in any function
+Use \verb{@inheritParams common_docs} to include the above in any function
 documentation with a matching argument (will only include matching args)
 }
 \keyword{internal}

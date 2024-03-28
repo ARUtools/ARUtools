@@ -66,8 +66,8 @@ sites <- readr::read_csv("../ARUtools - Extra/Scripts/LutherMarsh_2021/2022-02-2
   mutate(aru_id = stringr::str_remove(location, "LutherMarsh2021-"),
          date_start = min(m$date_time, na.rm = TRUE),
          date_end = max(m$date_time, na.rm = TRUE)) |>
-  clean_site_index(col_site_id = "location",
-                   col_date_time = c("date_start", "date_end"))
+  clean_site_index(name_site_id = "location",
+                   name_date_time = c("date_start", "date_end"))
 
 # GPS from logs
 g <- clean_gps(m, dist_by = "aru_id")
@@ -148,10 +148,10 @@ check_meta(m)
 # Add sites by date
 sites <- clean_site_index(i) # Expect standard column names - No good
 sites <- clean_site_index(i, # Supply column names
-                          col_aru_id = "ARU_ID",
-                          col_site_id = "SiteID_WildTrax",
-                          col_date_time = c("Date_Deploy", "Date_Retrieve"),
-                          col_extra = c("river" = "NorthernRiverTrip"))
+                          name_aru_id = "ARU_ID",
+                          name_site_id = "SiteID_WildTrax",
+                          name_date_time = c("Date_Deploy", "Date_Retrieve"),
+                          name_extra = c("river" = "NorthernRiverTrip"))
 
 f <- add_sites(m, sites) # See that it omits "site_id" from by (included by default)
 
@@ -210,8 +210,8 @@ sites <- "../ARUtools - Extra/Scripts/LutherMarsh_2021/2022-02-23_Locations_Luth
          date_end = max(m$date_time, na.rm = TRUE),
          date_start = lubridate::force_tz(date_start, "America/Toronto"),
          date_end = lubridate::force_tz(date_end, "America/Toronto")) |>
-  clean_site_index(col_site_id = "location",
-                   col_date_time = c("date_start", "date_end"))
+  clean_site_index(name_site_id = "location",
+                   name_date_time = c("date_start", "date_end"))
 
 # GPS from logs
 g <- clean_gps(m, dist_by = "aru_id")

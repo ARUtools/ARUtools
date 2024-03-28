@@ -34,3 +34,22 @@ temp_files <- function() {
 
   fs::path_temp(ARUtools::example_files)
 }
+
+#' Helper function to create test wave files
+#'
+#' Creates a directory structure and example wave files in temp folders.
+#'
+#' @param n Numeric. How many test files to create (up to six). D
+#' @export
+temp_wavs <- function(n = 6) {
+  f_in <- fs::path(tempdir(),
+                   "waves",
+                   rep(c("site1", "site2", "site3"), 2),
+                   c("file1.wav", "file2.wav", "file3.wav",
+                     "file4.wav", "file5.wav", "file6.wav"))
+  if(n < 6) f_in <- f_in[seq_len(n)]
+  fs::path_dir(f_in) |> fs::dir_create()
+  w <- tuneR::sine(440, duration = 100000)
+  purrr::map(f_in, \(x) tuneR::writeWave(w, x))
+  f_in
+}

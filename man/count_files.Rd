@@ -11,10 +11,10 @@ count_files(project_dir, subset = NULL, subset_type = "keep")
 paths will be used to extract information and must actually exist.}
 
 \item{subset}{Character. Text pattern to mark a subset of files/directories
-to either `keep` or `omit` (see `subset_type`)}
+to either \code{"keep"} or \code{"omit"} (see \code{subset_type})}
 
-\item{subset_type}{Character. Either `keep` (default) or `omit`
-files/directories which match the pattern in `subset`.}
+\item{subset_type}{Character. Either \code{keep} (default) or \code{omit}
+files/directories which match the pattern in \code{subset}.}
 }
 \description{
 Helper function to explore the number of files in a directory, recursively.

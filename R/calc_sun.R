@@ -22,11 +22,11 @@
 #' @export
 #'
 #' @examples
-#' m <- clean_metadata(project_files = example_files)
 #' s <- clean_site_index(example_sites_clean,
-#'                       col_date = c("date_time_start", "date_time_end"))
-#' m <- add_sites(m, s)
-#' m <- calc_sun(m)
+#'                       name_date = c("date_time_start", "date_time_end"))
+#' m <- clean_metadata(project_files = example_files) |>
+#'   add_sites(s)
+#'   calc_sun(m)
 #'
 calc_sun <- function(meta_sites, aru_tz = "local") {
 
@@ -39,7 +39,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
   meta_sites <- dplyr::mutate(
     meta_sites,
     date_time = lubridate::as_datetime(.data$date_time),
-    date = lubridate::as_date(.data$date_time))
+    date = lubridate::as_date(.data$date))
 
   # If sf, convert to df
   crs <- sf::st_crs(meta_sites)
@@ -62,6 +62,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
     m <- dplyr::mutate(m, tz = .env$aru_tz)
   }
 
+  # Calculate sunrise/sunset
   ss <- dplyr::select(m, "date", "tz", "longitude", "latitude") |>
     dplyr::distinct() |>
     tidyr::drop_na() |>
@@ -73,8 +74,14 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
 
   m <- dplyr::left_join(m, ss, by = c("date", "tz", "longitude", "latitude"))
 
+  # Calculate time to sunrise/sunset
+  m <- calc_ss_diff(m)
+
+  # Arrange
+  # - Match order of starting data (meta_sites)
+  m <- dplyr::arrange(m, match(.data$path, meta_sites$path))
+
   m |>
-    calc_ss_diff() |>
     df_to_sf(crs = crs) |> # If was sf, convert back
     dplyr::select(dplyr::all_of(names(meta_sites)), "tz", "t2sr", "t2ss") |>
     dplyr::relocate(dplyr::any_of("geometry"), .after = dplyr::last_col())
@@ -135,7 +142,7 @@ calc_ss <- function(dates, tz, suffix = ""){
       "latitude" = "lat"
     ) |>
     dplyr::relocate("longitude", .before = "latitude") |>
-    tibble::as_tibble()
+    dplyr::as_tibble()
 }
 
 #' Convert sunrise/sunset times to time-to-sunrise/sunset

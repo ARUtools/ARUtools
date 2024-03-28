@@ -9,10 +9,10 @@ test_that("clean_site_index()", {
 
   expect_message(i1 <- clean_site_index(
     "test.csv",
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = c("lon", "lat")),
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed"),
+    name_coords = c("lon", "lat")),
     "overlapping date ranges")
 
   expect_s3_class(i1, "data.frame")
@@ -29,10 +29,10 @@ test_that("clean_site_index()", {
   # Data Frame
   expect_message(i2 <- clean_site_index(
     example_sites,
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = c("lon", "lat")),
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed"),
+    name_coords = c("lon", "lat")),
     "overlapping date ranges")
 
   expect_equal(i1, i2)
@@ -40,10 +40,10 @@ test_that("clean_site_index()", {
   # Tibble
   expect_message(i3 <- clean_site_index(
     dplyr::as_tibble(example_sites),
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = c("lon", "lat")),
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed"),
+    name_coords = c("lon", "lat")),
     "overlapping date ranges")
 
   expect_equal(i1, i3)
@@ -53,9 +53,9 @@ test_that("clean_site_index()", {
                                    crs = 4326)
   expect_message(i4 <- clean_site_index(
     example_sites_sf,
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed")),
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed")),
     "overlapping date ranges")
 
   expect_equal(sf::st_drop_geometry(i4),
@@ -66,11 +66,11 @@ test_that("clean_site_index() extra cols", {
 
   expect_message(i <- clean_site_index(
     example_sites,
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = c("lon", "lat"),
-    col_extra = c("Plots", "Subplot")))
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed"),
+    name_coords = c("lon", "lat"),
+    name_extra = c("Plots", "Subplot")))
 
   expect_named(i, c("site_id", "aru_id", "date_time_start", "date_time_end",
                     "date_start", "date_end", "longitude", "latitude",
@@ -81,11 +81,11 @@ test_that("clean_site_index() extra cols", {
 
   expect_message(i <- clean_site_index(
     example_sites,
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = c("lon", "lat"),
-    col_extra = c("plot" = "Plots", "sub" = "Subplot")))
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed"),
+    name_coords = c("lon", "lat"),
+    name_extra = c("plot" = "Plots", "sub" = "Subplot")))
 
   expect_named(i, c("site_id", "aru_id", "date_time_start", "date_time_end",
                     "date_start", "date_end", "longitude", "latitude",
@@ -104,10 +104,10 @@ test_that("clean_site_index() overlapping dates", {
 
   expect_message(i <- clean_site_index(
     m,
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out", "Date_removed"),
-    col_coords = c("lon", "lat")),
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed"),
+    name_coords = c("lon", "lat")),
     "overlapping date ranges")
 
   expect_true(all(lubridate::hour(i$date_time_start) == 12))
@@ -117,28 +117,28 @@ test_that("clean_site_index() overlapping dates", {
 test_that("clean_site_index() single date", {
   expect_silent(i <- clean_site_index(
     example_sites,
-    col_aru_id = "ARU",
-    col_site_id = "Sites",
-    col_date_time = c("Date_set_out"),
-    col_coords = c("lon", "lat")))
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out"),
+    name_coords = c("lon", "lat")))
 })
 
 test_that("clean_site_index() date_times", {
   expect_silent(clean_site_index(example_sites_clean,
-                                 col_date_time = c("date_time_start")))
+                                 name_date_time = c("date_time_start")))
 })
 
 test_that("clean_site_index() no dates", {
 
   # tibble
   expect_silent(s <- clean_site_index(
-    example_sites_clean, col_date_time = NULL))
+    example_sites_clean, name_date_time = NULL))
   expect_named(s, c("site_id", "aru_id", "longitude", "latitude"))
 
   # sf
   sites_sf <- sf::st_as_sf(
     example_sites_clean, coords = c("longitude", "latitude"), crs = 4326)
-  expect_silent(s <- clean_site_index(sites_sf, col_date_time = NULL))
+  expect_silent(s <- clean_site_index(sites_sf, name_date_time = NULL))
   expect_s3_class(s, "sf")
   expect_named(s, c("site_id", "aru_id", "geometry"))
 })
@@ -155,17 +155,17 @@ test_that("clean_site_index() errors etc.", {
   e <- dplyr::mutate(
     example_sites_clean,
     date_time = lubridate::with_tz(date_time_start, "America/Toronto"))
-  expect_message(clean_site_index(e, col_date_time = "date_time"),
+  expect_message(clean_site_index(e, name_date_time = "date_time"),
                  "Removing timezone specification")
-  expect_error(clean_site_index(e, col_date_time = c("date_time", "date_time_end")),
+  expect_error(clean_site_index(e, name_date_time = c("date_time", "date_time_end")),
                "Multiple timezones detected in `date_time` columns")
 
   # No problem with shifting to noon
   expect_message(s1 <- clean_site_index(  # Original
     example_sites_clean,
-    col_date_time = c("date_start", "date_end")))
+    name_date_time = c("date_start", "date_end")))
   expect_message(s2 <- clean_site_index(  # TZ set by user
-    e, col_date_time = c("date_start", "date_end")),
+    e, name_date_time = c("date_start", "date_end")),
     "overlapping date ranges")
   expect_equal(s1, s2) # Same in the end
 
@@ -175,9 +175,9 @@ test_that("clean_site_index() errors etc.", {
     example_sites_clean,
     date_time = lubridate::with_tz(date_time_start, "America/Toronto")) |>
     sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
-  expect_message(clean_site_index(e, col_date_time = "date_time"),
+  expect_message(clean_site_index(e, name_date_time = "date_time"),
                  "Removing timezone specification")
-  expect_error(clean_site_index(e, col_date_time = c("date_time", "date_time_end")),
+  expect_error(clean_site_index(e, name_date_time = c("date_time", "date_time_end")),
                "Multiple timezones detected in `date_time` columns")
 })
 

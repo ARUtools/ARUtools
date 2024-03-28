@@ -111,6 +111,7 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
 #'
 #' @noRd
 is_dateable <- function(x) {
+  if(is.numeric(x)) return(FALSE)
   tryCatch(
     expr = {
       lubridate::as_date(x)
@@ -147,7 +148,7 @@ minmax_q <- function(x, fun) {
 #'
 #' @noRd
 sf_to_df <- function(sf) {
-  if(inherits(sf, "sf")){
+  if(inherits(sf, "sf")) {
     sf <- sf::st_transform(sf, crs = 4326)
 
     df <- sf |>
@@ -172,13 +173,13 @@ sf_to_df <- function(sf) {
 #' data frame for troubleshooting.
 #'
 #' @noRd
-df_to_sf <- function(df, sf = NULL, crs = NA) {
+df_to_sf <- function(df, sf = NULL, crs = NA, call = caller_env()) {
   if(!is.null(sf)) crs <- sf::st_crs(sf)
 
-  if(!is.na(crs)) {
+  if(!is.na(crs) && !inherits(df, "sf")) {
     if(any(is.na(df$longitude) | is.na(df$latitude))) {
-      rlang::warn(c("Cannot have missing coordinates in spatial data frames",
-                    "Returning non-spatial data frame"), call = NULL)
+      warn(c("Cannot have missing coordinates in spatial data frames",
+             "Returning non-spatial data frame"), call = call)
       sf <- df
     } else {
       sf <- df |>
@@ -188,4 +189,45 @@ df_to_sf <- function(df, sf = NULL, crs = NA) {
   } else sf <- df
 
   sf
+}
+
+suppressCat <- function(code, quiet = FALSE) {
+  if(quiet) invisible(utils::capture.output(x <- {code})) else x <- {code}
+  x
+}
+
+is_whole <- function(x, tolerance = 0.00001) {
+  if(is.numeric(x)) {
+    abs(x - round(x)) < tolerance
+  } else FALSE
+}
+
+#' Set seed unless NULL
+#'
+#' Wrapper around `withr::with_seed()` to ensure that if `seed` is `NULL`, it
+#' is just *quietly* ignored (otherwise `withr` sends a warning)
+#'
+#' @param seed Numeric. Seed to use.
+#' @param code Code. Code to be evaluated with the seed.
+#' @noRd
+#' @examples
+#'
+#' set_seed(NULL, sample(1:10, 2))
+#' set_seed(NULL, sample(1:10, 2))
+#' set_seed(NULL, sample(1:10, 2))
+#'
+#' set_seed(123, sample(1:10, 2))
+#' set_seed(123, sample(1:10, 2))
+#' set_seed(123, sample(1:10, 2))
+set_seed <- function(seed, code) {
+  if(is.null(seed)) code else withr::with_seed(seed, code)
+}
+
+nse_names <- function(col) {
+  names(exprs_auto_name(col)) |>
+    stringr::str_split(",") |>
+    unlist() |>
+    stringr::str_remove_all("~|c\\(|list\\(|\\,|\\)") |>
+    stringr::str_trim() |>
+    stringr::str_subset(".+")
 }

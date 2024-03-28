@@ -36,7 +36,7 @@ test_that("add_sites() no dates", {
   # Prep test files
   m <- clean_metadata(project_files = example_files, quiet = TRUE)
   s <- dplyr::select(example_sites_clean, -"date_time_start", -"date_time_end") |>
-    clean_site_index(col_date_time = NULL)
+    clean_site_index(name_date_time = NULL)
 
   # tibble
   expect_message(m1 <- add_sites(m, s, by_date = NULL), "Ignoring dates")

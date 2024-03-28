@@ -56,7 +56,7 @@ create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits 
   dplyr::case_when(order == "ymd" ~ paste0(y, sep, m, sep, d),
                    order == "mdy" ~ paste0(m, sep, d, sep, y),
                    order == "dmy" ~ paste0(d, sep, m, sep, y)) |>
-  pat_collapse()
+    pat_collapse()
 
 }
 
@@ -248,5 +248,5 @@ pat_collapse <- function(x) {
 test_pattern <- function(test, pattern) {
   check_text(test)
   check_text(pattern, n = 1)
- stringr::str_extract(test, pattern)
+  stringr::str_extract(test, pattern)
 }

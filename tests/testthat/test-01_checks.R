@@ -19,24 +19,39 @@ test_that("check_value()", {
   expect_silent(check_value(1, "x", opts = 1, type = "numeric"))
   expect_error(check_value(1:3, "x", type = "numeric", n = 1), "must have 1")
   expect_error(check_value(NULL, "x", type = "numeric"), "cannot be `NULL`")
-  expect_error(check_value(1, "x", opts = 2, type = "numeric"), "must be among")
+  expect_error(check_value(1, "x", opts = c(2, 4), type = "numeric"), "must be among")
+
+  expect_silent(check_value(1:3, "x", type = "numeric", range = c(0, Inf)))
+  expect_error(check_value(1:3, "x", type = "numeric", range = c(4, Inf)),
+               "must be between")
 })
 
 test_that("check_cols()", {
+  f <- function(col1, col2) {
+    check_cols(mtcars, c(!!enquo(col1), !!enquo(col2)))
+  }
 
+  expect_silent(f(cyl, mpg))
+  expect_silent(f(cyl, c(am, mpg)))
+
+  expect_error(f(cyl, hi), "Column 'hi' does not exist")
+  expect_error(f(cyl, c(hi, test)), "Column 'hi' does not exist")
+  expect_error(f(cyl, c(hi, test)), "Column 'test' does not exist")
+})
+
+test_that("check_names()", {
   col1 <- "cyl"
   col2 <- "mpg"
   col3 <- "testing"
   col4 <- NULL
-  expect_silent(check_cols(mtcars, cols = c(col1, col2), name = "mtcars"))
 
-  expect_error(check_cols(mtcars, cols = c(col1, col2, col3), name = "mtcars"),
+  expect_silent(check_names(mtcars, names = c(col1, col2)))
+
+  expect_error(check_names(mtcars, names = c(col1, col2, col3)),
                "Column 'testing' does not exist")
 
-  expect_error(check_cols(mtcars, name = "mtcars", dates = TRUE),
+  expect_error(check_names(mtcars, dates = TRUE),
                "No date or date range columns")
-
-
 })
 
 test_that("check_dates()", {
@@ -48,6 +63,30 @@ test_that("check_dates()", {
 
   s <- dplyr::mutate(example_sites, date = "13/05/2020")
   expect_error(check_dates(s, cols = "date"), "Problems with")
+})
+
+test_that("check_doy()", {
+
+  site <- LETTERS[1:10]
+  doy1 <- 1:10
+  doy2 <- -5:4
+  date <- lubridate::as_date(1:10, origin = "2023-01-01") - lubridate::days(1)
+  date_time <- lubridate::as_datetime(date)
+
+  # Error
+  expect_error(d <- check_doy(site), "`site` must contain dates")
+  expect_error(d <- check_doy(doy2), "`doy2` contains integers, but")
+
+  # No change with DOY
+  expect_silent(d <- check_doy(doy1))
+  expect_equal(d, doy1)
+
+  # Create `doy` column with date or datetime
+  expect_silent(d <- check_doy(date))
+  expect_equal(d, doy1)
+  expect_silent(d <- check_doy(date_time))
+  expect_equal(d, doy1)
+
 })
 
 test_that("check_df_file()", {

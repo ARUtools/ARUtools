@@ -1,3 +1,16 @@
+# ARUtools 0.6.0
+
+## New
+* Cleaned up functions for recording selection, spectrograms, clipping waves, 
+  acoustic indices and creating dirs (#8, #11, #12, #13, #23)
+* Added NSE for relevant functions, these now use `col_COLNAME`, changed arguments
+for non-NSE functions to `name_COLNAME` (#15)
+* Ensure that data order is unchanged when passing through cleaning functions (#19)
+* Added sampling vignette
+
+## Bugs
+* Fixed bug `calc_sun()` corrupting date column (#18)
+
 # ARUtools 0.5.1
 
 ## New

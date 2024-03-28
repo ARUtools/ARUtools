@@ -15,29 +15,29 @@ add_sites(
 )
 }
 \arguments{
-\item{meta}{Data frame. Recording metadata. Output of `clean_metadata()`.}
+\item{meta}{Data frame. Recording metadata. Output of \code{clean_metadata()}.}
 
-\item{sites}{Data frame. Site-level data from `clean_site_index()`.}
+\item{sites}{Data frame. Site-level data from \code{clean_site_index()}.}
 
 \item{buffer_before}{Numeric. Number of hours before a deployment in which to
-include recordings. `NULL` means include the time up to the last
-deployment. Coupled with `buffer_after`, this creates a window around a
+include recordings. \code{NULL} means include the time up to the last
+deployment. Coupled with \code{buffer_after}, this creates a window around a
 date/time in which to join recordings to the site-level data. Ignored if
-`sites` has both a start and end column for date/times. Default 0.}
+\code{sites} has both a start and end column for date/times. Default 0.}
 
 \item{buffer_after}{Numeric. Number of hours after the deployment in which to
-include recordings. `NULL` means include the time up to the next
-deployment. Coupled with `buffer_before`, creates a window around a
+include recordings. \code{NULL} means include the time up to the next
+deployment. Coupled with \code{buffer_before}, creates a window around a
 date/time in which to join recordings to the site-level data. Ignored if
-`sites` has both a start and end column for date/times. Default `NULL`.}
+\code{sites} has both a start and end column for date/times. Default \code{NULL}.}
 
-\item{by}{Character. Columns which identify a deployment in `sites` as well
-as `meta`, besides date/time, which are used to join the data. Default is
-`site_id` and `aru_id`.}
+\item{by}{Character. Columns which identify a deployment in \code{sites} as well
+as \code{meta}, besides date/time, which are used to join the data. Default is
+\code{site_id} and \code{aru_id}.}
 
-\item{by_date}{Character. Date/time type to join data by. `date` is faster
-but `date_time` is more precise. Default `date_time`. `NULL` means ignore
-dates and join only with `by` columns (`dplyr::left_join()`).}
+\item{by_date}{Character. Date/time type to join data by. \code{date} is faster
+but \code{date_time} is more precise. Default \code{date_time}. \code{NULL} means ignore
+dates and join only with \code{by} columns (\code{dplyr::left_join()}).}
 
 \item{quiet}{Logical. Whether to suppress progress messages and other
 non-essential updates.}
@@ -49,18 +49,18 @@ A data frame of metadata with site-level data joined in.
 Uses dates to join site-level data (coordinates and site ids) to the meta
 data. If the site data have only single dates, then a buffer before and after
 is used to determine which recordings belong to that site observation. Can
-join by site ids alone if set `by_date = NULL`.
+join by site ids alone if set \code{by_date = NULL}.
 }
 \examples{
 m <- clean_metadata(project_files = example_files)
 s <- clean_site_index(example_sites_clean,
-                      col_date = c("date_time_start", "date_time_end"))
+                      name_date = c("date_time_start", "date_time_end"))
 m <- add_sites(m, s)
 
 # Without dates (by site only)
 m <- clean_metadata(project_files = example_files)
 eg <- dplyr::select(example_sites_clean, -date_time_start, -date_time_end)
-s <- clean_site_index(eg, col_date_time = NULL)
+s <- clean_site_index(eg, name_date_time = NULL)
 m <- add_sites(m, s, by_date = NULL)
 
 }

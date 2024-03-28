@@ -12,14 +12,24 @@ making collaboration and future modifications easier.
 - In the initial cleaning functions (`clean_metadata()`, `clean_site_index()`)
   users can specify existing column names, but they will then be formatted
   to standard names
-- Later functions will not allow users to specify different column names and
+- Later functions will not allow users to specify different column names (generally) and
   they are assumed to be standardized
   - `file_name`, `path`
   - `date`, `date_start`, `date_end`, `date_time`, `date_time_start`, `date_time_end`
   - `aru_id`, `aru_type`, `site_id`
   - `longitude`, `latitude`
   - `tz`, `t2sr`, `t2ss`
-- `add_sites()` does allow adding and keeping extra columns (`col_extra = ...`)
+- `add_sites()` does allow adding and keeping extra columns (`name_extra = ...`)
+- Functions that could legitimately use different standardized column names 
+  (ie. selection functions and clip wave functions) use NSE and name arguments are defined as `col_COLNAME`
+- Non-NSE col arguments are defined as `name_COLNAME`, including when converted
+  to character within a function for use in other ways.
+- NSE col names can be referenced with {{ }} in tidyverse functions, but occasionally 
+  they must be `enquo()`d before use in other functions (like `nse_names()`, or
+  `quo_is_null()` for example). Therefore in those cases they are `enquo()`d right at the 
+  start of the function (e.g., `sample_recordings()`)
+- NSE col names with default values must be declared in the .onLoad function of
+  `ARUtools-package.R` to avoid NOTES
 
 ## Regular Expression patterns
 - Patterns that are expected to vary (i.e file names) have helper functions

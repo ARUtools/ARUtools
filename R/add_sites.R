@@ -31,13 +31,13 @@
 #' @examples
 #' m <- clean_metadata(project_files = example_files)
 #' s <- clean_site_index(example_sites_clean,
-#'                       col_date = c("date_time_start", "date_time_end"))
+#'                       name_date = c("date_time_start", "date_time_end"))
 #' m <- add_sites(m, s)
 #'
 #' # Without dates (by site only)
 #' m <- clean_metadata(project_files = example_files)
 #' eg <- dplyr::select(example_sites_clean, -date_time_start, -date_time_end)
-#' s <- clean_site_index(eg, col_date_time = NULL)
+#' s <- clean_site_index(eg, name_date_time = NULL)
 #' m <- add_sites(m, s, by_date = NULL)
 #'
 add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
@@ -70,10 +70,9 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
   # Check that there are columns to add (check after prep_xxx())
   add <- names(sites)[!names(sites) %in% c(by, by_date_cols)]
   if(length(add) < 1) {
-    rlang::abort(paste0(
+    abort(paste0(
       "No new columns in `sites` to add to `meta` ",
-      "(all columns in `by` or used in date matching)"),
-      call = NULL)
+      "(all columns in `by` or used in date matching)"))
   }
 
   # Do the joins
@@ -86,10 +85,14 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
     meta_sites <- dplyr::left_join(meta, sites, by = by)
   }
 
+  # Arrange
+  # - Match order of starting data (meta)
+  # - Order by path order, next by date in GPS data (for multiple rows of data)
+  meta_sites <- dplyr::arrange(meta_sites, match(.data$path, meta$path))
+
   # Finalize
-  meta_sites |>
-    df_to_sf(crs = crs) |>  # If was sf, convert back
-    dplyr::arrange(dplyr::across(dplyr::any_of(c(by, by_date_cols, "path"))))
+  # - If was sf, convert back
+  df_to_sf(meta_sites, crs = crs)
 }
 
 #' Calculate buffer date/times around a single date/time
@@ -213,7 +216,7 @@ prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
     for(i in report) if(all(is.na(meta[[i]]))) report <- report[report != i]
 
     if(length(report) > 0) {
-      rlang::inform(c(
+      inform(c(
         "Some columns in both `meta` and `sites` are not used to join (`by`)",
         "*" = paste0(
           "These columns (`", paste0(omit_cols, collapse = "`, `"), "`) ",
@@ -260,7 +263,7 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                          latitude = mean(.data$latitude)) |>
         dplyr::ungroup()
 
-      rlang::inform(c(
+      inform(c(
         paste0("Multiple coordinates per date at each combination of `",
                paste0(by, collapse = "`/`"), "`"),
         paste0("Taking mean coordinates ",
@@ -319,7 +322,7 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                             "/`date_time_start` and `date_end`/`date_time_end` in `sites`"))
     }
 
-    rlang::inform(msg)
+    inform(msg)
   }
 
   dplyr::select(meta_sites, -"...n")

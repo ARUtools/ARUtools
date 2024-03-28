@@ -10,17 +10,20 @@
 #' (and is removed if present, replaced with UTC). This allows sites
 #' from different timezones to be processed at the same time.
 #'
-#' @param site_index Data frame (can be spatial) or file path. Site index data
+#' @param site_index (Spatial) Data frame or file path. Site index data
 #'   to clean. If file path, must be to a local csv or xlsx file.
-#' @param col_aru_id Character. Column name that contains ARU ids. Default `aru_id`.
-#' @param col_site_id Character. Column name that contains site ids.
-#' @param col_date_time Character. Column name that contains dates or
+#' @param name_site_id Character. Name of the column that contains site ids.
+#'   Default `"site_id"`.
+#' @param name_aru_id Character. Name of the column that contains ARU ids.
+#'   Default `"aru_id"`.
+#' @param name_date_time Character. Column name that contains dates or
 #'   date/times. Can be vector of two names if there are both 'start' and 'end'
-#'   columns. Can be `NULL` to ignore dates.
-#' @param col_coords Character. Column names that contain longitude and
-#'   latitude (in that order). Ignored if `site_index` is spatial.
-#' @param col_extra Character. Column names for extra data to include. If a named
-#'  vector, will rename the columns (see examples).
+#'   columns. Can be `NULL` to ignore dates. Default `"date"`.
+#' @param name_coords Character. Column names that contain longitude and
+#'   latitude (in that order). Ignored if `site_index` is spatial. Default
+#'   `c("longitude", "latitude")`
+#' @param name_extra Character. Column names for extra data to include. If a named
+#'  vector, will rename the columns (see examples). Default `NULL`.
 #' @param resolve_overlaps Logical. Whether or not to resolve date overlaps by
 #'   shifting the start/end dates to noon (default `TRUE`). This assumes that
 #'   ARUs are generally *not* deployed/removed at midnight (the official
@@ -36,51 +39,51 @@
 #' @examples
 #'
 #' s <- clean_site_index(example_sites,
-#'                       col_aru_id = "ARU",
-#'                       col_site_id = "Sites",
-#'                       col_date_time = c("Date_set_out", "Date_removed"),
-#'                       col_coords = c("lon", "lat"))
+#'                       name_aru_id = "ARU",
+#'                       name_site_id = "Sites",
+#'                       name_date_time = c("Date_set_out", "Date_removed"),
+#'                       name_coords = c("lon", "lat"))
 #'
 #' s <- clean_site_index(example_sites,
-#'                       col_aru_id = "ARU",
-#'                       col_site_id = "Sites",
-#'                       col_date_time = c("Date_set_out", "Date_removed"),
-#'                       col_coords = c("lon", "lat"),
-#'                       col_extra = c("plot" = "Plots"))
+#'                       name_aru_id = "ARU",
+#'                       name_site_id = "Sites",
+#'                       name_date_time = c("Date_set_out", "Date_removed"),
+#'                       name_coords = c("lon", "lat"),
+#'                       name_extra = c("plot" = "Plots"))
 #'
 #' # Without dates
 #' eg <- dplyr::select(example_sites, -Date_set_out, -Date_removed)
 #' s <- clean_site_index(eg,
-#'                       col_aru_id = "ARU",
-#'                       col_site_id = "Sites",
-#'                       col_date_time = NULL,
-#'                       col_coords = c("lon", "lat"),
-#'                       col_extra = c("plot" = "Plots"))
+#'                       name_aru_id = "ARU",
+#'                       name_site_id = "Sites",
+#'                       name_date_time = NULL,
+#'                       name_coords = c("lon", "lat"),
+#'                       name_extra = c("plot" = "Plots"))
 #'
 clean_site_index <- function(site_index,
-                             col_aru_id = "aru_id",
-                             col_site_id = "site_id",
-                             col_date_time = "date",
-                             col_coords = c("longitude", "latitude"),
-                             col_extra = NULL,
+                             name_aru_id = "aru_id",
+                             name_site_id = "site_id",
+                             name_date_time = "date",
+                             name_coords = c("longitude", "latitude"),
+                             name_extra = NULL,
                              resolve_overlaps = TRUE,
                              quiet = FALSE) {
 
   # Checks
   check_df_file(site_index)
-  check_text(col_aru_id, n = 1)
-  check_text(col_site_id, n = 1)
-  check_text(col_date_time, n = c(1, 2), not_null = FALSE)
-  check_text(col_extra, not_null = FALSE)
+  check_text(name_aru_id, n = 1)
+  check_text(name_site_id, n = 1)
+  check_text(name_date_time, n = c(1, 2), not_null = FALSE)
+  check_text(name_extra, not_null = FALSE)
   check_logical(resolve_overlaps)
 
   is_sf <- inherits(site_index, "sf")
 
   if(!is_sf) {
-    check_text(col_coords, n = 2)
+    check_text(name_coords, n = 2)
   } else {
     check_points(site_index)
-    col_coords <- NULL
+    name_coords <- NULL
   }
 
   # Format different inputs
@@ -109,17 +112,16 @@ clean_site_index <- function(site_index,
   site_index <- dplyr::rename_with(site_index, tolower)
 
   # Check cols
-  check_cols(site_index, c(col_site_id, col_date_time, col_aru_id, col_coords,
-                           col_extra),
-             name = "site_index",
-             extra = "See ?clean_site_index")
+  check_names(site_index, c(name_site_id, name_date_time, name_aru_id, name_coords,
+                            name_extra),
+              extra = "See ?clean_site_index")
 
   # Check dates
-  check_dates(site_index, col_date_time)
+  check_dates(site_index, name_date_time)
 
-  if(is.null(col_date_time)) {
+  if(is.null(name_date_time)) {
     d <- dt <- NULL
-  } else if(length(col_date_time) == 1) {
+  } else if(length(name_date_time) == 1) {
     dt <- "date_time"
     d <- "date"
   } else {
@@ -129,16 +131,16 @@ clean_site_index <- function(site_index,
 
   # Prepare for renaming
 
-  if(length(names(col_extra)) == 0) {
-    col_extra <- stats::setNames(nm = col_extra)
+  if(length(names(name_extra)) == 0) {
+    name_extra <- stats::setNames(nm = name_extra)
   }
 
   cols <- c(
-    "site_id" = col_site_id,
-    "aru_id" = col_aru_id,
-    stats::setNames(col_date_time, dt),
-    if(!is.null(col_coords)) stats::setNames(col_coords, c("longitude", "latitude")),
-    col_extra) |>
+    "site_id" = name_site_id,
+    "aru_id" = name_aru_id,
+    stats::setNames(name_date_time, dt),
+    if(!is.null(name_coords)) stats::setNames(name_coords, c("longitude", "latitude")),
+    name_extra) |>
     tolower()
 
   # Check and force time zones to UTC if required
@@ -154,15 +156,13 @@ clean_site_index <- function(site_index,
       dplyr::across(dplyr::all_of(dt), lubridate::as_date, .names = "{d}")) |>
     dplyr::relocate(dplyr::any_of(c("longitude", "latitude", "geometry")),
                     .after = dplyr::last_col()) |>
-    dplyr::relocate(dplyr::any_of(names(col_extra)), .after = dplyr::last_col())
+    dplyr::relocate(dplyr::any_of(names(name_extra)), .after = dplyr::last_col())
 
   # For date ranges, check if only using dates
   if(resolve_overlaps &&
      length(dt) == 2 &&
      all(site_index$date_time_start == site_index$date_start) &&
      all(site_index$date_time_end == site_index$date_end)) {
-
-    site_index$date_time_end %in% site_index$date_time_start
 
     by_site <- dplyr::group_by(site_index, .data$site_id) |>
       dplyr::filter(.data$date_time_end %in% .data$date_time_start) |>
@@ -177,7 +177,7 @@ clean_site_index <- function(site_index,
       lubridate::hour(site_index$date_time_end) <- 12
 
       if(!quiet) {
-        rlang::inform(
+        inform(
           c("There are overlapping date ranges",
             "Shifting start/end times to 'noon'",
             #"Use `by_date = \"date_time\"` in `add_sites()`",
@@ -185,6 +185,10 @@ clean_site_index <- function(site_index,
       }
     }
   }
+
+  # Arrange
+  # - Match order of starting data
+  # - No changes from arrange, joins, or groupings, so no need to arrange
 
   site_index
 }
@@ -271,24 +275,30 @@ clean_gps <- function(meta = NULL,
     msg <- c(msg, report_missing(f_header, n, "headers (in text GPS files)"))
     msg <- c(msg, report_missing(f_gpx, n, "GPX files", "extracted"))
 
-    rlang::inform(msg)
+    inform(msg)
   }
 
-  dplyr::select(gps, -dplyr::starts_with("problems_"))
+  # Arrange
+  # - Match order of starting data (meta)
+  # - Order by path order, next by date in GPS data (for multiple rows of data)
+  dplyr::arrange(gps,
+                 match(.data[["path"]], meta$path[meta$type == "gps"]),
+                 .data[["date"]]) |>
+    dplyr::select(-dplyr::starts_with("problems_"))
 }
 
-clean_gps_files <- function(meta, quiet, verbose) {
+clean_gps_files <- function(meta, quiet, verbose, call = caller_env()) {
 
   gps <- dplyr::filter(meta, .data$type == "gps")
 
   if(nrow(gps) == 0) {
-    rlang::abort(
+    abort(
       "No GPS data provided and no GPS log files recorded in `meta`",
-      call = NULL)
+      call = call)
   }
 
   if(!quiet) {
-    rlang::inform(
+    inform(
       c("Note: GPS log files can be unreliable... ",
         "Consider supplying your own GPS records and using `clean_site_index()`"))
   }
@@ -494,7 +504,7 @@ fmt_gps_txt <- function(df) {
       date_time = lubridate::parse_date_time(
         .data$date_time_chr, orders = c("Ymd HMS", "dmY HMS")),
       date = lubridate::as_date(.data$date_time),
-      )
+    )
 
   # Fix coords - Check and apply -/+ if N/S/E/W columns present
   dir <- dplyr::select(df_fmt, dplyr::where(~coord_dir(.x, "NnSsEeWw")))
@@ -525,7 +535,7 @@ fmt_gps_txt <- function(df) {
 #'
 #' @param gps Data frame of gps sites and coordinates. Requires longitude,
 #'   latitude, and any columns in `dist_by`.
-#' @param crs Numeric. CRS to use for measuring distances. Should be in meters
+#' @param crs Numeric. CRS to use for measuring distances. Should be in metres
 #' @param dist_cutoff Distance cutoff in meters. Can be set to Inf to avoid this
 #'   check.
 #' @param dist_by Character. Column names to use in grouping GPS points before
@@ -548,7 +558,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
         dist_by <- paste0(", `", paste0(dist_by, collapse = "`, `"), "`")
       } else dist_by <- ""
       if(!quiet) {
-        rlang::inform(
+        inform(
           c("Skipping distance check:",
             paste0("All records missing at least one of ",
                    "`longitude`, `latitude`", dist_by)))
@@ -561,7 +571,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
 
       if(all(n$n == 1)) {
         if(!quiet) {
-          rlang::inform(
+          inform(
             c("Skipping distance check:",
               paste0("No records with more than one set of coordinates per unique `",
                      paste0(dist_by, collapse = "`/`"), "`")))
@@ -580,7 +590,7 @@ check_gps_dist <- function(gps, crs, dist_cutoff, dist_by, quiet = FALSE){
           sf::st_drop_geometry()
 
         if(any(max_dist$max_dist > units::set_units(dist_cutoff, "m"))) {
-          rlang::warn(
+          warn(
             c("Within site distances are greater than cutoff",
               "x" = paste0("Distances among ARUs within a site must be less than ",
                            "`dist_cutoff` (currently ", dist_cutoff, "m)"),

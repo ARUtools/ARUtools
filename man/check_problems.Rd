@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{check_problems}
 \alias{check_problems}
-\title{Check problems in output of `clean_metadata()`}
+\title{Check problems in output of \code{clean_metadata()}}
 \usage{
 check_problems(
   df,
@@ -12,18 +12,18 @@ check_problems(
 )
 }
 \arguments{
-\item{df}{Data frame. Either meta data (`clean_metadata()`) or GPS
-coordinates (`clean_gps()`)}
+\item{df}{Data frame. Either meta data (\code{clean_metadata()}) or GPS
+coordinates (\code{clean_gps()})}
 
 \item{check}{Character. Character vector of columns to check for missing
-values. Default is `site_id`, `aru_id`, `date`, `date_time`, `longitude`
-and `latitude`.}
+values. Default is \code{site_id}, \code{aru_id}, \code{date}, \code{date_time}, \code{longitude}
+and \code{latitude}.}
 
 \item{path}{Logical. Whether to return just the file paths which have missing
-attributes. Default `FALSE`}
+attributes. Default \code{FALSE}}
 
 \item{date}{Logical. Whether to summarize output by date (as well as
-`site_id` and `aru_id`. Default `FALSE`.}
+\code{site_id} and \code{aru_id}. Default \code{FALSE}.}
 }
 \value{
 A data frame summarizing the metadata by site_id, aru_type, aru_id,

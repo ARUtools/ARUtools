@@ -10,13 +10,13 @@
 #' @return
 wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]+"){
   warn("Function in development. Use at own risk")
-  if(!rlang::is_installed("jsonlite")) rlang::abort("sum_json requires {jsonlite} package")
+  if(!is_installed("jsonlite")) abort("sum_json requires {jsonlite} package")
 
   s <- purrr::safely(jsonlite::read_json)
 
   jsonfile <- s(f)
   if(is_null(jsonfile$result)){
-    return(  tibble::tibble(
+    return(  dplyr::tibble(
       jsonF = stringr::str_remove(
         stringr::str_extract(f, "/[\\w|\\d|_|-]+.json"), "/")) )
   }
@@ -26,7 +26,7 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
     purrr::transpose() |> purrr::pluck("Te") |>
     purrr::list_c() |>  max()
   if(is_empty(jsonfile$`Wind free regions`)){
-    return(tibble::tibble(name = nm, totalwindless = 0,
+    return(dplyr::tibble(name = nm, totalwindless = 0,
                   length=dets,
                   pwindless   =0,
                   n=0, mean_windless=0,
@@ -44,7 +44,7 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
     # purrr::list_flatten()
   s <-  purrr::list_c(purrr::pluck(tmp, "s"))
   # browser()
-  tibble::tibble(s,e) |>
+  dplyr::tibble(s,e) |>
     dplyr::mutate(t=e-s) |>
     dplyr::summarize(totalwindless = sum(t),
               pwindless = totalwindless/dets,

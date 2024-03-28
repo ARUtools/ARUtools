@@ -44,6 +44,7 @@ test_that("check_meta()", {
 
 test_that("check_problems() - basic meta", {
   m <- clean_metadata(project_files = example_files, quiet = TRUE)
+  m <- dplyr::arrange(m, match(.data$path, sort(example_files))) # Keep original order for this test
   m$aru_id[c(3, 7, 10)] <- NA_character_
   m$site_id[7] <- m$site_id[3]
 
@@ -126,4 +127,29 @@ test_that("add_wildtrax()", {
   expect_equal(m$wildtrax_file_name[1:2],
                c("P01_1_20200502_050000",
                  "P01_1_20200503_052000"))
+})
+
+test_that("acoustic_indices()", {
+  w <- tuneR::sine(440, duration = 300000) # > 5s
+  tuneR::writeWave(w, "test_wave.wav")
+
+  invisible(capture.output(expect_message(acoustic_indices("test_wave.wav"))))
+  expect_silent(a <- acoustic_indices("test_wave.wav", quiet = TRUE))
+  expect_s3_class(a, "data.frame")
+  expect_named(a)
+
+  unlink("test_wave.wav")
+})
+
+test_that("acoustic_indices() errors", {
+  w <- tuneR::sine(440, duration = 30000) # < 5s
+  tuneR::writeWave(w, "test_wave.wav")
+
+  invisible(capture.output(
+    expect_error(acoustic_indices("test_wave.wav"),
+                 "Error in `acoustic_complexity\\(\\)` from the soundecology package") |>
+      expect_message("Calculating acoustic indices")
+  ))
+
+  unlink("test_wave.wav")
 })

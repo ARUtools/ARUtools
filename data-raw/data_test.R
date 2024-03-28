@@ -40,10 +40,11 @@ usethis::use_data(example_files, overwrite = TRUE)
 
 # Example meta data for sun
 example_sites_clean <- clean_site_index(
-  example_sites, col_site_id = "Sites",
-  col_aru_id = "ARU",
-  col_date_time = c("Date_set_out", "Date_removed"),
-  col_coords = c("lon", "lat"))
+  example_sites,
+  name_site_id = "Sites",
+  name_aru_id = "ARU",
+  name_date_time = c("Date_set_out", "Date_removed"),
+  name_coords = c("lon", "lat"))
 
 usethis::use_data(example_sites_clean, overwrite = TRUE)
 
