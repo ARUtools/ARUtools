@@ -8,6 +8,9 @@
 #' recording (generally when there is a problem and no recording is made), the
 #' `date_time` value for that recording will be the same as the `rec_end` time.
 #'
+#' Because the BARLT units adjust their time according to the GPS locations,
+#' all times are in "local" to that area.
+#'
 #' @param log_files Character vector of log files to process.
 #' @param return Character. What kind of data to return, GPS fixes (`"gps"`),
 #'   recording events (`"recordings"`) or `"all"` (default).
