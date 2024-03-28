@@ -1,0 +1,31 @@
+url: http://arutools.github.io/ARUtools/
+template:
+  bootstrap: 5
+development:
+  mode: auto
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
+articles:
+ - title: Get started
+   navbar: ~
+   contents:
+    - SubSample
+
+ - title: Go further
+   navbar: Customization
+   contents:
+    - customizing
+    - spatial
+    - timezones
+ - title: Other
+   contents:
+    - Misc
+repo:
+  url:
+    home: https://github.com/arutools/ARUtools/
+    source: https://github.com/arutools/ARUtools/blob/HEAD/
+    issue: https://github.com/arutools/ARUtools/issues/
+    user: https://github.com/arutools
+

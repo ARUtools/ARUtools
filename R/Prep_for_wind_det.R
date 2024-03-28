@@ -1,3 +1,18 @@
+#' Prepare files for WindNoiseDetection
+#'
+#' This function prepares a set of files that can be used with
+#' the fork of WindNoiseDetection found at
+#' https://github.com/dhope/WindNoiseDetection
+#'
+#' @param wav_files Vector of path to wav files
+#' @param site_pattern Pattern to extract sites from file names
+#' @param output_directory Directory path to export files to
+#' @param write_to_file Logical Should the function write files to output_directory
+#' @param chunk_size Numeric If not NULL, sets number of files to include in each chunk
+#'
+#' @return List of vectors for sites, filenames, and filePaths
+#' @export
+#'
 prep_for_wind_detection <- function(wav_files,site_pattern, output_directory, write_to_file = FALSE,
                                     chunk_size = NULL){
   if(any(grepl("[\\(,\\),\\+,\\[,\\]", wav_files))) warn(

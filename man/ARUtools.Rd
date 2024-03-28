@@ -2,14 +2,21 @@
 % Please edit documentation in R/ARUtools-package.R
 \docType{package}
 \name{ARUtools}
-\alias{ARUtools}
 \alias{ARUtools-package}
+\alias{ARUtools}
 \title{ARUtools: CWS Ontario Tools for working with ARU files}
 \description{
 ARU tools that some might find useful for working with ARU files.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://arutools.github.io/ARUtools/}
+}
+
+}
 \author{
-\strong{Maintainer}: David Hope \email{david.hope@ec.gc.ca}
+\strong{Maintainer}: David Hope \email{david.hope@ec.gc.ca} (\href{https://orcid.org/0000-0002-2140-4261}{ORCID})
 
 Authors:
 \itemize{

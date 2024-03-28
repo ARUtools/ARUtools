@@ -67,3 +67,32 @@
 #' }
 #' @source data-raw/data_test.R
 "example_clean"
+
+
+
+
+#' Example template of tasks for WildTrax
+#'
+#' A data frame with tasks generated from `example_clean` using
+#' the wildRtrax::wt_make_aru_tasks() function
+#'
+#' @format ## `task_template`
+#' A data frame with 14 rows and 13 columns:
+#' \describe{
+#'   \item{location}{Site location name}
+#'   \item{recording_date_time}{Date time of the recording}
+#'   \item{method}{Method of interpretation (generally '1SPT')}
+#'   \item{taskLength}{Length of recording in seconds}
+#'   \item{transcriber}{Transcriber ID, to be filled in with function}
+#'   \item{rain}{Empty character for filling in WildTrax}
+#'   \item{wind}{Empty character for filling in WildTrax}
+#'   \item{industryNoise}{Empty character for filling in WildTrax}
+#'   \item{audioQuality}{Empty character for filling in WildTrax}
+#'   \item{taskComments}{Empty character for filling in WildTrax}
+#'   \item{internal_task_id}{Empty character for filling in WildTrax}
+#' }
+#' @source data-raw/task_template.R
+"example_clean"
+
+
+
