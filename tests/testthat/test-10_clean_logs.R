@@ -1,7 +1,8 @@
 test_that("clean_logs() single", {
 
-  log_file <- test_path("..", "..", "..", "ARUtools - Extra", "aru_log_files",
-                        "P028/1A_BARLT10962/logfile_00010962_SD1.txt")
+  # log_file <- test_path("..", "..", "..", "ARUtools - Extra", "aru_log_files",
+  #                       "P028/1A_BARLT10962/logfile_00010962_SD1.txt")
+  log_file <-  system.file("extdata", "logfile_00015141_SD1.txt", package = "ARUtools")
 
   skip_if_not(fs::file_exists(log_file))
 
