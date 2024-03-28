@@ -32,6 +32,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="articles/index.html">More articles...</a>
@@ -72,7 +73,7 @@
 <div class="section level2">
 <h2 id="column-names">Column names<a class="anchor" aria-label="anchor" href="#column-names"></a></h2>
 <ul><li>In the initial cleaning functions (<code><a href="reference/clean_metadata.html">clean_metadata()</a></code>, <code><a href="reference/clean_site_index.html">clean_site_index()</a></code>) users can specify existing column names, but they will then be formatted to standard names</li>
-<li>Later functions will not allow users to specify different column names and they are assumed to be standardized
+<li>Later functions will not allow users to specify different column names (generally) and they are assumed to be standardized
 <ul><li>
 <code>file_name</code>, <code>path</code>
 </li>
@@ -90,7 +91,12 @@
 </li>
 </ul></li>
 <li>
-<code><a href="reference/add_sites.html">add_sites()</a></code> does allow adding and keeping extra columns (<code>col_extra = ...</code>)</li>
+<code><a href="reference/add_sites.html">add_sites()</a></code> does allow adding and keeping extra columns (<code>name_extra = ...</code>)</li>
+<li>Functions that could legitimately use different standardized column names (ie. selection functions and clip wave functions) use NSE and name arguments are defined as <code>col_COLNAME</code>
+</li>
+<li>Non-NSE col arguments are defined as <code>name_COLNAME</code>, including when converted to character within a function for use in other ways.</li>
+<li>NSE col names can be referenced with {{ }} in tidyverse functions, but occasionally they must be <code>enquo()</code>d before use in other functions (like <code>nse_names()</code>, or <code>quo_is_null()</code> for example). Therefore in those cases they are <code>enquo()</code>d right at the start of the function (e.g., <code><a href="reference/sample_recordings.html">sample_recordings()</a></code>)</li>
+<li>NSE col names with default values must be declared in the .onLoad function of <code>ARUtools-package.R</code> to avoid NOTES</li>
 </ul></div>
 <div class="section level2">
 <h2 id="regular-expression-patterns">Regular Expression patterns<a class="anchor" aria-label="anchor" href="#regular-expression-patterns"></a></h2>

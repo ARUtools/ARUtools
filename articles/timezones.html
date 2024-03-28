@@ -56,6 +56,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -248,39 +249,42 @@ data set.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/cross_join.html" class="external-link">cross_join</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-05-02 05:00:00"</span>, </span>
 <span>                                      <span class="st">"2020-05-02 06:00:00"</span>,</span>
 <span>                                      <span class="st">"2020-05-02 07:00:00"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html" class="external-link">as_date</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html" class="external-link">as_date</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span>, </span>
+<span>         path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">aru_id</span>, <span class="st">"_"</span>, <span class="va">site_id</span>, <span class="st">"_"</span>, <span class="fu"><a href="https://lubridate.tidyverse.org/reference/hour.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span>, <span class="st">".csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>If we now calculate the time to sunrise/sunset (<code>t2sr</code> and
 <code>t2ss</code>) we find that the difference between these sites is
 about 15min, accounting for the fact that site P06_1 is farther west
 than P01_1 and so the recording at 6am occurs 28.8min before sunrise,
 whereas P01_1’s 6am recording occurs only 14.9 min before sunrise.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_sun.html">calc_sun</a></span><span class="op">(</span><span class="va">m_mini</span>, aru_tz <span class="op">=</span> <span class="st">"America/Toronto"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
-<span><span class="co">#&gt;   aru_id   site_id longitude latitude date_time           date       tz     t2sr</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 Amer… -<span style="color: #BB0000;">74.9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 Amer… -<span style="color: #BB0000;">14.9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 Amer…  45.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 Amer… -<span style="color: #BB0000;">88.8</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 Amer… -<span style="color: #BB0000;">28.8</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 Amer…  31.2</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: t2ss &lt;dbl&gt;</span></span></span></code></pre></div>
-<p>However, if we were to incorrectly assume that the ARU unit in the
-central timezone was recording in that timezone, we would get very
-different results.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_sun.html">calc_sun</a></span><span class="op">(</span><span class="va">m_mini</span>, aru_tz <span class="op">=</span> <span class="st">"America/Toronto"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
+<span><span class="co">#&gt;   aru_id   site_id longitude latitude date_time           date       path  tz   </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: t2sr &lt;dbl&gt;, t2ss &lt;dbl&gt;</span></span></span></code></pre></div>
+<p>However, if we were to incorrectly assume that the ARU unit located
+in the central timezone was recording in that timezone, we would get
+very different results.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_sun.html">calc_sun</a></span><span class="op">(</span><span class="va">m_mini</span>, aru_tz <span class="op">=</span> <span class="st">"local"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
-<span><span class="co">#&gt;   aru_id   site_id longitude latitude date_time           date       tz     t2sr</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 Amer… -<span style="color: #BB0000;">74.9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 Amer… -<span style="color: #BB0000;">14.9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 Amer…  45.1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 Amer… -<span style="color: #BB0000;">28.8</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 Amer…  31.2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 Amer…  91.2</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: t2ss &lt;dbl&gt;</span></span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/calc_sun.html">calc_sun</a></span><span class="op">(</span><span class="va">m_mini</span>, aru_tz <span class="op">=</span> <span class="st">"local"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
+<span><span class="co">#&gt;   aru_id   site_id longitude latitude date_time           date       path  tz   </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">06:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> BARLT10… P01_1       -<span style="color: #BB0000;">85.0</span>     50.0 2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> BARLT10… P06_1       -<span style="color: #BB0000;">90.1</span>     52   2020-05-02 <span style="color: #949494;">07:00:00</span> 2020-05-02 BARL… Amer…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: t2sr &lt;dbl&gt;, t2ss &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>Here all the times to sunrise/sunset for site P06_1 are offset by an
 hour, because we’re assuming the wrong timezone (which is an hour
 different from the correct one).</p>

@@ -34,6 +34,7 @@ directory structure, checked and cleaned."><meta property="og:image" content="ht
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -96,8 +97,8 @@ paths will be used to extract information and must actually exist.</p></dd>
 <dt>project_files</dt>
 <dd><p>Character. Vector of project file paths. These paths can
 be absolute or relative to the working directory, and don't actually need
-to point to existing files unless you plan to use `clean_gps()` or other
-sampling steps down the line. Must be provided if `project_dir` is `NULL`.</p></dd>
+to point to existing files unless you plan to use <code><a href="clean_gps.html">clean_gps()</a></code> or other
+sampling steps down the line. Must be provided if <code>project_dir</code> is <code>NULL</code>.</p></dd>
 
 
 <dt>file_type</dt>
@@ -107,37 +108,37 @@ wav.</p></dd>
 
 <dt>subset</dt>
 <dd><p>Character. Text pattern to mark a subset of files/directories
-to either `keep` or `omit` (see `subset_type`)</p></dd>
+to either <code>"keep"</code> or <code>"omit"</code> (see <code>subset_type</code>)</p></dd>
 
 
 <dt>subset_type</dt>
-<dd><p>Character. Either `keep` (default) or `omit`
-files/directories which match the pattern in `subset`.</p></dd>
+<dd><p>Character. Either <code>keep</code> (default) or <code>omit</code>
+files/directories which match the pattern in <code>subset</code>.</p></dd>
 
 
 <dt>pattern_site_id</dt>
 <dd><p>Character. Regular expression to extract site ids. See
-`create_pattern_site_id()`. Can be a vector of multiple patterns to match.</p></dd>
+<code><a href="create_pattern.html">create_pattern_site_id()</a></code>. Can be a vector of multiple patterns to match.</p></dd>
 
 
 <dt>pattern_aru_id</dt>
 <dd><p>Character. Regular expression to extract ARU ids. See
-`create_pattern_aru_id()`. Can be a vector of multiple patterns to match.</p></dd>
+<code><a href="create_pattern.html">create_pattern_aru_id()</a></code>. Can be a vector of multiple patterns to match.</p></dd>
 
 
 <dt>pattern_date</dt>
 <dd><p>Character. Regular expression to extract dates. See
-`create_pattern_date()`. Can be a vector of multiple patterns to match.</p></dd>
+<code><a href="create_pattern.html">create_pattern_date()</a></code>. Can be a vector of multiple patterns to match.</p></dd>
 
 
 <dt>pattern_time</dt>
 <dd><p>Character. Regular expression to extract times. See
-`create_pattern_time()`. Can be a vector of multiple patterns to match.</p></dd>
+<code><a href="create_pattern.html">create_pattern_time()</a></code>. Can be a vector of multiple patterns to match.</p></dd>
 
 
 <dt>pattern_dt_sep</dt>
 <dd><p>Character. Regular expression to mark separators
-between dates and times. See `create_pattern_dt_sep()`.</p></dd>
+between dates and times. See <code><a href="create_pattern.html">create_pattern_dt_sep()</a></code>.</p></dd>
 
 
 <dt>order_date</dt>
@@ -163,8 +164,8 @@ separator and the time patterns. This means that if there is a problem with
 this combination, dates might be extracted but date/times will not. This
 mismatch can be used to determine which part of a pattern needs to be
 tweaked.</p>
-<p>See `vignette("customizing", package = "ARUtools")` for details on
-customizing `clean_metadata()` for your project.</p>
+<p>See <code><a href="../articles/customizing.html">vignette("customizing", package = "ARUtools")</a></code> for details on
+customizing <code>clean_metadata()</code> for your project.</p>
     </div>
 
     <div class="section level2">
@@ -177,14 +178,14 @@ customizing `clean_metadata()` for your project.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> P08_1_202… wav   a_BA… BarLT    BARLT… P08_1   2020-05-11 <span style="color: #949494;">10:00:00</span> 2020-05-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32 more rows</span></span>
 <span class="r-in"><span><span class="fu">clean_metadata</span><span class="op">(</span>project_files <span class="op">=</span> <span class="va">example_files</span>, subset <span class="op">=</span> <span class="st">"P02"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Extracting ARU info...</span>

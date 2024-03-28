@@ -58,6 +58,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -149,8 +150,8 @@ to change any of the default arguments.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> P01_1_2020… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P01_1_2020… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> P03_1_2020… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P05_1_2020… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> P02_1_2020… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P02_1_2020… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 38 more rows</span></span></span></code></pre></div>
 <p>If you were reading directly from files you would assign a base
 directory and then have <code>clean_metadata</code> read the files in
@@ -190,7 +191,7 @@ critical if you are moving your ARUs during a season.</p>
 metadata.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clean_site_index.html">clean_site_index</a></span><span class="op">(</span><span class="va">example_sites</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `clean_site_index()`:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Problems with data `site_index`:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Column 'site_id' does not exist</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Column 'date' does not exist</span></span>
@@ -203,10 +204,10 @@ expects the data to be in a particular format. Luckily we can let it
 know if we’ve used a different format.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clean_site_index.html">clean_site_index</a></span><span class="op">(</span><span class="va">example_sites</span>, </span>
-<span>                          col_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
-<span>                          col_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
-<span>                          col_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span>,</span>
-<span>                          col_coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span><span class="op">)</span></span>
+<span>                          name_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
+<span>                          name_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
+<span>                          name_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span>,</span>
+<span>                          name_coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; There are overlapping date ranges</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Shifting start/end times to 'noon'</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Skip this with `resolve_overlaps = FALSE`</span></span></code></pre></div>
@@ -237,11 +238,11 @@ site index.</p>
 <p>We can retain these by specifying <code>cols_extra</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clean_site_index.html">clean_site_index</a></span><span class="op">(</span><span class="va">example_sites</span>, </span>
-<span>                          col_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
-<span>                          col_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
-<span>                          col_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span>,</span>
-<span>                          col_coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>,</span>
-<span>                          col_extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Plots"</span>, <span class="st">"Subplot"</span><span class="op">)</span><span class="op">)</span></span>
+<span>                          name_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
+<span>                          name_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
+<span>                          name_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span>,</span>
+<span>                          name_coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>,</span>
+<span>                          name_extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Plots"</span>, <span class="st">"Subplot"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; There are overlapping date ranges</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Shifting start/end times to 'noon'</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Skip this with `resolve_overlaps = FALSE`</span></span>
@@ -260,11 +261,11 @@ site index.</p>
 vectors.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clean_site_index.html">clean_site_index</a></span><span class="op">(</span><span class="va">example_sites</span>, </span>
-<span>                          col_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
-<span>                          col_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
-<span>                          col_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span>,</span>
-<span>                          col_coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>,</span>
-<span>                          col_extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plot"</span> <span class="op">=</span> <span class="st">"Plots"</span>, <span class="st">"subplot"</span> <span class="op">=</span> <span class="st">"Subplot"</span><span class="op">)</span><span class="op">)</span></span>
+<span>                          name_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
+<span>                          name_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
+<span>                          name_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span>,</span>
+<span>                          name_coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>,</span>
+<span>                          name_extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plot"</span> <span class="op">=</span> <span class="st">"Plots"</span>, <span class="st">"subplot"</span> <span class="op">=</span> <span class="st">"Subplot"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; There are overlapping date ranges</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Shifting start/end times to 'noon'</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Skip this with `resolve_overlaps = FALSE`</span></span>
@@ -289,8 +290,8 @@ vectors.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> P01_1_2020… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P01_1_2020… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> P01_1_2020… wav   j_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P01_1_2020… wav   j_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> P02_1_2020… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P02_1_2020… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 38 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: longitude &lt;dbl&gt;, latitude &lt;dbl&gt;, plot &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   subplot &lt;chr&gt;</span></span></span></code></pre></div>
@@ -328,18 +329,18 @@ default setting.</p>
 <span><span class="co">#&gt; $ file_name <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "P01_1_20200502T050000_ARU.wav", "P01_1_20200503T052000_ARU.…</span></span>
 <span><span class="co">#&gt; $ type      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "wav", "wav", "wav", "wav", "wav", "wav", "wav", "wav", "wav…</span></span>
 <span><span class="co">#&gt; $ path      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "a_BARLT10962_P01_1/P01_1_20200502T050000_ARU.wav", "a_BARLT…</span></span>
-<span><span class="co">#&gt; $ aru_type  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BarLT", "BarLT", "BarLT", "BarLT", "BarLT", "BarLT", "SongM…</span></span>
-<span><span class="co">#&gt; $ aru_id    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BARLT10962", "BARLT10962", "BARLT10962", "BARLT10962", "BAR…</span></span>
-<span><span class="co">#&gt; $ site_id   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "P01_1", "P01_1", "P01_1", "P01_1", "P01_1", "P01_1", "P02_1…</span></span>
-<span><span class="co">#&gt; $ date_time <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span> 2020-05-02 05:00:00, 2020-05-03 05:20:00, 2020-05-02 05:00:…</span></span>
-<span><span class="co">#&gt; $ date      <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2020-05-02, 2020-05-03, 2020-05-02, 2020-05-03, 2020-05-02,…</span></span>
-<span><span class="co">#&gt; $ longitude <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -85.03, -85.03, -85.03, -85.03, -85.03, -85.03, -87.45, -87.…</span></span>
-<span><span class="co">#&gt; $ latitude  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 50.01, 50.01, 50.01, 50.01, 50.01, 50.01, 52.68, 52.68, 52.6…</span></span>
-<span><span class="co">#&gt; $ plot      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Plot1", "Plot1", "Plot1", "Plot1", "Plot1", "Plot1", "Plot1…</span></span>
-<span><span class="co">#&gt; $ subplot   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", …</span></span>
+<span><span class="co">#&gt; $ aru_type  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BarLT", "BarLT", "SongMeter", "SongMeter", "BarLT", "BarLT"…</span></span>
+<span><span class="co">#&gt; $ aru_id    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARLT10…</span></span>
+<span><span class="co">#&gt; $ site_id   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "P01_1", "P01_1", "P02_1", "P02_1", "P03_1", "P04_1", "P04_1…</span></span>
+<span><span class="co">#&gt; $ date_time <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span> 2020-05-02 05:00:00, 2020-05-03 05:20:00, 2020-05-04 05:25:…</span></span>
+<span><span class="co">#&gt; $ date      <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2020-05-02, 2020-05-03, 2020-05-04, 2020-05-05, 2020-05-06,…</span></span>
+<span><span class="co">#&gt; $ longitude <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -85.03, -85.03, -87.45, -87.45, -90.38, -85.53, -85.53, -88.…</span></span>
+<span><span class="co">#&gt; $ latitude  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 50.010, 50.010, 52.680, 52.680, 48.990, 45.000, 45.000, 51.0…</span></span>
+<span><span class="co">#&gt; $ plot      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Plot1", "Plot1", "Plot1", "Plot1", "Plot2", "Plot2", "Plot2…</span></span>
+<span><span class="co">#&gt; $ subplot   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "a", "a", "a", "a", "a", "a", "a", "b", "a", "a", "a", "a", …</span></span>
 <span><span class="co">#&gt; $ tz        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "America/Toronto", "America/Toronto", "America/Toronto", "Am…</span></span>
-<span><span class="co">#&gt; $ t2sr      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -74.933333, -53.216667, -74.933333, -53.216667, -74.933333, …</span></span>
-<span><span class="co">#&gt; $ t2ss      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 479.9500, 498.4167, 479.9500, 498.4167, 479.9500, 498.4167, …</span></span></code></pre></div>
+<span><span class="co">#&gt; $ t2sr      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -74.933333, -53.216667, -47.250000, 79.616667, 207.133333, -…</span></span>
+<span><span class="co">#&gt; $ t2ss      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 479.9500, 498.4167, 483.4167, 606.6833, -685.8833, 486.1833,…</span></span></code></pre></div>
 <p>Tada! Now we have a complete set of cleaned metadata associated with
 each recording.</p>
 <p>This is a very simple example and much of the pain in large projects

@@ -32,6 +32,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -77,6 +78,11 @@
         <dd>ARUtools: CWS Ontario Tools for working with ARU files</dd>
       </dl><dl><dt>
           
+          <code><a href="acoustic_indices.html">acoustic_indices()</a></code> 
+        </dt>
+        <dd>Get acoustic complexity values</dd>
+      </dl><dl><dt>
+          
           <code><a href="add_sites.html">add_sites()</a></code> 
         </dt>
         <dd>Add site-level data to the metadata</dd>
@@ -87,9 +93,9 @@
         <dd>Add Wildtrax file name to metadata</dd>
       </dl><dl><dt>
           
-          <code><a href="calc_sel_pr.html">calc_sel_pr()</a></code> 
+          <code><a href="calc_selection_weights.html">calc_selection_weights()</a></code> 
         </dt>
-        <dd>Calculate Inclusion Probabilities</dd>
+        <dd>Calculate Selection Weights</dd>
       </dl><dl><dt>
           
           <code><a href="calc_sun.html">calc_sun()</a></code> 
@@ -104,17 +110,22 @@
           
           <code><a href="check_meta.html">check_meta()</a></code> 
         </dt>
-        <dd>Check output of `clean_metadata()`</dd>
+        <dd>Check output of <code><a href="../reference/clean_metadata.html">clean_metadata()</a></code></dd>
       </dl><dl><dt>
           
           <code><a href="check_problems.html">check_problems()</a></code> 
         </dt>
-        <dd>Check problems in output of `clean_metadata()`</dd>
+        <dd>Check problems in output of <code><a href="../reference/clean_metadata.html">clean_metadata()</a></code></dd>
       </dl><dl><dt>
           
           <code><a href="clean_gps.html">clean_gps()</a></code> 
         </dt>
         <dd>Check and clean GPS data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="clean_logs.html">clean_logs()</a></code> 
+        </dt>
+        <dd>Extract log data from BARLT log files</dd>
       </dl><dl><dt>
           
           <code><a href="clean_metadata.html">clean_metadata()</a></code> 
@@ -127,24 +138,29 @@
         <dd>Prepare and clean site index file</dd>
       </dl><dl><dt>
           
+          <code><a href="clip_wave.html">clip_wave()</a></code> 
+        </dt>
+        <dd>Clip multiple wave files and format names</dd>
+      </dl><dl><dt>
+          
+          <code><a href="clip_wave_single.html">clip_wave_single()</a></code> 
+        </dt>
+        <dd>Clip single wave file</dd>
+      </dl><dl><dt>
+          
           <code><a href="count_files.html">count_files()</a></code> 
         </dt>
         <dd>Count files in a project directory</dd>
       </dl><dl><dt>
           
-          <code><a href="create_directory_structure.html">create_directory_structure()</a></code> 
+          <code><a href="create_dirs.html">create_dirs()</a></code> 
         </dt>
-        <dd>Create directory structure for ARU folders</dd>
+        <dd>Create directory structure for recording folders</dd>
       </dl><dl><dt>
           
           <code><a href="create_pattern.html">create_pattern_date()</a></code> <code><a href="create_pattern.html">create_pattern_time()</a></code> <code><a href="create_pattern.html">create_pattern_dt_sep()</a></code> <code><a href="create_pattern.html">create_pattern_aru_id()</a></code> <code><a href="create_pattern.html">create_pattern_site_id()</a></code> <code><a href="create_pattern.html">test_pattern()</a></code> 
         </dt>
         <dd>Create a pattern to match date</dd>
-      </dl><dl><dt>
-          
-          <code><a href="default_selection_parameters.html">default_selection_parameters</a></code> 
-        </dt>
-        <dd>Default parameters for use in `gen_dens_sel_simulation` and `calc_sel_pr`</dd>
       </dl><dl><dt>
           
           <code><a href="example_clean.html">example_clean</a></code> <code><a href="example_clean.html">example_clean</a></code> 
@@ -167,40 +183,9 @@
         <dd>Example cleaned site-level meta data</dd>
       </dl><dl><dt>
           
-          <code><a href="format_clip_wave.html">format_clip_wave()</a></code> 
-        </dt>
-        <dd>Process multiple wav files by copying them with a new filename or clipping
-to a given length.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="format_clip_wave_single.html">format_clip_wave_single()</a></code> 
-        </dt>
-        <dd>Clip single wave file to length from given start time in recording</dd>
-      </dl><dl><dt>
-          
-          <code><a href="fun_aru_samp.html">fun_aru_samp()</a></code> 
-        </dt>
-        <dd>Run the model function</dd>
-      </dl><dl><dt>
-          
-          <code><a href="gen_dens_sel_simulation.html">gen_dens_sel_simulation()</a></code> 
-        </dt>
-        <dd>Simulate selection probabilities for GRTS</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_file_info.html">get_file_info()</a></code> 
-        </dt>
-        <dd>Get the file info from a recording</dd>
-      </dl><dl><dt>
-          
           <code><a href="get_wav_length.html">get_wav_length()</a></code> 
         </dt>
         <dd>Get the length of a recording in seconds</dd>
-      </dl><dl><dt>
-          
-          <code><a href="getvals.html">getvals()</a></code> 
-        </dt>
-        <dd>Get accoustic complexity values</dd>
       </dl><dl><dt>
           
           <code><a href="play_random_track.html">play_random_track()</a></code> 
@@ -213,39 +198,24 @@ to a given length.</dd>
         <dd>Prepare files for WindNoiseDetection</dd>
       </dl><dl><dt>
           
-          <code><a href="process_gps_SM.html">process_gps_SM()</a></code> 
+          <code><a href="sample_recordings.html">sample_recordings()</a></code> 
         </dt>
-        <dd>Process GPS locations for SongMeters</dd>
+        <dd>Sample recordings</dd>
       </dl><dl><dt>
           
-          <code><a href="process_gps_barlt.html">process_gps_barlt()</a></code> 
+          <code><a href="sim_selection_weights.html">sim_selection_weights()</a></code> 
         </dt>
-        <dd>Process GPS log file for BarLT</dd>
+        <dd>Create parameters and simulate selection weights</dd>
       </dl><dl><dt>
           
-          <code><a href="process_log_SM.html">process_log_SM()</a></code> 
+          <code><a href="sox_spectro.html">sox_spectro()</a></code> 
         </dt>
-        <dd>Process log files from SongMeters</dd>
+        <dd>Create spectrogram image from wave file</dd>
       </dl><dl><dt>
           
-          <code><a href="read_and_check_barlt_gps.html">read_and_check_barlt_gps()</a></code> 
+          <code><a href="temp_wavs.html">temp_wavs()</a></code> 
         </dt>
-        <dd>Read barlt gps and check locations</dd>
-      </dl><dl><dt>
-          
-          <code><a href="read_log_barlt.html">read_log_barlt()</a></code> 
-        </dt>
-        <dd>Parse the log file for BarLT</dd>
-      </dl><dl><dt>
-          
-          <code><a href="read_summary_SM4.html">read_summary_SM4()</a></code> 
-        </dt>
-        <dd>Parse SM4 logfiles</dd>
-      </dl><dl><dt>
-          
-          <code><a href="soxSpectrogram.html">soxSpectrogram()</a></code> 
-        </dt>
-        <dd>Create spectrogram from wave file</dd>
+        <dd>Helper function to create test wave files</dd>
       </dl><dl><dt>
           
           <code><a href="wind_detection_pre_processing.html">wind_detection_pre_processing()</a></code> 

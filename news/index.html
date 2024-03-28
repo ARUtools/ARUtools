@@ -32,6 +32,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -60,6 +61,20 @@
       <small>Source: <a href="https://github.com/arutools/ARUtools/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="arutools-060">ARUtools 0.6.0<a class="anchor" aria-label="anchor" href="#arutools-060"></a></h2>
+<div class="section level3">
+<h3 id="new-0-6-0">New<a class="anchor" aria-label="anchor" href="#new-0-6-0"></a></h3>
+<ul><li>Cleaned up functions for recording selection, spectrograms, clipping waves, acoustic indices and creating dirs (<a href="https://github.com/arutools/ARUtools/issues/8" class="external-link">#8</a>, <a href="https://github.com/arutools/ARUtools/issues/11" class="external-link">#11</a>, <a href="https://github.com/arutools/ARUtools/issues/12" class="external-link">#12</a>, <a href="https://github.com/arutools/ARUtools/issues/13" class="external-link">#13</a>, <a href="https://github.com/arutools/ARUtools/issues/23" class="external-link">#23</a>)</li>
+<li>Added NSE for relevant functions, these now use <code>col_COLNAME</code>, changed arguments for non-NSE functions to <code>name_COLNAME</code> (<a href="https://github.com/arutools/ARUtools/issues/15" class="external-link">#15</a>)</li>
+<li>Ensure that data order is unchanged when passing through cleaning functions (<a href="https://github.com/arutools/ARUtools/issues/19" class="external-link">#19</a>)</li>
+<li>Added sampling vignette</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bugs-0-6-0">Bugs<a class="anchor" aria-label="anchor" href="#bugs-0-6-0"></a></h3>
+<ul><li>Fixed bug <code><a href="../reference/calc_sun.html">calc_sun()</a></code> corrupting date column (<a href="https://github.com/arutools/ARUtools/issues/18" class="external-link">#18</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.1" id="arutools-051">ARUtools 0.5.1<a class="anchor" aria-label="anchor" href="#arutools-051"></a></h2>
 <div class="section level3">

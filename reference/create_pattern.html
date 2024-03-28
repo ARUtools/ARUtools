@@ -34,6 +34,7 @@ metadata in file paths."><meta property="og:image" content="http://arutools.gith
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -129,7 +130,7 @@ model specific).</p></dd>
 
 <dt>n_digits</dt>
 <dd><p>Numeric vector. Number of digits expected to follow the
-`arus` pattern. Can be one or two (a range).</p></dd>
+<code>arus</code> pattern. Can be one or two (a range).</p></dd>
 
 
 <dt>prefix</dt>
@@ -141,11 +142,11 @@ model specific).</p></dd>
 
 
 <dt>p_digits</dt>
-<dd><p>Numeric vector. Number(s) of digits following the `prefix`.</p></dd>
+<dd><p>Numeric vector. Number(s) of digits following the <code>prefix</code>.</p></dd>
 
 
 <dt>s_digits</dt>
-<dd><p>Numeric vector. Number(s) of digits following the `suffix`.</p></dd>
+<dd><p>Numeric vector. Number(s) of digits following the <code>suffix</code>.</p></dd>
 
 
 <dt>test</dt>
@@ -160,17 +161,17 @@ model specific).</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Either a pattern (`create_pattern_xxx()`) or the text extracted by a
-  pattern (`test_pattern()`)</p>
+<p>Either a pattern (<code>create_pattern_xxx()</code>) or the text extracted by a
+pattern (<code>test_pattern()</code>)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>By default `create_pattern_aru_id()` matches many common ARU patterns like
-`BARLT0000`, `S4A0000`, `SM40000`, `SMM0000`, `SMA0000`.</p>
-<p>`test_pattern()` is a helper function to see what a regular expression
+    <p>By default <code>create_pattern_aru_id()</code> matches many common ARU patterns like
+<code>BARLT0000</code>, <code>S4A0000</code>, <code>SM40000</code>, <code>SMM0000</code>, <code>SMA0000</code>.</p>
+<p><code>test_pattern()</code> is a helper function to see what a regular expression
 pattern will pick out of some example text. Can be used to see if your
 pattern grabs what you want. This is just a simple wrapper around
-`stringr::str_extract()`.</p>
+<code><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">stringr::str_extract()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>

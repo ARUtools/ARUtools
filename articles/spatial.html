@@ -56,6 +56,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -115,14 +116,14 @@ first.</p>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P08_1_202… wav   a_BA… BarLT    BARLT… P08_1   2020-05-11 <span style="color: #949494;">10:00:00</span> 2020-05-11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 32 more rows</span></span></span></code></pre></div>
 <p>This isn’t spatial because we don’t actually know where the sites are
 located. But our next step is to get our site coordinates.</p>
@@ -162,9 +163,9 @@ where they are located.</p>
 add these sites to our metadata.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clean_site_index.html">clean_site_index</a></span><span class="op">(</span><span class="va">s</span>, </span>
-<span>                          col_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
-<span>                          col_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
-<span>                          col_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span><span class="op">)</span></span>
+<span>                          name_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
+<span>                          name_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
+<span>                          name_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; There are overlapping date ranges</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Shifting start/end times to 'noon'</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Skip this with `resolve_overlaps = FALSE`</span></span>
@@ -201,17 +202,17 @@ add these sites to our metadata.</p>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 42 × 9</span></span></span>
 <span><span class="co">#&gt;    file_name  type  path  aru_type aru_id site_id date_time           date      </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
+<span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P01_1_202… wav   o_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P01_1_202… wav   o_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 32 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: geometry &lt;POINT [°]&gt;</span></span></span></code></pre></div>
 <p>Again our output is as a spatial data set.</p>
@@ -229,14 +230,14 @@ add these sites to our metadata.</p>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P01_1_202… wav   o_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P01_1_202… wav   o_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 32 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: tz &lt;chr&gt;, t2sr &lt;dbl&gt;, t2ss &lt;dbl&gt;, geometry &lt;POINT [°]&gt;</span></span></span></code></pre></div>
 <p>All done! And we’ve retained a spatial data set the entire way.</p>
@@ -254,9 +255,9 @@ of sites.</p>
 <span><span class="co">#&gt; Extracting Dates and Times...</span></span>
 <span></span>
 <span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">example_sites</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/clean_site_index.html">clean_site_index</a></span><span class="op">(</span>col_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
-<span>                   col_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
-<span>                   col_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/clean_site_index.html">clean_site_index</a></span><span class="op">(</span>name_aru_id <span class="op">=</span> <span class="st">"ARU"</span>, </span>
+<span>                   name_site_id <span class="op">=</span> <span class="st">"Sites"</span>, </span>
+<span>                   name_date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Date_set_out"</span>, <span class="st">"Date_removed"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; There are overlapping date ranges</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Shifting start/end times to 'noon'</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Skip this with `resolve_overlaps = FALSE`</span></span>
@@ -268,7 +269,7 @@ of sites.</p>
 <span><span class="co">#&gt; Identified possible problems with metadata extraction:</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> Not all files were matched to a site reference (6/42)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Consider adjusting the `by` argument</span></span>
-<span><span class="co">#&gt; Warning: Cannot have missing coordinates in spatial data frames</span></span>
+<span><span class="co">#&gt; Warning in add_sites(m, sites): Cannot have missing coordinates in spatial data frames</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> Returning non-spatial data frame</span></span>
 <span><span class="va">m</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 42 × 10</span></span></span>
@@ -276,14 +277,14 @@ of sites.</p>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P01_1_202… wav   o_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P01_1_202… wav   o_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 32 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: longitude &lt;dbl&gt;, latitude &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>To resolve this, either add in the missing site information, or omit
@@ -304,17 +305,17 @@ the files before joining.</p>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 36 × 9</span></span></span>
 <span><span class="co">#&gt;    file_name  type  path  aru_type aru_id site_id date_time           date      </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
+<span><span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P02_1_202… wav   o_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P02_1_202… wav   o_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P03_1_202… wav   j_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P03_1_202… wav   o_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-10 <span style="color: #949494;">07:30:00</span> 2020-05-10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P08_1_202… wav   a_BA… BarLT    BARLT… P08_1   2020-05-11 <span style="color: #949494;">10:00:00</span> 2020-05-11</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: geometry &lt;POINT [°]&gt;</span></span></span></code></pre></div>
 <p>Fixed!</p>

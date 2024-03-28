@@ -56,6 +56,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -399,16 +400,16 @@ means ‘at the start’)</p>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P01_1_202… wav   a_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P08_1_202… wav   a_BA… BarLT    BARLT… P08_1   2020-05-11 <span style="color: #949494;">10:00:00</span> 2020-05-11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-10 <span style="color: #949494;">07:30:00</span> 2020-05-10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   a_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P03_1_202… wav   a_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   a_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P05_1_202… wav   a_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P06_1_202… wav   a_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> P07_1_202… wav   a_S4… SongMet… S4A01… P07_1   2020-05-10 <span style="color: #949494;">07:30:00</span> 2020-05-10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> P08_1_202… wav   a_BA… BarLT    BARLT… P08_1   2020-05-11 <span style="color: #949494;">10:00:00</span> 2020-05-11</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> P09_1_202… wav   a_S4… SongMet… S4A02… P09_1   2020-05-11 <span style="color: #949494;">05:00:00</span> 2020-05-11</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> P10_1_202… wav   a_S4… SongMet… S4A03… P10_1   2020-05-11 <span style="color: #949494;">03:25:00</span> 2020-05-11</span></span></code></pre></div>
 <p>To omit all files with the “a” prefix</p>
@@ -421,14 +422,14 @@ means ‘at the start’)</p>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-02 <span style="color: #949494;">05:00:00</span> 2020-05-02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> P01_1_202… wav   j_BA… BarLT    BARLT… P01_1   2020-05-03 <span style="color: #949494;">05:20:00</span> 2020-05-03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P03_1_202… wav   j_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P05_1_202… wav   j_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P06_1_202… wav   j_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P08_1_202… wav   j_BA… BarLT    BARLT… P08_1   2020-05-11 <span style="color: #949494;">10:00:00</span> 2020-05-11</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   j_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P04_1_202… wav   j_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-04 <span style="color: #949494;">05:25:00</span> 2020-05-04</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> P02_1_202… wav   j_S4… SongMet… S4A01… P02_1   2020-05-05 <span style="color: #949494;">07:30:00</span> 2020-05-05</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> P03_1_202… wav   j_BA… BarLT    BARLT… P03_1   2020-05-06 <span style="color: #949494;">10:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> P04_1_202… wav   j_BA… BarLT    BARLT… P04_1   2020-05-06 <span style="color: #949494;">05:00:00</span> 2020-05-06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> P04_1_202… wav   j_BA… BarLT    BARLT… P04_1   2020-05-07 <span style="color: #949494;">03:25:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> P05_1_202… wav   j_BA… BarLT    BARLT… P05_1   2020-05-07 <span style="color: #949494;">05:00:00</span> 2020-05-07</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> P06_1_202… wav   j_BA… BarLT    BARLT… P06_1   2020-05-09 <span style="color: #949494;">05:20:00</span> 2020-05-09</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> P07_1_202… wav   j_S4… SongMet… S4A01… P07_1   2020-05-09 <span style="color: #949494;">05:25:00</span> 2020-05-09</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 18 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">

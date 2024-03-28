@@ -32,6 +32,7 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
+    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -76,33 +77,46 @@ paths will be used to extract information and must actually exist.</p></dd>
 <dt>project_files</dt>
 <dd><p>Character. Vector of project file paths. These paths can
 be absolute or relative to the working directory, and don't actually need
-to point to existing files unless you plan to use `clean_gps()` or other
-sampling steps down the line. Must be provided if `project_dir` is `NULL`.</p></dd>
+to point to existing files unless you plan to use <code><a href="clean_gps.html">clean_gps()</a></code> or other
+sampling steps down the line. Must be provided if <code>project_dir</code> is <code>NULL</code>.</p></dd>
 
 
 <dt>subset</dt>
 <dd><p>Character. Text pattern to mark a subset of files/directories
-to either `keep` or `omit` (see `subset_type`)</p></dd>
+to either <code>"keep"</code> or <code>"omit"</code> (see <code>subset_type</code>)</p></dd>
 
 
 <dt>subset_type</dt>
-<dd><p>Character. Either `keep` (default) or `omit`
-files/directories which match the pattern in `subset`.</p></dd>
+<dd><p>Character. Either <code>keep</code> (default) or <code>omit</code>
+files/directories which match the pattern in <code>subset</code>.</p></dd>
 
 
 <dt>meta</dt>
-<dd><p>Data frame. Recording metadata. Output of `clean_metadata()`.</p></dd>
+<dd><p>Data frame. Recording metadata. Output of <code><a href="clean_metadata.html">clean_metadata()</a></code>.</p></dd>
 
 
 <dt>meta_sites</dt>
 <dd><p>(Spatial) Data frame. Recording metadata with added
-coordinates. Output of `clean_metadata()` and then `add_sites()` (with
-either `clean_gps()` or `clean_site_index()`).</p></dd>
+coordinates. Output of <code><a href="clean_metadata.html">clean_metadata()</a></code> and then <code><a href="add_sites.html">add_sites()</a></code> (with
+either <code><a href="clean_gps.html">clean_gps()</a></code> or <code><a href="clean_site_index.html">clean_site_index()</a></code>).</p></dd>
+
+
+<dt>col_site_id</dt>
+<dd><p>Column. Unquoted column containing site strata IDs
+(defaults to <code>site_id</code>).</p></dd>
 
 
 <dt>date</dt>
 <dd><p>Logical. Whether to summarize output by date (as well as
-`site_id` and `aru_id`. Default `FALSE`.</p></dd>
+<code>site_id</code> and <code>aru_id</code>. Default <code>FALSE</code>.</p></dd>
+
+
+<dt>path</dt>
+<dd><p>Character. Path to wave file.</p></dd>
+
+
+<dt>dir_out</dt>
+<dd><p>Character. Output directory.</p></dd>
 
 
 <dt>quiet</dt>
@@ -112,7 +126,7 @@ non-essential updates.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Use `@inheritParams common_docs` to include the above in any function
+    <p>Use <code>@inheritParams common_docs</code> to include the above in any function
 documentation with a matching argument (will only include matching args)</p>
     </div>
 

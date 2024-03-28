@@ -25,6 +25,9 @@
     <loc>http://arutools.github.io/ARUtools/articles/index.html</loc>
   </url>
   <url>
+    <loc>http://arutools.github.io/ARUtools/articles/sampling.html</loc>
+  </url>
+  <url>
     <loc>http://arutools.github.io/ARUtools/articles/spatial.html</loc>
   </url>
   <url>
@@ -43,13 +46,16 @@
     <loc>http://arutools.github.io/ARUtools/reference/ARUtools.html</loc>
   </url>
   <url>
+    <loc>http://arutools.github.io/ARUtools/reference/acoustic_indices.html</loc>
+  </url>
+  <url>
     <loc>http://arutools.github.io/ARUtools/reference/add_sites.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/add_wildtrax.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/calc_sel_pr.html</loc>
+    <loc>http://arutools.github.io/ARUtools/reference/calc_selection_weights.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/calc_sun.html</loc>
@@ -67,10 +73,19 @@
     <loc>http://arutools.github.io/ARUtools/reference/clean_gps.html</loc>
   </url>
   <url>
+    <loc>http://arutools.github.io/ARUtools/reference/clean_logs.html</loc>
+  </url>
+  <url>
     <loc>http://arutools.github.io/ARUtools/reference/clean_metadata.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/clean_site_index.html</loc>
+  </url>
+  <url>
+    <loc>http://arutools.github.io/ARUtools/reference/clip_wave.html</loc>
+  </url>
+  <url>
+    <loc>http://arutools.github.io/ARUtools/reference/clip_wave_single.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/common_docs.html</loc>
@@ -79,13 +94,10 @@
     <loc>http://arutools.github.io/ARUtools/reference/count_files.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/create_directory_structure.html</loc>
+    <loc>http://arutools.github.io/ARUtools/reference/create_dirs.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/create_pattern.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/default_selection_parameters.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/example_clean.html</loc>
@@ -100,25 +112,7 @@
     <loc>http://arutools.github.io/ARUtools/reference/example_sites_clean.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/format_clip_wave.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/format_clip_wave_single.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/fun_aru_samp.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/gen_dens_sel_simulation.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/get_file_info.html</loc>
-  </url>
-  <url>
     <loc>http://arutools.github.io/ARUtools/reference/get_wav_length.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/getvals.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/index.html</loc>
@@ -130,25 +124,16 @@
     <loc>http://arutools.github.io/ARUtools/reference/prep_for_wind_detection.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/process_gps_SM.html</loc>
+    <loc>http://arutools.github.io/ARUtools/reference/sample_recordings.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/process_gps_barlt.html</loc>
+    <loc>http://arutools.github.io/ARUtools/reference/sim_selection_weights.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/process_log_SM.html</loc>
+    <loc>http://arutools.github.io/ARUtools/reference/sox_spectro.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/read_and_check_barlt_gps.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/read_log_barlt.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/read_summary_SM4.html</loc>
-  </url>
-  <url>
-    <loc>http://arutools.github.io/ARUtools/reference/soxSpectrogram.html</loc>
+    <loc>http://arutools.github.io/ARUtools/reference/temp_wavs.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/wind_detection_pre_processing.html</loc>
