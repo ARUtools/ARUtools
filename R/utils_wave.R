@@ -351,15 +351,18 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
   }
 
   if(is_null(sox_file_path)){
-    test <- system("sox -h", intern=FALSE, show.output.on.console = F)
+    test <- system("sox -h", intern=FALSE, show.output.on.console = FALSE,
+                   ignore.stdout = T)
   } else{
-    test <- system(paste0(sox_file_path, " -h"), intern=FALSE, show.output.on.console = F)
+    test <- system(paste0(sox_file_path, " -h"), intern=FALSE,
+                   ignore.stdout = T,
+                   show.output.on.console = FALSE)
   }
   if(test == 127){
     if(is_testing()){
       testthat::skip("SoX not available")
     } else{
-      abort("SoX not available ")
+      abort("SoX not available")
     }
   }
 

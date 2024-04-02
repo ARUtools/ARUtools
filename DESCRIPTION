@@ -33,7 +33,8 @@ Imports:
     readxl (>= 1.4.2),
     seewave (>= 2.2.3),
     withr,
-    parzer
+    parzer,
+    here
 Suggests: 
     testthat (>= 3.0.0),
     soundecology,
