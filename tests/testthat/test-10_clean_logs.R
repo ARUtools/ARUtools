@@ -27,9 +27,9 @@ test_that("clean_logs() single", {
 
 test_that("clean_logs() multiple", {
 
-  log_files <- fs::dir_ls(test_path("..", "..", "..", "ARUtools - Extra", "aru_log_files"),
+  log_files <- fs::dir_ls(fs::path_package("extdata",package="ARUtools"),
                           recurse = TRUE, glob = "*logfile*")
-  log_files <- log_files[1:5]
+  # log_files <- log_files[1:5]
 
   skip_if_not(all(fs::file_exists(log_files)) | length(log_files) > 0)
 
