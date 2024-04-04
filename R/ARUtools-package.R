@@ -5,7 +5,6 @@
 #' @docType package
 #' @name ARUtools
 #' @import spsurvey
-#' @import patchwork
 #' @import rlang
 #' @import dplyr
 #'

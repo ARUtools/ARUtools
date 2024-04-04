@@ -21,7 +21,6 @@ Imports:
     stringr,
     lubridate,
     readr,
-    patchwork,
     glue,
     rlang (>= 0.4),
     spsurvey (>= 5.0.1),
@@ -38,6 +37,7 @@ Imports:
     lifecycle
 Suggests: 
     testthat (>= 3.0.0),
+    patchwork,
     soundecology,
     ggplot2,
     tuneR,
