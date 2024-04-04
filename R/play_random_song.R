@@ -11,6 +11,11 @@
 play_random_track <- function(base_folder,file_list=NULL,  random_seed = NULL){
   if(!interactive()) abort("This program does not work outside of an interactive seesion")
   if (!requireNamespace("tuneR", quietly = TRUE)) {
+      abort(
+        "Package \"tuneR\" must be installed to use this function."
+    )
+  }
+  if (!requireNamespace("tuneR", quietly = TRUE)) {
     stop(
       "Package \"tuneR\" must be installed to use this function.",
       call. = FALSE

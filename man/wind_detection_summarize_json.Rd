@@ -11,6 +11,13 @@ wind_detection_summarize_json(f, json_string_regex = "/[\\\\w|\\\\d|_|-]+")
 
 \item{json_string_regex}{string. Regex to extract from file path}
 }
+\value{
+tibble of summarized data from json file
+}
 \description{
-Summarize wind detection results
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+This function takes output from the command line program and summarizes it.
+Details of the wind detection software can be found at
+\url{https://github.com/dhope/WindNoiseDetection}.
 }

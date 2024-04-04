@@ -34,7 +34,8 @@ Imports:
     seewave (>= 2.2.3),
     withr,
     parzer,
-    here
+    here,
+    lifecycle
 Suggests: 
     testthat (>= 3.0.0),
     soundecology,
