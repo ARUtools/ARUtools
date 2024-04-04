@@ -16,3 +16,9 @@ inst\Gen_gex.R
 ^pkgdown$
 ^doc$
 ^Meta$
+^\.github$
+^\.github/workflows/R-CMD-check\.yaml$
+^\.github/workflows/pr-commands\.yaml$
+^\.github/workflows/pkgdown\.yaml$
+^.Rprofile$
+^ISSUE_TEMPLATE\.md$
