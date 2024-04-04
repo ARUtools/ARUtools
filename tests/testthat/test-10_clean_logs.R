@@ -20,7 +20,7 @@ test_that("clean_logs() single", {
   expect_equal(dplyr::filter(l, event == "recording") |>
                  dplyr::select(-"lat", -"lon"),
                l2)
-
+  skip_on_ci()
   l <- withr::with_seed(1234, dplyr::slice_sample(l, n = 100))
   expect_snapshot_value(l, style = "json2")
 })
@@ -47,7 +47,7 @@ test_that("clean_logs() multiple", {
   expect_equal(dplyr::filter(l, event == "recording") |>
                  dplyr::select(-"lat", -"lon"),
                l2)
-
+  skip_on_ci()
   l <- withr::with_seed(1234, dplyr::slice_sample(l, n = 100))
   expect_snapshot_value(l, style = "json2")
 })

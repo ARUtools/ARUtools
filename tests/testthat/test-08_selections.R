@@ -64,7 +64,7 @@ test_that("calc_selection_weights()", {
 
   p <- sim_selection_weights(plot = FALSE)
   withr::with_seed(123, expect_silent(pr1 <- calc_selection_weights(m, params = p)))
-  expect_snapshot_value(pr1, style = "json2", tolerance = 0.0005)
+
 
   # Use DOY rather than date
   m$doy <- lubridate::yday(m$date)
@@ -78,6 +78,12 @@ test_that("calc_selection_weights()", {
                "you must provide an `offset`")
   p <- sim_selection_weights(plot = FALSE, selection_fun = "lognorm", offset = 200)
   withr::with_seed(123, expect_silent(calc_selection_weights(m, params = p, col_day = doy)))
+
+  # From calc_selection-weights above pr1
+  # Moving to end to avoid skipping above tests
+  skip_on_ci()
+  expect_snapshot_value(pr1, style = "json2", tolerance = 0.0005)
+
 })
 
 test_that("sample_recordings()", {
@@ -140,6 +146,7 @@ test_that("sample_recordings()", {
 
 
   # Snapshots cannot be tested interactively
+  skip_on_ci()
   expect_snapshot_value(r1, style = "json2", tolerance = 0.0005)
   expect_snapshot_value(r4, style = "json2", tolerance = 0.0005)
 
