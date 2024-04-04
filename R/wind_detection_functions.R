@@ -99,7 +99,7 @@ wind_detection_pre_processing <- function(wav_vector,site_pattern,
   warn(c("Function in development.",
          "i" = "Use cases very limited for now.",
          "*"= "Improvements expected in later versions"))
-  if(!grepl("Windows", osVersion))
+  if(!grepl("Windows", utils::osVersion))
     abort("Currently only implemented for  Windows due to drive naming and for use with cygwin")
   # Currently need to set drive manually
   # don't need this for non-windows

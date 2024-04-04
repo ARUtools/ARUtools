@@ -93,6 +93,7 @@ sim_selection_weights <- function(
       ggplot2::theme_minimal(base_size = 14)
     )
     } else{
+      inform("Package \"patchwork\" not installed, returning plots as list.")
       p <- list(p1 + ggplot2::theme_minimal(base_size = 14),
                 p2 + ggplot2::theme_minimal(base_size = 14),
                 p3 + ggplot2::theme_minimal(base_size = 14))

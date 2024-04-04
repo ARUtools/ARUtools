@@ -4,6 +4,7 @@
 #'
 #' @param base_folder Base folder path from which to search from.
 #' @param file_list Vector of strings with file locations. If it is null, will search for them manually. Should be relative to base_folder
+#' @param random_seed numeric
 #'
 #' @return Will not return anything. It does open your media player
 #' @export

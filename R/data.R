@@ -8,6 +8,19 @@
 #' @source data-raw/data_test.R
 "example_files"
 
+
+
+#' Example long-term deployment recording files
+#'
+#' A vector of examples ARU recording files. Uses the
+#' `example_sites` data, but deploys them for a longer deployment
+#'
+#' @format ## `example_files_long`
+#' A vector with 614 file paths
+#' @source data-raw/data_long_deployment.R
+"example_files_long"
+
+
 #' Example site-level meta data
 #'
 #' A data frame with examples of incorrectly formatted site-level data.
@@ -92,7 +105,7 @@
 #'   \item{internal_task_id}{Empty character for filling in WildTrax}
 #' }
 #' @source data-raw/task_template.R
-"example_clean"
+"task_template"
 
 
 

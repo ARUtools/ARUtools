@@ -105,7 +105,11 @@ clean_site_index <- function(site_index,
                                     progress = FALSE,
                                     show_col_types = FALSE)
     } else if(type == "xlsx") {
+      if(is_installed('readxl')){
       site_index <- readxl::read_excel(site_index, progress = FALSE)
+      } else{abort(c("package \"readxl\" is required to import xlsx files",
+                     'i' = "Install using \"install.packages(\'readxl\')\"
+                     or convert to a 'csv' file and re-import"))}
     }
   }
 
