@@ -18,11 +18,11 @@ articles:
    contents:
     - customizing
     - spatial
-    - sampling
     - timezones
  - title: Other
    contents:
     - Misc
+    - multisampling
 repo:
   url:
     home: https://github.com/arutools/ARUtools/
