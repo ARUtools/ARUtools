@@ -314,6 +314,8 @@ check_wave_length <- function(path_in, clip_length, start_time, diff_limit, call
 #'   10kHz. Use `rate = NULL` for no limiting.
 #' @param dry_run Logical. If `TRUE` show the sox command, but do not run (for
 #'   debugging and understanding precise details).
+#' @param sox_file_path Path to sox file if not installed at the system level,
+#'         otherwise NULL.
 #'
 #' @inheritParams common_docs
 #'
@@ -342,10 +344,26 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
                         width = NULL, height = NULL,
                         start = NULL, end = NULL,
                         rate = "20k", dry_run = FALSE,
-                        quiet = FALSE) {
+                        quiet = FALSE, sox_file_path = NULL ) {
 
   if(!fs::file_exists(path)) {
     abort(paste0("Cannot find wave file ", path))
+  }
+
+  if(is_null(sox_file_path)){
+    test <- system("sox -h", intern=FALSE, show.output.on.console = FALSE,
+                   ignore.stdout = T)
+  } else{
+    test <- system(paste0(sox_file_path, " -h"), intern=FALSE,
+                   ignore.stdout = T,
+                   show.output.on.console = FALSE)
+  }
+  if(test == 127){
+    if(is_testing()){
+      testthat::skip("SoX not available")
+    } else{
+      abort("SoX not available")
+    }
   }
 
   # Create output path
@@ -374,7 +392,9 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
     inform(cmd)
   } else {
     if(!quiet) inform(glue::glue("Writing spectrogram to {path_out}"))
-    seewave::sox(cmd)
+    output <- seewave::sox(cmd)
+    if(output==127) abort(c("Sox failed to run",
+                            'i' = "Check SoX install or provide path to program file"))
   }
 }
 

@@ -4,6 +4,7 @@
 #'
 #' @param base_folder Base folder path from which to search from.
 #' @param file_list Vector of strings with file locations. If it is null, will search for them manually. Should be relative to base_folder
+#' @param random_seed numeric
 #'
 #' @return Will not return anything. It does open your media player
 #' @export
@@ -11,9 +12,8 @@
 play_random_track <- function(base_folder,file_list=NULL,  random_seed = NULL){
   if(!interactive()) abort("This program does not work outside of an interactive seesion")
   if (!requireNamespace("tuneR", quietly = TRUE)) {
-    stop(
-      "Package \"tuneR\" must be installed to use this function.",
-      call. = FALSE
+      abort(
+        "Package \"tuneR\" must be installed to use this function."
     )
   }
   if(is_null(random_seed)) random_seed <- Sys.time()

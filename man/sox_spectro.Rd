@@ -14,7 +14,8 @@ sox_spectro(
   end = NULL,
   rate = "20k",
   dry_run = FALSE,
-  quiet = FALSE
+  quiet = FALSE,
+  sox_file_path = NULL
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ debugging and understanding precise details).}
 
 \item{quiet}{Logical. Whether to suppress progress messages and other
 non-essential updates.}
+
+\item{sox_file_path}{Path to sox file if not installed at the system level,
+otherwise NULL.}
 }
 \value{
 Does not return anything, but creates a spectrogram image in

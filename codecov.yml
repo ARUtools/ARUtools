@@ -1,14 +1,27 @@
+codecov:
+  require_ci_to_pass: true
+  token: 450a5bef-1516-4a0e-b062-8f3c79e76cf1
 comment: false
-
 coverage:
+  precision: 2
+  range:
+  - 60.0
+  - 80.0
+  round: down
   status:
-    project:
-      default:
-        target: auto
-        threshold: 1%
-        informational: true
+    changes: false
+    default_rules:
+      flag_coverage_not_uploaded_behavior: include
     patch:
       default:
-        target: auto
-        threshold: 1%
         informational: true
+        target: auto
+        threshold: 1.0
+    project:
+      default:
+        informational: true
+        target: auto
+        threshold: 1.0
+github_checks:
+  annotations: true
+slack_app: true

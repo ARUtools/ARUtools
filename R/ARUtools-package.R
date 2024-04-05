@@ -5,7 +5,6 @@
 #' @docType package
 #' @name ARUtools
 #' @import spsurvey
-#' @import patchwork
 #' @import rlang
 #' @import dplyr
 #'
@@ -30,7 +29,10 @@ rlang::on_load(rlang::local_use_cli())
       # Vars used in Non-Standard Evaluations, declare here to
       # avoid notes. Here are Defaults for various functions
       c("site_id", "psel_std", "t2sr", # sample_recordings()
-        "path", "subdir_out", "filename_out", "clip_length", "start_time" # clip_wave()
+        "path", "subdir_out", "filename_out", "clip_length", "start_time", # clip_wave(),
+        "totalwindless", # wind_detection_summarize_json()
+        "taskLength", "transcriber", "hrs_assigned", # wt_assign_tasks(),
+        "is_testing" # sox_spectro() for usethis failure
       )
     )
 

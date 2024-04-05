@@ -121,8 +121,7 @@ task_template <- wildRtrax::wt_make_aru_tasks(example_clean |>
 
 
 ```{r}
-template_observers <- 
-  "https://raw.githubusercontent.com/dhope/Shiny_select/main/data/InterpreterHours_Template.csv"
+template_observers
 
 ```
 
@@ -133,7 +132,7 @@ tasks to interpreters based on the amount of effort they can put in.
 ```{r}
 task_output <- wt_assign_tasks(wt_task_template_in = task_template, 
                 wt_task_output_file = NULL,
-                interp_hours_file = template_observers,
+                interp_hours = template_observers,
                 interp_hours_column = hrs, 
                 random_seed = 65416
                 )

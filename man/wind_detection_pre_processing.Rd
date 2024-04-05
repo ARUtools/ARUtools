@@ -14,8 +14,27 @@ wind_detection_pre_processing(
 )
 }
 \arguments{
-\item{write_output}{}
+\item{wav_vector}{vector of wave files}
+
+\item{site_pattern}{regular expression to extract site names}
+
+\item{chunksize}{numeric size of chunks to split wav_vector into}
+
+\item{file_drive}{Path to replace for use of cygwin}
+
+\item{output_directory}{string - output directory to write files to}
+
+\item{write_output}{logical - if should write output to files.}
+}
+\value{
+List including filePath, filenames, and sites suitable for wind software.
 }
 \description{
-Pre-processing of files for Wind Detection program
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+This function takes a vector of wave file names and returns a list
+of three vectors that can be provided to the wind detection software or
+written to files that the software can read. Details of the wind detection
+software can be found at
+\url{https://github.com/dhope/WindNoiseDetection}
 }

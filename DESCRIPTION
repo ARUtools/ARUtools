@@ -21,7 +21,6 @@ Imports:
     stringr,
     lubridate,
     readr,
-    patchwork,
     glue,
     rlang (>= 0.4),
     spsurvey (>= 5.0.1),
@@ -30,12 +29,15 @@ Imports:
     suncalc,
     fs (>= 1.6.1),
     hms (>= 1.1.2),
-    readxl (>= 1.4.2),
     seewave (>= 2.2.3),
     withr,
-    parzer
+    parzer,
+    here,
+    lifecycle
 Suggests: 
     testthat (>= 3.0.0),
+    readxl (>= 1.4.2),
+    patchwork,
     soundecology,
     ggplot2,
     tuneR,

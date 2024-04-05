@@ -1,8 +1,8 @@
 ---
-title: "Sampling recordings"
+title: "Sampling recordings - Multple Time Periods"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Sampling recordings}
+  %\VignetteIndexEntry{Sampling recordings - Multple Time Periods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

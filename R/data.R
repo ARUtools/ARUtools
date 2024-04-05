@@ -8,6 +8,19 @@
 #' @source data-raw/data_test.R
 "example_files"
 
+
+
+#' Example long-term deployment recording files
+#'
+#' A vector of examples ARU recording files. Uses the
+#' `example_sites` data, but deploys them for a longer deployment
+#'
+#' @format ## `example_files_long`
+#' A vector with 614 file paths
+#' @source data-raw/data_long_deployment.R
+"example_files_long"
+
+
 #' Example site-level meta data
 #'
 #' A data frame with examples of incorrectly formatted site-level data.
@@ -91,8 +104,22 @@
 #'   \item{taskComments}{Empty character for filling in WildTrax}
 #'   \item{internal_task_id}{Empty character for filling in WildTrax}
 #' }
-#' @source data-raw/task_template.R
-"example_clean"
+#' @source data-raw/data_wt_assign_tasks.R
+"task_template"
 
 
+
+
+#' Example template of tasks for WildTrax
+#'
+#' A data frame showing example observers and their effort
+#'
+#' @format ## `template_observers`
+#' A data frame with 4 rows and 2 columns:
+#' \describe{
+#'   \item{transcriber}{Interpreter name in Wildtrax system}
+#'   \item{hrs}{Number of hours to assign to interpreter}
+#' }
+#' @source data-raw/data_wt_assign_tasks.R
+"template_observers"
 
