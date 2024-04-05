@@ -8,18 +8,34 @@
 #'
 #' @return Returns a list with a tibble of assigned tasks and a summary tibble.
 #' @export
-wt_assign_tasks <- function(wt_task_template_in, interp_hours_file, wt_task_output_file,
+wt_assign_tasks <- function(wt_task_template_in, interp_hours, wt_task_output_file,
                             interp_hours_column, random_seed = NULL){
   if(is.data.frame(wt_task_template_in)){
     tasks <- wt_task_template_in
-  } else if (is.character(wt_task_template_in)){
+  } else if (fs::file_exists(wt_task_template_in)){
+
+    if(fs::path_ext(wt_task_template_in)!="csv"){
+      abort("'wt_task_template_in' must be a path to a csv file or data table")
+    }
 
   tasks <- readr::read_csv(wt_task_template_in,
                     col_types = glue::glue_collapse(rep("c", 13)),
                     na = character())
 
-  } else{rlang::abort("wt_task_template_in requires a data.frame or path to file")}
-  hours <- readr::read_csv(interp_hours_file) |>
+  } else{abort("'wt_task_template_in' requires a data.frame or path to csv file")}
+
+  if(is.data.frame(interp_hours)){
+    hours <- interp_hours
+  } else if(fs::file_exists(interp_hours)){
+    if(fs::path_ext(interp_hours)!="csv"){
+      abort("'interp_hours' must be a path to a csv file or data table")
+    }
+    hours <- readr::read_csv(interp_hours, col_types = readr::cols())
+  } else{
+    abort("'interp_hours' requires a data.frame or path to a csv file")
+  }
+
+  hours <- hours |>
     dplyr::filter(!is.na({{interp_hours_column}})) |>
     dplyr::mutate(phrs = {{interp_hours_column}}/sum({{interp_hours_column}}))
 

@@ -104,8 +104,22 @@
 #'   \item{taskComments}{Empty character for filling in WildTrax}
 #'   \item{internal_task_id}{Empty character for filling in WildTrax}
 #' }
-#' @source data-raw/task_template.R
+#' @source data-raw/data_wt_assign_tasks.R
 "task_template"
 
 
+
+
+#' Example template of tasks for WildTrax
+#'
+#' A data frame showing example observers and their effort
+#'
+#' @format ## `template_observers`
+#' A data frame with 4 rows and 2 columns:
+#' \describe{
+#'   \item{transcriber}{Interpreter name in Wildtrax system}
+#'   \item{hrs}{Number of hours to assign to interpreter}
+#' }
+#' @source data-raw/data_wt_assign_tasks.R
+"template_observers"
 
