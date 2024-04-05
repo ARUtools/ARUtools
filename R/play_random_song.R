@@ -16,12 +16,6 @@ play_random_track <- function(base_folder,file_list=NULL,  random_seed = NULL){
         "Package \"tuneR\" must be installed to use this function."
     )
   }
-  if (!requireNamespace("tuneR", quietly = TRUE)) {
-    stop(
-      "Package \"tuneR\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
   if(is_null(random_seed)) random_seed <- Sys.time()
   if(is.null(file_list))  list_waves <- list.files(base_folder, pattern = ".wav", recursive = T, full.names = F)
   if(length(file_list)==0) abort("No wav files found. Check path")
