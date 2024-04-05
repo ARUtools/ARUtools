@@ -100,12 +100,11 @@ clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_s
     r <- dplyr::bind_rows(events_gps, events_rec)
   }
 
-
     # ../ARUtools - Extra/aru_log_files/P352/1A_BARLT16214/logfile.txt
   r |>
     dplyr::full_join(schedule, by = dplyr::join_by("path", "date_time" >= "schedule_date")) |>
     dplyr::full_join(meta, by = "path") |>
-    dplyr::mutate(file_name = fs::path(.data[["path"]])) |>
+    dplyr::mutate(file_name = fs::path_file(.data[["path"]])) |>
     dplyr::relocate("file_name", "path", "event", "date_time") |>
     dplyr::arrange(.data[["path"]], .data[["date_time"]])
 }

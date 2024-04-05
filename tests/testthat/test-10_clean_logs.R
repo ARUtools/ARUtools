@@ -22,6 +22,7 @@ test_that("clean_logs() single", {
                l2)
   skip_on_ci()
   l <- withr::with_seed(1234, dplyr::slice_sample(l, n = 100))
+  l$path <- l$path |> stringr::str_remove(fs::path_package("ARUtools"))
   expect_snapshot_value(l, style = "json2")
 })
 
@@ -49,5 +50,6 @@ test_that("clean_logs() multiple", {
                l2)
   skip_on_ci()
   l <- withr::with_seed(1234, dplyr::slice_sample(l, n = 100))
+  l$path <- l$path |> stringr::str_remove(fs::path_package("ARUtools"))
   expect_snapshot_value(l, style = "json2")
 })
