@@ -25,7 +25,7 @@
     <loc>http://arutools.github.io/ARUtools/articles/index.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/articles/sampling.html</loc>
+    <loc>http://arutools.github.io/ARUtools/articles/multisampling.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/articles/spatial.html</loc>
@@ -106,6 +106,9 @@
     <loc>http://arutools.github.io/ARUtools/reference/example_files.html</loc>
   </url>
   <url>
+    <loc>http://arutools.github.io/ARUtools/reference/example_files_long.html</loc>
+  </url>
+  <url>
     <loc>http://arutools.github.io/ARUtools/reference/example_sites.html</loc>
   </url>
   <url>
@@ -131,6 +134,9 @@
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/sox_spectro.html</loc>
+  </url>
+  <url>
+    <loc>http://arutools.github.io/ARUtools/reference/task_template.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/temp_wavs.html</loc>

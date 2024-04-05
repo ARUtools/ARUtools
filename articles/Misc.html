@@ -58,7 +58,6 @@
     <h6 class="dropdown-header" data-toc-skip>Customization</h6>
     <a class="dropdown-item" href="../articles/customizing.html">Customizing `clean_metadata()`</a>
     <a class="dropdown-item" href="../articles/spatial.html">Working with spatial data</a>
-    <a class="dropdown-item" href="../articles/sampling.html">Sampling recordings</a>
     <a class="dropdown-item" href="../articles/timezones.html">Dealing with Timezones</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
@@ -195,34 +194,33 @@ in a project as the relative amounts are used.</p>
 <span>                             output <span class="op">=</span> <span class="va">in_tasks</span>,</span>
 <span>                               task_method <span class="op">=</span> <span class="st">'1SPT'</span>, task_length <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">template_observers</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="st">"https://raw.githubusercontent.com/dhope/Shiny_select/main/data/InterpreterHours_Template.csv"</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">template_observers</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">#&gt;   transcriber                     hrs</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Charles Dickens                 5  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> John Von Jovie                  1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> John Yossarian                  6.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Rodion Romanovich Raskolnikov   2.3</span></span></code></pre></div>
 <p>Once you have the files you need, you can run
 <code><a href="../reference/wt_assign_tasks.html">wt_assign_tasks()</a></code> to randomly assign tasks to interpreters
 based on the amount of effort they can put in.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">task_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wt_assign_tasks.html">wt_assign_tasks</a></span><span class="op">(</span>wt_task_template_in <span class="op">=</span> <span class="va">task_template</span>, </span>
 <span>                wt_task_output_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                interp_hours_file <span class="op">=</span> <span class="va">template_observers</span>,</span>
+<span>                interp_hours <span class="op">=</span> <span class="va">template_observers</span>,</span>
 <span>                interp_hours_column <span class="op">=</span> <span class="va">hrs</span>, </span>
 <span>                random_seed <span class="op">=</span> <span class="fl">65416</span></span>
 <span>                <span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">4</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">chr</span> (1): transcriber</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">dbl</span> (1): hrs</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
 <span></span>
 <span><span class="va">task_output</span><span class="op">$</span><span class="va">task_summary</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 5</span></span></span>
-<span><span class="co">#&gt;   transcriber                   hrs_assigned   hrs  phrs updated_hrs_remain</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> John Yossarian                       0.333   6.5 0.439               6.17</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Rodion Romanovich Raskolnikov        0.5     2.3 0.155               1.8 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Charles Dickens                      0.333   5   0.338               4.67</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
+<span><span class="co">#&gt;   transcriber                   hrs_assigned   hrs   phrs updated_hrs_remain</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> John Yossarian                       1.08    6.5 0.439               5.42 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Rodion Romanovich Raskolnikov        1.08    2.3 0.155               1.22 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Charles Dickens                      1.17    5   0.338               3.83 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> John Von Jovie                       0.167   1   0.067<span style="text-decoration: underline;">6</span>              0.833</span></span></code></pre></div>
 <p>You can alternatively use the <code>Shiny</code> app <a href="https://github.com/dhope/Shiny_select" class="external-link">Shiny_select</a> by running
 the following:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">

@@ -6,10 +6,10 @@ articles:
   Misc: Misc.html
   SubSample: SubSample.html
   customizing: customizing.html
-  sampling: sampling.html
+  multisampling: multisampling.html
   spatial: spatial.html
   timezones: timezones.html
-last_built: 2024-04-02T20:18Z
+last_built: 2024-04-05T20:50Z
 urls:
   reference: http://arutools.github.io/ARUtools/reference
   article: http://arutools.github.io/ARUtools/articles
