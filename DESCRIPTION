@@ -1,7 +1,7 @@
 Package: ARUtools
 Type: Package
 Title: Tools for management of Autonomous Recording Unit (ARU) data
-Version: 0.5.1
+Version: 0.6.0
 Authors@R: c(
     person("David", "Hope", email = "david.hope@ec.gc.ca", role = c("aut", "cre"),
             comment = c(ORCID = "0000-0002-2140-4261")),
