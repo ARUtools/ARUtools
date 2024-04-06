@@ -1,14 +1,14 @@
 Package: ARUtools
 Type: Package
-Title: Tools for management of Acoustic Recording Unit (ARU) data
+Title: Tools for management of Autonomous Recording Unit (ARU) data
 Version: 0.5.1
 Authors@R: c(
     person("David", "Hope", email = "david.hope@ec.gc.ca", role = c("aut", "cre"),
             comment = c(ORCID = "0000-0002-2140-4261")),
     person("Steffi", "LaZerte", email = "sel@steffilazerte.ca", role = c("aut"), 
            comment = c(ORCID = "0000-0002-7690-8360")))
-Description: Collection of functions and R code for parsing acoustic recording
-    unit (ARU) data and for sub-sampling recordings.
+Description: ARutools is a collection of functions and R code for parsing Autonomous Recording
+    Unit (ARU) data and for sub-sampling recordings. Extract Metadata from your recordings,  select a subset of recordings for interpretation, and prepare files for processing on the 'WildTrax' platform.
 Depends: R (>= 4.0)
 License: GPL (>= 3)
 Encoding: UTF-8
