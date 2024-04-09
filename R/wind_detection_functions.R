@@ -88,86 +88,75 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
 #' `r lifecycle::badge("experimental")`
 #'
 #' This function takes a vector of wave file names and returns a list
-#' of three vectors that can be provided to the wind detection software or
-#' written to files that the software can read. Details of the wind detection
-#' software can be found at
+#'  of three vectors that can be provided to the wind detection software or
+#'  written to files that the software can read. Details of the usable fork of the
+#'  wind detection software can be found at
 #' [https://github.com/dhope/WindNoiseDetection](https://github.com/dhope/WindNoiseDetection)
 #'
+#' @param wav_files Vector of path to wav files
+#' @param site_pattern Pattern to extract sites from file names
+#' @param output_directory Directory path to export files to
+#' @param write_to_file Logical Should the function write files to output_directory
+#' @param chunk_size Numeric If not NULL, sets number of files to include in each chunk
 #'
-#' @param wav_vector vector of wave files
-#' @param site_pattern regular expression to extract site names
-#' @param chunksize numeric size of chunks to split wav_vector into
-#' @param file_drive Path to replace for use of cygwin
-#' @param output_directory string - output directory to write files to
-#' @param write_output logical - if should write output to files.
-#'
+#' @return List of vectors for sites, filenames, and filePaths
 #' @export
 #'
 #' @return List including filePath, filenames, and sites suitable for wind software.
 #'
-wind_detection_pre_processing <- function(wav_vector, site_pattern,
-                                          chunksize, file_drive,
-                                          output_directory = NULL, write_output = FALSE) {
+wind_detection_pre_processing <- function(wav_files, site_pattern, output_directory, write_to_file = FALSE,
+                                             chunk_size = NULL) {
   lifecycle::signal_stage("experimental", "wind_detection_pre_processing()")
-  warn(c("Function in development.",
-    "i" = "Use cases very limited for now.",
-    "*" = "Improvements expected in later versions"
-  ))
-  if (!grepl("Windows", utils::osVersion)) {
-    abort("Currently only implemented for  Windows due to drive naming and for use with cygwin")
+  if (any(grepl("[\\(,\\),\\+,\\[,\\]", wav_files))) {
+    warn(
+      c("Special characters detected in file paths",
+        x = "Wind Detection is may not work"
+      )
+    )
   }
-  # Currently need to set drive manually
-  # don't need this for non-windows
-  # drive <- stringr::str(wav_vector, 1,1)
-  chunks <- parallel::splitIndices(length(wav_vector), ncl = ceiling(length(wav_vector) / (chunksize)))
+  gen_output <- function(file_list) {
+    filePaths <- file_list |>
+      # stringr::str_replace( "J:/", "/cygdrive/j/") |>
+      stringr::str_remove("/[^/]+.wav")
 
-  output_vec <- vector(mode = "list", length = length(chunks))
+    sites <- file_list |>
+      stringr::str_extract(site_pattern)
 
-  for (i in 1:length(chunks)) {
-    tmp_wav <- wav_vector[chunks[[i]]]
-
-    filePaths <- tmp_wav |>
-      stringr::str_replace(
-        glue::glue("{file_drive}:/"),
-        glue::glue("/cygdrive/{file_drive}/")
-      ) |>
-      stringr::str_remove("/[^/]+.wav") |>
-      stringr::str_replace("\\(", r"(\\\()") |>
-      stringr::str_replace("\\)", r"(\\\))") |>
-      stringr::str_replace("\\s", r"(\\\ )") |>
-      stringr::str_replace("\\+", "\\\\+") |>
-      stringr::str_replace("\\[", "\\\\[") |>
-      stringr::str_replace("\\]", "\\\\]")
-
-    sites <- tmp_wav |>
-      stringr::str_extract(site_pattern) |>
-      stringr::str_replace("/", "-")
-
-    filenames <- tmp_wav |>
+    filenames <- file_list |>
       stringr::str_extract("/[^/]+.wav") |>
       stringr::str_remove(".wav$") |>
-      stringr::str_remove("/") |>
-      stringr::str_replace("\\(", r"(\\\()") |>
-      stringr::str_replace("\\)", r"(\\\))") |>
-      stringr::str_replace("\\s", r"(\\\ )") |>
-      stringr::str_replace("\\+", "\\\\+") |>
-      stringr::str_replace("\\[", "\\\\[") |>
-      stringr::str_replace("\\]", "\\\\]")
-    if (!is_null(output_directory) & is_true(write_output)) {
-      dir_ <- glue::glue("{output_directory}/{i}")
+      stringr::str_remove("/")
 
-      dir.create(dir_, showWarnings = T, recursive = F)
-
-      readr::write_lines(filePaths, here::here(glue::glue("{dir_}/pathlist.txt")))
-      readr::write_lines(filenames, here::here(glue::glue("{dir_}/filelist.txt")))
-      readr::write_lines(sites, here::here(glue::glue("{dir_}/sitelist.txt")))
-    }
-    output_vec[[i]] <- list(
-      chunk = i,
+    list(
       filePaths = filePaths,
       filenames = filenames,
       sites = sites
     )
   }
-  return(output_vec)
+
+  if (is.null(chunk_size)) {
+    output <- gen_output(wav_files)
+    if (isTRUE(write_to_file)) {
+      readr::write_lines(output$filePaths, glue::glue("{output_directory}/pathlist.txt"))
+      readr::write_lines(output$filenames, glue::glue("{output_directory}/filelist.txt"))
+      readr::write_lines(output$sites, glue::glue("{output_directory}/sitelist.txt"))
+    }
+  } else {
+    chunks <- parallel::splitIndices(length(wav_files), ncl = ceiling(length(wav_files) / (chunk_size)))
+    output <- purrr::map(chunks, ~ gen_output(wav_files[.x]))
+
+    if (isTRUE(write_to_file)) {
+      dir_ <- purrr::walk(
+        1:length(chunks),
+        ~ {
+          dir.create(glue::glue("{output_directory}/{.x}"))
+          readr::write_lines(output[[.x]]$filePaths, here::here(glue::glue("{output_directory}/{.x}/pathlist.txt")))
+          readr::write_lines(output[[.x]]$filenames, here::here(glue::glue("{output_directory}/{.x}/filelist.txt")))
+          readr::write_lines(output[[.x]]$sites, here::here(glue::glue("{output_directory}/{.x}/sitelist.txt")))
+        }
+      )
+    }
+  }
+  return(output)
 }
+
