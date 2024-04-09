@@ -9,24 +9,21 @@
 #'
 #'
 #' @param f filepath for json
-#' @param json_string_regex string. Regex to extract from file path
 #'
 #' @export
 #'
 #' @return tibble of summarized data from json file
-wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]+") {
-  lifecycle::signal_stage("experimental", "wind_detection_summarize_json()")
-  warn("Function in development. Use at own risk")
-  if (!is_installed("jsonlite")) abort("sum_json requires {jsonlite} package")
+wind_detection_summarize_json <- function(f) {
+  lifecycle::signal_stage("experimental", "ARUtools::wind_detection_summarize_json()")
+  check_installed("jsonlite",reason = "sum_json requires {jsonlite} package")
 
   s <- purrr::safely(jsonlite::read_json)
 
   jsonfile <- s(f)
+  jsonFilename <-  fs::path_file(f)
   if (is_null(jsonfile$result)) {
     return(dplyr::tibble(
-      jsonF = stringr::str_remove(
-        stringr::str_extract(f, "/[\\w|\\d|_|-]+.json"), "/"
-      )
+      jsonF = jsonFilename
     ))
   } else {
     jsonfile <- jsonfile$result
@@ -39,17 +36,11 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
     max()
   if (is_empty(jsonfile$`Wind free regions`)) {
     return(dplyr::tibble(
-      name = nm, totalwindless = 0,
+      path = nm, totalwindless = 0,
       length = dets,
       pwindless = 0,
       n = 0, mean_windless = 0,
-      jsonF = stringr::str_remove(
-        stringr::str_extract(
-          f,
-          glue::glue("{json_string_regex}.json")
-        ),
-        "/"
-      )
+      jsonF = jsonFilename
     ))
   }
 
@@ -57,10 +48,9 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
   nm <- purrr::pluck(jsonfile, "FileName")
   e <- tmp |>
     purrr::pluck("e") |>
-    purrr::list_c() # |>
-  # purrr::list_flatten()
+    purrr::list_c()
   s <- purrr::list_c(purrr::pluck(tmp, "s"))
-  # browser()
+
   dplyr::tibble(s, e) |>
     dplyr::mutate(t = e - s) |>
     dplyr::summarize(
@@ -69,14 +59,8 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
       n = dplyr::n(),
       length = dets,
       mean_windless = mean(t),
-      name = nm,
-      jsonF = stringr::str_remove(
-        stringr::str_extract(
-          f,
-          glue::glue("{json_string_regex}.json")
-        ),
-        "/"
-      )
+      path = nm,
+      jsonF = jsonFilename
     )
 }
 
@@ -106,7 +90,7 @@ wind_detection_summarize_json <- function(f, json_string_regex = "/[\\w|\\d|_|-]
 #'
 wind_detection_pre_processing <- function(wav_files, site_pattern, output_directory, write_to_file = FALSE,
                                              chunk_size = NULL) {
-  lifecycle::signal_stage("experimental", "wind_detection_pre_processing()")
+  lifecycle::signal_stage("experimental", "ARUtools::wind_detection_pre_processing()")
   if (any(grepl("[\\(,\\),\\+,\\[,\\]", wav_files))) {
     warn(
       c("Special characters detected in file paths",
@@ -115,17 +99,13 @@ wind_detection_pre_processing <- function(wav_files, site_pattern, output_direct
     )
   }
   gen_output <- function(file_list) {
-    filePaths <- file_list |>
-      # stringr::str_replace( "J:/", "/cygdrive/j/") |>
-      stringr::str_remove("/[^/]+.wav")
+    filePaths <- fs::path_dir(file_list)
 
     sites <- file_list |>
       stringr::str_extract(site_pattern)
 
-    filenames <- file_list |>
-      stringr::str_extract("/[^/]+.wav") |>
-      stringr::str_remove(".wav$") |>
-      stringr::str_remove("/")
+    filenames <- fs::path_file(file_list) |>
+      fs::path_ext_remove()
 
     list(
       filePaths = filePaths,
@@ -142,6 +122,8 @@ wind_detection_pre_processing <- function(wav_files, site_pattern, output_direct
       readr::write_lines(output$sites, glue::glue("{output_directory}/sitelist.txt"))
     }
   } else {
+    check_installed("parallel", "Using the chunks command requires installation of the 'parallel' package.
+                    Set chunks = NULL or install the package")
     chunks <- parallel::splitIndices(length(wav_files), ncl = ceiling(length(wav_files) / (chunk_size)))
     output <- purrr::map(chunks, ~ gen_output(wav_files[.x]))
 

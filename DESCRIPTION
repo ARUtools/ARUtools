@@ -41,6 +41,7 @@ Suggests:
     job,
     jsonlite,
     knitr,
+    parallel,
     patchwork,
     readxl (>= 1.4.2),
     rmarkdown,
