@@ -67,7 +67,7 @@ test_that("sun_diff()", {
 
 test_that("calc_ss_diff()", {
   ss <- calc_all_ss(dts, tz = "America/Toronto") |>
-    mutate(date_time = lubridate::as_datetime(paste0(date, " 06:30:00")))
+    dplyr::mutate(date_time = lubridate::as_datetime(paste0(date, " 06:30:00")))
 
   expect_silent(diff <- calc_ss_diff(ss))
   expect_true(all(c("t2sr", "t2sr_day_of", "t2sr_before", "t2sr_after",
@@ -75,7 +75,7 @@ test_that("calc_ss_diff()", {
                     names(diff)))
   expect_equal(diff$t2sr, c(30.53333, -20.11667), tolerance = 0.0001)
   expect_equal(diff$t2ss, c(468.0833, 520.9000), tolerance = 0.0001)
-  expect_true(all(select(diff, starts_with("t2")) < 48*60)) # at most two day away
+  expect_true(all(dplyr::select(diff, starts_with("t2")) < 48*60)) # at most two day away
 })
 
 test_that("calc_sun()", {

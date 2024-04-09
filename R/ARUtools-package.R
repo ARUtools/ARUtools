@@ -1,12 +1,11 @@
-#' ARUtools: CWS Ontario Tools for working with ARU files
+#' ARUtools: Tools for management of Acoustic Recording Unit (ARU) data
 #'
-#' ARU tools that some might find useful for working with ARU files.
+#' Collection of functions and R code for parsing acoustic
+#'     recording unit (ARU) data and for sub-sampling recordings.
 #'
 #' @docType package
 #' @name ARUtools
-#' @import spsurvey
 #' @import rlang
-#' @import dplyr
 #'
 "_PACKAGE"
 

@@ -6,16 +6,19 @@
 \usage{
 wt_assign_tasks(
   wt_task_template_in,
-  interp_hours_file,
+  interp_hours,
   wt_task_output_file,
   interp_hours_column,
   random_seed = NULL
 )
 }
 \arguments{
-\item{wt_task_template_in}{Path to csv template downloaded from WilldTrax website listing all tasks}
+\item{wt_task_template_in}{Path to csv template downloaded from WilldTrax website listing all tasks.
+Alternatively, can be a data.frame that is correctly formatted using \code{wildRtrax::wt_make_aru_tasks()}.
+See \code{vignette("Misc")} for details.}
 
-\item{interp_hours_file}{Path to number of hours for each interpreter. Must be csv and include}
+\item{interp_hours}{Path to number of hours for each interpreter or a data.table. If a file, must be csv and must include
+the columns "transcriber" and whatever the variable \code{interp_hours_column} is.}
 
 \item{wt_task_output_file}{Path to csv of output file for uploading to wildtrax. If left as NULL will not write file}
 
