@@ -11,11 +11,8 @@
 #'
 play_random_track <- function(base_folder, file_list = NULL, random_seed = NULL) {
   if (!interactive()) abort("This program does not work outside of an interactive seesion")
-  if (!requireNamespace("tuneR", quietly = TRUE)) {
-    abort(
-      "Package \"tuneR\" must be installed to use this function."
-    )
-  }
+  check_installed("tuneR","Package \"tuneR\" must be installed to use this function.")
+
   if (is_null(random_seed)) random_seed <- Sys.time()
   if (is.null(file_list)) list_waves <- list.files(base_folder, pattern = ".wav", recursive = T, full.names = F)
   if (length(file_list) == 0) abort("No wav files found. Check path")

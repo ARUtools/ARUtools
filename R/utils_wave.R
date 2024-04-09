@@ -465,15 +465,12 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
 #' unlink("test_wave.wav")
 acoustic_indices <- function(path, min_freq = NA, max_freq = NA, units = "samples",
                              quiet = FALSE) {
-  if (!requireNamespace("soundecology", quietly = TRUE) ||
-    !requireNamespace("tuneR", quietly = TRUE)) {
-    abort(
-      c(
+ check_installed(c("soundecology","tuneR"), c(
         "Packages \"soundecology\" and \"tuneR\" must be installed to use `acoustic_indices()`",
         "Install with `install.packages(c(\"soundecology\", \"tuneR\"))`"
       )
     )
-  }
+
 
   file_name <- fs::path_file(path)
   if (!quiet) message(glue::glue("Calculating acoustic indices for {file_name}\n"))

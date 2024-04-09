@@ -39,13 +39,11 @@ sim_selection_weights <- function(
     day_range = c(120, 201), day_mean = 161, day_sd = 20,
     offset = 0, return_log = TRUE, selection_fun = "norm",
     selection_var = "psel_normalized", return_params = TRUE, plot = TRUE) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    abort(
+  check_installed("ggplot2",
       c("Package \"ggplot2\" must be installed to use this function",
         "!" = "Use `install.packages(\"ggplot2\") to install"
       )
     )
-  }
 
   # Create parameter list
   params <- list(
