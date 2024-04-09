@@ -34,9 +34,10 @@ based on the longitude and latitude of each recording.
 }
 \examples{
 s <- clean_site_index(example_sites_clean,
-                      name_date = c("date_time_start", "date_time_end"))
+  name_date = c("date_time_start", "date_time_end")
+)
 m <- clean_metadata(project_files = example_files) |>
   add_sites(s)
-  calc_sun(m)
+calc_sun(m)
 
 }

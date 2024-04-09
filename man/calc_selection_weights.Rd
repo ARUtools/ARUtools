@@ -48,7 +48,8 @@ parameters defined by \code{sim_selection_weights()}.
 }
 \examples{
 s <- clean_site_index(example_sites_clean,
-                      name_date_time = c("date_time_start", "date_time_end"))
+  name_date_time = c("date_time_start", "date_time_end")
+)
 m <- clean_metadata(project_files = example_files) |>
   add_sites(s) |>
   calc_sun()

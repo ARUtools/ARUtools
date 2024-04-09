@@ -64,25 +64,28 @@ from different timezones to be processed at the same time.
 \examples{
 
 s <- clean_site_index(example_sites,
-                      name_aru_id = "ARU",
-                      name_site_id = "Sites",
-                      name_date_time = c("Date_set_out", "Date_removed"),
-                      name_coords = c("lon", "lat"))
+  name_aru_id = "ARU",
+  name_site_id = "Sites",
+  name_date_time = c("Date_set_out", "Date_removed"),
+  name_coords = c("lon", "lat")
+)
 
 s <- clean_site_index(example_sites,
-                      name_aru_id = "ARU",
-                      name_site_id = "Sites",
-                      name_date_time = c("Date_set_out", "Date_removed"),
-                      name_coords = c("lon", "lat"),
-                      name_extra = c("plot" = "Plots"))
+  name_aru_id = "ARU",
+  name_site_id = "Sites",
+  name_date_time = c("Date_set_out", "Date_removed"),
+  name_coords = c("lon", "lat"),
+  name_extra = c("plot" = "Plots")
+)
 
 # Without dates
 eg <- dplyr::select(example_sites, -Date_set_out, -Date_removed)
 s <- clean_site_index(eg,
-                      name_aru_id = "ARU",
-                      name_site_id = "Sites",
-                      name_date_time = NULL,
-                      name_coords = c("lon", "lat"),
-                      name_extra = c("plot" = "Plots"))
+  name_aru_id = "ARU",
+  name_site_id = "Sites",
+  name_date_time = NULL,
+  name_coords = c("lon", "lat"),
+  name_extra = c("plot" = "Plots")
+)
 
 }

@@ -47,9 +47,8 @@ group (\code{dist_by}), the returned data frame will include a column \code{max_
 which represents the largest distance among points within that group.
 }
 \examples{
-
 \dontrun{
-  m <- clean_metadata(project_dir = "my_project")
-  g <- clean_gps(meta = m)
+m <- clean_metadata(project_dir = "my_project")
+g <- clean_gps(meta = m)
 }
 }
