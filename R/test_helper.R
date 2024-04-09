@@ -64,3 +64,7 @@ temp_wavs <- function(n = 6) {
   purrr::map(f_in, \(x) tuneR::writeWave(w, x))
   f_in
 }
+
+is_testing <- function() {
+  identical(Sys.getenv("TESTTHAT"), "true")
+}
