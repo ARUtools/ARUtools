@@ -12,7 +12,7 @@ badge](https://arutools.r-universe.dev/badges/ARUtools)](https://arutools.r-univ
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-
+[![R-CMD-check](https://github.com/ARUtools/ARUtools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ARUtools/ARUtools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of ARUtools is to facilitate the processing of ARU data and
