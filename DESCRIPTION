@@ -8,10 +8,12 @@ Authors@R: c(
     person("Steffi", "LaZerte", , "sel@steffilazerte.ca", role = "aut",
            comment = c(ORCID = "0000-0002-7690-8360"))
   )
-Description: Collection of functions and R code for parsing acoustic
-    recording unit (ARU) data and for sub-sampling recordings.
+Description: ARutools is a collection of functions and R code for parsing Autonomous Recording
+    Unit (ARU) data and for sub-sampling recordings. Extract Metadata from your recordings,  
+    select a subset of recordings for interpretation, and prepare files for processing on the 'WildTrax' platform.
 License: GPL (>= 3)
-URL: http://arutools.github.io/ARUtools/
+URL: https://arutools.github.io/ARUtools/, https://github.com/arutools/ARUtools/
+BugReports: https://github.com/arutools/ARUtools/issues
 Depends: 
     R (>= 4.0)
 Imports: 
@@ -58,3 +60,4 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+VignetteBuilder: knitr
