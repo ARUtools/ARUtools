@@ -31,19 +31,20 @@ To set up a folder structure you will need the hierarchical structure you wish t
 use and the list of sites/arus you are processing.
 
 ```{r, eval=F}
-site_list <- 
-example_sites |> 
-  tidyr::separate(Sites, into = c("plot", "site"), sep = "_", remove = F) |> 
-  dplyr::select(site_id=Sites, plot, site)
-  
-  
+site_list <-
+  example_sites |>
+  tidyr::separate(Sites, into = c("plot", "site"), sep = "_", remove = F) |>
+  dplyr::select(site_id = Sites, plot, site)
+
+
 tmp_dir <- tempdir(check = T) |> paste0("/ARUtools/")
 dir.create(tmp_dir)
 
-create_directory_structure(hexagons = site_list$plot,
-                           units = site_list$site_id, 
-                           base_dir = tmp_dir)
-
+create_directory_structure(
+  hexagons = site_list$plot,
+  units = site_list$site_id,
+  base_dir = tmp_dir
+)
 ```
 This should create a series of folders with plot at the main level and site in 
 the subdirectory below that.
@@ -73,12 +74,16 @@ However if you do get it running, `ARUtools` includes a couple helper functions 
 process your metadata and set it up for running with WindNoiseDetection.
 
 ```{r}
-wind_files <- 
-  prep_for_wind_detection(wav_files = example_clean$path,
-                                     output_directory = "./wind_files/", 
-                                     site_pattern = create_pattern_site_id( p_digits = c(2,3), sep = "_", 
-                                                                            s_digits = c(1,2)),
-                                     write_to_file = F, chunk_size = NULL)
+wind_files <-
+  prep_for_wind_detection(
+    wav_files = example_clean$path,
+    output_directory = "./wind_files/",
+    site_pattern = create_pattern_site_id(
+      p_digits = c(2, 3), sep = "_",
+      s_digits = c(1, 2)
+    ),
+    write_to_file = F, chunk_size = NULL
+  )
 ```
 
 The output is a list of vectors that include the path to the wave files (`filePaths`),
@@ -110,19 +115,21 @@ relative amounts are used.
 
 ```{r, eval=F}
 in_tasks <- fs::file_temp("Input_task_file", ext = ".csv")
-task_template <- wildRtrax::wt_make_aru_tasks(example_clean |> 
-                               dplyr::mutate(
-                                 recording_date_time = date_time,
-                                 file_path = path, location = site_id,
-                                 length_seconds = 300), 
-                             output = in_tasks,
-                               task_method = '1SPT', task_length = 300)
+task_template <- wildRtrax::wt_make_aru_tasks(
+  example_clean |>
+    dplyr::mutate(
+      recording_date_time = date_time,
+      file_path = path, location = site_id,
+      length_seconds = 300
+    ),
+  output = in_tasks,
+  task_method = "1SPT", task_length = 300
+)
 ```
 
 
 ```{r}
 template_observers
-
 ```
 
 
@@ -130,15 +137,15 @@ Once you have the files you need, you can run `wt_assign_tasks()` to randomly as
 tasks to interpreters based on the amount of effort they can put in.
 
 ```{r}
-task_output <- wt_assign_tasks(wt_task_template_in = task_template, 
-                wt_task_output_file = NULL,
-                interp_hours = template_observers,
-                interp_hours_column = hrs, 
-                random_seed = 65416
-                )
+task_output <- wt_assign_tasks(
+  wt_task_template_in = task_template,
+  wt_task_output_file = NULL,
+  interp_hours = template_observers,
+  interp_hours_column = hrs,
+  random_seed = 65416
+)
 
 task_output$task_summary
-
 ```
 
 

@@ -28,15 +28,14 @@ NULL
 #' @param yr_digits Numeric vector. Number of digits in Year, either 2 or 4.
 #'
 #' @examples
-#' create_pattern_date()  # Default matches 2020-01-01 or 2020_01_01 or 20200101
-#'                        # ("-", "_" or "" as separators)
+#' create_pattern_date() # Default matches 2020-01-01 or 2020_01_01 or 20200101
+#' # ("-", "_" or "" as separators)
 #' create_pattern_date(sep = "") # Matches only 20200101 (no separator allowed)
 #'
 #' @export
 #' @describeIn create_pattern Create a pattern to match a date
 
 create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits = 4) {
-
   check_text(order, opts = c("ymd", "dmy", "mdy"))
   check_text(sep)
   check_num(yr_digits, opts = c(2, 4))
@@ -46,32 +45,34 @@ create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits 
 
   yr_digits <- rev(sort(yr_digits)) # Ensure long patterns matched first if available
 
-  y <- dplyr::case_when(yr_digits == 4 ~ "([12]{1}\\d{3})",  # First must be 1 or 2
-                        yr_digits == 2 ~ "(\\d{2})") |>
+  y <- dplyr::case_when(
+    yr_digits == 4 ~ "([12]{1}\\d{3})", # First must be 1 or 2
+    yr_digits == 2 ~ "(\\d{2})"
+  ) |>
     pat_collapse()
 
   m <- "(\\d{2})"
   d <- "(\\d{2})"
 
-  dplyr::case_when(order == "ymd" ~ paste0(y, sep, m, sep, d),
-                   order == "mdy" ~ paste0(m, sep, d, sep, y),
-                   order == "dmy" ~ paste0(d, sep, m, sep, y)) |>
+  dplyr::case_when(
+    order == "ymd" ~ paste0(y, sep, m, sep, d),
+    order == "mdy" ~ paste0(m, sep, d, sep, y),
+    order == "dmy" ~ paste0(d, sep, m, sep, y)
+  ) |>
     pat_collapse()
-
 }
 
 #' @param seconds Character. Whether seconds are included. Options are "yes",
 #' "no", "maybe".
 #'
 #' @examples
-#' create_pattern_time()  # Default matches 23_59_59 (_, -, :, as optional separators)
+#' create_pattern_time() # Default matches 23_59_59 (_, -, :, as optional separators)
 #' create_pattern_time(sep = "", seconds = "no") # Matches 2359 (no seconds no separators)
 #'
 #' @export
 #'
 #' @describeIn create_pattern Create a pattern to match a time
 create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes") {
-
   check_text(sep)
   check_text(seconds, opts = c("yes", "no", "maybe"), n = 1)
 
@@ -82,8 +83,8 @@ create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes") {
   m <- "([0-5]{1}[0-9]{1})"
 
   p <- paste0(h, sep, m)
-  if(seconds != "no") p <- paste0(p, "(", sep, "([0-5]{1}[0-9]{1}))")
-  if(seconds == "maybe") p <- paste0(p, "?")
+  if (seconds != "no") p <- paste0(p, "(", sep, "([0-5]{1}[0-9]{1}))")
+  if (seconds == "maybe") p <- paste0(p, "?")
   p
 }
 
@@ -91,7 +92,7 @@ create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes") {
 #'   Allows matching on different date/time patterns.
 #'
 #' @examples
-#' create_pattern_dt_sep()  # Default matches 'T' as a required separator
+#' create_pattern_dt_sep() # Default matches 'T' as a required separator
 #' create_pattern_dt_sep(optional = TRUE) # 'T' as an optional separator
 #' create_pattern_dt_sep(c("T", "_", "-")) # 'T', '_', or '-' as separators
 #'
@@ -120,7 +121,6 @@ create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM",
                                   sep = c("_", "-", ""),
                                   prefix = "",
                                   suffix = "") {
-
   check_text(arus)
   check_num(n_digits, n = c(1, 2))
   check_text(sep)
@@ -128,7 +128,7 @@ create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM",
   check_text(suffix)
 
   sep <- create_pattern_sep(sep, optional = FALSE)
-  if(length(n_digits) > 1) {
+  if (length(n_digits) > 1) {
     n_digits <- paste0("\\d{", n_digits[1], ",", n_digits[2], "}")
   } else {
     n_digits <- paste0("\\d{", n_digits, "}")
@@ -151,8 +151,10 @@ create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM",
 #' @examples
 #'
 #' create_pattern_site_id() # Default matches P00-0
-#' create_pattern_site_id(prefix = "site", p_digits = 3, sep = "",
-#'                        suffix = c("a", "b", "c"), s_digits = 0) # Matches site000a
+#' create_pattern_site_id(
+#'   prefix = "site", p_digits = 3, sep = "",
+#'   suffix = c("a", "b", "c"), s_digits = 0
+#' ) # Matches site000a
 #'
 #' @describeIn create_pattern Create a pattern to match a site id
 create_pattern_site_id <- function(prefix = c("P", "Q"),
@@ -160,7 +162,6 @@ create_pattern_site_id <- function(prefix = c("P", "Q"),
                                    sep = c("_", "-"),
                                    suffix = "",
                                    s_digits = 1) {
-
   check_text(prefix)
   check_num(p_digits)
   check_text(sep)
@@ -172,17 +173,17 @@ create_pattern_site_id <- function(prefix = c("P", "Q"),
   # Use reverse sort, to make sure that longer patterns are matched first
   # (otherwise shorter patterns can be matched to what should be a long one)
   prefix <- pat_collapse(prefix)
-  if(any(p_digits > 0)) {
+  if (any(p_digits > 0)) {
     p_digits <- pat_collapse(paste0("\\d{", rev(sort(p_digits)), "}"))
     prefix <- paste0(prefix, p_digits)
   }
 
   suffix <- pat_collapse(suffix)
-  if(any(s_digits > 0)) {
+  if (any(s_digits > 0)) {
     s_digits <- pat_collapse(paste0("\\d{", rev(sort(s_digits)), "}"))
     suffix <- paste0(suffix, s_digits)
   }
-  if(suffix != "") suffix <- paste0(sep, suffix)
+  if (suffix != "") suffix <- paste0(sep, suffix)
 
   paste0(prefix, suffix)
 }
@@ -197,10 +198,12 @@ create_pattern_sep <- function(sep, optional = TRUE) {
   check_text(sep)
   check_logical(optional)
 
-  if(!all(sep == "")) {
+  if (!all(sep == "")) {
     sep <- paste0("(", paste0(sep, collapse = "|"), ")")
-    if(optional) sep <- paste0(sep, "?")
-  } else sep <- ""
+    if (optional) sep <- paste0(sep, "?")
+  } else {
+    sep <- ""
+  }
   sep
 }
 
@@ -213,9 +216,11 @@ create_pattern_sep <- function(sep, optional = TRUE) {
 #'
 #' @noRd
 pat_collapse <- function(x) {
-  if(any(x != "")) {
+  if (any(x != "")) {
     paste0("(", paste0("(", rev(sort(x)), ")", collapse = "|"), ")")
-  } else ""
+  } else {
+    ""
+  }
 }
 
 
@@ -228,19 +233,21 @@ pat_collapse <- function(x) {
 #'
 #' @examples
 #' pat <- create_pattern_aru_id(prefix = "CWS")
-#' test_pattern("CWS_BARLT1012", pat)            # No luck
+#' test_pattern("CWS_BARLT1012", pat) # No luck
 #' pat <- create_pattern_aru_id(prefix = "CWS_")
-#' test_pattern("CWS_BARLT1012", pat)            # Ah ha!
+#' test_pattern("CWS_BARLT1012", pat) # Ah ha!
 #' pat <- create_pattern_site_id()
 #'
 #' pat <- create_pattern_site_id()
-#' test_pattern("P03", pat)   # Nope
+#' test_pattern("P03", pat) # Nope
 #' test_pattern("P03-1", pat) # Success!
 #'
 #' pat <- create_pattern_site_id(prefix = "site", p_digits = 3, sep = "", s_digits = 0)
 #' test_pattern("site111", pat)
-#' pat <- create_pattern_site_id(prefix = "site", p_digits = 3, sep = "",
-#'                              suffix = c("a", "b", "c"), s_digits = 0)
+#' pat <- create_pattern_site_id(
+#'   prefix = "site", p_digits = 3, sep = "",
+#'   suffix = c("a", "b", "c"), s_digits = 0
+#' )
 #' test_pattern(c("site9", "site100a"), pat)
 #'
 #' @describeIn create_pattern Test patterns

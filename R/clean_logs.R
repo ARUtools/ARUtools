@@ -36,25 +36,23 @@
 #'
 #' @examples
 #' \dontrun{
-#'   # Replace "my_project_folder" with your directory containing your recordings and logfiles
-#'   log_files <- fs::dir_ls("my_project_folder", recurse = TRUE, glob = "*logfile*")
-#'   log_files
-#'   logs <- clean_logs(log_files)
+#' # Replace "my_project_folder" with your directory containing your recordings and logfiles
+#' log_files <- fs::dir_ls("my_project_folder", recurse = TRUE, glob = "*logfile*")
+#' log_files
+#' logs <- clean_logs(log_files)
 #'
-#'   log_files <- "../ARUtools - Extra/aru_log_files/P028/1A_BARLT10962/logfile_00010962_SD1.txt"
+#' log_files <- "../ARUtools - Extra/aru_log_files/P028/1A_BARLT10962/logfile_00010962_SD1.txt"
 #'
-#'   clean_logs(log_files)
-#'   clean_logs(log_files, return = "gps")
-#'   clean_logs(log_files, return = "recordings")
+#' clean_logs(log_files)
+#' clean_logs(log_files, return = "gps")
+#' clean_logs(log_files, return = "recordings")
 #'
-#'   log_files <- fs::dir_ls("../ARUtools - Extra/aru_log_files/", recurse = TRUE, glob = "*logfile*")
+#' log_files <- fs::dir_ls("../ARUtools - Extra/aru_log_files/", recurse = TRUE, glob = "*logfile*")
 #'
-#'   l <- clean_logs(log_files)
+#' l <- clean_logs(log_files)
 #' }
-
 clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_ss = "(SS)",
-                      progress = TRUE) {
-
+                       progress = TRUE) {
   # Pattern to id the correct kind of log file
   pattern_check <- "FRONTIER LABS Bioacoustic Audio Recorder"
 
@@ -67,22 +65,28 @@ clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_s
     schedule_sr = glue::glue(" +\\d{{1,2}}\\) \\\"{pattern_sr}\\\""),
     schedule_ss = glue::glue(" +\\d{{1,2}}\\) \\\"{pattern_ss}\\\""),
     gps_position = "GPS position lock acquired \\[",
-    recordings = pat_collapse(c("start" = "\\| New recording started: ",
-                                "end" = "Recording stopped. "))
+    recordings = pat_collapse(c(
+      "start" = "\\| New recording started: ",
+      "end" = "Recording stopped. "
+    ))
   )
 
   # Because log files suck and can sometimes have *both* dmy AND ymd formats in
   # the same file.
   pattern_date_time <- paste(
-    pat_collapse(c(create_pattern_date(order = "dmy", sep = c("\\/")),
-                   create_pattern_date())),
-    create_pattern_time())
+    pat_collapse(c(
+      create_pattern_date(order = "dmy", sep = c("\\/")),
+      create_pattern_date()
+    )),
+    create_pattern_time()
+  )
 
   # Arrange events and format
   log <- purrr::map(
     log_files,
     \(x) read_log_single(x, pattern_check, pattern_data, pattern_date_time),
-    .progress = progress) |>
+    .progress = progress
+  ) |>
     purrr::set_names(log_files) |>
     purrr::list_transpose() |>
     purrr::map(\(x) purrr::list_rbind(x, names_to = "path"))
@@ -92,15 +96,15 @@ clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_s
   events_gps <- extract_event_gps(log)
   events_rec <- extract_event_rec(log)
 
-  if(return == "gps") {
+  if (return == "gps") {
     r <- events_gps
-  } else if(return == "recordings") {
+  } else if (return == "recordings") {
     r <- events_rec
   } else {
     r <- dplyr::bind_rows(events_gps, events_rec)
   }
 
-    # ../ARUtools - Extra/aru_log_files/P352/1A_BARLT16214/logfile.txt
+  # ../ARUtools - Extra/aru_log_files/P352/1A_BARLT16214/logfile.txt
   r |>
     dplyr::full_join(schedule, by = dplyr::join_by("path", "date_time" >= "schedule_date")) |>
     dplyr::full_join(meta, by = "path") |>
@@ -113,7 +117,7 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
                             call = caller_env()) {
   l <- readr::read_lines(log_file, lazy = TRUE, progress = FALSE)
 
-  if(!any(stringr::str_detect(l, pattern_check))) {
+  if (!any(stringr::str_detect(l, pattern_check))) {
     abort(c("Not a BARTL log file", "*" = log_file), call = call)
   }
 
@@ -158,9 +162,11 @@ extract_schedule <- function(log) {
 
 extract_event_gps <- function(log) {
   log[["gps_position"]] |>
-    dplyr::mutate(event = "gps",
-                  value = stringr::str_replace(.data[["value"]], "(\\-[\\d\\.]+)\\]", " \\1"),
-                  value = parzer::parse_llstr(.data[["value"]])) |>
+    dplyr::mutate(
+      event = "gps",
+      value = stringr::str_replace(.data[["value"]], "(\\-[\\d\\.]+)\\]", " \\1"),
+      value = parzer::parse_llstr(.data[["value"]])
+    ) |>
     tidyr::unnest("value")
 }
 
@@ -168,11 +174,14 @@ extract_event_rec <- function(log) {
   log[["recordings"]] |>
     dplyr::mutate(
       type = dplyr::if_else(stringr::str_detect(.data[["value"]], "recorded"),
-                            "recording_end", "recording_start"),
+        "recording_end", "recording_start"
+      ),
       value = dplyr::if_else(
         .data[["type"]] == "recording_start",
         .data[["value"]],
-        stringr::str_extract(.data[["value"]], "\\d+ (MB|GB|TB)(?= recorded)"))) |>
+        stringr::str_extract(.data[["value"]], "\\d+ (MB|GB|TB)(?= recorded)")
+      )
+    ) |>
     # Sometimes the log does not record the start of a recording, so there's a missing entry
     # To deal with this, we label (n) entries in pairs by whether they match/don't match the pre/proceeding type
     dplyr::mutate(
@@ -180,14 +189,19 @@ extract_event_rec <- function(log) {
       last_type = dplyr::lag(.data[["type"]]),
       n = .data[["next_type"]] != .data[["type"]] & .data[["type"]] == "recording_start" |
         .data[["last_type"]] == .data[["type"]] & .data[["type"]] == "recording_end",
-      n = cumsum(.data[["n"]])) |>
+      n = cumsum(.data[["n"]])
+    ) |>
     dplyr::select(-"next_type", -"last_type") |>
     tidyr::pivot_wider(names_from = "type", values_from = c("value", "date_time")) |>
-    dplyr::select(-"n", "rec_file" = "value_recording_start", "rec_size" = "value_recording_end",
-                  "date_time" = "date_time_recording_start", "rec_end" = "date_time_recording_end") |>
+    dplyr::select(-"n",
+      "rec_file" = "value_recording_start", "rec_size" = "value_recording_end",
+      "date_time" = "date_time_recording_start", "rec_end" = "date_time_recording_end"
+    ) |>
     dplyr::relocate("date_time") |>
-    dplyr::mutate(date_time = dplyr::if_else(is.na(.data[["date_time"]]), .data[["rec_end"]], .data[["date_time"]]),
-                  event = "recording")
+    dplyr::mutate(
+      date_time = dplyr::if_else(is.na(.data[["date_time"]]), .data[["rec_end"]], .data[["date_time"]]),
+      event = "recording"
+    )
 }
 
 

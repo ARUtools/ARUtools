@@ -49,7 +49,6 @@ clean_metadata <- function(
     pattern_dt_sep = create_pattern_dt_sep(),
     order_date = "ymd",
     quiet = FALSE) {
-
   # Checks
   check_text(project_dir, not_null = FALSE, n = 1)
   check_text(project_files, not_null = FALSE)
@@ -68,7 +67,7 @@ clean_metadata <- function(
   # Prepare patterns
   file_type_pattern <- stringr::regex(paste0(file_type, "$"), ignore_case = TRUE)
 
-  pattern_site_id <-  pat_collapse(pattern_site_id)
+  pattern_site_id <- pat_collapse(pattern_site_id)
   pattern_aru_id <- pat_collapse(pattern_aru_id)
   pattern_date <- pat_collapse(pattern_date)
   pattern_time <- pat_collapse(pattern_time)
@@ -77,23 +76,25 @@ clean_metadata <- function(
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
 
   # Get file lists
-  if(!is.null(project_dir)) {
-    if(!is.null(project_files)) {
+  if (!is.null(project_dir)) {
+    if (!is.null(project_files)) {
       warn("`project_dir` overrides `project_files`")
     }
-    if(!quiet) inform("Fetching file list...")
+    if (!quiet) inform("Fetching file list...")
     project_files <- list_files(project_dir, subset, subset_type,
-                                type = "file")
-  } else if(!is.null(subset)){
+      type = "file"
+    )
+  } else if (!is.null(subset)) {
     project_files <- stringr::str_subset(project_files, subset,
-                                         negate = subset_type == "omit")
-  } else if(is.null(project_files)) {
+      negate = subset_type == "omit"
+    )
+  } else if (is.null(project_files)) {
     abort("Must provide one of `project_dir` or `project_files`")
   }
 
   # Check for files (either zero or all directories)
-  if(length(project_files) == 0 || all(fs::is_dir(project_files))) {
-    if(is.null(subset)) {
+  if (length(project_files) == 0 || all(fs::is_dir(project_files))) {
+    if (is.null(subset)) {
       msg <- "`project_dir`"
     } else {
       msg <- "`project_dir`/`subset`/`subset_type` combination"
@@ -103,16 +104,17 @@ clean_metadata <- function(
       paste0("There are no files in the ", msg, " you have specified. Note:"),
       "i" = "Paths are case-sensitive",
       "i" = "Check folders using `list.dirs(path = PROJECT_DIR)`",
-      "i" = "Check for files using `count_files(project_dir = PROJECT_DIR)`")
-    )
+      "i" = "Check for files using `count_files(project_dir = PROJECT_DIR)`"
+    ))
   }
 
   # Check for file types
   n_ext <- sum(stringr::str_detect(project_files, file_type_pattern))
-  if(n_ext == 0){
+  if (n_ext == 0) {
     abort(c(glue::glue("Did not find any '{file_type}' files."),
-            "i" = "Use `file_type` to change file extension for sound files",
-            "i" = "Check `project_dir`/`project_files` are correct"))
+      "i" = "Use `file_type` to change file extension for sound files",
+      "i" = "Check `project_dir`/`project_files` are correct"
+    ))
   }
 
 
@@ -125,21 +127,26 @@ clean_metadata <- function(
   meta <- dplyr::tibble(
     dir = fs::path_dir(focal),
     file_name = fs::path_file(focal),
-    type = tolower(fs::path_ext(focal)))
+    type = tolower(fs::path_ext(focal))
+  )
 
-  if(length(gps) > 1) {
+  if (length(gps) > 1) {
     meta <- meta |>
-      dplyr::add_row(dir = fs::path_dir(gps),
-                     file_name = fs::path_file(gps),
-                     type = "gps")
+      dplyr::add_row(
+        dir = fs::path_dir(gps),
+        file_name = fs::path_file(gps),
+        type = "gps"
+      )
   }
 
-  pattern_aru_type <- c("barlt" = "BarLT",
-                        "SMM" = "SongMeter",
-                        "SM\\d" = "SongMeter",
-                        "S\\dA" = "SongMeter")
+  pattern_aru_type <- c(
+    "barlt" = "BarLT",
+    "SMM" = "SongMeter",
+    "SM\\d" = "SongMeter",
+    "S\\dA" = "SongMeter"
+  )
 
-  if(!quiet) inform("Extracting ARU info...")
+  if (!quiet) inform("Extracting ARU info...")
 
   # Extract ARU metadata -----------------------
   meta <- meta |>
@@ -147,23 +154,28 @@ clean_metadata <- function(
       path = file.path(.data$dir, .data$file_name),
       aru_type = extract_replace(.data$file_name, pattern_aru_type),
       aru_type = dplyr::if_else(is.na(.data$aru_type),
-                                extract_replace(.data$dir, pattern_aru_type),
-                                .data$aru_type),
+        extract_replace(.data$dir, pattern_aru_type),
+        .data$aru_type
+      ),
       aru_id = stringr::str_extract(.data$file_name, pattern_aru_id),
       aru_id = dplyr::if_else(is.na(.data$aru_id),
-                              stringr::str_extract(.data$dir, pattern_aru_id),
-                              .data$aru_id))
+        stringr::str_extract(.data$dir, pattern_aru_id),
+        .data$aru_id
+      )
+    )
 
   meta <- dplyr::mutate(meta, site_id = stringr::str_extract(.data$dir, .env$pattern_site_id))
 
-  pattern_non_date <- paste0("(", pattern_site_id, ")|(",
-                             pattern_aru_id, ")|(",
-                             paste0("(", pattern_aru_type, ")", collapse = "|"),
-                             ")")
+  pattern_non_date <- paste0(
+    "(", pattern_site_id, ")|(",
+    pattern_aru_id, ")|(",
+    paste0("(", pattern_aru_type, ")", collapse = "|"),
+    ")"
+  )
 
 
   # Extract Date/time --------------------------
-  if(!quiet) inform("Extracting Dates and Times...")
+  if (!quiet) inform("Extracting Dates and Times...")
 
   meta <- meta |>
     dplyr::mutate(
@@ -176,16 +188,18 @@ clean_metadata <- function(
       date_time_chr = dplyr::if_else(
         is.na(.data$date_time_chr),
         stringr::str_extract(.data$dir_left, .env$pattern_date_time),
-        .data$date_time_chr),
+        .data$date_time_chr
+      ),
       # Get date_times
       date_time = lubridate::parse_date_time(
         .data$date_time_chr,
         orders = paste(order_date, "HMS"),
-        truncated = 1),
-      date = lubridate::as_date(.data$date_time))
+        truncated = 1
+      ),
+      date = lubridate::as_date(.data$date_time)
+    )
 
-  if(any(is.na(meta$date))) {
-
+  if (any(is.na(meta$date))) {
     missing <- meta |>
       dplyr::filter(is.na(.data$date)) |>
       dplyr::mutate(
@@ -195,13 +209,17 @@ clean_metadata <- function(
         date_chr = dplyr::if_else(
           is.na(.data$date_chr),
           stringr::str_extract(.data$dir_left, .env$pattern_date),
-          .data$date_chr),
-        date = lubridate::parse_date_time(.data$date_chr, orders = order_date,
-                                          quiet = TRUE),
-        date = lubridate::as_date(.data$date)) |>
+          .data$date_chr
+        ),
+        date = lubridate::parse_date_time(.data$date_chr,
+          orders = order_date,
+          quiet = TRUE
+        ),
+        date = lubridate::as_date(.data$date)
+      ) |>
       dplyr::select("path", "date")
 
-    if(any(!is.na(missing$date))) {
+    if (any(!is.na(missing$date))) {
       # Add dates where missing
       meta <- dplyr::rows_patch(meta, missing, by = "path")
     }
@@ -209,13 +227,16 @@ clean_metadata <- function(
 
   # Report on details -------------------------
   # Extra files
-  if(length(extra) > 1) {
+  if (length(extra) > 1) {
     inform(
-      c("!" = paste0("Omitted ", length(extra), " extra, non-",
-                     file_type, "/GPS files")))
+      c("!" = paste0(
+        "Omitted ", length(extra), " extra, non-",
+        file_type, "/GPS files"
+      ))
+    )
   }
 
-  if(length(gps) > 1) {
+  if (length(gps) > 1) {
     inform(c("!" = paste0("Detected ", length(gps), " GPS logs")))
   }
 
@@ -228,7 +249,7 @@ clean_metadata <- function(
   f_id <- sum(is.na(f$aru_id))
   f_site <- sum(is.na(f$site_id))
 
-  if(any(c(f_d, f_dt, f_type, f_id, f_site) > 0)) {
+  if (any(c(f_d, f_dt, f_type, f_id, f_site) > 0)) {
     msg <- c("Identified possible problems with metadata extraction:")
     msg <- c(msg, report_missing(f_d, n, "dates"))
     msg <- c(msg, report_missing(f_dt, n, "times"))
@@ -242,13 +263,11 @@ clean_metadata <- function(
   # - Match order of starting data
   # - By project_files if provided
   # - Sorted by path name if project_dir
-  if(is.null(project_dir) & !is.null(project_files)) {
+  if (is.null(project_dir) & !is.null(project_files)) {
     meta <- dplyr::arrange(meta, match(.data$path, project_files))
-  } else meta <- dplyr::arrange(meta, .data$path)
+  } else {
+    meta <- dplyr::arrange(meta, .data$path)
+  }
 
   dplyr::select(meta, -"file_left", -"dir_left", -"date_time_chr", -"dir")
 }
-
-
-
-

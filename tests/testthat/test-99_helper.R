@@ -26,8 +26,11 @@ test_that("check_meta()", {
   expect_silent(chk <- check_meta(m))
   expect_s3_class(chk, "data.frame")
   expect_named(
-    chk, c("site_id", "aru_type", "aru_id", "type", "n_files", "n_dirs",
-           "n_days", "min_date", "max_date", "min_time", "max_time"))
+    chk, c(
+      "site_id", "aru_type", "aru_id", "type", "n_files", "n_dirs",
+      "n_days", "min_date", "max_date", "min_time", "max_time"
+    )
+  )
   expect_true(all(m$site_id %in% chk$site_id))
   expect_true(all(m$aru_id %in% chk$aru_id))
 
@@ -35,8 +38,11 @@ test_that("check_meta()", {
   expect_silent(chk2 <- check_meta(m, date = TRUE))
   expect_s3_class(chk2, "data.frame")
   expect_named(
-    chk2, c("site_id", "aru_type", "aru_id", "type", "date", "n_files", "n_dirs",
-           "n_days", "min_time", "max_time"))
+    chk2, c(
+      "site_id", "aru_type", "aru_id", "type", "date", "n_files", "n_dirs",
+      "n_days", "min_time", "max_time"
+    )
+  )
   expect_true(all(m$date %in% chk2$date))
   expect_gt(nrow(chk2), nrow(chk))
 })
@@ -52,7 +58,8 @@ test_that("check_problems() - basic meta", {
   expect_silent(chk <- check_problems(m))
   expect_equal(
     chk,
-    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date")])
+    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date")]
+  )
   expect_equal(nrow(chk), 3)
 
   # Summarize by date
@@ -86,7 +93,8 @@ test_that("check_problems() - meta with coords", {
   expect_silent(chk <- check_problems(m))
   expect_equal(
     chk,
-    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date", "longitude", "latitude")])
+    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date", "longitude", "latitude")]
+  )
   expect_equal(nrow(chk), 3)
 
   # Summarize by date
@@ -102,7 +110,6 @@ test_that("check_problems() - meta with coords", {
   # Return paths
   expect_silent(chk4 <- check_problems(m, path = TRUE))
   expect_equal(chk4, dplyr::pull(m, "path")[c(3, 7, 10)])
-
 })
 
 
@@ -124,9 +131,13 @@ test_that("add_wildtrax()", {
   expect_false("wildtrax_file_name" %in% names(m))
   expect_silent(m <- add_wildtrax(m))
   expect_true("wildtrax_file_name" %in% names(m))
-  expect_equal(m$wildtrax_file_name[1:2],
-               c("P01_1_20200502_050000",
-                 "P01_1_20200503_052000"))
+  expect_equal(
+    m$wildtrax_file_name[1:2],
+    c(
+      "P01_1_20200502_050000",
+      "P01_1_20200503_052000"
+    )
+  )
 })
 
 test_that("acoustic_indices()", {
@@ -146,8 +157,10 @@ test_that("acoustic_indices() errors", {
   tuneR::writeWave(w, "test_wave.wav")
 
   invisible(capture.output(
-    expect_error(acoustic_indices("test_wave.wav"),
-                 "Error in `acoustic_complexity\\(\\)` from the soundecology package") |>
+    expect_error(
+      acoustic_indices("test_wave.wav"),
+      "Error in `acoustic_complexity\\(\\)` from the soundecology package"
+    ) |>
       expect_message("Calculating acoustic indices")
   ))
 

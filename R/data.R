@@ -1,4 +1,3 @@
-
 #' Example recording files
 #'
 #' A vector of examples ARU recording files.
@@ -122,4 +121,3 @@
 #' }
 #' @source data-raw/data_wt_assign_tasks.R
 "template_observers"
-
