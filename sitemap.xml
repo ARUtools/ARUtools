@@ -124,9 +124,6 @@
     <loc>http://arutools.github.io/ARUtools/reference/play_random_track.html</loc>
   </url>
   <url>
-    <loc>http://arutools.github.io/ARUtools/reference/prep_for_wind_detection.html</loc>
-  </url>
-  <url>
     <loc>http://arutools.github.io/ARUtools/reference/sample_recordings.html</loc>
   </url>
   <url>
@@ -140,6 +137,9 @@
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/temp_wavs.html</loc>
+  </url>
+  <url>
+    <loc>http://arutools.github.io/ARUtools/reference/template_observers.html</loc>
   </url>
   <url>
     <loc>http://arutools.github.io/ARUtools/reference/wind_detection_pre_processing.html</loc>

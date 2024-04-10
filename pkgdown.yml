@@ -1,15 +1,15 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.0.8
 pkgdown_sha: ~
 articles:
   ARUtools: ARUtools.html
-  Misc: Misc.html
-  SubSample: SubSample.html
   customizing: customizing.html
+  Misc: Misc.html
   multisampling: multisampling.html
   spatial: spatial.html
+  SubSample: SubSample.html
   timezones: timezones.html
-last_built: 2024-04-06T18:16Z
+last_built: 2024-04-10T15:25Z
 urls:
   reference: http://arutools.github.io/ARUtools/reference
   article: http://arutools.github.io/ARUtools/articles

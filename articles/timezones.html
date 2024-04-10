@@ -29,11 +29,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://arutools.github.io/ARUtools/" class="external-link">ARUtools</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span> <span class="co"># For working with date/times</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>     <span class="co"># For manipulating data</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span> <span class="co"># For manipulating data</span></span></code></pre></div>
 <p>Timezones can cause a lot of confusion, but, unfortunately are
 important descriptors of a moment in time.</p>
 <blockquote>
@@ -200,10 +200,10 @@ Let’s assume that we know the timezones and that sites P06_1 and P09_1
 are in Central, and the rest in Eastern.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Split by timezone</span></span>
-<span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">site_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P06_1"</span>, <span class="st">"P09_1"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Get P06_1 and P09_1</span></span>
+<span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">site_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P06_1"</span>, <span class="st">"P09_1"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Get P06_1 and P09_1</span></span>
 <span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">m</span>, <span class="op">!</span><span class="va">site_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P06_1"</span>, <span class="st">"P09_1"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Get all except the above</span></span>
 <span></span>
-<span><span class="co"># Calculate time to sunrise/sunset individually </span></span>
+<span><span class="co"># Calculate time to sunrise/sunset individually</span></span>
 <span><span class="va">m1_cst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_sun.html">calc_sun</a></span><span class="op">(</span><span class="va">m1</span>, aru_tz <span class="op">=</span> <span class="st">"America/Winnipeg"</span><span class="op">)</span></span>
 <span><span class="va">m2_est</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_sun.html">calc_sun</a></span><span class="op">(</span><span class="va">m2</span>, aru_tz <span class="op">=</span> <span class="st">"America/Toronto"</span><span class="op">)</span></span>
 <span></span>
@@ -245,11 +245,15 @@ data set.</p>
 <code class="sourceCode R"><span><span class="va">m_mini</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">site_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P01_1"</span>, <span class="st">"P06_1"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">aru_id</span>, <span class="va">site_id</span>, <span class="va">longitude</span>, <span class="va">latitude</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/cross_join.html" class="external-link">cross_join</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-05-02 05:00:00"</span>, </span>
-<span>                                      <span class="st">"2020-05-02 06:00:00"</span>,</span>
-<span>                                      <span class="st">"2020-05-02 07:00:00"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html" class="external-link">as_date</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span>, </span>
-<span>         path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">aru_id</span>, <span class="st">"_"</span>, <span class="va">site_id</span>, <span class="st">"_"</span>, <span class="fu"><a href="https://lubridate.tidyverse.org/reference/hour.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span>, <span class="st">".csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/cross_join.html" class="external-link">cross_join</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>date_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"2020-05-02 05:00:00"</span>,</span>
+<span>    <span class="st">"2020-05-02 06:00:00"</span>,</span>
+<span>    <span class="st">"2020-05-02 07:00:00"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/as_date.html" class="external-link">as_date</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span>,</span>
+<span>    path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">aru_id</span>, <span class="st">"_"</span>, <span class="va">site_id</span>, <span class="st">"_"</span>, <span class="fu"><a href="https://lubridate.tidyverse.org/reference/hour.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">date_time</span><span class="op">)</span>, <span class="st">".csv"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>If we now calculate the time to sunrise/sunset (<code>t2sr</code> and
 <code>t2ss</code>) we find that the difference between these sites is
 about 15min, accounting for the fact that site P06_1 is farther west
@@ -309,7 +313,7 @@ they can be derived from their coordinates).</li>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer>

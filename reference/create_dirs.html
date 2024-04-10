@@ -6,11 +6,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,18 +118,26 @@ If not a dry run, also creates the folder structure.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Default is to do a dry-run (don't actually create the directories)</span></span></span>
-<span class="r-in"><span><span class="fu">create_dirs</span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1"</span>, <span class="st">"river2"</span>, <span class="st">"river3"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>            site_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1_sm01"</span>, <span class="st">"river1_sm02"</span>, <span class="st">"river2_sm03"</span>, <span class="st">"river2_sm04"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"river3_sm05"</span>, <span class="st">"river3_sm06"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>            base_dir <span class="op">=</span> <span class="st">"Recordings"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">create_dirs</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1"</span>, <span class="st">"river2"</span>, <span class="st">"river3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  site_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"river1_sm01"</span>, <span class="st">"river1_sm02"</span>, <span class="st">"river2_sm03"</span>, <span class="st">"river2_sm04"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"river3_sm05"</span>, <span class="st">"river3_sm06"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  base_dir <span class="op">=</span> <span class="st">"Recordings"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> This is a dry run, no directories are created</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> Use `dir_list = TRUE` to return a list of directories to be created</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get a list of directories which would be created</span></span></span>
-<span class="r-in"><span><span class="fu">create_dirs</span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1"</span>, <span class="st">"river2"</span>, <span class="st">"river3"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>            site_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1_sm01"</span>, <span class="st">"river1_sm02"</span>, <span class="st">"river2_sm03"</span>, <span class="st">"river2_sm04"</span>,</span></span>
-<span class="r-in"><span>                         <span class="st">"river3_sm05"</span>, <span class="st">"river3_sm06"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>            base_dir <span class="op">=</span> <span class="st">"Recordings"</span>, dir_list <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">create_dirs</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1"</span>, <span class="st">"river2"</span>, <span class="st">"river3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  site_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"river1_sm01"</span>, <span class="st">"river1_sm02"</span>, <span class="st">"river2_sm03"</span>, <span class="st">"river2_sm04"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"river3_sm05"</span>, <span class="st">"river3_sm06"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  base_dir <span class="op">=</span> <span class="st">"Recordings"</span>, dir_list <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> This is a dry run, no directories are created</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/work/ARUtools/ARUtools/docs/reference/Recordings/river1/river1_sm01"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/home/runner/work/ARUtools/ARUtools/docs/reference/Recordings/river1/river1_sm02"</span>
@@ -140,11 +148,15 @@ If not a dry run, also creates the folder structure.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co"># Create directories AND return a list of those created</span></span></span>
-<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">create_dirs</span><span class="op">(</span>plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1"</span>, <span class="st">"river2"</span>, <span class="st">"river3"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                 site_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1_sm01"</span>, <span class="st">"river1_sm02"</span>, <span class="st">"river2_sm03"</span>, <span class="st">"river2_sm04"</span>,</span></span>
-<span class="r-in"><span>                              <span class="st">"river3_sm05"</span>, <span class="st">"river3_sm06"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                 base_dir <span class="op">=</span> <span class="st">"Recordings"</span>, dir_list <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>                 dry_run <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">create_dirs</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1"</span>, <span class="st">"river2"</span>, <span class="st">"river3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  site_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"river1_sm01"</span>, <span class="st">"river1_sm02"</span>, <span class="st">"river2_sm03"</span>, <span class="st">"river2_sm04"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"river3_sm05"</span>, <span class="st">"river3_sm06"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  base_dir <span class="op">=</span> <span class="st">"Recordings"</span>, dir_list <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  dry_run <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
@@ -158,7 +170,7 @@ If not a dry run, also creates the folder structure.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>

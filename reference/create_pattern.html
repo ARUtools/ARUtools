@@ -8,11 +8,11 @@ metadata in file paths."><meta property="og:image" content="http://arutools.gith
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,18 +185,18 @@ pattern grabs what you want. This is just a simple wrapper around
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">create_pattern_date</span><span class="op">(</span><span class="op">)</span>  <span class="co"># Default matches 2020-01-01 or 2020_01_01 or 20200101</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">create_pattern_date</span><span class="op">(</span><span class="op">)</span> <span class="co"># Default matches 2020-01-01 or 2020_01_01 or 20200101</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "((((([12]{1}\\d{3})))(_|-|)(\\d{2})(_|-|)(\\d{2})))"</span>
-<span class="r-in"><span>                       <span class="co"># ("-", "_" or "" as separators)</span></span></span>
+<span class="r-in"><span><span class="co"># ("-", "_" or "" as separators)</span></span></span>
 <span class="r-in"><span><span class="fu">create_pattern_date</span><span class="op">(</span>sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="co"># Matches only 20200101 (no separator allowed)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "((((([12]{1}\\d{3})))(\\d{2})(\\d{2})))"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">create_pattern_time</span><span class="op">(</span><span class="op">)</span>  <span class="co"># Default matches 23_59_59 (_, -, :, as optional separators)</span></span></span>
+<span class="r-in"><span><span class="fu">create_pattern_time</span><span class="op">(</span><span class="op">)</span> <span class="co"># Default matches 23_59_59 (_, -, :, as optional separators)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "([0-2]{1}[0-9]{1})(_|-|:|)([0-5]{1}[0-9]{1})((_|-|:|)([0-5]{1}[0-9]{1}))"</span>
 <span class="r-in"><span><span class="fu">create_pattern_time</span><span class="op">(</span>sep <span class="op">=</span> <span class="st">""</span>, seconds <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span> <span class="co"># Matches 2359 (no seconds no separators)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "([0-2]{1}[0-9]{1})([0-5]{1}[0-9]{1})"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">create_pattern_dt_sep</span><span class="op">(</span><span class="op">)</span>  <span class="co"># Default matches 'T' as a required separator</span></span></span>
+<span class="r-in"><span><span class="fu">create_pattern_dt_sep</span><span class="op">(</span><span class="op">)</span> <span class="co"># Default matches 'T' as a required separator</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "(T)"</span>
 <span class="r-in"><span><span class="fu">create_pattern_dt_sep</span><span class="op">(</span>optional <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># 'T' as an optional separator</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "(T)?"</span>
@@ -213,20 +213,22 @@ pattern grabs what you want. This is just a simple wrapper around
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">create_pattern_site_id</span><span class="op">(</span><span class="op">)</span> <span class="co"># Default matches P00-0</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "((Q)|(P))((\\d{2}))(_|-)((\\d{1}))"</span>
-<span class="r-in"><span><span class="fu">create_pattern_site_id</span><span class="op">(</span>prefix <span class="op">=</span> <span class="st">"site"</span>, p_digits <span class="op">=</span> <span class="fl">3</span>, sep <span class="op">=</span> <span class="st">""</span>,</span></span>
-<span class="r-in"><span>                       suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span>, s_digits <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Matches site000a</span></span></span>
+<span class="r-in"><span><span class="fu">create_pattern_site_id</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  prefix <span class="op">=</span> <span class="st">"site"</span>, p_digits <span class="op">=</span> <span class="fl">3</span>, sep <span class="op">=</span> <span class="st">""</span>,</span></span>
+<span class="r-in"><span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span>, s_digits <span class="op">=</span> <span class="fl">0</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="co"># Matches site000a</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "((site))((\\d{3}))((c)|(b)|(a))"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pat</span> <span class="op">&lt;-</span> <span class="fu">create_pattern_aru_id</span><span class="op">(</span>prefix <span class="op">=</span> <span class="st">"CWS"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"CWS_BARLT1012"</span>, <span class="va">pat</span><span class="op">)</span>            <span class="co"># No luck</span></span></span>
+<span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"CWS_BARLT1012"</span>, <span class="va">pat</span><span class="op">)</span> <span class="co"># No luck</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-in"><span><span class="va">pat</span> <span class="op">&lt;-</span> <span class="fu">create_pattern_aru_id</span><span class="op">(</span>prefix <span class="op">=</span> <span class="st">"CWS_"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"CWS_BARLT1012"</span>, <span class="va">pat</span><span class="op">)</span>            <span class="co"># Ah ha!</span></span></span>
+<span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"CWS_BARLT1012"</span>, <span class="va">pat</span><span class="op">)</span> <span class="co"># Ah ha!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CWS_BARLT1012"</span>
 <span class="r-in"><span><span class="va">pat</span> <span class="op">&lt;-</span> <span class="fu">create_pattern_site_id</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pat</span> <span class="op">&lt;-</span> <span class="fu">create_pattern_site_id</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"P03"</span>, <span class="va">pat</span><span class="op">)</span>   <span class="co"># Nope</span></span></span>
+<span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"P03"</span>, <span class="va">pat</span><span class="op">)</span> <span class="co"># Nope</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"P03-1"</span>, <span class="va">pat</span><span class="op">)</span> <span class="co"># Success!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "P03-1"</span>
@@ -234,8 +236,10 @@ pattern grabs what you want. This is just a simple wrapper around
 <span class="r-in"><span><span class="va">pat</span> <span class="op">&lt;-</span> <span class="fu">create_pattern_site_id</span><span class="op">(</span>prefix <span class="op">=</span> <span class="st">"site"</span>, p_digits <span class="op">=</span> <span class="fl">3</span>, sep <span class="op">=</span> <span class="st">""</span>, s_digits <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="st">"site111"</span>, <span class="va">pat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "site111"</span>
-<span class="r-in"><span><span class="va">pat</span> <span class="op">&lt;-</span> <span class="fu">create_pattern_site_id</span><span class="op">(</span>prefix <span class="op">=</span> <span class="st">"site"</span>, p_digits <span class="op">=</span> <span class="fl">3</span>, sep <span class="op">=</span> <span class="st">""</span>,</span></span>
-<span class="r-in"><span>                             suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span>, s_digits <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pat</span> <span class="op">&lt;-</span> <span class="fu">create_pattern_site_id</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  prefix <span class="op">=</span> <span class="st">"site"</span>, p_digits <span class="op">=</span> <span class="fl">3</span>, sep <span class="op">=</span> <span class="st">""</span>,</span></span>
+<span class="r-in"><span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span>, s_digits <span class="op">=</span> <span class="fl">0</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">test_pattern</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"site9"</span>, <span class="st">"site100a"</span><span class="op">)</span>, <span class="va">pat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA         "site100a"</span>
 <span class="r-in"><span></span></span>
@@ -250,7 +254,7 @@ pattern grabs what you want. This is just a simple wrapper around
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>
