@@ -395,19 +395,20 @@ check_tz <- function(tz, call = caller_env()) {
 #' @param sox_file_path Path to where SoX program is installed
 #' @noRd
 check_sox <- function(sox_file_path = NULL){
+  sooc <- ifelse(stringr::str_detect("Windows", osVersion), FALSE, TRUE)
   if (is_null(sox_file_path)) {
-    test <- system("sox -h",
-                   intern = FALSE, show.output.on.console = FALSE,
+    suppressWarnings(test <- system("sox -h",
+                   intern = FALSE, show.output.on.console = sooc,
                    ignore.stdout = T
-    )
+    ))
   } else {
-    test <- system(paste0(sox_file_path, " -h"),
+    suppressWarnings(test <- system(paste0(sox_file_path, " -h"),
                    intern = FALSE,
                    ignore.stdout = T,
-                   show.output.on.console = FALSE
+                   show.output.on.console = sooc
+    )
     )
   }
-
   if (test == 127) {
     if (is_testing()) {
       testthat::skip("SoX not available")
@@ -415,5 +416,7 @@ check_sox <- function(sox_file_path = NULL){
       abort("SoX not available")
     }
   }
+
+
 
 }

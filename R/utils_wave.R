@@ -382,7 +382,10 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
     abort(paste0("Cannot find wave file ", path))
   }
 
-  if(isFALSE(skip_check)) check_sox(sox_file_path)
+  if(isFALSE(skip_check)) {
+    test <- check_sox(sox_file_path)
+
+  }
 
 
 
