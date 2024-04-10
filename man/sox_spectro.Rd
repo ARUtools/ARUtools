@@ -50,6 +50,9 @@ non-essential updates.}
 
 \item{sox_file_path}{Path to sox file if not installed at the system level,
 otherwise NULL.}
+
+\item{skip_check}{Logical. Should the function skip check to ensure SoX is installed.
+This may allow speed ups if running across large numbers of files.}
 }
 \value{
 Does not return anything, but creates a spectrogram image in

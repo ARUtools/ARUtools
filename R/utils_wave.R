@@ -344,6 +344,8 @@ check_wave_length <- function(path_in, clip_length, start_time, diff_limit, call
 #'   debugging and understanding precise details).
 #' @param sox_file_path Path to sox file if not installed at the system level,
 #'         otherwise NULL.
+#' @param skip_check Logical. Should the function skip check to ensure SoX is installed.
+#'      This may allow speed ups if running across large numbers of files.
 #'
 #' @inheritParams common_docs
 #'
