@@ -395,19 +395,33 @@ check_tz <- function(tz, call = caller_env()) {
 #' @param sox_file_path Path to where SoX program is installed
 #' @noRd
 check_sox <- function(sox_file_path = NULL){
-  sooc <- ifelse(stringr::str_detect("Windows", osVersion), FALSE, TRUE)
+  sooc <- stringr::str_detect("Windows", osVersion)
   if (is_null(sox_file_path)) {
+    if(sooc){
     suppressWarnings(test <- system("sox -h",
-                   intern = FALSE, show.output.on.console = sooc,
+                   intern = FALSE, show.output.on.console = FALSE,
                    ignore.stdout = T
-    ))
+    ))} else{
+      suppressWarnings(test <- system("sox -h",
+                                      intern = FALSE,
+                                      ignore.stdout = T
+      ))
+    }
+
   } else {
+    if(sooc){
     suppressWarnings(test <- system(paste0(sox_file_path, " -h"),
                    intern = FALSE,
                    ignore.stdout = T,
-                   show.output.on.console = sooc
+                   show.output.on.console = FALSE
     )
-    )
+    )} else{
+      suppressWarnings(test <- system(paste0(sox_file_path, " -h"),
+                                      intern = FALSE,
+                                      ignore.stdout = T
+      )
+      )
+    }
   }
   if (test == 127) {
     if (is_testing()) {
