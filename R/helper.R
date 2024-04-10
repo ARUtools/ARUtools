@@ -6,16 +6,16 @@
 #'
 #' @export
 count_files <- function(project_dir, subset = NULL, subset_type = "keep") {
-
   list_files(project_dir, subset, subset_type, type = "directory") |>
     dplyr::as_tibble() |>
     dplyr::rename("dir" = "value") |>
-    dplyr::mutate(n = purrr::map_int(
-      .data$dir, ~length(fs::dir_ls(.x, type = "file")),
-      .progress = TRUE),
-      dir = stringr::str_remove(dir, project_dir))
-
-
+    dplyr::mutate(
+      n = purrr::map_int(
+        .data$dir, ~ length(fs::dir_ls(.x, type = "file")),
+        .progress = TRUE
+      ),
+      dir = stringr::str_remove(dir, project_dir)
+    )
 }
 
 #' Check output of `clean_metadata()`
@@ -39,21 +39,23 @@ count_files <- function(project_dir, subset = NULL, subset_type = "keep") {
 #'
 check_meta <- function(meta, date = FALSE) {
   g <- c("site_id", "aru_type", "aru_id", "type")
-  if(date) g <- c(g, "date")
+  if (date) g <- c(g, "date")
 
   m <- meta |>
     dplyr::group_by(dplyr::across(dplyr::all_of(g))) |>
-    dplyr::summarize(n_files = dplyr::n(),
-                     n_dirs = dplyr::n_distinct(fs::path_dir(.data$path)),
-                     min_date = min(.data$date_time),
-                     max_date = max(.data$date_time),
-                     n_days = dplyr::n_distinct(.data$date),
-                     min_time = hms::as_hms(min(hms::as_hms(.data$date_time))),
-                     max_time = hms::as_hms(max(hms::as_hms(.data$date_time))),
-                     .groups = "drop") |>
+    dplyr::summarize(
+      n_files = dplyr::n(),
+      n_dirs = dplyr::n_distinct(fs::path_dir(.data$path)),
+      min_date = min(.data$date_time),
+      max_date = max(.data$date_time),
+      n_days = dplyr::n_distinct(.data$date),
+      min_time = hms::as_hms(min(hms::as_hms(.data$date_time))),
+      max_time = hms::as_hms(max(hms::as_hms(.data$date_time))),
+      .groups = "drop"
+    ) |>
     dplyr::relocate("n_days", .before = "min_date")
 
-  if(date) m <- dplyr::select(m, -"min_date", -"max_date")
+  if (date) m <- dplyr::select(m, -"min_date", -"max_date")
   m
 }
 
@@ -85,40 +87,50 @@ check_meta <- function(meta, date = FALSE) {
 #' check_problems(m)
 #' check_problems(m, date = TRUE)
 #' check_problems(m, path = TRUE)
-check_problems <- function(df, check = c("site_id", "aru_id",
-                                         "date", "date_time", "longitude",
-                                         "latitude"),
+check_problems <- function(df, check = c(
+                             "site_id", "aru_id",
+                             "date", "date_time", "longitude",
+                             "latitude"
+                           ),
                            path = FALSE, date = FALSE) {
-  if(path & date) {
-    abort(c("`date` summarizes problems, so `path` cannot be returned",
-            "Use one or the other"))
+  if (path & date) {
+    abort(c(
+      "`date` summarizes problems, so `path` cannot be returned",
+      "Use one or the other"
+    ))
   }
 
   # If a mix of gps and meta, remove gps
 
-  if(any(df$type != "gps")) {
+  if (any(df$type != "gps")) {
     df <- dplyr::filter(df, .data$type != "gps")
   }
 
   df <- df |>
-    dplyr::filter(dplyr::if_any(dplyr::any_of(check), ~is.na(.x))) |>
+    dplyr::filter(dplyr::if_any(dplyr::any_of(check), ~ is.na(.x))) |>
     dplyr::select(-dplyr::any_of(c("type", "file_name", "aru_type")))
 
 
-  if(date) {
+  if (date) {
     check <- check[check %in% c("longitude", "latitude", "date_time")]
     df <- df |>
       dplyr::group_by(
-        dplyr::across(dplyr::any_of(c("site_id", "aru_id", "date")))) |>
+        dplyr::across(dplyr::any_of(c("site_id", "aru_id", "date")))
+      ) |>
       dplyr::summarize(
-        dplyr::across(dplyr::any_of(check),
-                      list("min" = min_q, "max" = max_q,
-                           "n" = length,
-                           "n_na" = ~sum(is.na(.x)))),
-        .groups = "drop")
+        dplyr::across(
+          dplyr::any_of(check),
+          list(
+            "min" = min_q, "max" = max_q,
+            "n" = length,
+            "n_na" = ~ sum(is.na(.x))
+          )
+        ),
+        .groups = "drop"
+      )
   }
 
-  if(path) df <- dplyr::pull(df, "path")
+  if (path) df <- dplyr::pull(df, "path")
   df
 }
 
@@ -156,10 +168,11 @@ check_file <- function(file_name, n_max = 10, ...) {
 #' m <- clean_metadata(project_files = example_files)
 #' m <- add_wildtrax(m)
 #' m
-
 add_wildtrax <- function(meta) {
   dplyr::mutate(
     meta,
     wildtrax_file_name = glue::glue(
-      "{site_id}_{format(date_time, '%Y%m%d_%H%M%S')}"))
+      "{site_id}_{format(date_time, '%Y%m%d_%H%M%S')}"
+    )
+  )
 }

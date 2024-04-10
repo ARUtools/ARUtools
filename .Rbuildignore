@@ -22,4 +22,4 @@ inst\Gen_gex.R
 ^\.github/workflows/pkgdown\.yaml$
 ^.Rprofile$
 ^ISSUE_TEMPLATE\.md$
-inst\*.R
+inst\.R$

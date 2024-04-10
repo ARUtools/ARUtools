@@ -39,24 +39,36 @@ Create a set of nested folders for storing ARU recordings by plots and sites.
 }
 \examples{
 # Default is to do a dry-run (don't actually create the directories)
-create_dirs(plots = c("river1", "river2", "river3"),
-            site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
-                         "river3_sm05", "river3_sm06"),
-            base_dir = "Recordings")
+create_dirs(
+  plots = c("river1", "river2", "river3"),
+  site_ids = c(
+    "river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+    "river3_sm05", "river3_sm06"
+  ),
+  base_dir = "Recordings"
+)
 
 # Get a list of directories which would be created
-create_dirs(plots = c("river1", "river2", "river3"),
-            site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
-                         "river3_sm05", "river3_sm06"),
-            base_dir = "Recordings", dir_list = TRUE)
+create_dirs(
+  plots = c("river1", "river2", "river3"),
+  site_ids = c(
+    "river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+    "river3_sm05", "river3_sm06"
+  ),
+  base_dir = "Recordings", dir_list = TRUE
+)
 
 \dontrun{
 # Create directories AND return a list of those created
-d <- create_dirs(plots = c("river1", "river2", "river3"),
-                 site_ids = c("river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
-                              "river3_sm05", "river3_sm06"),
-                 base_dir = "Recordings", dir_list = TRUE,
-                 dry_run = FALSE)
+d <- create_dirs(
+  plots = c("river1", "river2", "river3"),
+  site_ids = c(
+    "river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+    "river3_sm05", "river3_sm06"
+  ),
+  base_dir = "Recordings", dir_list = TRUE,
+  dry_run = FALSE
+)
 d
 }
 }

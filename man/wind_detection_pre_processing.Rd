@@ -5,28 +5,27 @@
 \title{Pre-processing of files for Wind Detection program}
 \usage{
 wind_detection_pre_processing(
-  wav_vector,
+  wav_files,
   site_pattern,
-  chunksize,
-  file_drive,
-  output_directory = NULL,
-  write_output = FALSE
+  output_directory,
+  write_to_file = FALSE,
+  chunk_size = NULL
 )
 }
 \arguments{
-\item{wav_vector}{vector of wave files}
+\item{wav_files}{Vector of path to wav files}
 
-\item{site_pattern}{regular expression to extract site names}
+\item{site_pattern}{Pattern to extract sites from file names}
 
-\item{chunksize}{numeric size of chunks to split wav_vector into}
+\item{output_directory}{Directory path to export files to}
 
-\item{file_drive}{Path to replace for use of cygwin}
+\item{write_to_file}{Logical Should the function write files to output_directory}
 
-\item{output_directory}{string - output directory to write files to}
-
-\item{write_output}{logical - if should write output to files.}
+\item{chunk_size}{Numeric If not NULL, sets number of files to include in each chunk}
 }
 \value{
+List of vectors for sites, filenames, and filePaths
+
 List including filePath, filenames, and sites suitable for wind software.
 }
 \description{
@@ -34,7 +33,7 @@ List including filePath, filenames, and sites suitable for wind software.
 
 This function takes a vector of wave file names and returns a list
 of three vectors that can be provided to the wind detection software or
-written to files that the software can read. Details of the wind detection
-software can be found at
+written to files that the software can read. Details of the usable fork of the
+wind detection software can be found at
 \url{https://github.com/dhope/WindNoiseDetection}
 }

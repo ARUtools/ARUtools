@@ -45,10 +45,11 @@ s
 Similar to a non-spatial workflow, we'll clean up this list so we can add these sites to our metadata.
 
 ```{r}
-sites <- clean_site_index(s, 
-                          name_aru_id = "ARU", 
-                          name_site_id = "Sites", 
-                          name_date_time = c("Date_set_out", "Date_removed"))
+sites <- clean_site_index(s,
+  name_aru_id = "ARU",
+  name_site_id = "Sites",
+  name_date_time = c("Date_set_out", "Date_removed")
+)
 sites
 ```
 
@@ -82,9 +83,11 @@ back if you try to add an incomplete list of sites.
 m <- clean_metadata(project_files = example_files)
 
 sites <- st_as_sf(example_sites, coords = c("lon", "lat"), crs = 4326) |>
-  clean_site_index(name_aru_id = "ARU", 
-                   name_site_id = "Sites", 
-                   name_date_time = c("Date_set_out", "Date_removed"))
+  clean_site_index(
+    name_aru_id = "ARU",
+    name_site_id = "Sites",
+    name_date_time = c("Date_set_out", "Date_removed")
+  )
 
 sites <- sites[-1, ] # Omit that first site
 

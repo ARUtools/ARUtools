@@ -31,7 +31,8 @@
 #' @examples
 #' m <- clean_metadata(project_files = example_files)
 #' s <- clean_site_index(example_sites_clean,
-#'                       name_date = c("date_time_start", "date_time_end"))
+#'   name_date = c("date_time_start", "date_time_end")
+#' )
 #' m <- add_sites(m, s)
 #'
 #' # Without dates (by site only)
@@ -44,7 +45,6 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
                       by = c("site_id", "aru_id"),
                       by_date = "date_time",
                       quiet = FALSE) {
-
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
   check_data(sites, type = "sites", ref = "clean_sites_index()` or `clean_gps()")
@@ -69,18 +69,21 @@ add_sites <- function(meta, sites, buffer_before = 0, buffer_after = NULL,
 
   # Check that there are columns to add (check after prep_xxx())
   add <- names(sites)[!names(sites) %in% c(by, by_date_cols)]
-  if(length(add) < 1) {
+  if (length(add) < 1) {
     abort(paste0(
       "No new columns in `sites` to add to `meta` ",
-      "(all columns in `by` or used in date matching)"))
+      "(all columns in `by` or used in date matching)"
+    ))
   }
 
   # Do the joins
-  if(!is.null(by_date)) {
-    meta_sites <- add_sites_date(sites, meta,
-                                 by, by_date, by_date_cols,
-                                 buffer_before, buffer_after,
-                                 quiet)
+  if (!is.null(by_date)) {
+    meta_sites <- add_sites_date(
+      sites, meta,
+      by, by_date, by_date_cols,
+      buffer_before, buffer_after,
+      quiet
+    )
   } else {
     meta_sites <- dplyr::left_join(meta, sites, by = by)
   }
@@ -117,21 +120,29 @@ calc_buffers <- function(df, buffer_before, buffer_after, by_date_cols) {
   d2 <- lubridate::as_datetime("2999-01-01")
 
   # Start time
-  if(is.null(buffer_before)) {
+  if (is.null(buffer_before)) {
     df <- dplyr::mutate(
-      df, t1 = dplyr::lag(.data[[by_date_cols]], default = .env$d1) + lubridate::seconds(1))
+      df,
+      t1 = dplyr::lag(.data[[by_date_cols]], default = .env$d1) + lubridate::seconds(1)
+    )
   } else {
     df <- dplyr::mutate(
-      df, t1 = .data[[by_date_cols]] - lubridate::hours(.env$buffer_before))
+      df,
+      t1 = .data[[by_date_cols]] - lubridate::hours(.env$buffer_before)
+    )
   }
 
   # End time
-  if(is.null(buffer_after)) {
+  if (is.null(buffer_after)) {
     df <- dplyr::mutate(
-      df, t2 = dplyr::lead(.data[[by_date_cols]], default = .env$d2) - lubridate::seconds(1))
+      df,
+      t2 = dplyr::lead(.data[[by_date_cols]], default = .env$d2) - lubridate::seconds(1)
+    )
   } else {
     df <- dplyr::mutate(
-      df, t2 = .data[[by_date_cols]] + lubridate::hours(.env$buffer_after))
+      df,
+      t2 = .data[[by_date_cols]] + lubridate::hours(.env$buffer_after)
+    )
   }
 
   df
@@ -157,7 +168,6 @@ calc_buffers <- function(df, buffer_before, buffer_after, by_date_cols) {
 #'
 #' @noRd
 prep_sites <- function(sites, by, by_date_cols) {
-
   # Omit unused dates
   omit_dts <- stringr::str_subset(names(sites), "date")
   omit_dts <- omit_dts[!omit_dts %in% by_date_cols]
@@ -166,10 +176,11 @@ prep_sites <- function(sites, by, by_date_cols) {
   # Omit NAs
   sites <- tidyr::drop_na(
     sites,
-    dplyr::any_of(c(by_date_cols, "longitude", "latitude")))
+    dplyr::any_of(c(by_date_cols, "longitude", "latitude"))
+  )
 
   # Fix output of clean_gps()
-  if("type" %in% names(sites) && all(sites$type == "gps")) {
+  if ("type" %in% names(sites) && all(sites$type == "gps")) {
     omit <- c("file_name", "type", "path", "aru_type")
     omit <- omit[!omit %in% by]
     sites <- dplyr::select(sites, -dplyr::any_of(omit))
@@ -200,27 +211,27 @@ prep_sites <- function(sites, by, by_date_cols) {
 #' @return meta data simplified
 #'
 #' @noRd
-prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
-
+prep_meta <- function(meta, cols_sites, by, by_date_cols, quiet) {
   meta <- dplyr::filter(meta, .data$type != "gps")
 
   # Omit columns in both meta and site not in 'by'/'by_date_cols' (allows faster filling)
   omit_cols <- cols_sites[!cols_sites %in% c(by, by_date_cols)]
   omit_cols <- omit_cols[omit_cols %in% names(meta)]
 
-  if(length(omit_cols) > 0) {
+  if (length(omit_cols) > 0) {
     meta <- dplyr::select(meta, -dplyr::all_of(omit_cols))
 
     # Don't report if all NA in meta
     report <- omit_cols
-    for(i in report) if(all(is.na(meta[[i]]))) report <- report[report != i]
+    for (i in report) if (all(is.na(meta[[i]]))) report <- report[report != i]
 
-    if(length(report) > 0) {
+    if (length(report) > 0) {
       inform(c(
         "Some columns in both `meta` and `sites` are not used to join (`by`)",
         "*" = paste0(
           "These columns (`", paste0(omit_cols, collapse = "`, `"), "`) ",
-          "will be overwritten in `meta`")
+          "will be overwritten in `meta`"
+        )
       ))
     }
   }
@@ -238,45 +249,54 @@ prep_meta <- function(meta, cols_sites, by , by_date_cols, quiet) {
 #' @noRd
 add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
                            buffer_before, buffer_after, quiet) {
-
   # Clean up Dates
-  if(by_date == "date") {
+  if (by_date == "date") {
     dt_fun <- lubridate::as_date
-  } else dt_fun <- lubridate::as_datetime
+  } else {
+    dt_fun <- lubridate::as_datetime
+  }
 
   sites <- dplyr::mutate(sites, dplyr::across(dplyr::all_of(by_date_cols), dt_fun))
 
   # Summarize multiple, coordinates within a date by grouping variables
   # Deals with multiple reads of GPS locations (e.g., hourly)
-  if(by_date == "date") {
+  if (by_date == "date") {
     n <- dplyr::count(
       sites,
-      dplyr::across(.cols = c(dplyr::all_of(by), dplyr::matches("date(_(start|end))?"))))
-    if(any(n$n > 1)) {
-
+      dplyr::across(.cols = c(dplyr::all_of(by), dplyr::matches("date(_(start|end))?")))
+    )
+    if (any(n$n > 1)) {
       sites <- sites |>
         dplyr::group_by(dplyr::across(
-          .cols = c(dplyr::all_of(by), dplyr::matches("date(_(start|end))?")))) |>
-        dplyr::summarize(sd_lon = stats::sd(.data$longitude),
-                         sd_lat = stats::sd(.data$latitude),
-                         longitude = mean(.data$longitude),
-                         latitude = mean(.data$latitude)) |>
+          .cols = c(dplyr::all_of(by), dplyr::matches("date(_(start|end))?"))
+        )) |>
+        dplyr::summarize(
+          sd_lon = stats::sd(.data$longitude),
+          sd_lat = stats::sd(.data$latitude),
+          longitude = mean(.data$longitude),
+          latitude = mean(.data$latitude)
+        ) |>
         dplyr::ungroup()
 
       inform(c(
-        paste0("Multiple coordinates per date at each combination of `",
-               paste0(by, collapse = "`/`"), "`"),
-        paste0("Taking mean coordinates ",
-               "(max sd lon ", round(max(sites$sd_lon, na.rm = TRUE), 4),
-               "; max sd lat ", round(max(sites$sd_lat, na.rm = TRUE), 4), ")"),
-        "Consider using `by = \"date_time\"` for more fine-tuned control"))
+        paste0(
+          "Multiple coordinates per date at each combination of `",
+          paste0(by, collapse = "`/`"), "`"
+        ),
+        paste0(
+          "Taking mean coordinates ",
+          "(max sd lon ", round(max(sites$sd_lon, na.rm = TRUE), 4),
+          "; max sd lat ", round(max(sites$sd_lat, na.rm = TRUE), 4), ")"
+        ),
+        "Consider using `by = \"date_time\"` for more fine-tuned control"
+      ))
 
       sites <- dplyr::select(sites, -"sd_lon", -"sd_lat")
     }
   }
 
   # Create date/time range (from buffers as required)
-  if(length(by_date_cols) == 1) {
+  if (length(by_date_cols) == 1) {
     sites <- sites |>
       dplyr::group_by(dplyr::across(dplyr::all_of(by))) |>
       calc_buffers(buffer_before, buffer_after, by_date_cols) |>
@@ -285,41 +305,50 @@ add_sites_date <- function(sites, meta, by, by_date, by_date_cols,
       dplyr::ungroup()
   } else {
     sites <- sites |>
-      dplyr::mutate(dt_range = lubridate::interval(.data[[by_date_cols[1]]],
-                                                   .data[[by_date_cols[[2]]]])) |>
+      dplyr::mutate(dt_range = lubridate::interval(
+        .data[[by_date_cols[1]]],
+        .data[[by_date_cols[[2]]]]
+      )) |>
       dplyr::select(-dplyr::all_of(by_date_cols))
   }
 
   # Join by date (add `...n` to track successfully merged records)
   sites <- dplyr::mutate(sites, `...n` = 1:dplyr::n())
 
-  meta_sites <- date_join(meta, sites, by = by, id = "path",
-                          col = by_date, int = "dt_range")
+  meta_sites <- date_join(meta, sites,
+    by = by, id = "path",
+    col = by_date, int = "dt_range"
+  )
 
   # Flags
   msg <- c("Identified possible problems with metadata extraction:")
 
-  if(nrow(meta_sites) > nrow(meta)) {
+  if (nrow(meta_sites) > nrow(meta)) {
     msg <- c(msg,
-             "x" = "Some sound files matched multiple site references (see `n_matches` column)")
+      "x" = "Some sound files matched multiple site references (see `n_matches` column)"
+    )
   }
 
-  if(any(is.na(meta_sites$`...n`))) {
+  if (any(is.na(meta_sites$`...n`))) {
     n <- nrow(meta)
     f <- sum(is.na(meta_sites$`...n`))
     msg <- c(msg,
-             "x" = paste0("Not all files were matched to a site reference (", f, "/", n, ")"))
+      "x" = paste0("Not all files were matched to a site reference (", f, "/", n, ")")
+    )
   }
-  if(length(msg) > 1) {
+  if (length(msg) > 1) {
     msg <- c(msg, "*" = "Consider adjusting the `by` argument")
-    if(by_date == "date") {
+    if (by_date == "date") {
       msg <- c(msg, "*" = "Consider matching by time, `by_date = \"date_time\"`")
     }
-    if(length(by_date_cols) == 1)  {
+    if (length(by_date_cols) == 1) {
       msg <- c(msg,
-               "*" = c("Consider adjusting `buffer_before` or `buffer_after`"),
-               "*" = paste0("Consider using date/time ranges by including `date_start`",
-                            "/`date_time_start` and `date_end`/`date_time_end` in `sites`"))
+        "*" = c("Consider adjusting `buffer_before` or `buffer_after`"),
+        "*" = paste0(
+          "Consider using date/time ranges by including `date_start`",
+          "/`date_time_start` and `date_end`/`date_time_end` in `sites`"
+        )
+      )
     }
 
     inform(msg)

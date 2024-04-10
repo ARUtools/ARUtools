@@ -4,14 +4,17 @@
 \name{ARUtools}
 \alias{ARUtools-package}
 \alias{ARUtools}
-\title{ARUtools: CWS Ontario Tools for working with ARU files}
+\title{ARUtools: Tools for management of Acoustic Recording Unit (ARU) data}
 \description{
-ARU tools that some might find useful for working with ARU files.
+Collection of functions and R code for parsing acoustic
+recording unit (ARU) data and for sub-sampling recordings.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://arutools.github.io/ARUtools/}
+  \item \url{https://arutools.github.io/ARUtools/}
+  \item \url{https://github.com/arutools/ARUtools/}
+  \item Report bugs at \url{https://github.com/arutools/ARUtools/issues}
 }
 
 }

@@ -32,8 +32,10 @@ at Site 100-a45 May 4th 2020 at 5:25 am with ARU unit S4A1234. The other at
 Site 102-b56 on the same day but at 5:40 am with ARU unit S4A1111.
 
 ```{r}
-f <- c("site100-a45/2020_05_04_05_25_00_s4a1234.wav",
-       "site102-b56/2020_05_04_05_40_00_s4a1111.wav")
+f <- c(
+  "site100-a45/2020_05_04_05_25_00_s4a1234.wav",
+  "site102-b56/2020_05_04_05_40_00_s4a1111.wav"
+)
 ```
 
 If we try to clean this with the default arguments, we're going to have some problems.
@@ -81,9 +83,11 @@ We specify the `prefix` text as well as how many digits we might expect, a separ
 `suffix` text and how many suffix digits there might be.
 
 ```{r}
-pat_site <- create_pattern_site_id(prefix = "site", p_digits = 3, 
-                                   sep = "-", 
-                                   suffix = c("a", "b"), s_digits = 2)
+pat_site <- create_pattern_site_id(
+  prefix = "site", p_digits = 3,
+  sep = "-",
+  suffix = c("a", "b"), s_digits = 2
+)
 pat_site
 ```
 
@@ -112,10 +116,12 @@ Let's continue customizing our metadata patterns by specifying ARU ids, dates an
 ```{r}
 pat_aru <- create_pattern_aru_id(arus = "s4a", n_digits = 4)
 
-m <- clean_metadata(project_files = f,
-                    pattern_site_id = pat_site,
-                    pattern_aru_id = pat_aru,
-                    pattern_dt_sep = "_")
+m <- clean_metadata(
+  project_files = f,
+  pattern_site_id = pat_site,
+  pattern_aru_id = pat_aru,
+  pattern_dt_sep = "_"
+)
 m
 ```
 
@@ -127,15 +133,19 @@ Depending on your date formatting, you may also need to specify the order of the
 year, month and day, in addition to changing the pattern. 
 
 ```{r}
-f <- c("P01-1/05042020_052500_S4A1234.wav",
-       "P01-1/05042020_054000_S4A1111.wav")
+f <- c(
+  "P01-1/05042020_052500_S4A1234.wav",
+  "P01-1/05042020_054000_S4A1111.wav"
+)
 ```
 
 ```{r}
-clean_metadata(project_files = f,
-               pattern_dt_sep = "_",
-               pattern_date = create_pattern_date(order = "mdy"),
-               order_date = "mdy")
+clean_metadata(
+  project_files = f,
+  pattern_dt_sep = "_",
+  pattern_date = create_pattern_date(order = "mdy"),
+  order_date = "mdy"
+)
 ```
 
 Note that you need to specify it once when making the pattern, and then again 
@@ -151,10 +161,12 @@ correctly in these situations.
 ### Matching multiple patterns
 
 ```{r}
-f <- c("P01-1/05042020_052500_S4A1234.wav",
-       "P01-1/05042020_054000_S4A1111.wav",
-       "Site10/2020-01-01T09:00:00_BARLT100.wav",
-       "Site10/2020-01-02T09:00:00_BARLT100.wav")
+f <- c(
+  "P01-1/05042020_052500_S4A1234.wav",
+  "P01-1/05042020_054000_S4A1111.wav",
+  "Site10/2020-01-01T09:00:00_BARLT100.wav",
+  "Site10/2020-01-02T09:00:00_BARLT100.wav"
+)
 ```
 
 Sometimes your files may use more than one pattern. You can address this problem
@@ -163,17 +175,20 @@ in one of two ways.
 **One option is to run `clean_metadata()` twice and then join the outputs**
 
 ```{r}
-m1 <- clean_metadata(project_files = f, 
-                     pattern_dt_sep = "_",
-                     pattern_date = create_pattern_date(order = "mdy"),
-                     order_date = "mdy")
+m1 <- clean_metadata(
+  project_files = f,
+  pattern_dt_sep = "_",
+  pattern_date = create_pattern_date(order = "mdy"),
+  order_date = "mdy"
+)
 m1 <- filter(m1, !is.na(date_time)) # omit ones that didn't work
 m1
 
 m2 <- clean_metadata(
   project_files = f,
   pattern_site_id = create_pattern_site_id(prefix = "Site", s_digits = 0),
-  pattern_aru_id = create_pattern_aru_id(n_digits = 3))
+  pattern_aru_id = create_pattern_aru_id(n_digits = 3)
+)
 m2 <- filter(m2, !is.na(date_time)) # omit ones that didn't work
 m2
 
@@ -192,14 +207,18 @@ nrow(m)
 `create_pattern_XXX()` functions**
 
 ```{r}
-m <- clean_metadata(project_files = f, 
-                    pattern_dt_sep = c("_", "T"),
-                    pattern_date = create_pattern_date(order = c("ymd", "mdy")),
-                    order_date = c("ymd", "mdy"),
-                    pattern_aru_id = create_pattern_aru_id(n_digits = c(3, 4)),
-                    pattern_site_id = create_pattern_site_id(prefix = c("P", "Site"),
-                                                             sep = c("-", ""),
-                                                             s_digits = c(1, 0)))
+m <- clean_metadata(
+  project_files = f,
+  pattern_dt_sep = c("_", "T"),
+  pattern_date = create_pattern_date(order = c("ymd", "mdy")),
+  order_date = c("ymd", "mdy"),
+  pattern_aru_id = create_pattern_aru_id(n_digits = c(3, 4)),
+  pattern_site_id = create_pattern_site_id(
+    prefix = c("P", "Site"),
+    sep = c("-", ""),
+    s_digits = c(1, 0)
+  )
+)
 m
 ```
 
@@ -254,8 +273,10 @@ By default `clean_metadata()` looks for .wav files. If you want it to match
 something else, adjust the `file_type` argument.
 
 ```{r}
-f <- c("a_BARLT10962_P01_1/P01_1_20200502T050000_ARU.mp4",
-       "a_BARLT10962_P01_1/P01_1_20200503T052000_ARU.mp4")
+f <- c(
+  "a_BARLT10962_P01_1/P01_1_20200502T050000_ARU.mp4",
+  "a_BARLT10962_P01_1/P01_1_20200503T052000_ARU.mp4"
+)
 ```
 
 Other wise we'll run into problems...

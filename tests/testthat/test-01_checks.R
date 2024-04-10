@@ -1,4 +1,3 @@
-
 test_that("check_ext()", {
   expect_silent(check_ext("csv", "csv"))
   expect_silent(check_ext("csv", c("xlsx", "csv")))
@@ -15,15 +14,17 @@ test_that("check_value()", {
   expect_error(check_value(1, "x", type = "text"), "must be text")
 
   expect_silent(check_value(1:3, "x", type = "numeric", n = 3))
-  expect_silent(check_value(NULL, "x", type = "numeric", not_null= FALSE))
+  expect_silent(check_value(NULL, "x", type = "numeric", not_null = FALSE))
   expect_silent(check_value(1, "x", opts = 1, type = "numeric"))
   expect_error(check_value(1:3, "x", type = "numeric", n = 1), "must have 1")
   expect_error(check_value(NULL, "x", type = "numeric"), "cannot be `NULL`")
   expect_error(check_value(1, "x", opts = c(2, 4), type = "numeric"), "must be among")
 
   expect_silent(check_value(1:3, "x", type = "numeric", range = c(0, Inf)))
-  expect_error(check_value(1:3, "x", type = "numeric", range = c(4, Inf)),
-               "must be between")
+  expect_error(
+    check_value(1:3, "x", type = "numeric", range = c(4, Inf)),
+    "must be between"
+  )
 })
 
 test_that("check_cols()", {
@@ -47,16 +48,22 @@ test_that("check_names()", {
 
   expect_silent(check_names(mtcars, names = c(col1, col2)))
 
-  expect_error(check_names(mtcars, names = c(col1, col2, col3)),
-               "Column 'testing' does not exist")
+  expect_error(
+    check_names(mtcars, names = c(col1, col2, col3)),
+    "Column 'testing' does not exist"
+  )
 
-  expect_error(check_names(mtcars, dates = TRUE),
-               "No date or date range columns")
+  expect_error(
+    check_names(mtcars, dates = TRUE),
+    "No date or date range columns"
+  )
 })
 
 test_that("check_dates()", {
-  s <- dplyr::mutate(example_sites, date = lubridate::ymd(Date_set_out),
-                     date_time = as.POSIXct(date))
+  s <- dplyr::mutate(example_sites,
+    date = lubridate::ymd(Date_set_out),
+    date_time = as.POSIXct(date)
+  )
 
   expect_silent(check_dates(s, "date"))
   expect_silent(check_dates(s, c("date", "date_time")))
@@ -66,7 +73,6 @@ test_that("check_dates()", {
 })
 
 test_that("check_doy()", {
-
   site <- LETTERS[1:10]
   doy1 <- 1:10
   doy2 <- -5:4
@@ -86,7 +92,6 @@ test_that("check_doy()", {
   expect_equal(d, doy1)
   expect_silent(d <- check_doy(date_time))
   expect_equal(d, doy1)
-
 })
 
 test_that("check_df_file()", {
@@ -102,24 +107,31 @@ test_that("check_date_joins()", {
   expect_error(check_date_joins(df, by_date = "date_time"), "Cannot find")
 
   df <- data.frame(date_time = "2020-01-01 00:00:00")
-  expect_message(v <- check_date_joins(df, by_date = "date_time"),
-                 "`date_time` using buffers")
+  expect_message(
+    v <- check_date_joins(df, by_date = "date_time"),
+    "`date_time` using buffers"
+  )
   expect_equal(v, "date_time")
   expect_error(check_date_joins(df, by_date = "date"), "Cannot find")
 
   df <- data.frame(date_start = "2020-01-01", date_end = "2020-02-01")
-  expect_message(v <- check_date_joins(df, by_date = "date"),
-                 "`date_start` and `date_end`")
+  expect_message(
+    v <- check_date_joins(df, by_date = "date"),
+    "`date_start` and `date_end`"
+  )
   expect_equal(v, c("date_start", "date_end"))
   expect_error(check_date_joins(df, by_date = "date_time"), "Cannot find")
 
-  df <- data.frame(date_time_start = "2020-01-01 00:00:00",
-                   date_time_end = "2020-01-01 05:00:00")
-  expect_message(v <- check_date_joins(df, by_date = "date_time"),
-                 "`date_time_start` and `date_time_end`")
+  df <- data.frame(
+    date_time_start = "2020-01-01 00:00:00",
+    date_time_end = "2020-01-01 05:00:00"
+  )
+  expect_message(
+    v <- check_date_joins(df, by_date = "date_time"),
+    "`date_time_start` and `date_time_end`"
+  )
   expect_equal(v, c("date_time_start", "date_time_end"))
   expect_error(check_date_joins(df, by_date = "date"), "Cannot find")
-
 })
 
 test_that("check_tz()", {
@@ -127,4 +139,3 @@ test_that("check_tz()", {
   expect_silent(check_tz("America/Winnipeg"))
   expect_error(check_tz("lsdjkf/skdjfl"))
 })
-

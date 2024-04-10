@@ -103,11 +103,12 @@ in a particular format. Luckily we can let it know if we've used a different
 format.
 
 ```{r}
-sites <- clean_site_index(example_sites, 
-                          name_aru_id = "ARU", 
-                          name_site_id = "Sites", 
-                          name_date_time = c("Date_set_out", "Date_removed"),
-                          name_coords = c("lon", "lat"))
+sites <- clean_site_index(example_sites,
+  name_aru_id = "ARU",
+  name_site_id = "Sites",
+  name_date_time = c("Date_set_out", "Date_removed"),
+  name_coords = c("lon", "lat")
+)
 ```
 
 Hmm, that's an interesting message! This means that some of our deployment
@@ -130,24 +131,26 @@ Note that we've lost a couple of non-standard columns: `Plots` and `Subplot`.
 We can retain these by specifying `cols_extra`. 
 
 ```{r}
-sites <- clean_site_index(example_sites, 
-                          name_aru_id = "ARU", 
-                          name_site_id = "Sites", 
-                          name_date_time = c("Date_set_out", "Date_removed"),
-                          name_coords = c("lon", "lat"),
-                          name_extra = c("Plots", "Subplot"))
+sites <- clean_site_index(example_sites,
+  name_aru_id = "ARU",
+  name_site_id = "Sites",
+  name_date_time = c("Date_set_out", "Date_removed"),
+  name_coords = c("lon", "lat"),
+  name_extra = c("Plots", "Subplot")
+)
 sites
 ```
 
 We can even be fancy and rename them for consistency by using named vectors.  
 
 ```{r}
-sites <- clean_site_index(example_sites, 
-                          name_aru_id = "ARU", 
-                          name_site_id = "Sites", 
-                          name_date_time = c("Date_set_out", "Date_removed"),
-                          name_coords = c("lon", "lat"),
-                          name_extra = c("plot" = "Plots", "subplot" = "Subplot"))
+sites <- clean_site_index(example_sites,
+  name_aru_id = "ARU",
+  name_site_id = "Sites",
+  name_date_time = c("Date_set_out", "Date_removed"),
+  name_coords = c("lon", "lat"),
+  name_extra = c("plot" = "Plots", "subplot" = "Subplot")
+)
 sites
 ```
 

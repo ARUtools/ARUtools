@@ -49,31 +49,31 @@ library(dplyr)
 library(stringr)
 library(lubridate)
 
-simple_deploy <- 
-tidyr::expand_grid(site_id = unique(example_sites$Sites),
-                   
-                   doy = seq(121,191, by = 2),
-                   times = seq(-30, 120, by = 30)) |> 
-  tidyr::separate(site_id, into = c("plot", "site"), sep = "_", remove = F) |> 
-  left_join(example_sites, join_by(site_id == Sites)) |> 
+simple_deploy <-
+  tidyr::expand_grid(
+    site_id = unique(example_sites$Sites),
+    doy = seq(121, 191, by = 2),
+    times = seq(-30, 120, by = 30)
+  ) |>
+  tidyr::separate(site_id, into = c("plot", "site"), sep = "_", remove = F) |>
+  left_join(example_sites, join_by(site_id == Sites)) |>
   mutate(
     # aru_id = glue::glue("BARLT-000{as.numeric(as.factor(site_id))}"),
-    date = ymd("2028-01-01")+doy,
-         date_time = ymd_hm(glue::glue("{date} 06:00"))+minutes(times),
-         date_time_chr = str_replace(as.character(date_time), "\\s", "T"),
-         file_name = glue::glue("{plot}/{site_id}/{ARU}_{date_time_chr}.wav") )
-  
-simple_deploy
+    date = ymd("2028-01-01") + doy,
+    date_time = ymd_hm(glue::glue("{date} 06:00")) + minutes(times),
+    date_time_chr = str_replace(as.character(date_time), "\\s", "T"),
+    file_name = glue::glue("{plot}/{site_id}/{ARU}_{date_time_chr}.wav")
+  )
 
+simple_deploy
 ```
 
 Our site info will be that used in `example_sites`.
 
 ```{r}
-site_info <- simple_deploy |> 
-  slice_min(order_by = date_time, n=1, by = site_id) |> 
+site_info <- simple_deploy |>
+  slice_min(order_by = date_time, n = 1, by = site_id) |>
   dplyr::select(site_id, ARU, lon, lat, date_time)
-  
 ```
 
 </details>
@@ -86,14 +86,15 @@ article (`vignette("ARUtools")`).
 
 ```{r}
 sites <- clean_site_index(site_info,
-                          name_aru_id = "ARU", 
-                          name_site_id = "site_id", 
-                          name_date_time = c("date_time"),
-                          name_coords = c("lon", "lat") )
-metadata <- clean_metadata(project_files = simple_deploy$file_name) |> 
-  add_sites( sites) |> 
-  calc_sun() |> 
-  dplyr::mutate( doy = lubridate::yday(date))
+  name_aru_id = "ARU",
+  name_site_id = "site_id",
+  name_date_time = c("date_time"),
+  name_coords = c("lon", "lat")
+)
+metadata <- clean_metadata(project_files = simple_deploy$file_name) |>
+  add_sites(sites) |>
+  calc_sun() |>
+  dplyr::mutate(doy = lubridate::yday(date))
 dplyr::glimpse(metadata)
 ```
 ## Parameters
@@ -112,12 +113,14 @@ To visualize the selection parameters use `gen_dens_sel_simulation`. This will s
 will change over time and time to sunrise/sunset.
 
 ```{r fig.height=6, out.height=8, warning=FALSE}
-p <-  sim_selection_weights(min_range = c(-70, 240),
-                          day_range = c(120, lubridate::yday(lubridate::ymd("2021-07-20"))),
-                          min_mean = 30, min_sd = 60,
-                          day_mean = lubridate::yday(lubridate::ymd("2021-06-10")),
-                          day_sd = 20,offset=0,
-                          return_log = TRUE, selection_fun = "norm") 
+p <- sim_selection_weights(
+  min_range = c(-70, 240),
+  day_range = c(120, lubridate::yday(lubridate::ymd("2021-07-20"))),
+  min_mean = 30, min_sd = 60,
+  day_mean = lubridate::yday(lubridate::ymd("2021-06-10")),
+  day_sd = 20, offset = 0,
+  return_log = TRUE, selection_fun = "norm"
+)
 ```
 
 
@@ -130,13 +133,14 @@ p <-  sim_selection_weights(min_range = c(-70, 240),
 Once you have your parameters set up, you can use them to calculate the sampling weights from the metadata.
 
 ```{r}
-full_selection_probs <- 
-  metadata |> 
+full_selection_probs <-
+  metadata |>
   calc_selection_weights(
-    col_site_id = site_id, 
-    col_min = t2sr, 
+    col_site_id = site_id,
+    col_min = t2sr,
     col_day = doy,
-    params = p)
+    params = p
+  )
 ```
 
 
@@ -148,9 +152,10 @@ occur differ by sites.
 
 ```{r, echo=FALSE}
 library(ggplot2)
-ggplot(full_selection_probs, aes(doy, t2sr, colour = psel_normalized)) + 
+ggplot(full_selection_probs, aes(doy, t2sr, colour = psel_normalized)) +
   geom_point() +
-  scale_colour_viridis_c() + facet_wrap(~site_id)
+  scale_colour_viridis_c() +
+  facet_wrap(~site_id)
 ```
 
 
@@ -163,11 +168,11 @@ in case some samples are unusable (e.g. due to wind).
 
 
 ```{r}
-sample_size <- count(full_selection_probs,  site_id) |> 
+sample_size <- count(full_selection_probs, site_id) |>
   transmute(site_id,
-            n = floor(n*.02),
-         n_os  = ceiling(n*.3)
-         )
+    n = floor(n * .02),
+    n_os = ceiling(n * .3)
+  )
 ```
 
 The figure below can provide a coarse rule of thumb on how many minutes of 
@@ -176,15 +181,19 @@ including knowledge of probability of observing per minute, that this probabilit
 will change by date, time of day, conspecific behaviour, weather, etc.
 
 ```{r, echo=F}
-p_obs <- 
-  tidyr::expand_grid(p_obs = seq(0.01, 0.99, by = 0.01),
-                     n_obs = 1:20) |> 
-  mutate(p_total= 1-exp(-p_obs*n_obs)) |> 
-  ggplot(aes(n_obs, p_obs, fill = p_total), colour =NA) +
+p_obs <-
+  tidyr::expand_grid(
+    p_obs = seq(0.01, 0.99, by = 0.01),
+    n_obs = 1:20
+  ) |>
+  mutate(p_total = 1 - exp(-p_obs * n_obs)) |>
+  ggplot(aes(n_obs, p_obs, fill = p_total), colour = NA) +
   geom_raster() +
   scale_fill_viridis_c() +
-  labs(x = "Number of minutes observed", y = "Probably of observing per minute",
-       fill = "Total\nprobability\nof\ndetection")
+  labs(
+    x = "Number of minutes observed", y = "Probably of observing per minute",
+    fill = "Total\nprobability\nof\ndetection"
+  )
 p_obs
 ```
 
@@ -204,11 +213,12 @@ and time in the dates.
 
 
 ```{r}
-grts_res <- sample_recordings(full_selection_probs, 
-                         n = sample_size,
-                         col_site_id =  site_id,
-                         seed = 2024, 
-                         col_sel_weights =  psel_normalized)
+grts_res <- sample_recordings(full_selection_probs,
+  n = sample_size,
+  col_site_id = site_id,
+  seed = 2024,
+  col_sel_weights = psel_normalized
+)
 
 dplyr::glimpse(grts_res$sites_base)
 ```
@@ -219,35 +229,36 @@ If you don't want to sample using `grts()` you can just use
 `dplyr::slice_sample()`.
 
 ```{r}
-withr::with_seed(2024,{
-random_sample <- 
-  full_selection_probs |> 
-  dplyr::slice_sample( n = 4,by = site_id,
-                       weight_by = psel_normalized,
-                      replace = F)
-  
-} ) 
+withr::with_seed(2024, {
+  random_sample <-
+    full_selection_probs |>
+    dplyr::slice_sample(
+      n = 4, by = site_id,
+      weight_by = psel_normalized,
+      replace = F
+    )
+})
 ```
 
 <details> <summary>
 If you want to set site specific sample sizes, you can use some dplyr tricks to
 handle that: </summary>
 ```{r eval=F}
-withr::with_seed(2024,{
-random_sample_stratified <- 
-  full_selection_probs |> 
-  left_join(sample_size,by = join_by(site_id)) |> 
-  nest_by(site_id, n) |> 
-  rowwise() |> 
-  mutate(sample = list(dplyr::slice_sample(.data =data,
-                                      n = .data$n,
-                                      weight_by = psel_normalized,
-                      replace = F)) ) |> 
-  dplyr::select(site_id, sample) |> 
-  tidyr::unnest(sample)
-  
-} ) 
-
+withr::with_seed(2024, {
+  random_sample_stratified <-
+    full_selection_probs |>
+    left_join(sample_size, by = join_by(site_id)) |>
+    nest_by(site_id, n) |>
+    rowwise() |>
+    mutate(sample = list(dplyr::slice_sample(
+      .data = data,
+      n = .data$n,
+      weight_by = psel_normalized,
+      replace = F
+    ))) |>
+    dplyr::select(site_id, sample) |>
+    tidyr::unnest(sample)
+})
 ```
 
 </details>
@@ -256,12 +267,15 @@ Oversamples with random sampling, just involves dropping recordings you've selec
 drawing some more.
 
 ```{r}
-oversample <- filter(full_selection_probs, 
-                     !path %in% random_sample$path) |> 
-  dplyr::slice_sample( n = 2,by = site_id,
-                       weight_by = psel_normalized,
-                      replace = F)
-  
+oversample <- filter(
+  full_selection_probs,
+  !path %in% random_sample$path
+) |>
+  dplyr::slice_sample(
+    n = 2, by = site_id,
+    weight_by = psel_normalized,
+    replace = F
+  )
 ```
 
 
@@ -272,23 +286,22 @@ Looking at the draws, you may notice the `grts` results are more spaced out, whi
 the random sample, contains more clumping, which is characteristic of random sampling.
 
 ```{r, echo=F}
-filter(full_selection_probs, path %in% grts_res$sites_base$path) |> 
-ggplot(aes(doy,t2sr)) + geom_point() +
-  xlim(range(full_selection_probs$doy))+
+filter(full_selection_probs, path %in% grts_res$sites_base$path) |>
+  ggplot(aes(doy, t2sr)) +
+  geom_point() +
+  xlim(range(full_selection_probs$doy)) +
   ylim(range(full_selection_probs$t2sr)) +
-  labs(x="Day of Year", y = "Time to sunrise", title = "GRTS selection")
-
-
+  labs(x = "Day of Year", y = "Time to sunrise", title = "GRTS selection")
 ```
 
 ```{r, echo=F}
-random_sample |> 
-  mutate(z=1) |> 
-ggplot(aes(doy,t2sr)) + geom_point() +
-  xlim(range(full_selection_probs$doy))+
+random_sample |>
+  mutate(z = 1) |>
+  ggplot(aes(doy, t2sr)) +
+  geom_point() +
+  xlim(range(full_selection_probs$doy)) +
   ylim(range(full_selection_probs$t2sr)) +
-  labs(x="Day of Year", y = "Time to sunrise", title = "Random selection")
-
+  labs(x = "Day of Year", y = "Time to sunrise", title = "Random selection")
 ```
 
 ## Assigning recording lengths
@@ -301,16 +314,20 @@ To assign lengths, we can repeat the same process as above sequentially assignin
 lengths or more simply just assign them all at once.
 
 ```{r}
-withr::with_seed(6546,{
-random_sample$length <- sample(x = c("5min", "3min", "1min"),
-                               size =  nrow(random_sample), replace = T)
-} )
+withr::with_seed(6546, {
+  random_sample$length <- sample(
+    x = c("5min", "3min", "1min"),
+    size = nrow(random_sample), replace = T
+  )
+})
 ```
 ```{r, echo=F}
-count(random_sample, length, site_id) |> 
-  tidyr::pivot_wider(names_from = site_id, 
-                     values_from = n, values_fill = list(n=0),
-                     values_fn = as.numeric)
+count(random_sample, length, site_id) |>
+  tidyr::pivot_wider(
+    names_from = site_id,
+    values_from = n, values_fill = list(n = 0),
+    values_fn = as.numeric
+  )
 ```
 
 
@@ -318,34 +335,40 @@ This however creates the issue that some sites will have less and some more of e
 
 
 ```{r}
-withr::with_seed(569,{
-  
-sample5min <- slice_sample(random_sample,
-                           n=1, by = site_id, weight_by = psel_normalized) 
+withr::with_seed(569, {
+  sample5min <- slice_sample(random_sample,
+    n = 1, by = site_id, weight_by = psel_normalized
+  )
 
-sample3min <- slice_sample(random_sample |> 
-                             filter(!path %in% sample5min$path),
-                           n=1, by = site_id, weight_by = psel_normalized)
-
-
-random_sample_with_lengths <- random_sample |> 
-  mutate(Length_group =
-           case_when(path %in% sample5min$path ~ "5min",
-                     path %in% sample3min$path ~ "3min",
-                     TRUE~"1min"
-           ),
-         length_clip = as.numeric(str_extract(Length_group, "^\\d"))*60)  })
+  sample3min <- slice_sample(
+    random_sample |>
+      filter(!path %in% sample5min$path),
+    n = 1, by = site_id, weight_by = psel_normalized
+  )
 
 
+  random_sample_with_lengths <- random_sample |>
+    mutate(
+      Length_group =
+        case_when(
+          path %in% sample5min$path ~ "5min",
+          path %in% sample3min$path ~ "3min",
+          TRUE ~ "1min"
+        ),
+      length_clip = as.numeric(str_extract(Length_group, "^\\d")) * 60
+    )
+})
 ```
 
 Sampling by site and length creates an equal sample by length and site.
 
 ```{r, echo=F}
-count(random_sample_with_lengths, Length_group, site_id) |> 
-  tidyr::pivot_wider(names_from = site_id, 
-                     values_from = n, values_fill = list(n=0),
-                     values_fn = as.numeric) 
+count(random_sample_with_lengths, Length_group, site_id) |>
+  tidyr::pivot_wider(
+    names_from = site_id,
+    values_from = n, values_fill = list(n = 0),
+    values_fn = as.numeric
+  )
 ```
 
 
@@ -356,29 +379,38 @@ a 'wav' file in seconds.
 
 ```{r, eval=F}
 random_sample_with_lengths$length_clip <-
-  purrr::map(1:nrow(random_sample_with_lengths),
-      ~get_wav_length(
-        path = random_sample_with_lengths$path[[.x]], 
-        return_numeric = T))
+  purrr::map(
+    1:nrow(random_sample_with_lengths),
+    ~ get_wav_length(
+      path = random_sample_with_lengths$path[[.x]],
+      return_numeric = T
+    )
+  )
 ```
 This can be used to safely add a random start time to your recordings if you don't
 want to all start at zero.
 
 For this document we will assume all recordings are 5 minutes.
 ```{r}
-random_sample_with_lengths$length <- 5*60
+random_sample_with_lengths$length <- 5 * 60
 ```
 
 
 ```{r, eval=T}
-random_sample_with_lengths <- 
-  random_sample_with_lengths |> 
-  rowwise() |> 
-  mutate(StartTime = case_when(Length_group == "5min"~0,
-                                 TRUE~runif(1, 0,
-                                          pmax(0,
-                                               length - length_clip)))
-  ) |> ungroup()
+random_sample_with_lengths <-
+  random_sample_with_lengths |>
+  rowwise() |>
+  mutate(StartTime = case_when(
+    Length_group == "5min" ~ 0,
+    TRUE ~ runif(
+      1, 0,
+      pmax(
+        0,
+        length - length_clip
+      )
+    )
+  )) |>
+  ungroup()
 ```
 
 ```{r, echo=F}
@@ -396,13 +428,12 @@ dates, and times based on file name.
 
 
 ```{r}
-final_selection <- random_sample_with_lengths |> 
+final_selection <- random_sample_with_lengths |>
   add_wildtrax()
 
-final_selection |> 
-  head() |> 
+final_selection |>
+  head() |>
   dplyr::select(path, wildtrax_file_name)
-
 ```
 
 
@@ -417,10 +448,14 @@ structure which can help with checking for errors prior to uploading.
 ```{r, eval=F}
 out_directory <- "/path/to/upload/directory/"
 dir.create(out_directory, recursive = T)
-ul_tab <- expand_grid(period =c('Dawn'), # Add 'Dusk' if using more than one time period
-                      length = unique(selected_recordings$Length_group))
-purrr::map(glue::glue("{out_directory}/{ul_tab$period}/{ul_tab$length}"), 
-           dir.create,recursive = T)
+ul_tab <- expand_grid(
+  period = c("Dawn"), # Add 'Dusk' if using more than one time period
+  length = unique(selected_recordings$Length_group)
+)
+purrr::map(glue::glue("{out_directory}/{ul_tab$period}/{ul_tab$length}"),
+  dir.create,
+  recursive = T
+)
 ```
 
 
@@ -433,15 +468,16 @@ You can use the option `use_job=T` to allow the use of the `job` package, which
 will launch a background job if the copying will take a long time.
 
 ```{r eval=F}
-log_output <- 
+log_output <-
   format_clip_wave(
     segment_df = final_selection,
-    in_base_directory = "",out_base_directory =  out_directory, 
-    length_clip_col = "length_clip", 
-    sub_dir_out_col = c("Time_period", "Length_group"), 
+    in_base_directory = "", out_base_directory = out_directory,
+    length_clip_col = "length_clip",
+    sub_dir_out_col = c("Time_period", "Length_group"),
     filepath_in_col = "path",
-    out_filename_col ="wildtrax_file_name",  
-    use_job = F, filewarn = F)
+    out_filename_col = "wildtrax_file_name",
+    use_job = F, filewarn = F
+  )
 ```
 
 

@@ -4,12 +4,10 @@
 \alias{wind_detection_summarize_json}
 \title{Summarize wind detection results}
 \usage{
-wind_detection_summarize_json(f, json_string_regex = "/[\\\\w|\\\\d|_|-]+")
+wind_detection_summarize_json(f)
 }
 \arguments{
 \item{f}{filepath for json}
-
-\item{json_string_regex}{string. Regex to extract from file path}
 }
 \value{
 tibble of summarized data from json file

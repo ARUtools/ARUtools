@@ -7,11 +7,13 @@
 #'
 list_files <- function(project_dir, subset, subset_type,
                        type = c("file", "directory")) {
-  fs::dir_ls(project_dir, type = type,
-             # Add filters
-             regexp = subset,
-             invert = subset_type == "omit",
-             recurse = TRUE)
+  fs::dir_ls(project_dir,
+    type = type,
+    # Add filters
+    regexp = subset,
+    invert = subset_type == "omit",
+    recurse = TRUE
+  )
 }
 
 #' Extract and replace a pattern
@@ -31,7 +33,9 @@ extract_replace <- function(string, pattern) {
   string |>
     stringr::str_extract(
       stringr::regex(paste0("(", names(pattern), ")", collapse = "|"),
-                     ignore_case = TRUE)) |>
+        ignore_case = TRUE
+      )
+    ) |>
     stringr::str_replace_all(stringr::regex(pattern, ignore_case = TRUE))
 }
 
@@ -46,10 +50,12 @@ extract_replace <- function(string, pattern) {
 #' @noRd
 report_missing <- function(missing, total, name, what = "detected") {
   msg <- NULL
-  if(missing > 0) {
-    if(missing == total) type <- "No" else type <- "Not all"
-    msg <- c("x" = paste0(type, " ", name, " were successfully ", what, " (",
-                          missing, "/", total, ")"))
+  if (missing > 0) {
+    if (missing == total) type <- "No" else type <- "Not all"
+    msg <- c("x" = paste0(
+      type, " ", name, " were successfully ", what, " (",
+      missing, "/", total, ")"
+    ))
   }
   msg
 }
@@ -70,15 +76,15 @@ report_missing <- function(missing, total, name, what = "detected") {
 #' @noRd
 date_join <- function(x, y, by, id, col = "date", int = "date_range",
                       check_col = "...n") {
-
   # Nested filters
   match <- y |>
     dplyr::ungroup() |>
     tidyr::nest(add = -dplyr::all_of(int)) |>
     dplyr::mutate(data = purrr::map2(
       .data[[int]], .data$add,
-      ~dplyr::filter(x, lubridate::`%within%`(.data[[col]], ..1)) |>
-        dplyr::inner_join(..2, by = .env$by))) |>
+      ~ dplyr::filter(x, lubridate::`%within%`(.data[[col]], ..1)) |>
+        dplyr::inner_join(..2, by = .env$by)
+    )) |>
     dplyr::select(-dplyr::any_of(int), -"add") |>
     tidyr::unnest("data")
 
@@ -86,7 +92,7 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
 
   all <- dplyr::bind_rows(match, no_match)
 
-  if(nrow(x) != nrow(all)) {
+  if (nrow(x) != nrow(all)) {
     all <- dplyr::add_count(all, .data[[id]], name = "n_matches")
     all$n_matches[is.na(all[[check_col]])] <- NA_integer_
   }
@@ -104,21 +110,24 @@ date_join <- function(x, y, by, id, col = "date", int = "date_range",
 #' @return TRUE/FALSE
 #'
 #' @examples
-#' is_dateable("2023-01-01")          # TRUE
-#' is_dateable("20-01-01")            # TRUE
+#' is_dateable("2023-01-01") # TRUE
+#' is_dateable("20-01-01") # TRUE
 #' is_dateable("2023-01-01 01:00:00") # TRUE
-#' is_dateable("05/16/2020")          # FALSE
+#' is_dateable("05/16/2020") # FALSE
 #'
 #' @noRd
 is_dateable <- function(x) {
-  if(is.numeric(x)) return(FALSE)
+  if (is.numeric(x)) {
+    return(FALSE)
+  }
   tryCatch(
     expr = {
       lubridate::as_date(x)
       TRUE
     },
     error = \(x) FALSE,
-    warning = \(x) FALSE)
+    warning = \(x) FALSE
+  )
 }
 
 #' Quiet min/max functions
@@ -132,11 +141,13 @@ min_q <- function(x) minmax_q(x, min)
 max_q <- function(x) minmax_q(x, max)
 
 minmax_q <- function(x, fun) {
-  if(length(x) == 0) {
+  if (length(x) == 0) {
     r <- NA
-  } else if(all(is.na(x))) {
+  } else if (all(is.na(x))) {
     r <- x[1]
-  } else r <- fun(x, na.rm = TRUE)
+  } else {
+    r <- fun(x, na.rm = TRUE)
+  }
   r
 }
 
@@ -148,14 +159,16 @@ minmax_q <- function(x, fun) {
 #'
 #' @noRd
 sf_to_df <- function(sf) {
-  if(inherits(sf, "sf")) {
+  if (inherits(sf, "sf")) {
     sf <- sf::st_transform(sf, crs = 4326)
 
     df <- sf |>
       sf::st_drop_geometry() |>
       dplyr::bind_cols(sf::st_coordinates(sf)) |>
       dplyr::rename("longitude" = "X", "latitude" = "Y")
-  } else df <- sf
+  } else {
+    df <- sf
+  }
   df
 }
 
@@ -174,32 +187,46 @@ sf_to_df <- function(sf) {
 #'
 #' @noRd
 df_to_sf <- function(df, sf = NULL, crs = NA, call = caller_env()) {
-  if(!is.null(sf)) crs <- sf::st_crs(sf)
+  if (!is.null(sf)) crs <- sf::st_crs(sf)
 
-  if(!is.na(crs) && !inherits(df, "sf")) {
-    if(any(is.na(df$longitude) | is.na(df$latitude))) {
-      warn(c("Cannot have missing coordinates in spatial data frames",
-             "Returning non-spatial data frame"), call = call)
+  if (!is.na(crs) && !inherits(df, "sf")) {
+    if (any(is.na(df$longitude) | is.na(df$latitude))) {
+      warn(c(
+        "Cannot have missing coordinates in spatial data frames",
+        "Returning non-spatial data frame"
+      ), call = call)
       sf <- df
     } else {
       sf <- df |>
         sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
         sf::st_transform(crs)
     }
-  } else sf <- df
+  } else {
+    sf <- df
+  }
 
   sf
 }
 
 suppressCat <- function(code, quiet = FALSE) {
-  if(quiet) invisible(utils::capture.output(x <- {code})) else x <- {code}
+  if (quiet) {
+    invisible(utils::capture.output(x <- {
+      code
+    }))
+  } else {
+    x <- {
+      code
+    }
+  }
   x
 }
 
 is_whole <- function(x, tolerance = 0.00001) {
-  if(is.numeric(x)) {
+  if (is.numeric(x)) {
     abs(x - round(x)) < tolerance
-  } else FALSE
+  } else {
+    FALSE
+  }
 }
 
 #' Set seed unless NULL
@@ -220,7 +247,7 @@ is_whole <- function(x, tolerance = 0.00001) {
 #' set_seed(123, sample(1:10, 2))
 #' set_seed(123, sample(1:10, 2))
 set_seed <- function(seed, code) {
-  if(is.null(seed)) code else withr::with_seed(seed, code)
+  if (is.null(seed)) code else withr::with_seed(seed, code)
 }
 
 nse_names <- function(col) {

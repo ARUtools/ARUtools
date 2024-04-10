@@ -52,7 +52,8 @@ using \code{spsurvey::grts()}.
 }
 \examples{
 s <- clean_site_index(example_sites_clean,
-                      name_date_time = c("date_time_start", "date_time_end"))
+  name_date_time = c("date_time_start", "date_time_end")
+)
 m <- clean_metadata(project_files = example_files) |>
   add_sites(s) |>
   calc_sun()
@@ -74,8 +75,11 @@ samples <- sample_recordings(w, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 2), os = 0.2
 # data frame
 samples <- sample_recordings(
   w,
-  n = data.frame(site_id = c("P01_1", "P02_1", "P03_1"),
-                 n = c(2, 5, 2),
-                 n_os = c(0, 0, 1)))
+  n = data.frame(
+    site_id = c("P01_1", "P02_1", "P03_1"),
+    n = c(2, 5, 2),
+    n_os = c(0, 0, 1)
+  )
+)
 
 }

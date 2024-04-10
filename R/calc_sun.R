@@ -23,13 +23,13 @@
 #'
 #' @examples
 #' s <- clean_site_index(example_sites_clean,
-#'                       name_date = c("date_time_start", "date_time_end"))
+#'   name_date = c("date_time_start", "date_time_end")
+#' )
 #' m <- clean_metadata(project_files = example_files) |>
 #'   add_sites(s)
-#'   calc_sun(m)
+#' calc_sun(m)
 #'
 calc_sun <- function(meta_sites, aru_tz = "local") {
-
   # Checks
   check_data(meta_sites, type = "meta_sites", ref = "add_sites()")
   check_tz(aru_tz)
@@ -39,13 +39,14 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
   meta_sites <- dplyr::mutate(
     meta_sites,
     date_time = lubridate::as_datetime(.data$date_time),
-    date = lubridate::as_date(.data$date))
+    date = lubridate::as_date(.data$date)
+  )
 
   # If sf, convert to df
   crs <- sf::st_crs(meta_sites)
   m <- sf_to_df(meta_sites)
 
-  if(aru_tz == "local") {
+  if (aru_tz == "local") {
     # Get timezones from location if not set globally
 
     tz <- dplyr::select(m, "longitude", "latitude") |>
@@ -55,7 +56,9 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
         tz = lutz::tz_lookup_coords(
           lon = .data$longitude,
           lat = .data$latitude,
-          method = 'accurate'))
+          method = "accurate"
+        )
+      )
 
     m <- dplyr::left_join(m, tz, by = c("longitude", "latitude"))
   } else {
@@ -68,7 +71,8 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
     tidyr::drop_na() |>
     tidyr::nest(dates = -"tz") |>
     dplyr::mutate(times = purrr::map2(
-      .data$dates, .data$tz, ~calc_all_ss(.x, tz = .y))) |>
+      .data$dates, .data$tz, ~ calc_all_ss(.x, tz = .y)
+    )) |>
     tidyr::unnest("times") |>
     dplyr::select(-"dates", -"date_before", -"date_after")
 
@@ -96,8 +100,7 @@ calc_sun <- function(meta_sites, aru_tz = "local") {
 #'   date/times would be in). Must be valide tz from OlsonNames().
 #'
 #' @noRd
-calc_all_ss <- function(dates, tz){
-
+calc_all_ss <- function(dates, tz) {
   ss_day_of <- calc_ss(dates, tz)
 
   ss_day_before <- dates |>
@@ -129,11 +132,13 @@ calc_all_ss <- function(dates, tz){
 #' @return Returns a data frame with sunrise and sunset
 #'
 #' @noRd
-calc_ss <- function(dates, tz, suffix = ""){
+calc_ss <- function(dates, tz, suffix = "") {
   dplyr::rename(dates, "lon" = "longitude", "lat" = "latitude") |>
     suncalc::getSunlightTimes(data = _, keep = c("sunrise", "sunset"), tz = tz) |>
-    dplyr::mutate(sunrise = lubridate::force_tz(.data$sunrise, "UTC"),
-                  sunset = lubridate::force_tz(.data$sunset, "UTC")) |>
+    dplyr::mutate(
+      sunrise = lubridate::force_tz(.data$sunrise, "UTC"),
+      sunset = lubridate::force_tz(.data$sunset, "UTC")
+    ) |>
     dplyr::rename(
       "date{suffix}" := "date",
       "sunrise{suffix}" := "sunrise",
@@ -164,12 +169,16 @@ calc_ss_diff <- function(sun_times) {
       t2ss_day_of = sun_diff(.data$sunset, .data$date_time),
       t2ss_before = sun_diff(.data$sunset_before, .data$date_time),
       t2ss_after = sun_diff(.data$sunset_after, .data$date_time),
-      doy = lubridate::yday(.data$date)) |>
+      doy = lubridate::yday(.data$date)
+    ) |>
     dplyr::mutate(
       t2sr = purrr::pmap_dbl(
-        list(.data$t2sr_day_of, .data$t2sr_before, .data$t2sr_after), min_abs),
+        list(.data$t2sr_day_of, .data$t2sr_before, .data$t2sr_after), min_abs
+      ),
       t2ss = purrr::pmap_dbl(
-        list(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after), min_abs))
+        list(.data$t2ss_day_of, .data$t2ss_before, .data$t2ss_after), min_abs
+      )
+    )
 }
 
 #' Calculate the diff time in minutes
@@ -196,4 +205,3 @@ sun_diff <- function(t1, t2) {
 min_abs <- function(x, y, z) {
   c(x, y, z)[abs(c(x, y, z)) == pmin(abs(x), abs(y), abs(z))][1]
 }
-

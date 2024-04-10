@@ -10,7 +10,7 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  eval=F,
+  eval = F,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%"
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 coverage](https://codecov.io/gh/arutools/ARUtools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/arutools/ARUtools?branch=main)
 [![ARUtools status badge](https://arutools.r-universe.dev/badges/ARUtools)](https://arutools.r-universe.dev/ARUtools)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-
+[![R-CMD-check](https://github.com/ARUtools/ARUtools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ARUtools/ARUtools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of ARUtools is to facilitate the processing of ARU data and

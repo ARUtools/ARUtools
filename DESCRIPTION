@@ -1,57 +1,62 @@
-Package: ARUtools
 Type: Package
-Title: Tools for management of Autonomous Recording Unit (ARU) data
-Version: 0.6.0
+Package: ARUtools
+Title: Tools for management of Acoustic Recording Unit (ARU) data
+Version: 0.6.1
 Authors@R: c(
-    person("David", "Hope", email = "david.hope@ec.gc.ca", role = c("aut", "cre"),
-            comment = c(ORCID = "0000-0002-2140-4261")),
-    person("Steffi", "LaZerte", email = "sel@steffilazerte.ca", role = c("aut"), 
-           comment = c(ORCID = "0000-0002-7690-8360")))
+    person("David", "Hope", , "david.hope@ec.gc.ca", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-2140-4261")),
+    person("Steffi", "LaZerte", , "sel@steffilazerte.ca", role = "aut",
+           comment = c(ORCID = "0000-0002-7690-8360"))
+  )
 Description: ARutools is a collection of functions and R code for parsing Autonomous Recording
-    Unit (ARU) data and for sub-sampling recordings. Extract Metadata from your recordings,  select a subset of recordings for interpretation, and prepare files for processing on the 'WildTrax' platform.
-Depends: R (>= 4.0)
+    Unit (ARU) data and for sub-sampling recordings. Extract Metadata from your recordings,  
+    select a subset of recordings for interpretation, and prepare files for processing on the 'WildTrax' platform.
 License: GPL (>= 3)
-Encoding: UTF-8
-LazyData: true
+URL: https://arutools.github.io/ARUtools/, https://github.com/arutools/ARUtools/
+BugReports: https://github.com/arutools/ARUtools/issues
+Depends: 
+    R (>= 4.0)
 Imports: 
     dplyr,
-    tidyr,
-    sf,
-    purrr,
-    stringr,
-    lubridate,
-    readr,
-    glue,
-    rlang (>= 0.4),
-    spsurvey (>= 5.0.1),
-    lutz,
-    units,
-    suncalc,
     fs (>= 1.6.1),
-    hms (>= 1.1.2),
-    seewave (>= 2.2.3),
-    withr,
-    parzer,
+    glue,
     here,
-    lifecycle
+    hms (>= 1.1.2),
+    lifecycle,
+    lubridate,
+    lutz,
+    parzer,
+    purrr,
+    readr,
+    rlang (>= 0.4),
+    seewave (>= 2.2.3),
+    sf,
+    spsurvey (>= 5.0.1),
+    stringr,
+    suncalc,
+    tidyr,
+    units,
+    withr
 Suggests: 
-    testthat (>= 3.0.0),
-    readxl (>= 1.4.2),
-    patchwork,
-    soundecology,
+    covr,
     ggplot2,
-    tuneR,
-    sessioninfo,
     job,
-    rstudioapi,
     jsonlite,
     knitr,
+    parallel,
+    patchwork,
+    readxl (>= 1.4.2),
     rmarkdown,
-    covr,
+    rstudioapi,
+    sessioninfo,
+    soundecology,
+    testthat (>= 3.0.0),
+    tuneR,
     vdiffr (>= 1.0.0)
+VignetteBuilder: 
+    knitr
 Config/testthat/edition: 3
-RoxygenNote: 7.3.1
+Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
-VignetteBuilder: knitr
-URL: https://arutools.github.io/ARUtools/, https://github.com/arutools/ARUtools
-BugReports: https://github.com/arutools/ARUtools/issues
+RoxygenNote: 7.3.1

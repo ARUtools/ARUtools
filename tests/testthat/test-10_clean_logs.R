@@ -1,8 +1,7 @@
 test_that("clean_logs() single", {
-
   # log_file <- test_path("..", "..", "..", "ARUtools - Extra", "aru_log_files",
   #                       "P028/1A_BARLT10962/logfile_00010962_SD1.txt")
-  log_file <-  system.file("extdata", "logfile_00015141_SD1.txt", package = "ARUtools")
+  log_file <- system.file("extdata", "logfile_00015141_SD1.txt", package = "ARUtools")
 
   skip_if_not(fs::file_exists(log_file))
 
@@ -14,12 +13,16 @@ test_that("clean_logs() single", {
   expect_silent(l1 <- clean_logs(log_file, return = "gps"))
   expect_silent(l2 <- clean_logs(log_file, return = "recordings"))
 
-  expect_equal(dplyr::filter(l, event == "gps") |>
-                 dplyr::select(-dplyr::starts_with("rec_")),
-               l1)
-  expect_equal(dplyr::filter(l, event == "recording") |>
-                 dplyr::select(-"lat", -"lon"),
-               l2)
+  expect_equal(
+    dplyr::filter(l, event == "gps") |>
+      dplyr::select(-dplyr::starts_with("rec_")),
+    l1
+  )
+  expect_equal(
+    dplyr::filter(l, event == "recording") |>
+      dplyr::select(-"lat", -"lon"),
+    l2
+  )
   skip_on_ci()
   l <- withr::with_seed(1234, dplyr::slice_sample(l, n = 100))
   l$path <- l$path |> stringr::str_remove(fs::path_package("ARUtools"))
@@ -27,9 +30,9 @@ test_that("clean_logs() single", {
 })
 
 test_that("clean_logs() multiple", {
-
-  log_files <- fs::dir_ls(fs::path_package("extdata",package="ARUtools"),
-                          recurse = TRUE, glob = "*logfile*")
+  log_files <- fs::dir_ls(fs::path_package("extdata", package = "ARUtools"),
+    recurse = TRUE, glob = "*logfile*"
+  )
   # log_files <- log_files[1:5]
 
   skip_if_not(all(fs::file_exists(log_files)) | length(log_files) > 0)
@@ -42,12 +45,16 @@ test_that("clean_logs() multiple", {
   expect_silent(l1 <- clean_logs(log_files, progress = FALSE, return = "gps"))
   expect_silent(l2 <- clean_logs(log_files, progress = FALSE, return = "recordings"))
 
-  expect_equal(dplyr::filter(l, event == "gps") |>
-                 dplyr::select(-dplyr::starts_with("rec_")),
-               l1)
-  expect_equal(dplyr::filter(l, event == "recording") |>
-                 dplyr::select(-"lat", -"lon"),
-               l2)
+  expect_equal(
+    dplyr::filter(l, event == "gps") |>
+      dplyr::select(-dplyr::starts_with("rec_")),
+    l1
+  )
+  expect_equal(
+    dplyr::filter(l, event == "recording") |>
+      dplyr::select(-"lat", -"lon"),
+    l2
+  )
   skip_on_ci()
   l <- withr::with_seed(1234, dplyr::slice_sample(l, n = 100))
   l$path <- l$path |> stringr::str_remove(fs::path_package("ARUtools"))

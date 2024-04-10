@@ -101,14 +101,14 @@ pattern grabs what you want. This is just a simple wrapper around
 
 }}
 \examples{
-create_pattern_date()  # Default matches 2020-01-01 or 2020_01_01 or 20200101
-                       # ("-", "_" or "" as separators)
+create_pattern_date() # Default matches 2020-01-01 or 2020_01_01 or 20200101
+# ("-", "_" or "" as separators)
 create_pattern_date(sep = "") # Matches only 20200101 (no separator allowed)
 
-create_pattern_time()  # Default matches 23_59_59 (_, -, :, as optional separators)
+create_pattern_time() # Default matches 23_59_59 (_, -, :, as optional separators)
 create_pattern_time(sep = "", seconds = "no") # Matches 2359 (no seconds no separators)
 
-create_pattern_dt_sep()  # Default matches 'T' as a required separator
+create_pattern_dt_sep() # Default matches 'T' as a required separator
 create_pattern_dt_sep(optional = TRUE) # 'T' as an optional separator
 create_pattern_dt_sep(c("T", "_", "-")) # 'T', '_', or '-' as separators
 
@@ -118,23 +118,27 @@ create_pattern_aru_id(n_digits = 12)
 
 
 create_pattern_site_id() # Default matches P00-0
-create_pattern_site_id(prefix = "site", p_digits = 3, sep = "",
-                       suffix = c("a", "b", "c"), s_digits = 0) # Matches site000a
+create_pattern_site_id(
+  prefix = "site", p_digits = 3, sep = "",
+  suffix = c("a", "b", "c"), s_digits = 0
+) # Matches site000a
 
 pat <- create_pattern_aru_id(prefix = "CWS")
-test_pattern("CWS_BARLT1012", pat)            # No luck
+test_pattern("CWS_BARLT1012", pat) # No luck
 pat <- create_pattern_aru_id(prefix = "CWS_")
-test_pattern("CWS_BARLT1012", pat)            # Ah ha!
+test_pattern("CWS_BARLT1012", pat) # Ah ha!
 pat <- create_pattern_site_id()
 
 pat <- create_pattern_site_id()
-test_pattern("P03", pat)   # Nope
+test_pattern("P03", pat) # Nope
 test_pattern("P03-1", pat) # Success!
 
 pat <- create_pattern_site_id(prefix = "site", p_digits = 3, sep = "", s_digits = 0)
 test_pattern("site111", pat)
-pat <- create_pattern_site_id(prefix = "site", p_digits = 3, sep = "",
-                             suffix = c("a", "b", "c"), s_digits = 0)
+pat <- create_pattern_site_id(
+  prefix = "site", p_digits = 3, sep = "",
+  suffix = c("a", "b", "c"), s_digits = 0
+)
 test_pattern(c("site9", "site100a"), pat)
 
 }
