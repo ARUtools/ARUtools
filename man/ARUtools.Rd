@@ -12,7 +12,9 @@ recording unit (ARU) data and for sub-sampling recordings.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://arutools.github.io/ARUtools/}
+  \item \url{https://arutools.github.io/ARUtools/}
+  \item \url{https://github.com/arutools/ARUtools/}
+  \item Report bugs at \url{https://github.com/arutools/ARUtools/issues}
 }
 
 }

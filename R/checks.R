@@ -387,3 +387,32 @@ check_tz <- function(tz, call = caller_env()) {
     )
   }
 }
+
+
+
+#' Check if sox program is installed.
+#'
+#' @noRd
+check_sox <- function(sox_file_path = NULL){
+  if (is_null(sox_file_path)) {
+    test <- system("sox -h",
+                   intern = FALSE, show.output.on.console = FALSE,
+                   ignore.stdout = T
+    )
+  } else {
+    test <- system(paste0(sox_file_path, " -h"),
+                   intern = FALSE,
+                   ignore.stdout = T,
+                   show.output.on.console = FALSE
+    )
+  }
+
+  if (test == 127) {
+    if (is_testing()) {
+      testthat::skip("SoX not available")
+    } else {
+      abort("SoX not available")
+    }
+  }
+
+}

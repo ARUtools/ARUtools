@@ -180,6 +180,7 @@ clip_wave <- function(waves,
   if (!use_job) {
     purrr::pmap(wv, clip_wave_single)
   } else {
+    check_installed("job", "Using `use_job=TRUE` requires the 'job' package.")
     job::job(
       {
         purrr::pmap(wv, clip_wave_single)
@@ -353,47 +354,35 @@ check_wave_length <- function(path_in, clip_length, start_time, diff_limit, call
 #' @examples
 #' # Prep sample file
 #' w <- tuneR::sine(440, duration = 300000)
-#' tuneR::writeWave(w, "test_wave.wav")
+#' td <- tempdir()
+#' temp_wave <- glue::glue("{td}/test_wave.wav")
+#' tuneR::writeWave(w, temp_wave)
 #'
 #' # Create spectrograms
-#' sox_spectro("test_wave.wav")
-#' sox_spectro("test_wave.wav", rate = NULL)
-#' sox_spectro("test_wave.wav", start = 2, end = 3)
-#' sox_spectro("test_wave.wav", start = "0:01", end = "0:04")
-#' sox_spectro("test_wave.wav", prepend = "")
+#'
+#' try({sox_spectro(temp_wave)
+#' sox_spectro(temp_wave, rate = NULL)
+#' sox_spectro(temp_wave, start = 2, end = 3)
+#' sox_spectro(temp_wave, start = "0:01", end = "0:04")
+#' sox_spectro(temp_wave, prepend = "")
+#' })
 #'
 #' # Clean up
-#' unlink("test_wave.wav")
+#' unlink(temp_wave)
 #' unlink("Spectrograms", recursive = TRUE)
 sox_spectro <- function(path, dir_out = "Spectrograms",
                         prepend = "spectro_",
                         width = NULL, height = NULL,
                         start = NULL, end = NULL,
                         rate = "20k", dry_run = FALSE,
-                        quiet = FALSE, sox_file_path = NULL) {
+                        quiet = FALSE, sox_file_path = NULL, skip_check = FALSE) {
   if (!fs::file_exists(path)) {
     abort(paste0("Cannot find wave file ", path))
   }
 
-  if (is_null(sox_file_path)) {
-    test <- system("sox -h",
-      intern = FALSE, show.output.on.console = FALSE,
-      ignore.stdout = T
-    )
-  } else {
-    test <- system(paste0(sox_file_path, " -h"),
-      intern = FALSE,
-      ignore.stdout = T,
-      show.output.on.console = FALSE
-    )
-  }
-  if (test == 127) {
-    if (is_testing()) {
-      testthat::skip("SoX not available")
-    } else {
-      abort("SoX not available")
-    }
-  }
+  if(isFALSE(skip_check)) check_sox(sox_file_path)
+
+
 
   # Create output path
   path_out <- path |>

@@ -15,7 +15,8 @@ sox_spectro(
   rate = "20k",
   dry_run = FALSE,
   quiet = FALSE,
-  sox_file_path = NULL
+  sox_file_path = NULL,
+  skip_check = FALSE
 )
 }
 \arguments{
@@ -73,16 +74,20 @@ Based on code from Sam Hache.
 \examples{
 # Prep sample file
 w <- tuneR::sine(440, duration = 300000)
-tuneR::writeWave(w, "test_wave.wav")
+td <- tempdir()
+temp_wave <- glue::glue("{td}/test_wave.wav")
+tuneR::writeWave(w, temp_wave)
 
 # Create spectrograms
-sox_spectro("test_wave.wav")
-sox_spectro("test_wave.wav", rate = NULL)
-sox_spectro("test_wave.wav", start = 2, end = 3)
-sox_spectro("test_wave.wav", start = "0:01", end = "0:04")
-sox_spectro("test_wave.wav", prepend = "")
+
+try({sox_spectro(temp_wave)
+sox_spectro(temp_wave, rate = NULL)
+sox_spectro(temp_wave, start = 2, end = 3)
+sox_spectro(temp_wave, start = "0:01", end = "0:04")
+sox_spectro(temp_wave, prepend = "")
+})
 
 # Clean up
-unlink("test_wave.wav")
+unlink(temp_wave)
 unlink("Spectrograms", recursive = TRUE)
 }
