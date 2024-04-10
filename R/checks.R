@@ -392,6 +392,7 @@ check_tz <- function(tz, call = caller_env()) {
 
 #' Check if sox program is installed.
 #'
+#' @param sox_file_path Path to where SoX program is installed
 #' @noRd
 check_sox <- function(sox_file_path = NULL){
   if (is_null(sox_file_path)) {
