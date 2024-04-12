@@ -11,7 +11,7 @@ Authors@R: c(
 Description: ARutools is a collection of functions and R code for parsing Autonomous Recording
     Unit (ARU) data and for sub-sampling recordings. Extract Metadata from your recordings,  
     select a subset of recordings for interpretation, and prepare files for processing on the 'WildTrax' platform.
-License: GPL (>= 3)
+License: MIT + file LICENSE
 URL: https://arutools.github.io/ARUtools/, https://github.com/arutools/ARUtools/
 BugReports: https://github.com/arutools/ARUtools/issues
 Depends: 
