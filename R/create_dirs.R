@@ -38,7 +38,8 @@
 #'   base_dir = "Recordings", dir_list = TRUE
 #' )
 #'
-#' \dontrun{
+#' @examplesIf dir.exists("Recordings")
+#'
 #' # Create directories AND return a list of those created
 #' d <- create_dirs(
 #'   plots = c("river1", "river2", "river3"),

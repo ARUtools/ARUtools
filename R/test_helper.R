@@ -47,7 +47,14 @@ temp_files <- function() {
 #' Creates a directory structure and example wave files in temp folders.
 #'
 #' @param n Numeric. How many test files to create (up to six). D
+#'
+#' @return vector of paths to temporary wave files
+#'
 #' @export
+#'
+#' @examples
+#' temp_wavs(n=3)
+#'
 temp_wavs <- function(n = 6) {
   f_in <- fs::path(
     tempdir(),

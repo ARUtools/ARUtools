@@ -9,6 +9,13 @@ temp_wavs(n = 6)
 \arguments{
 \item{n}{Numeric. How many test files to create (up to six). D}
 }
+\value{
+vector of paths to temporary wave files
+}
 \description{
 Creates a directory structure and example wave files in temp folders.
+}
+\examples{
+temp_wavs(n=3)
+
 }

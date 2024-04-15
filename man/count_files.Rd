@@ -16,6 +16,14 @@ to either \code{"keep"} or \code{"omit"} (see \code{subset_type})}
 \item{subset_type}{Character. Either \code{keep} (default) or \code{omit}
 files/directories which match the pattern in \code{subset}.}
 }
+\value{
+A data frame with number of files in a directory
+}
 \description{
 Helper function to explore the number of files in a directory, recursively.
+}
+\examples{
+\dontshow{if (dir.exists("PROJECT_DIR")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+count_files("PROJECT_DIR")
+\dontshow{\}) # examplesIf}
 }

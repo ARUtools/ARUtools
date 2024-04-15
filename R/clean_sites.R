@@ -237,11 +237,9 @@ clean_site_index <- function(site_index,
 #' @return Data frame of site-level metadata.
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf dir.exists("my_project")
 #' m <- clean_metadata(project_dir = "my_project")
 #' g <- clean_gps(meta = m)
-#' }
 clean_gps <- function(meta = NULL,
                       dist_cutoff = 100, dist_crs = 3161,
                       dist_by = c("site_id", "aru_id"),

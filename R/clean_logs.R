@@ -34,8 +34,7 @@
 #'
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf dir.exists("my_project_folder")
 #' # Replace "my_project_folder" with your directory containing your recordings and logfiles
 #' log_files <- fs::dir_ls("my_project_folder", recurse = TRUE, glob = "*logfile*")
 #' log_files
@@ -50,7 +49,6 @@
 #' log_files <- fs::dir_ls("../ARUtools - Extra/aru_log_files/", recurse = TRUE, glob = "*logfile*")
 #'
 #' l <- clean_logs(log_files)
-#' }
 clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_ss = "(SS)",
                        progress = TRUE) {
   # Pattern to id the correct kind of log file
