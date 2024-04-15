@@ -8,10 +8,13 @@ Authors@R: c(
     person("Steffi", "LaZerte", , "sel@steffilazerte.ca", role = "aut",
            comment = c(ORCID = "0000-0002-7690-8360"))
   )
-Description: ARUtools is a collection of functions and R code for parsing Autonomous Recording
-    Unit (ARU) data and for sub-sampling recordings. Extract Metadata from your recordings,  
-    select a subset of recordings for interpretation, and prepare files for processing on the 'WildTrax' platform.
-License: GPL (>= 3)
+Description: 'ARutools' is a collection of functions and R code for parsing 
+    Autonomous Recording Unit (ARU) data and for sub-sampling recordings. 
+    Extract Metadata from your recordings, select a subset of recordings for 
+    interpretation, and prepare files for processing on the 'WildTrax' platform. 
+    The package allows you to read and process metadata from recordings collected 
+    using the 'SongMeter' and 'BarLT' types of ARUs. 
+License: MIT + file LICENSE
 URL: https://arutools.github.io/ARUtools/, https://github.com/arutools/ARUtools/
 BugReports: https://github.com/arutools/ARUtools/issues
 Depends: 
