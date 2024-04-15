@@ -6,7 +6,8 @@ Authors@R: c(
     person("David", "Hope", , "david.hope@ec.gc.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2140-4261")),
     person("Steffi", "LaZerte", , "sel@steffilazerte.ca", role = "aut",
-           comment = c(ORCID = "0000-0002-7690-8360"))
+           comment = c(ORCID = "0000-0002-7690-8360")),
+    person("Government of Canada", role = c("cph", "fnd"))
   )
 Description: 'ARutools' is a collection of functions and R code for parsing 
     Autonomous Recording Unit (ARU) data and for sub-sampling recordings. 
