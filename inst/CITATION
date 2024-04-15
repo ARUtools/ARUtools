@@ -1,10 +1,10 @@
 citHeader("To cite ARUtools in publications use:")
 
 bibentry(
-  entry    = "Manual",
+  bibtype    = "Manual",
   title    = "ARUtools: a package for ARU data",
   author   = "David Hope, Steffi LaZerte",
-  year     = 2023,
+  year     = 2024,
   url      = "www.github.com/arutools/ARUtools",
   textVersion = paste(
   "Hope, David and Steffi LaZerte. ARUtools: a package for ARU data. www.github.com/arutools/ARUtools"
