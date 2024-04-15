@@ -26,4 +26,9 @@ Authors:
   \item Steffi LaZerte \email{sel@steffilazerte.ca} (\href{https://orcid.org/0000-0002-7690-8360}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Government of Canada [copyright holder, funder]
+}
+
 }

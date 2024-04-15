@@ -58,4 +58,17 @@ create_dirs(
   base_dir = "Recordings", dir_list = TRUE
 )
 
+\dontshow{if (dir.exists("Recordings")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create directories AND return a list of those created
+d <- create_dirs(
+  plots = c("river1", "river2", "river3"),
+  site_ids = c(
+    "river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
+    "river3_sm05", "river3_sm06"
+  ),
+  base_dir = "Recordings", dir_list = TRUE, expect_dirs =TRUE,
+  dry_run = FALSE
+)
+d
+\dontshow{\}) # examplesIf}
 }

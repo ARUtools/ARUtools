@@ -39,7 +39,6 @@
 #' )
 #'
 #' @examplesIf dir.exists("Recordings")
-#'
 #' # Create directories AND return a list of those created
 #' d <- create_dirs(
 #'   plots = c("river1", "river2", "river3"),
@@ -47,11 +46,10 @@
 #'     "river1_sm01", "river1_sm02", "river2_sm03", "river2_sm04",
 #'     "river3_sm05", "river3_sm06"
 #'   ),
-#'   base_dir = "Recordings", dir_list = TRUE,
+#'   base_dir = "Recordings", dir_list = TRUE, expect_dirs =TRUE,
 #'   dry_run = FALSE
 #' )
 #' d
-#' }
 create_dirs <- function(plots, site_ids, base_dir = NULL, dir_list = FALSE,
                         dry_run = TRUE, expect_dirs = FALSE) {
   # Get absolute path so user can be *really* sure they want to do this
