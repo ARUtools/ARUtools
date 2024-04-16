@@ -24,8 +24,6 @@ wind_detection_pre_processing(
 \item{chunk_size}{Numeric If not NULL, sets number of files to include in each chunk}
 }
 \value{
-List of vectors for sites, filenames, and filePaths
-
 List including filePath, filenames, and sites suitable for wind software.
 }
 \description{
@@ -36,4 +34,18 @@ of three vectors that can be provided to the wind detection software or
 written to files that the software can read. Details of the usable fork of the
 wind detection software can be found at
 \url{https://github.com/dhope/WindNoiseDetection}
+}
+\examples{
+ wind_files <-
+ wind_detection_pre_processing(
+ wav_files = example_clean$path,
+   output_directory = td,
+     site_pattern = create_pattern_site_id(
+         p_digits = c(2, 3), sep = "_",
+             s_digits = c(1, 2)
+               ),
+                 write_to_file = F, chunk_size = NULL
+                 )
+
+
 }

@@ -7,7 +7,9 @@
 wind_detection_summarize_json(f)
 }
 \arguments{
-\item{f}{filepath for json}
+\item{f}{filepath for json
+
+#'}
 }
 \value{
 tibble of summarized data from json file
@@ -18,4 +20,15 @@ tibble of summarized data from json file
 This function takes output from the command line program and summarizes it.
 Details of the wind detection software can be found at
 \url{https://github.com/dhope/WindNoiseDetection}.
+}
+\examples{
+# example code
+
+ example_json <- system.file("extdata",
+ "P71-1__20210606T232500-0400_SS.json",
+ package = "ARUtools"
+ )
+
+ wind_summary <- wind_detection_summarize_json(example_json)
+
 }

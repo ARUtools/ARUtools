@@ -10,9 +10,21 @@
 #'
 #' @param f filepath for json
 #'
+#'#'
+#' @return tibble of summarized data from json file
+#'
 #' @export
 #'
-#' @return tibble of summarized data from json file
+#' @examples
+#' # example code
+#'
+#'  example_json <- system.file("extdata",
+#'  "P71-1__20210606T232500-0400_SS.json",
+#'  package = "ARUtools"
+#'  )
+#'
+#'  wind_summary <- wind_detection_summarize_json(example_json)
+#'
 wind_detection_summarize_json <- function(f) {
   lifecycle::signal_stage("experimental", "ARUtools::wind_detection_summarize_json()")
   check_installed("jsonlite",reason = "sum_json requires {jsonlite} package")
@@ -83,10 +95,21 @@ wind_detection_summarize_json <- function(f) {
 #' @param write_to_file Logical Should the function write files to output_directory
 #' @param chunk_size Numeric If not NULL, sets number of files to include in each chunk
 #'
-#' @return List of vectors for sites, filenames, and filePaths
+#' @return List including filePath, filenames, and sites suitable for wind software.
 #' @export
 #'
-#' @return List including filePath, filenames, and sites suitable for wind software.
+#' @examples
+#'  wind_files <-
+#'  wind_detection_pre_processing(
+#'  wav_files = example_clean$path,
+#'    output_directory = td,
+#'      site_pattern = create_pattern_site_id(
+#'          p_digits = c(2, 3), sep = "_",
+#'              s_digits = c(1, 2)
+#'                ),
+#'                  write_to_file = F, chunk_size = NULL
+#'                  )
+#'
 #'
 wind_detection_pre_processing <- function(wav_files, site_pattern, output_directory, write_to_file = FALSE,
                                              chunk_size = NULL) {

@@ -32,3 +32,13 @@ Returns a list with a tibble of assigned tasks and a summary tibble.
 \description{
 Assign tasks for wildtrax interpretation
 }
+\examples{
+  task_output <- wt_assign_tasks(
+  wt_task_template_in = task_template,
+  wt_task_output_file = NULL,
+  interp_hours = template_observers,
+  interp_hours_column = hrs,
+  random_seed = 65122
+  )
+
+}
