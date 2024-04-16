@@ -1,5 +1,13 @@
 # ARUtools 0.6.2
 
+# ARUtools 0.6.2
+
+* Initial CRAN submission.
+
+## New
+
+Changes made to improve clarity for CRAN submission.
+
 # ARUtools 0.6.0
 
 ## New
