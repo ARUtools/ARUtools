@@ -15,8 +15,8 @@ Description: Parse Autonomous Recording Unit (ARU) data and for sub-sampling rec
     Read and process metadata from recordings collected using the 'SongMeter' 
     and 'BarLT' types of ARUs. 
 License: MIT + file LICENSE
-URL: https://arutools.github.io/ARUtools/, https://github.com/arutools/ARUtools/
-BugReports: https://github.com/arutools/ARUtools/issues
+URL: https://arutools.github.io/ARUtools/, https://github.com/ARUtools/ARUtools
+BugReports: https://github.com/ARUtools/ARUtools/issues
 Depends: 
     R (>= 4.0)
 Imports: 
