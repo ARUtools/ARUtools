@@ -1,4 +1,4 @@
-#' ARUtools: Tools for management of Autonomous Recording Unit (ARU) data
+#' ARUtools: Management and Processing of Autonomous Recording Unit (ARU) data
 #'
 #' Collection of functions and R code for parsing acoustic
 #'     recording unit (ARU) data and for sub-sampling recordings.

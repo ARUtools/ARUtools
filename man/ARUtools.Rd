@@ -4,7 +4,7 @@
 \name{ARUtools}
 \alias{ARUtools-package}
 \alias{ARUtools}
-\title{ARUtools: Tools for management of Autonomous Recording Unit (ARU) data}
+\title{ARUtools: Management and Processing of Autonomous Recording Unit (ARU) data}
 \description{
 Collection of functions and R code for parsing acoustic
 recording unit (ARU) data and for sub-sampling recordings.

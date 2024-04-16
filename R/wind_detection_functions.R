@@ -107,7 +107,7 @@ wind_detection_summarize_json <- function(f) {
 #'          p_digits = c(2, 3), sep = "_",
 #'              s_digits = c(1, 2)
 #'                ),
-#'                  write_to_file = F, chunk_size = NULL
+#'                  write_to_file = FALSE, chunk_size = NULL
 #'                  )
 #'
 #'
