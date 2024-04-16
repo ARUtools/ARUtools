@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -146,7 +146,7 @@ If not a dry run, also creates the folder structure.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] "/home/runner/work/ARUtools/ARUtools/docs/reference/Recordings/river3/river3_sm05"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] "/home/runner/work/ARUtools/ARUtools/docs/reference/Recordings/river3/river3_sm06"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># dir.exists("Recordings")</span></span></span>
 <span class="r-in"><span><span class="co"># Create directories AND return a list of those created</span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">create_dirs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  plots <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"river1"</span>, <span class="st">"river2"</span>, <span class="st">"river3"</span><span class="op">)</span>,</span></span>
@@ -154,7 +154,7 @@ If not a dry run, also creates the folder structure.</p>
 <span class="r-in"><span>    <span class="st">"river1_sm01"</span>, <span class="st">"river1_sm02"</span>, <span class="st">"river2_sm03"</span>, <span class="st">"river2_sm04"</span>,</span></span>
 <span class="r-in"><span>    <span class="st">"river3_sm05"</span>, <span class="st">"river3_sm06"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
-<span class="r-in"><span>  base_dir <span class="op">=</span> <span class="st">"Recordings"</span>, dir_list <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  base_dir <span class="op">=</span> <span class="st">"Recordings"</span>, dir_list <span class="op">=</span> <span class="cn">TRUE</span>, expect_dirs <span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  dry_run <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span></span></span>
@@ -166,7 +166,7 @@ If not a dry run, also creates the folder structure.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by David Hope, Steffi LaZerte.</p>
+  <p></p><p>Developed by David Hope, Steffi LaZerte, Government of Canada.</p>
 </div>
 
 <div class="pkgdown-footer-right">

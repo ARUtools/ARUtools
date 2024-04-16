@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,12 +108,24 @@ the columns "transcriber" and whatever the variable <code>interp_hours_column</c
 <p>Returns a list with a tibble of assigned tasks and a summary tibble.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span>  <span class="va">task_output</span> <span class="op">&lt;-</span> <span class="fu">wt_assign_tasks</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  wt_task_template_in <span class="op">=</span> <span class="va">task_template</span>,</span></span>
+<span class="r-in"><span>  wt_task_output_file <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>  interp_hours <span class="op">=</span> <span class="va">template_observers</span>,</span></span>
+<span class="r-in"><span>  interp_hours_column <span class="op">=</span> <span class="va">hrs</span>,</span></span>
+<span class="r-in"><span>  random_seed <span class="op">=</span> <span class="fl">65122</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by David Hope, Steffi LaZerte.</p>
+  <p></p><p>Developed by David Hope, Steffi LaZerte, Government of Canada.</p>
 </div>
 
 <div class="pkgdown-footer-right">

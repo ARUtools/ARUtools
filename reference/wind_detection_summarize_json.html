@@ -16,7 +16,7 @@ https://github.com/dhope/WindNoiseDetection."><meta property="og:image" content=
     
     <a class="navbar-brand me-2" href="../index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.6.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,8 @@ Details of the wind detection software can be found at
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>f</dt>
-<dd><p>filepath for json</p></dd>
+<dd><p>filepath for json</p>
+<p>#'</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -92,12 +93,25 @@ Details of the wind detection software can be found at
 <p>tibble of summarized data from json file</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># example code</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="va">example_json</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
+<span class="r-in"><span> <span class="st">"P71-1__20210606T232500-0400_SS.json"</span>,</span></span>
+<span class="r-in"><span> package <span class="op">=</span> <span class="st">"ARUtools"</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="va">wind_summary</span> <span class="op">&lt;-</span> <span class="fu">wind_detection_summarize_json</span><span class="op">(</span><span class="va">example_json</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by David Hope, Steffi LaZerte.</p>
+  <p></p><p>Developed by David Hope, Steffi LaZerte, Government of Canada.</p>
 </div>
 
 <div class="pkgdown-footer-right">
