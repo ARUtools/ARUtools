@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ARUtools <a href="http://arutools.github.io/ARUtools/"><img src="man/figures/logo.png" align="right" height="139" alt="ARUtools website" /></a>
+# ARUtools <a href="https://arutools.github.io/ARUtools/"><img src="man/figures/logo.png" align="right" height="139" alt="ARUtools website" /></a>
 
 <!-- badges: start -->
 
@@ -22,7 +22,16 @@ names may change between versions and some functions may become defunct.
 
 ## Installation
 
-You can install the current version of ARUtools from the
+The easiest way to install ARUtools is with
+
+``` r
+
+install.packages("ARUtools")
+```
+
+### Development version
+
+You can install the most current version of ARUtools from the
 [R-universe](https://arutools.r-universe.dev/) repository.
 
 ``` r
@@ -31,7 +40,7 @@ install.packages("ARUtools",
                            "https://cran.r-project.org") )
 ```
 
-Alternatively you can install the package from
+Alternatively you can build and install the package from
 [GitHub](https://github.com/) with the code below. You will need to have
 [Rtools](https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html)
 installed first:
@@ -39,6 +48,13 @@ installed first:
 ``` r
 # install.packages("pak") # Uncomment if you don't have remotes installed.
 pak::pak("arutools/ARUtools")
+```
+
+Using “remotes”
+
+``` r
+# install.packages("remotes")
+remotes::install_github("arutools/ARUtools")
 ```
 
 ## Learn to use
