@@ -13,10 +13,18 @@ check_file(file_name, n_max = 10, ...)
 
 \item{...}{Arguments passed on to \code{readr::read_lines()}}
 }
+\value{
+A character vector with one element for each line
+}
 \description{
 Shows the first few lines in a text file. Useful for trying to understand
 problems in GPS files.
 }
 \details{
 Wrapper around \code{readr::read_lines(n_max)}.
+}
+\examples{
+f <- system.file("extdata", "logfile_00015141_SD1.txt", package = "ARUtools")
+check_file(f)
+
 }

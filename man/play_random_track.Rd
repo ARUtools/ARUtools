@@ -19,3 +19,8 @@ Will not return anything. It does open your media player
 \description{
 Will play a random track from a wave file in a given folder.
 }
+\examples{
+\dontshow{if (file.exists("path_to_wave_file.wav")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+play_random_track("path_to_wave_file.wav")
+\dontshow{\}) # examplesIf}
+}

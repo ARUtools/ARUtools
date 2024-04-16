@@ -97,15 +97,14 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #'   formatted and clipped wave files.
 #' @param diff_limit Numeric. How much longer in seconds clip lengths can be
 #'   compared to file lengths before triggering an error. Default `30`.
-#' @param use_job Logical. Use the {job} package to copy files Default `FALSE`.
+#' @param use_job Logical. Use the 'job' package to copy files Default `FALSE`.
 #'
 #' @inheritParams common_docs
 #'
 #' @return TRUE if successful and clipped wave files created
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf dir.exists("test1")
 #' w <- data.frame(
 #'   path = temp_wavs(n = 4),
 #'   subdir_out = c("test1/a", "test2/a", "test3/c", "test4/d"),
@@ -118,7 +117,6 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #' clip_wave(w, dir_out = "clean", col_subdir_out = c(subdir_out, subsub_dir_out))
 #'
 #' unlink("clean", recursive = TRUE) # Remove this new 'clean' directory
-#' }
 clip_wave <- function(waves,
                       dir_out,
                       dir_in = NULL,

@@ -4,7 +4,7 @@
 \name{ARUtools}
 \alias{ARUtools-package}
 \alias{ARUtools}
-\title{ARUtools: Tools for management of Autonomous Recording Unit (ARU) data}
+\title{ARUtools: Management and Processing of Autonomous Recording Unit (ARU) Data}
 \description{
 Collection of functions and R code for parsing acoustic
 recording unit (ARU) data and for sub-sampling recordings.
@@ -13,8 +13,8 @@ recording unit (ARU) data and for sub-sampling recordings.
 Useful links:
 \itemize{
   \item \url{https://arutools.github.io/ARUtools/}
-  \item \url{https://github.com/arutools/ARUtools/}
-  \item Report bugs at \url{https://github.com/arutools/ARUtools/issues}
+  \item \url{https://github.com/ARUtools/ARUtools}
+  \item Report bugs at \url{https://github.com/ARUtools/ARUtools/issues}
 }
 
 }
@@ -24,6 +24,11 @@ Useful links:
 Authors:
 \itemize{
   \item Steffi LaZerte \email{sel@steffilazerte.ca} (\href{https://orcid.org/0000-0002-7690-8360}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Government of Canada [copyright holder, funder]
 }
 
 }

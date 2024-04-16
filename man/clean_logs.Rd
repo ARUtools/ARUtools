@@ -55,7 +55,7 @@ Because the BARLT units adjust their time according to the GPS locations,
 all times are in "local" to that area.
 }
 \examples{
-\dontrun{
+\dontshow{if (dir.exists("my_project_folder")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Replace "my_project_folder" with your directory containing your recordings and logfiles
 log_files <- fs::dir_ls("my_project_folder", recurse = TRUE, glob = "*logfile*")
 log_files
@@ -70,5 +70,5 @@ clean_logs(log_files, return = "recordings")
 log_files <- fs::dir_ls("../ARUtools - Extra/aru_log_files/", recurse = TRUE, glob = "*logfile*")
 
 l <- clean_logs(log_files)
-}
+\dontshow{\}) # examplesIf}
 }

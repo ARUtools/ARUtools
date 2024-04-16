@@ -4,8 +4,14 @@
 #'
 #' @inheritParams common_docs
 #'
+#' @return A data frame with number of files in a directory
 #' @export
+#'
+#' @examplesIf dir.exists("PROJECT_DIR")
+#' count_files("PROJECT_DIR")
+#'
 count_files <- function(project_dir, subset = NULL, subset_type = "keep") {
+  project_dir <- gsub("\\\\", "/", project_dir)
   list_files(project_dir, subset, subset_type, type = "directory") |>
     dplyr::as_tibble() |>
     dplyr::rename("dir" = "value") |>
@@ -145,7 +151,14 @@ check_problems <- function(df, check = c(
 #' @param n_max Numeric. Number of lines in the file to show. Default 10.
 #' @param ... Arguments passed on to `readr::read_lines()`
 #'
+#' @return A character vector with one element for each line
+#'
 #' @export
+#'
+#' @examples
+#' f <- system.file("extdata", "logfile_00015141_SD1.txt", package = "ARUtools")
+#' check_file(f)
+#'
 check_file <- function(file_name, n_max = 10, ...) {
   readr::read_lines(file_name, n_max = n_max, ...)
 }

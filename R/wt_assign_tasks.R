@@ -11,6 +11,16 @@
 #'
 #' @return Returns a list with a tibble of assigned tasks and a summary tibble.
 #' @export
+#'
+#' @examples
+#'   task_output <- wt_assign_tasks(
+#'   wt_task_template_in = task_template,
+#'   wt_task_output_file = NULL,
+#'   interp_hours = template_observers,
+#'   interp_hours_column = hrs,
+#'   random_seed = 65122
+#'   )
+#'
 wt_assign_tasks <- function(wt_task_template_in, interp_hours, wt_task_output_file,
                             interp_hours_column, random_seed = NULL) {
   if (is.data.frame(wt_task_template_in)) {

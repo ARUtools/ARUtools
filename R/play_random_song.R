@@ -9,6 +9,8 @@
 #' @return Will not return anything. It does open your media player
 #' @export
 #'
+#' @examplesIf file.exists("path_to_wave_file.wav")
+#' play_random_track("path_to_wave_file.wav")
 play_random_track <- function(base_folder, file_list = NULL, random_seed = NULL) {
   if (!interactive()) abort("This program does not work outside of an interactive seesion")
   check_installed("tuneR","Package \"tuneR\" must be installed to use this function.")
