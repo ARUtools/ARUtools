@@ -52,7 +52,7 @@ formatted and clipped wave files.}
 \item{diff_limit}{Numeric. How much longer in seconds clip lengths can be
 compared to file lengths before triggering an error. Default \code{30}.}
 
-\item{use_job}{Logical. Use the {job} package to copy files Default \code{FALSE}.}
+\item{use_job}{Logical. Use the 'job' package to copy files Default \code{FALSE}.}
 }
 \value{
 TRUE if successful and clipped wave files created
