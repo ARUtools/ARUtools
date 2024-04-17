@@ -5,3 +5,5 @@
 * This is a new release.
 
 There are no references that describe the methods in this package.
+
+URLs corrected since last submission.
