@@ -9,8 +9,8 @@ articles:
   spatial: spatial.html
   SubSample: SubSample.html
   timezones: timezones.html
-last_built: 2024-04-16T21:27Z
+last_built: 2024-04-17T11:33Z
 urls:
-  reference: http://arutools.github.io/ARUtools/reference
-  article: http://arutools.github.io/ARUtools/articles
+  reference: https://arutools.github.io/ARUtools/reference
+  article: https://arutools.github.io/ARUtools/articles
 
