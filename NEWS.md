@@ -1,12 +1,15 @@
-# ARUtools 0.6.2
+# ARUtools (development version)
 
 # ARUtools 0.6.2
 
 * Initial CRAN submission.
 
-## New
+1st CRAN version! 🥳 
+Changes since 0.6.1 relate to getting package ready for CRAN submission and so included improved documentation, final coverage of tests, removing unnecessary functions. 
 
-Changes made to improve clarity for CRAN submission.
+- #36 tracks workflow to submission
+- Removed `play_random_track()` (dd3ddb195fe50c37cb83a15110651c4c659014dd) #38 
+- Added examples to final functions and remove \dontrun where necessary (44879bd3508af743049f0c5528d386d9f56a8475)
 
 # ARUtools 0.6.0
 
