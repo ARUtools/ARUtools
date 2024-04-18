@@ -229,7 +229,7 @@ is_whole <- function(x, tolerance = 0.00001) {
   }
 }
 
-#' Set seed unless NULL
+#' Run with provided seed unless NULL
 #'
 #' Wrapper around `withr::with_seed()` to ensure that if `seed` is `NULL`, it
 #' is just *quietly* ignored (otherwise `withr` sends a warning)
@@ -239,14 +239,14 @@ is_whole <- function(x, tolerance = 0.00001) {
 #' @noRd
 #' @examples
 #'
-#' set_seed(NULL, sample(1:10, 2))
-#' set_seed(NULL, sample(1:10, 2))
-#' set_seed(NULL, sample(1:10, 2))
+#' run_with_seed_if_provided(NULL, sample(1:10, 2))
+#' run_with_seed_if_provided(NULL, sample(1:10, 2))
+#' run_with_seed_if_provided(NULL, sample(1:10, 2))
 #'
-#' set_seed(123, sample(1:10, 2))
-#' set_seed(123, sample(1:10, 2))
-#' set_seed(123, sample(1:10, 2))
-set_seed <- function(seed, code) {
+#' run_with_seed_if_provided(123, sample(1:10, 2))
+#' run_with_seed_if_provided(123, sample(1:10, 2))
+#' run_with_seed_if_provided(123, sample(1:10, 2))
+run_with_seed_if_provided <- function(seed, code) {
   if (is.null(seed)) code else withr::with_seed(seed, code)
 }
 

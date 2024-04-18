@@ -6,8 +6,11 @@
 \alias{ARUtools}
 \title{ARUtools: Management and Processing of Autonomous Recording Unit (ARU) Data}
 \description{
-Collection of functions and R code for parsing acoustic
-recording unit (ARU) data and for sub-sampling recordings.
+Parse Autonomous Recording Unit (ARU) data and for sub-sampling recordings.
+Extract Metadata from your recordings, select a subset of recordings for
+interpretation, and prepare files for processing on the
+WildTrax \url{https://wildtrax.ca/} platform. Read and process metadata
+from recordings collected using the Song Meter and BAR-LT types of ARUs.
 }
 \seealso{
 Useful links:

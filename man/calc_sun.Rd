@@ -20,7 +20,8 @@ and time to sunrise/sunset (\code{t2sr}, \code{t2ss}).
 }
 \description{
 Calculate the sunrise/sunset of each sound file for the day of, the day before
-and the day after to get the nearest sunrise to the recording.
+and the day after to get the nearest sunrise to the recording. Times are
+calculated using the 'suncalc' package.
 }
 \details{
 Timezones. To ensure that the sunrise/sunset times are calculated

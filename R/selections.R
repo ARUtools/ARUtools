@@ -473,7 +473,7 @@ sample_recordings <- function(meta_weights,
   # slightly more useful
   col_sel_weights <- nse_names(col_sel_weights)
 
-  set_seed(seed, {
+  run_with_seed_if_provided(seed, {
     spsurvey::grts(
       sframe = meta_weights_sf,
       n_over = n_os,

@@ -39,7 +39,6 @@ Clip and copy a single wave files to a given length. See \code{clip_wave()} for
 processing multiple files.
 }
 \examples{
-\dontrun{
 # Create test wave file
 f <- temp_wavs(1)
 
@@ -47,5 +46,4 @@ f <- temp_wavs(1)
 clip_wave_single(f, "new_file.wav", clip_length = 1)
 tuneR::readWave("new_file.wav")
 unlink("new_file.wav")
-}
 }

@@ -19,7 +19,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Create test wave file
 #' f <- temp_wavs(1)
 #'
@@ -27,7 +26,6 @@
 #' clip_wave_single(f, "new_file.wav", clip_length = 1)
 #' tuneR::readWave("new_file.wav")
 #' unlink("new_file.wav")
-#' }
 clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
                              wave_length = NULL, overwrite = FALSE) {
   # Checks
@@ -202,9 +200,10 @@ clip_wave <- function(waves,
 #' @export
 #'
 #' @examples
-#' f <- tempfile()
-#' wav <- download.file("https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav", destfile = f)
-#' get_wav_length(f)
+#'   f <- tempfile()
+#'   w <- tuneR::sine(440, duration = 100000)
+#'   tuneR::writeWave(w, f)
+#'   get_wav_length(f)
 get_wav_length <- function(path, return_numeric = FALSE) {
   audio <- tuneR::readWave(path, header = TRUE)
   l <- round(audio$samples / audio$sample.rate, 2)
@@ -427,7 +426,7 @@ sox_spectro <- function(path, dir_out = "Spectrograms",
 
 #' Get acoustic complexity values
 #'
-#' Wrapper for soundecology package to calculate acoustic complexity, the
+#' Wrapper for 'soundecology' package to calculate acoustic complexity, the
 #' bioacoustic index, and acoustic diversity. See Value for details about
 #' these indices.
 #'

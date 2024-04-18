@@ -106,7 +106,7 @@ dplyr::glimpse(wind_summary)
 ## Assign tasks
 
 
-To assign tasks you will need to either download the task template from WildTrax
+To assign tasks you will need to either download the task template from 'WildTrax'
 or alternatively you can use the new `wildRtrax::wt_make_aru_tasks()` function.
 
 You will also need a template for observers with the number of hours they will
@@ -158,7 +158,3 @@ shiny::runGitHub("dhope/Shiny_select")
 
 
 
-
-<!-- ## Misc functions -->
-<!-- soxSpectrogram() -->
-<!-- play_random_track() -->

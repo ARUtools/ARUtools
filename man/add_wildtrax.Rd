@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{add_wildtrax}
 \alias{add_wildtrax}
-\title{Add Wildtrax file name to metadata}
+\title{Add file name formated for Wildtrax to metadata}
 \usage{
 add_wildtrax(meta)
 }
@@ -10,12 +10,12 @@ add_wildtrax(meta)
 \item{meta}{Data frame. Recording metadata. Output of \code{clean_metadata()}.}
 }
 \value{
-Data frame of metadata with appended column of wildtrax appropriate
+Data frame of metadata with appended column of WildTrax appropriate
 file names.
 }
 \description{
 Create and append file name appropriate for uploading data to the Wildtrax
-system.
+platform \url{https://wildtrax.ca/}.
 }
 \examples{
 

@@ -31,6 +31,7 @@ task_template
 }
 \description{
 A data frame with tasks generated from \code{example_clean} using
-the wildRtrax::wt_make_aru_tasks() function
+the wildRtrax::wt_make_aru_tasks() function. Allows updating of
+tasks on WildTrax \url{https://wildtrax.ca/}.
 }
 \keyword{datasets}

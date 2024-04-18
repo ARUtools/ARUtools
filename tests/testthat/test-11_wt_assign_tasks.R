@@ -4,16 +4,23 @@ test_that("wt_assign_tasks()", {
     "'wt_task_template_in' requires a data.frame or path to csv file"
   )
 
-  expect_warning(
+  set.seed(1231)
+  r1_null_seed <- rnorm(100)
+
+  expect_silent(
     task_output_file_no_seed <- wt_assign_tasks(
       wt_task_template_in = task_template,
       wt_task_output_file = NULL,
       interp_hours = template_observers,
       interp_hours_column = hrs,
       random_seed = NULL
-    ), "random_seed left NULL"
+    )
   )
 
+  # Check that seed not changed by wt_assign_tasks() call
+  r2_null_seed <- rnorm(100)
+  expect(!any(r1_null_seed==r2_null_seed),
+         "random_seed = NULL did not change global seed tick")
 
   set.seed(1231)
   r1 <- rnorm(100)

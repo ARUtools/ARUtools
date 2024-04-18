@@ -2,7 +2,7 @@
 % Please edit documentation in R/wt_assign_tasks.R
 \name{wt_assign_tasks}
 \alias{wt_assign_tasks}
-\title{Assign tasks for wildtrax interpretation}
+\title{Assign tasks for interpretation on Wildtrax}
 \usage{
 wt_assign_tasks(
   wt_task_template_in,
@@ -13,14 +13,15 @@ wt_assign_tasks(
 )
 }
 \arguments{
-\item{wt_task_template_in}{Path to csv template downloaded from WilldTrax website listing all tasks.
-Alternatively, can be a data.frame that is correctly formatted using \code{wildRtrax::wt_make_aru_tasks()}.
-See \code{vignette("Misc")} for details.}
+\item{wt_task_template_in}{Path to csv template downloaded from Wildtrax
+platform \url{https://wildtrax.ca} listing all tasks. Alternatively,
+can be a data.frame that is correctly formatted using
+\code{wildRtrax::wt_make_aru_tasks()}. See \code{vignette("Misc")} for details.}
 
 \item{interp_hours}{Path to number of hours for each interpreter or a data.table. If a file, must be csv and must include
 the columns "transcriber" and whatever the variable \code{interp_hours_column} is.}
 
-\item{wt_task_output_file}{Path to csv of output file for uploading to wildtrax. If left as NULL will not write file}
+\item{wt_task_output_file}{Path to csv of output file for uploading to Wildtrax. If left as NULL will not write file}
 
 \item{interp_hours_column}{LazyEval column name with hours for interpreters}
 
@@ -30,7 +31,7 @@ the columns "transcriber" and whatever the variable \code{interp_hours_column} i
 Returns a list with a tibble of assigned tasks and a summary tibble.
 }
 \description{
-Assign tasks for wildtrax interpretation
+Assign tasks for interpretation on Wildtrax
 }
 \examples{
   task_output <- wt_assign_tasks(

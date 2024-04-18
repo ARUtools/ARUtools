@@ -24,7 +24,7 @@ for non-NSE functions to `name_COLNAME` (#15)
 # ARUtools 0.5.1
 
 ## New
-* `add_wildtrax()` - New helper function to create and append Wildtrax file names
+* `add_wildtrax()` - New helper function to create and append WildTrax file names
 
 ## Bugs
 * `clean_gps()` - Fixed errors when processing only GPX files

@@ -86,7 +86,8 @@
 #' Example template of tasks for WildTrax
 #'
 #' A data frame with tasks generated from `example_clean` using
-#' the wildRtrax::wt_make_aru_tasks() function
+#' the wildRtrax::wt_make_aru_tasks() function. Allows updating of
+#' tasks on WildTrax <https://wildtrax.ca/>.
 #'
 #' @format ## `task_template`
 #' A data frame with 14 rows and 13 columns:

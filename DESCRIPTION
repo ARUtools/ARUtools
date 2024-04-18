@@ -11,9 +11,9 @@ Authors@R: c(
   )
 Description: Parse Autonomous Recording Unit (ARU) data and for sub-sampling recordings. 
     Extract Metadata from your recordings, select a subset of recordings for 
-    interpretation, and prepare files for processing on the 'WildTrax' platform. 
-    Read and process metadata from recordings collected using the 'SongMeter' 
-    and 'BarLT' types of ARUs. 
+    interpretation, and prepare files for processing on the 
+    'WildTrax' <https://wildtrax.ca/> platform. Read and process metadata 
+    from recordings collected using the SongMeter and BAR-LT types of ARUs. 
 License: MIT + file LICENSE
 URL: https://arutools.github.io/ARUtools/, https://github.com/ARUtools/ARUtools
 BugReports: https://github.com/ARUtools/ARUtools/issues

@@ -165,14 +165,14 @@ check_file <- function(file_name, n_max = 10, ...) {
 
 
 
-#' Add Wildtrax file name to metadata
+#' Add file name formated for Wildtrax to metadata
 #'
 #' Create and append file name appropriate for uploading data to the Wildtrax
-#' system.
+#' platform <https://wildtrax.ca/>.
 #'
 #' @inheritParams common_docs
 #'
-#' @return Data frame of metadata with appended column of wildtrax appropriate
+#' @return Data frame of metadata with appended column of WildTrax appropriate
 #'   file names.
 #' @export
 #'

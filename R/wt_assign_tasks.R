@@ -1,11 +1,12 @@
-#' Assign tasks for wildtrax interpretation
+#' Assign tasks for interpretation on Wildtrax
 #'
-#' @param wt_task_template_in Path to csv template downloaded from WilldTrax website listing all tasks.
-#'     Alternatively, can be a data.frame that is correctly formatted using `wildRtrax::wt_make_aru_tasks()`.
-#'     See `vignette("Misc")` for details.
+#' @param wt_task_template_in Path to csv template downloaded from Wildtrax
+#'     platform <https://wildtrax.ca> listing all tasks. Alternatively,
+#'     can be a data.frame that is correctly formatted using
+#'     `wildRtrax::wt_make_aru_tasks()`. See `vignette("Misc")` for details.
 #' @param interp_hours Path to number of hours for each interpreter or a data.table. If a file, must be csv and must include
 #'     the columns "transcriber" and whatever the variable `interp_hours_column` is.
-#' @param wt_task_output_file Path to csv of output file for uploading to wildtrax. If left as NULL will not write file
+#' @param wt_task_output_file Path to csv of output file for uploading to Wildtrax. If left as NULL will not write file
 #' @param interp_hours_column LazyEval column name with hours for interpreters
 #' @param random_seed Integer. Random seed to select with. If left NULL will use timestamp
 #'
@@ -53,18 +54,12 @@ wt_assign_tasks <- function(wt_task_template_in, interp_hours, wt_task_output_fi
     dplyr::filter(!is.na({{ interp_hours_column }})) |>
     dplyr::mutate(phrs = {{ interp_hours_column }} / sum({{ interp_hours_column }}))
 
-  if (is_null(random_seed)) {
-    random_seed <- Sys.time()
-    warn(glue::glue("random_seed left NULL. Using seed {as.numeric(random_seed)}"))
-  }
-  withr::with_seed(random_seed, {
+  run_with_seed_if_provided(random_seed, {
     assigned_tasks <- tasks |>
-      # dplyr::group_by(taskLength) |>
       dplyr::mutate(transcriber = sample(hours$transcriber,
         size = dplyr::n(),
         replace = T, prob = hours$phrs
       ))
-    # dplyr::ungroup()
   })
 
   if (!is_null(wt_task_output_file)) {

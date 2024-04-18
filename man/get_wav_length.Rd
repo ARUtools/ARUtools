@@ -18,7 +18,8 @@ Length of recording in seconds
 Get the length of a recording in seconds
 }
 \examples{
-f <- tempfile()
-wav <- download.file("https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav", destfile = f)
-get_wav_length(f)
+  f <- tempfile()
+  w <- tuneR::sine(440, duration = 100000)
+  tuneR::writeWave(w, f)
+  get_wav_length(f)
 }

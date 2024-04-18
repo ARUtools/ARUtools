@@ -1,6 +1,6 @@
-#' Extract log data from BARLT log files
+#' Extract log data from BAR-LT log files
 #'
-#' Process BARLT log files into a data frame reflecting metadata, schedule
+#' Process BAR-LT log files into a data frame reflecting metadata, schedule
 #' information, and events. Events are time-stamped logs of either GPS fixes
 #' (`lat` and `lon`) or recordings (`rec_file`, `rec_size`, `rec_end`).
 #'
@@ -8,7 +8,7 @@
 #' recording (generally when there is a problem and no recording is made), the
 #' `date_time` value for that recording will be the same as the `rec_end` time.
 #'
-#' Because the BARLT units adjust their time according to the GPS locations,
+#' Because the BAR-LT units adjust their time according to the GPS locations,
 #' all times are in "local" to that area.
 #'
 #' @param log_files Character vector of log files to process.
@@ -116,7 +116,7 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
   l <- readr::read_lines(log_file, lazy = TRUE, progress = FALSE)
 
   if (!any(stringr::str_detect(l, pattern_check))) {
-    abort(c("Not a BARTL log file", "*" = log_file), call = call)
+    abort(c("Not a BAR-TL log file", "*" = log_file), call = call)
   }
 
   purrr::map(pattern_data, \(x) {
@@ -206,7 +206,7 @@ extract_event_rec <- function(log) {
 
 #'
 #'
-#' #' Parse the log file for BarLT
+#' #' Parse the log file for BAR-LT
 #' #'
 #' #' Returns the serial number, firware version
 #' #' and log file parsed as a tibble.
@@ -305,7 +305,7 @@ extract_event_rec <- function(log) {
 #'
 #'
 #' }
-#' #' Process GPS locations for SongMeters
+#' #' Process GPS locations for Song Meters
 #' #'
 #' #' @param folder_base Base folder were summary folders locationed
 #' #' @param list_files List of files in folder_base
@@ -318,7 +318,7 @@ extract_event_rec <- function(log) {
 #'                    return_gps=T, return_log=F)
 #'
 #'   }
-#' #' Process log files from SongMeters
+#' #' Process log files from Song Meters
 #' #'
 #' #' @param folder_base Base folder were summary folders locationed
 #' #' @param list_files List of files in folder_base

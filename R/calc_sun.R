@@ -1,7 +1,8 @@
 #' Calculate time to sunrise/sunset
 #'
 #' Calculate the sunrise/sunset of each sound file for the day of, the day before
-#' and the day after to get the nearest sunrise to the recording.
+#' and the day after to get the nearest sunrise to the recording. Times are
+#' calculated using the 'suncalc' package.
 #'
 #' @param aru_tz Character. Must be either "local" or a timezone listed in
 #'   `OlsonNames()`. See Details.

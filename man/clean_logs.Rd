@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean_logs.R
 \name{clean_logs}
 \alias{clean_logs}
-\title{Extract log data from BARLT log files}
+\title{Extract log data from BAR-LT log files}
 \usage{
 clean_logs(
   log_files,
@@ -42,7 +42,7 @@ and \code{schedule_ss} (sunset)
 }
 }
 \description{
-Process BARLT log files into a data frame reflecting metadata, schedule
+Process BAR-LT log files into a data frame reflecting metadata, schedule
 information, and events. Events are time-stamped logs of either GPS fixes
 (\code{lat} and \code{lon}) or recordings (\code{rec_file}, \code{rec_size}, \code{rec_end}).
 }
@@ -51,7 +51,7 @@ Note that log files can have glitches. If there is no start time for a
 recording (generally when there is a problem and no recording is made), the
 \code{date_time} value for that recording will be the same as the \code{rec_end} time.
 
-Because the BARLT units adjust their time according to the GPS locations,
+Because the BAR-LT units adjust their time according to the GPS locations,
 all times are in "local" to that area.
 }
 \examples{
