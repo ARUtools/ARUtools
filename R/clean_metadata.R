@@ -117,9 +117,9 @@ clean_metadata <- function(
     ))
   }
 
-
   # Collect non-file-type files
   extra <- stringr::str_subset(project_files, file_type_pattern, negate = TRUE)
+  log <-  stringr::str_subset(extra, stringr::regex("logfile", ignore_case = TRUE))
   gps <- stringr::str_subset(extra, stringr::regex("gps|summary", ignore_case = TRUE))
   focal <- stringr::str_subset(project_files, file_type_pattern)
 
@@ -130,7 +130,7 @@ clean_metadata <- function(
     type = tolower(fs::path_ext(focal))
   )
 
-  if (length(gps) > 1) {
+  if (length(gps) > 0) {
     meta <- meta |>
       dplyr::add_row(
         dir = fs::path_dir(gps),
@@ -138,6 +138,16 @@ clean_metadata <- function(
         type = "gps"
       )
   }
+
+  if (length(log) > 0) {
+    meta <- meta |>
+      dplyr::add_row(
+        dir = fs::path_dir(log),
+        file_name = fs::path_file(log),
+        type = "log"
+      )
+  }
+
 
   pattern_aru_type <- c(
     "barlt" = "BarLT",
@@ -227,16 +237,20 @@ clean_metadata <- function(
 
   # Report on details -------------------------
   # Extra files
-  if (length(extra) > 1) {
+  if (length(extra[!extra %in% c(gps, log)]) > 0) {
     inform(
       c("!" = paste0(
-        "Omitted ", length(extra), " extra, non-",
+        "Omitted ", length(extra[!extra %in% c(gps, log)]), " extra, non-",
         file_type, "/GPS files"
       ))
     )
   }
 
-  if (length(gps) > 1) {
+  if (length(log) > 0) {
+    inform(c("!" = paste0("Detected ", length(log), " log files")))
+  }
+
+  if (length(gps) > 0) {
     inform(c("!" = paste0("Detected ", length(gps), " GPS logs")))
   }
 
