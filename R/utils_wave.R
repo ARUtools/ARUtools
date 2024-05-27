@@ -173,18 +173,7 @@ clip_wave <- function(waves,
       overwrite = .env$overwrite
     )
 
-  if (!use_job) {
     purrr::pmap(wv, clip_wave_single)
-  } else {
-    check_installed("job", "Using `use_job=TRUE` requires the 'job' package.")
-    job::job(
-      {
-        purrr::pmap(wv, clip_wave_single)
-      },
-      import = c(wv),
-      packages = "ARUtools"
-    )
-  }
 
   TRUE
 }
