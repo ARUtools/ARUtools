@@ -95,7 +95,6 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #'   formatted and clipped wave files.
 #' @param diff_limit Numeric. How much longer in seconds clip lengths can be
 #'   compared to file lengths before triggering an error. Default `30`.
-#' @param use_job Logical. Use the 'job' package to copy files Default `FALSE`.
 #'
 #' @inheritParams common_docs
 #'
@@ -125,8 +124,7 @@ clip_wave <- function(waves,
                       col_start_time = start_time,
                       overwrite = FALSE,
                       create_dir = TRUE,
-                      diff_limit = 30,
-                      use_job = FALSE) {
+                      diff_limit = 30) {
   # Checks
   if (missing(dir_out)) {
     abort(paste0(
