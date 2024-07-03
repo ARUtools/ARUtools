@@ -412,8 +412,12 @@ sample_recordings <- function(meta_weights,
       if (!all(n_sites %in% sites)) abort_strat()
 
       # Convert from data frame
-      n_os <- as.list(n$n_os) |>
+      # Set oversample to null if all zeros
+      if(sum(n$n_os)==0 || is_null(n$n_os)){
+        n_os <- NULL
+      } else{n_os <- as.list(n$n_os) |>
         stats::setNames(n_sites)
+      }
       n <- as.list(n$n) |>
         stats::setNames(n_sites)
     } else {
