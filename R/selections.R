@@ -347,7 +347,8 @@ sample_recordings <- function(meta_weights,
   # Checks
   check_data(meta_weights, type = "meta_weights", ref = "calc_sleection_weights()")
   check_cols(meta_weights, c(!!enquo(col_site_id), !!enquo(col_sel_weights)))
-  if (is.data.frame(n)) check_names(n, c(name_site_id, "n", "n_os"))
+  if (is.data.frame(n)) check_names(dplyr::rename_with(n, tolower),
+                                    c(name_site_id, "n", "n_os"))
   check_num(seed, not_null = FALSE)
 
   if (!is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
