@@ -283,6 +283,45 @@ test_pattern <- function(test, pattern) {
 
 
 
+#' Create a look around expression and add it to an
+#' existing regular expression
+#'
+#' Lookarounds allow you to position a regular expression to more
+#' specificity.
+#'
+#' @param pattern String. Pattern that you wish to add a look around to
+#' @param lookaround_pattern String. Pattern that you wish to look for.
+#' @param position String. One of 'before', 'after', 'ahead', or 'behind'. Capitalization doesn't matter
+#' @param negate Logical. allows you to exclude cases where look around is detected.
+#'
+#' @return Returns a string that can be used as a regular expression
+#' @export
+#'
+#' @examples
+#'
+#' # Here is a string with three patterns of digits
+#' text <- "cars123ruin456cities789"
+#'
+#' # To extract the first one we can use this pattern
+#' stringr::str_extract(text, "\\d{3}")
+#' # or
+#' create_lookaround("\\d{3}", "cars", "before") |>
+#' stringr::str_extract(string=text)
+#'
+#' To exclude the first one we can write
+#' create_lookaround("\\d{3}", "cars", "before", negate=T) |>
+#' stringr::str_extract_all(string=text)
+#'
+#' To extract the second one we can write
+#'  create_lookaround("\\d{3}", "ruin", "before") |>
+#' stringr::str_extract(string=text)
+#'
+#' or
+#'
+#' create_lookaround("\\d{3}", "cities", "after") |>
+#' stringr::str_extract(string=text)
+#'
+#'
 create_lookaround <- function(pattern, lookaround_pattern, position, negate = FALSE) {
   check_text(pattern)
   check_text(lookaround_pattern)

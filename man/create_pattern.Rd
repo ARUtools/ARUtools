@@ -10,18 +10,36 @@
 \alias{test_pattern}
 \title{Create a pattern to match date}
 \usage{
-create_pattern_date(order = "ymd", sep = c("_", "-", ""), yr_digits = 4)
+create_pattern_date(
+  order = "ymd",
+  sep = c("_", "-", ""),
+  yr_digits = 4,
+  look_ahead = "",
+  look_behind = ""
+)
 
-create_pattern_time(sep = c("_", "-", ":", ""), seconds = "yes")
+create_pattern_time(
+  sep = c("_", "-", ":", ""),
+  seconds = "yes",
+  look_ahead = "",
+  look_behind = ""
+)
 
-create_pattern_dt_sep(sep = "T", optional = FALSE)
+create_pattern_dt_sep(
+  sep = "T",
+  optional = FALSE,
+  look_ahead = "",
+  look_behind = ""
+)
 
 create_pattern_aru_id(
   arus = c("BARLT", "S\\\\d(A|U)", "SM\\\\d", "SMM", "SMA"),
   n_digits = c(4, 8),
   sep = c("_", "-", ""),
   prefix = "",
-  suffix = ""
+  suffix = "",
+  look_ahead = "",
+  look_behind = ""
 )
 
 create_pattern_site_id(
@@ -29,7 +47,9 @@ create_pattern_site_id(
   p_digits = 2,
   sep = c("_", "-"),
   suffix = "",
-  s_digits = 1
+  s_digits = 1,
+  look_ahead = "",
+  look_behind = ""
 )
 
 test_pattern(test, pattern)
@@ -43,6 +63,10 @@ order.}
 Can be "" for no separator.}
 
 \item{yr_digits}{Numeric vector. Number of digits in Year, either 2 or 4.}
+
+\item{look_ahead}{Pattern to look ahead or after string Can be a regular expression or text.}
+
+\item{look_behind}{Pattern to look before behind string. Can be a regular expression or text.}
 
 \item{seconds}{Character. Whether seconds are included. Options are "yes",
 "no", "maybe".}
