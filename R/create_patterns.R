@@ -16,6 +16,10 @@
 #' @param sep Character vector. Expected separator(s) between the pattern parts.
 #'   Can be "" for no separator.
 #'
+#' @param look_ahead Pattern to look ahead or after string Can be a regular expression or text.
+#'
+#' @param look_behind Pattern to look before behind string. Can be a regular expression or text.
+#'
 #' @return Either a pattern (`create_pattern_xxx()`) or the text extracted by a
 #'   pattern (`test_pattern()`)
 #'
@@ -35,7 +39,9 @@ NULL
 #' @export
 #' @describeIn create_pattern Create a pattern to match a date
 
-create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits = 4) {
+create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""),
+                                yr_digits = 4, look_ahead = "",
+                                look_behind = "") {
   check_text(order, opts = c("ymd", "dmy", "mdy"))
   check_text(sep)
   check_num(yr_digits, opts = c(2, 4))
@@ -59,7 +65,9 @@ create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits 
     order == "mdy" ~ paste0(m, sep, d, sep, y),
     order == "dmy" ~ paste0(d, sep, m, sep, y)
   ) |>
-    pat_collapse()
+    pat_collapse() |>
+    create_lookaround(look_behind, position = "behind") |>
+    create_lookaround(look_ahead, position = "ahead")
 }
 
 #' @param seconds Character. Whether seconds are included. Options are "yes",
@@ -72,7 +80,9 @@ create_pattern_date <- function(order = "ymd", sep = c("_", "-", ""), yr_digits 
 #' @export
 #'
 #' @describeIn create_pattern Create a pattern to match a time
-create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes") {
+create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes",
+                                look_ahead = "",
+                                look_behind = "") {
   check_text(sep)
   check_text(seconds, opts = c("yes", "no", "maybe"), n = 1)
 
@@ -85,7 +95,9 @@ create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes") {
   p <- paste0(h, sep, m)
   if (seconds != "no") p <- paste0(p, "(", sep, "([0-5]{1}[0-9]{1}))")
   if (seconds == "maybe") p <- paste0(p, "?")
-  p
+  p |>
+    create_lookaround(look_behind, position = "behind") |>
+    create_lookaround(look_ahead, position = "ahead")
 }
 
 #' @param optional Logical. Whether the separator should be optional or not.
@@ -99,8 +111,11 @@ create_pattern_time <- function(sep = c("_", "-", ":", ""), seconds = "yes") {
 #' @export
 #' @describeIn create_pattern Create a pattern to match a date/time separator
 
-create_pattern_dt_sep <- function(sep = "T", optional = FALSE) {
-  create_pattern_sep(sep, optional)
+create_pattern_dt_sep <- function(sep = "T", optional = FALSE,look_ahead = "",
+                                  look_behind = "" ) {
+  create_pattern_sep(sep, optional) |>
+    create_lookaround(look_behind, position = "behind") |>
+    create_lookaround(look_ahead, position = "ahead")
 }
 
 
@@ -120,7 +135,9 @@ create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM",
                                   n_digits = c(4, 8),
                                   sep = c("_", "-", ""),
                                   prefix = "",
-                                  suffix = "") {
+                                  suffix = "",
+                                  look_ahead = "",
+                                  look_behind = "") {
   check_text(arus)
   check_num(n_digits, n = c(1, 2))
   check_text(sep)
@@ -138,7 +155,9 @@ create_pattern_aru_id <- function(arus = c("BARLT", "S\\d(A|U)", "SM\\d", "SMM",
   prefix <- pat_collapse(prefix)
   suffix <- pat_collapse(suffix)
 
-  paste0(prefix, "(", arus, ")", sep, n_digits, suffix)
+  paste0(prefix, "(", arus, ")", sep, n_digits, suffix) |>
+    create_lookaround(look_behind, position = "behind") |>
+    create_lookaround(look_ahead, position = "ahead")
 }
 
 #' @param prefix Character vector. Prefix(es) for site ids.
@@ -161,7 +180,9 @@ create_pattern_site_id <- function(prefix = c("P", "Q"),
                                    p_digits = 2,
                                    sep = c("_", "-"),
                                    suffix = "",
-                                   s_digits = 1) {
+                                   s_digits = 1,
+                                   look_ahead = "",
+                                   look_behind = "") {
   check_text(prefix)
   check_num(p_digits)
   check_text(sep)
@@ -185,7 +206,9 @@ create_pattern_site_id <- function(prefix = c("P", "Q"),
   }
   if (suffix != "") suffix <- paste0(sep, suffix)
 
-  paste0(prefix, suffix)
+  paste0(prefix, suffix) |>
+    create_lookaround(look_behind, position = "behind") |>
+    create_lookaround(look_ahead, position = "ahead")
 }
 
 #' Create sep pattern from series of options
@@ -256,4 +279,31 @@ test_pattern <- function(test, pattern) {
   check_text(test)
   check_text(pattern, n = 1)
   stringr::str_extract(test, pattern)
+}
+
+
+
+create_lookaround <- function(pattern, lookaround_pattern, position, negate = FALSE) {
+  check_text(pattern)
+  check_text(lookaround_pattern)
+  check_text(position)
+  check_text(tolower(position),
+             opts = c("before", "behind", "ahead", "after"))
+
+  # before or after?
+  pos_neg <- ifelse(negate, "!", "=")
+  dplyr::case_when(
+    lookaround_pattern==""~pattern,
+    tolower(position) %in%
+    c("before", "behind") ~
+      paste0(
+        "(?", "<", pos_neg, lookaround_pattern, ")",
+        pattern
+      ),
+    tolower(position) %in% c("after", "ahead") ~
+      paste0(
+        pattern,
+        "(?", "", pos_neg, lookaround_pattern, ")"
+      ),
+  )
 }
