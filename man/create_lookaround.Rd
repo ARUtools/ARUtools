@@ -17,6 +17,7 @@ create_lookaround(pattern, lookaround_pattern, position, negate = FALSE)
 \item{negate}{Logical. allows you to exclude cases where look around is detected.}
 }
 \value{
+Returns a string that can be used as a regular expression
 }
 \description{
 Lookarounds allow you to position a regular expression to more
