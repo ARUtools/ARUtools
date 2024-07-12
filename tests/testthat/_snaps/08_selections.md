@@ -16,7 +16,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2sr", "t2ss", "doy", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+          "value": ["file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2sr", "t2ss", "doy", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
         }
       },
       "value": [
@@ -38,12 +38,22 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["BarLT", "SongMeter", "SongMeter", "BarLT", "BarLT", "SongMeter", "SongMeter", "BarLT", "SongMeter", "BarLT", "SongMeter", "SongMeter", "BarLT", "BarLT", "SongMeter", "SongMeter", "BarLT", "SongMeter", "BarLT", "SongMeter", "SongMeter", "BarLT", "BarLT", "SongMeter", "SongMeter", "BarLT", "SongMeter"]
+          "value": ["BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "S4A02222", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "S4A02222", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "S4A02222"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "S4A02222", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "S4A02222", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962", "S4A02222"]
+          "value": ["Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Wildlife Acoustics", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Wildlife Acoustics", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Wildlife Acoustics"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT", "Song Meter 4", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT", "Song Meter 4", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT", "Song Meter 4"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["BARLT", "SongMeter", "SongMeter", "BARLT", "BARLT", "SongMeter", "SongMeter", "BARLT", "SongMeter", "BARLT", "SongMeter", "SongMeter", "BARLT", "BARLT", "SongMeter", "SongMeter", "BARLT", "SongMeter", "BARLT", "SongMeter", "SongMeter", "BARLT", "BARLT", "SongMeter", "SongMeter", "BARLT", "SongMeter"]
         },
         {
           "type": "character",
@@ -171,7 +181,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -194,7 +204,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -207,7 +217,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -279,12 +289,22 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["SongMeter", "BarLT", "BarLT", "SongMeter", "BarLT", "BarLT", "SongMeter", "SongMeter", "BarLT", "SongMeter", "SongMeter", "BarLT"]
+              "value": ["S4A02222", "BARLT10962", "BARLT10962", "S4A01234", "BARLT10962", "BARLT10962", "S4A02222", "S4A01234", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["S4A02222", "BARLT10962", "BARLT10962", "S4A01234", "BARLT10962", "BARLT10962", "S4A02222", "S4A01234", "BARLT10962", "S4A01234", "S4A01234", "BARLT10962"]
+              "value": ["Wildlife Acoustics", "Frontier Labs", "Frontier Labs", "Wildlife Acoustics", "Frontier Labs", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["Song Meter 4", "BAR-LT", "BAR-LT", "Song Meter 4", "BAR-LT", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-LT"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["SongMeter", "BARLT", "BARLT", "SongMeter", "BARLT", "BARLT", "SongMeter", "SongMeter", "BARLT", "SongMeter", "SongMeter", "BARLT"]
             },
             {
               "type": "character",
@@ -578,7 +598,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -601,7 +621,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -614,7 +634,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -686,12 +706,22 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["SongMeter", "SongMeter"]
+              "value": ["S4A01234", "S4A01234"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["S4A01234", "S4A01234"]
+              "value": ["Wildlife Acoustics", "Wildlife Acoustics"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["Song Meter 4", "Song Meter 4"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["SongMeter", "SongMeter"]
             },
             {
               "type": "character",
@@ -999,7 +1029,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -1022,7 +1052,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -1035,7 +1065,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -1107,12 +1137,22 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["BarLT", "BarLT", "SongMeter", "SongMeter", "SongMeter", "SongMeter", "SongMeter", "BarLT", "BarLT"]
+              "value": ["BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "S4A01234", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "S4A01234", "S4A01234", "S4A01234", "BARLT10962", "BARLT10962"]
+              "value": ["Frontier Labs", "Frontier Labs", "Wildlife Acoustics", "Wildlife Acoustics", "Wildlife Acoustics", "Wildlife Acoustics", "Wildlife Acoustics", "Frontier Labs", "Frontier Labs"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["BAR-LT", "BAR-LT", "Song Meter 4", "Song Meter 4", "Song Meter 4", "Song Meter 4", "Song Meter 4", "BAR-LT", "BAR-LT"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["BARLT", "BARLT", "SongMeter", "SongMeter", "SongMeter", "SongMeter", "SongMeter", "BARLT", "BARLT"]
             },
             {
               "type": "character",
@@ -1373,7 +1413,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -1396,7 +1436,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_type", "aru_id", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -1409,7 +1449,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -1481,12 +1521,22 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["SongMeter"]
+              "value": ["S4A01234"]
             },
             {
               "type": "character",
               "attributes": {},
-              "value": ["S4A01234"]
+              "value": ["Wildlife Acoustics"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["Song Meter 4"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["SongMeter"]
             },
             {
               "type": "character",

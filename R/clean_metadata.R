@@ -162,17 +162,19 @@ clean_metadata <- function(
   meta <- meta |>
     dplyr::mutate(
       path = file.path(.data$dir, .data$file_name),
-      aru_type = extract_replace(.data$file_name, pattern_aru_type),
-      aru_type = dplyr::if_else(is.na(.data$aru_type),
-        extract_replace(.data$dir, pattern_aru_type),
-        .data$aru_type
-      ),
+      # aru_type = extract_replace(.data$file_name, pattern_aru_type),
+      # aru_type = dplyr::if_else(is.na(.data$aru_type),
+      #   extract_replace(.data$dir, pattern_aru_type),
+      #   .data$aru_type
+      # ),
       aru_id = stringr::str_extract(.data$file_name, pattern_aru_id),
       aru_id = dplyr::if_else(is.na(.data$aru_id),
         stringr::str_extract(.data$dir, pattern_aru_id),
         .data$aru_id
       )
     )
+
+  meta <- dplyr::bind_cols(meta, guess_ARU_type(meta$path))
 
   meta <- dplyr::mutate(meta, site_id = stringr::str_extract(.data$dir, .env$pattern_site_id))
 

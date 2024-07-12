@@ -114,7 +114,8 @@ check_problems <- function(df, check = c(
 
   df <- df |>
     dplyr::filter(dplyr::if_any(dplyr::any_of(check), ~ is.na(.x))) |>
-    dplyr::select(-dplyr::any_of(c("type", "file_name", "aru_type")))
+    dplyr::select(-dplyr::any_of(c("type", "file_name", "aru_type",
+                                   "manufacturer", "model")))
 
 
   if (date) {
