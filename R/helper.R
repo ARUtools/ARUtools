@@ -190,3 +190,48 @@ add_wildtrax <- function(meta) {
     )
   )
 }
+
+
+
+#' Returns the current vector of ARU types
+#'
+#' @return named character vector
+#' @export
+#'
+#' @examples
+#'
+#' get_pattern_aru_type()
+get_pattern_aru_type <- function(){
+  .arutools$pattern_aru_type
+}
+
+
+#' Add an ARU to the list of identified ARUs
+#'
+#' @param pattern regular expression to extract from file path
+#' @param aru_type Name of ARUtype
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+#'
+#' get_pattern_aru_type()
+#'
+#' add_pattern_aru_type("CWS\\d", "Canadian Wildlife Detector \1")
+#'
+#' get_pattern_aru_type()
+#'
+add_pattern_aru_type <- function(pattern, aru_type){
+  check_text(pattern)
+  check_text(aru_type)
+  .arutools$pattern_aru_type <-
+    c(.arutools$pattern_aru_type, aru_type)
+  names(.arutools$pattern_aru_type)[length(.arutools$pattern_aru_type)] <-
+    pattern
+}
+
+
+
+
+

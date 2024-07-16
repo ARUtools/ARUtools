@@ -166,3 +166,24 @@ test_that("acoustic_indices() errors", {
 
   unlink("test_wave.wav")
 })
+
+
+test_that("pattern_aru_type",
+          {
+            expect_equal(
+              .arutools$pattern_aru_type,
+              get_pattern_aru_type()
+            )
+            x <- c(.arutools$pattern_aru_type,"the aru")
+            names(x)[length(x)] <- "pattern"
+            expect_equal(
+              x,
+              {add_pattern_aru_type("pattern", "the aru")
+              get_pattern_aru_type()}
+            )
+            expect_error(add_pattern_aru_type(4, "cats"),
+                         '`pattern` must be text')
+            expect_error(add_pattern_aru_type("cats", 4),
+                         '`aru_type` must be text')
+
+          })

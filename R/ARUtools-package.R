@@ -16,6 +16,8 @@
 rlang::on_load(rlang::local_use_cli())
 
 
+
+
 #' Set options for matching column headers in GPS text logs
 #' @noRd
 .onLoad <- function(libname, pkgname) {

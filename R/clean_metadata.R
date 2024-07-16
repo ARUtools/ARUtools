@@ -149,24 +149,12 @@ clean_metadata <- function(
   }
 
 
-  pattern_aru_type <- c(
-    "barlt" = "BarLT",
-    "SMM" = "SongMeter",
-    "SM\\d" = "SongMeter",
-    "S\\dA" = "SongMeter"
-  )
-
-  if (!quiet) inform("Extracting ARU info...")
+if (!quiet) inform("Extracting ARU info...")
 
   # Extract ARU metadata -----------------------
   meta <- meta |>
     dplyr::mutate(
       path = file.path(.data$dir, .data$file_name),
-      # aru_type = extract_replace(.data$file_name, pattern_aru_type),
-      # aru_type = dplyr::if_else(is.na(.data$aru_type),
-      #   extract_replace(.data$dir, pattern_aru_type),
-      #   .data$aru_type
-      # ),
       aru_id = stringr::str_extract(.data$file_name, pattern_aru_id),
       aru_id = dplyr::if_else(is.na(.data$aru_id),
         stringr::str_extract(.data$dir, pattern_aru_id),
@@ -181,7 +169,7 @@ clean_metadata <- function(
   pattern_non_date <- paste0(
     "(", pattern_site_id, ")|(",
     pattern_aru_id, ")|(",
-    paste0("(", pattern_aru_type, ")", collapse = "|"),
+    paste0("(", get_pattern_aru_type(), ")", collapse = "|"),
     ")"
   )
 
