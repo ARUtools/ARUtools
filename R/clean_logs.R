@@ -58,7 +58,7 @@ clean_logs <- function(log_files, return = "all",
   ) |>
     purrr::set_names(log_files) |>
     purrr::list_transpose() |>
-    purrr::map(\(x) purrr::list_rbind(x, names_to = "path"))
+    purrr::map(\(x) dplyr::bind_rows(x))
 
   meta <- extract_meta(log)
   schedule <- extract_schedule(log)
@@ -99,7 +99,8 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
         date_time = lubridate::parse_date_time(.data[["date_time"]], orders = c("dmy HMS", "ymd HMS")),
         value = stringr::str_remove(.data[["value"]], pattern_date_time),
         value = stringr::str_remove_all(.data[["value"]], x),
-        value = stringr::str_squish(.data[["value"]])
+        value = stringr::str_squish(.data[["value"]]),
+        path = log_file
       )
   })
 }
