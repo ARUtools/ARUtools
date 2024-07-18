@@ -51,38 +51,13 @@
 #' l <- clean_logs(log_files)
 clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_ss = "(SS)",
                        progress = TRUE) {
-  # Pattern to id the correct kind of log file
-  pattern_check <- "FRONTIER LABS Bioacoustic Audio Recorder"
-
-  # Define data to extract and patterns
-  pattern_data <- list(
-    meta_serial = "Serial Number: ",
-    meta_firmware = "Firmware: ",
-    schedule_name = "Name: ",
-    schedule_gps = "Backup GPS location: ",
-    schedule_sr = glue::glue(" +\\d{{1,2}}\\) \\\"{pattern_sr}\\\""),
-    schedule_ss = glue::glue(" +\\d{{1,2}}\\) \\\"{pattern_ss}\\\""),
-    gps_position = "GPS position lock acquired \\[",
-    recordings = pat_collapse(c(
-      "start" = "\\| New recording started: ",
-      "end" = "Recording stopped. "
-    ))
-  )
-
-  # Because log files suck and can sometimes have *both* dmy AND ymd formats in
-  # the same file.
-  pattern_date_time <- paste(
-    pat_collapse(c(
-      create_pattern_date(order = "dmy", sep = c("\\/")),
-      create_pattern_date()
-    )),
-    create_pattern_time()
-  )
 
   # Arrange events and format
   log <- purrr::map(
     log_files,
-    \(x) read_log_single(x, pattern_check, pattern_data, pattern_date_time),
+    \(x) read_log_single(x, get_pattern("pattern_check"),
+                         get_pattern("pattern_data"),
+                         get_pattern("pattern_date_time")),
     .progress = progress
   ) |>
     purrr::set_names(log_files) |>
@@ -119,6 +94,7 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
     abort(c("Not a BAR-TL log file", "*" = log_file), call = call)
   }
 
+  o <-
   purrr::map(pattern_data, \(x) {
     l |>
       stringr::str_subset(x) |>
@@ -131,6 +107,8 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
         value = stringr::str_squish(.data[["value"]])
       )
   })
+  if(!"list" %in% class(o)) o <- list(o)
+  o
 }
 
 extract_meta <- function(log) {

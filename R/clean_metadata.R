@@ -169,7 +169,7 @@ if (!quiet) inform("Extracting ARU info...")
   pattern_non_date <- paste0(
     "(", pattern_site_id, ")|(",
     pattern_aru_id, ")|(",
-    paste0("(", get_pattern_aru_type(), ")", collapse = "|"),
+    paste0("(", get_pattern("pattern_aru_type"), ")", collapse = "|"),
     ")"
   )
 

@@ -195,14 +195,19 @@ add_wildtrax <- function(meta) {
 
 #' Returns the current vector of ARU types
 #'
+#' @param pattern_name String of pattern variable to return. One of
+#'    "pattern_aru_type", "pattern_check","pattern_data", or "pattern_date_time"
+#'
 #' @return named character vector
 #' @export
 #'
 #' @examples
 #'
-#' get_pattern_aru_type()
-get_pattern_aru_type <- function(){
-  .arutools$pattern_aru_type
+#' get_pattern("pattern_aru_type")
+get_pattern <- function(pattern_name){
+  check_text(pattern_name,
+             opts = names(.arutools))
+  .arutools[[pattern_name]]
 }
 
 
@@ -216,11 +221,11 @@ get_pattern_aru_type <- function(){
 #'
 #' @examples
 #'
-#' get_pattern_aru_type()
+#' get_pattern("pattern_aru_type")
 #'
 #' add_pattern_aru_type("CWS\\d", "Canadian Wildlife Detector \1")
 #'
-#' get_pattern_aru_type()
+#' get_pattern("pattern_aru_type")
 #'
 add_pattern_aru_type <- function(pattern, aru_type){
   check_text(pattern)
@@ -231,6 +236,45 @@ add_pattern_aru_type <- function(pattern, aru_type){
     pattern
 }
 
+
+
+#' Set pattern into ARUtools environment
+#'
+#' @param pattern_name string of variable to set
+#' @param pattern
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+#'
+#' og_pat <- get_pattern("pattern_date_time")
+#'
+#' set_pattern("pattern_date_time", create_pattern_date())
+#'
+#' glue::glue("Default pattern: {og_pat}")
+#' glue::glue("Updated pattern: {get_pattern('pattern_date_time')}"
+#'
+#' set_pattern("pattern_date_time", og_pat)
+#'
+#'
+set_pattern <- function(pattern_name, pattern){
+  check_text(pattern_name,
+             opts = names(.arutools))
+  if(pattern_name == "pattern_data" ){
+    fail_pat <- FALSE
+    if(!"list" %in% class(pattern)){ fail_pat <- TRUE}else{
+      if(any(!names(.arutools$pattern_data)%in% pattern)) fail_pat <- TRUE
+    }
+    if(fail_pat) abort(
+      glue::glue("pattern_data must be a list with the following values:\n {
+          glue::glue_collapse(
+                 names(.arutools$pattern_data),
+                 sep = ', ')}"))
+
+  }
+   .arutools[[pattern_name]] <- pattern
+}
 
 
 
