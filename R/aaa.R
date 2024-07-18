@@ -13,8 +13,10 @@
 # # Pattern to id the correct kind of log file
 .arutools$pattern_check <- "FRONTIER LABS Bioacoustic Audio Recorder"
 
+# Pattern to match the sunrise schedule in the log files.
 .arutools$pattern_sr <- "(SR)"
 
+# Pattern to match the sunset schedule in the log files.
 .arutools$pattern_ss <- "(SS)"
 
 # # Define data to extract and patterns

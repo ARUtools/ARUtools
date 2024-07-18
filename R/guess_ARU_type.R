@@ -1,11 +1,17 @@
 #' Try to guess the ARU type from a file path
 #'
-#' @param path
+#' @param path Character. Path to wave file
 #'
-#' @return
+#' @return Tibble with columns 'manufacturer', 'model', and 'aru_type'
 #' @export
 #'
 #' @examples
+#'
+#' get_pattern("pattern_aru_type")
+#'
+#' guess_ARU_type("/path/to/barlt/file.wav")
+#'
+#' guess_ARU_type("/path/to/sm/S4A2342.wav")
 guess_ARU_type <- function(path){
    model_guess <- ARUtools:::extract_replace(path, get_pattern("pattern_aru_type"))
   company_guess <- dplyr::case_when(

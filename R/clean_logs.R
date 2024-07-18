@@ -14,10 +14,6 @@
 #' @param log_files Character vector of log files to process.
 #' @param return Character. What kind of data to return, GPS fixes (`"gps"`),
 #'   recording events (`"recordings"`) or `"all"` (default).
-#' @param pattern_sr Character. Pattern to match the sunrise schedule in the log
-#'   files.
-#' @param pattern_ss Character. Pattern to match the sunset schedule in the log
-#'   files.
 #' @param progress Logical. Whether to use `purrr::map()` progress bars (default
 #'   `TRUE`).
 #'
@@ -49,7 +45,7 @@
 #' log_files <- fs::dir_ls("../ARUtools - Extra/aru_log_files/", recurse = TRUE, glob = "*logfile*")
 #'
 #' l <- clean_logs(log_files)
-clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_ss = "(SS)",
+clean_logs <- function(log_files, return = "all",
                        progress = TRUE) {
 
   # Arrange events and format
