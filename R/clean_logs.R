@@ -90,7 +90,6 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
     abort(c("Not a BAR-TL log file", "*" = log_file), call = call)
   }
 
-  o <-
   purrr::map(pattern_data, \(x) {
     l |>
       stringr::str_subset(x) |>
@@ -103,8 +102,6 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
         value = stringr::str_squish(.data[["value"]])
       )
   })
-  if(!"list" %in% class(o)) o <- list(o)
-  o
 }
 
 extract_meta <- function(log) {
