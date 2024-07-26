@@ -260,7 +260,11 @@ if (!quiet) inform("Extracting ARU info...")
     msg <- c(msg, report_missing(f_type, n, "ARU types"))
     msg <- c(msg, report_missing(f_id, n, "ARU ids"))
     msg <- c(msg, report_missing(f_site, n, "sites"))
+    if(!quiet & f_type) msg <- c(msg,
+      "i" = "Try `clean_logs() to detect aru_type "
+    )
     inform(msg)
+
   }
 
   # Arrange ----------------------------------

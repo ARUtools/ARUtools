@@ -6,7 +6,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["file_name", "path", "event", "date_time", "lat", "lon", "rec_file", "rec_size", "rec_end", "schedule_date", "schedule_name", "schedule_lat", "schedule_lon", "meta_serial", "meta_firmware"]
+          "value": ["file_name", "path", "event", "date_time", "lat", "lon", "rec_file", "rec_size", "rec_end", "schedule_date", "schedule_name", "schedule_lat", "schedule_lon", "meta_serial", "meta_firmware", "manufacturer", "model", "aru_type"]
         },
         "row.names": {
           "type": "integer",
@@ -122,6 +122,21 @@
           "type": "character",
           "attributes": {},
           "value": ["3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT"]
         }
       ]
     }
@@ -134,7 +149,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["file_name", "path", "event", "date_time", "lat", "lon", "rec_file", "rec_size", "rec_end", "schedule_date", "schedule_name", "schedule_lat", "schedule_lon", "schedule_sr", "schedule_ss", "meta_serial", "meta_firmware"]
+          "value": ["file_name", "path", "event", "date_time", "lat", "lon", "rec_file", "rec_size", "rec_end", "schedule_date", "schedule_name", "schedule_lat", "schedule_lon", "schedule_sr", "schedule_ss", "meta_serial", "meta_firmware", "manufacturer", "model", "aru_type"]
         },
         "row.names": {
           "type": "integer",
@@ -260,6 +275,21 @@
           "type": "character",
           "attributes": {},
           "value": ["3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)", "3.30 (Jul 20 2021 15:53:03)"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs", "Frontier Labs"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT", "BAR-LT"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT", "BARLT"]
         }
       ]
     }

@@ -110,7 +110,12 @@ extract_meta <- function(log) {
     purrr::list_rbind(names_to = "type") |>
     dplyr::select(-"date_time") |>
     dplyr::distinct() |>
-    tidyr::pivot_wider(names_from = "type", values_from = "value")
+    tidyr::pivot_wider(names_from = "type", values_from = "value") |>
+    dplyr::mutate(
+      manufacturer = "Frontier Labs",
+      model = "BAR-LT",
+      aru_type = "BARLT"
+    )
 }
 
 extract_schedule <- function(log) {
