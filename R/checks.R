@@ -103,7 +103,7 @@ check_data <- function(df, type, ref, call = caller_env()) {
 #' Confirm file extension
 #' @noRd
 check_ext <- function(ext, opts, call = caller_env()) {
-  if (!ext %in% opts) {
+  if (any(!ext %in% opts)) {
     abort(
       paste0("File extension must be one of ", paste0(opts, collapse = ", ")),
       call = call

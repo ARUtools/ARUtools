@@ -1,3 +1,35 @@
+#' Run `clean_logs()` on the output from `clean_metadata()`
+#'
+#' @param meta Data frame. `meta` data processed in `add_sites()`
+#'
+#' @return Data frame containing
+#'   - `file_name`s and `path`s of the log files
+#'   - `event`s and their `date_time`s
+#'   - `lat` and `lon` for "gps" events
+#'   - `rec_file`, `rec_size` and `rec_end` for "recording" events
+#'     (recording start is the `date_time` of the event)
+#'   - `schedule` information such as `schedule_date`, `schedule_name`,
+#'     `schedule_lat`, `schedule_lon`, `schedule_sr` (sunrise),
+#'     and `schedule_ss` (sunset)
+#'   - `meta`data information such as `meta_serial` and `meta_firmware`
+#'   - other columns from meta provided
+#' @export
+#'
+#' @examples
+meta_clean_logs <- function(meta){
+  # Checks
+  check_data(meta, type = "meta", ref = "clean_metadata()")
+
+   logs <- dplyr::filter(meta, type == "log")
+
+   logs |> dplyr::pull(path) |>
+   clean_logs() |> dplyr::left_join(y = logs,
+     by = dplyr::join_by(file_name, path, date_time,
+                  manufacturer, model, aru_type) )
+}
+
+
+
 #' Extract log data from BAR-LT log files
 #'
 #' Process BAR-LT log files into a data frame reflecting metadata, schedule
@@ -47,6 +79,9 @@
 #' l <- clean_logs(log_files)
 clean_logs <- function(log_files, return = "all",
                        progress = TRUE) {
+
+  type <- fs::path_ext(log_files)
+  check_ext(type, c("txt"))
 
   # Arrange events and format
   log <- purrr::map(
