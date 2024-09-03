@@ -231,6 +231,19 @@ create_pattern_sep <- function(sep, optional = TRUE) {
 }
 
 
+
+pattern_tz_offset <- function(direction_from_UTC = "West",
+                              n_digits_hrs =2, n_digits_min =2){
+  ## CHECKS
+
+  ## DIRECTIONS
+  dir <- case_when(direction_from_UTC)
+
+  ## COLLAPSE PATTERN
+
+}
+
+
 #' Collapse a pattern down
 #'
 #' Turns a vector of patterns into a regular expression: `(x|x)`

@@ -47,6 +47,7 @@ clean_metadata <- function(
     pattern_date = create_pattern_date(),
     pattern_time = create_pattern_time(),
     pattern_dt_sep = create_pattern_dt_sep(),
+    pattern_tz_offset = create_pattern_tz_offset(), #"[\\+,\\-]\\d{4}"
     order_date = "ymd",
     quiet = FALSE) {
   # Checks
@@ -60,6 +61,7 @@ clean_metadata <- function(
   check_text(pattern_date)
   check_text(pattern_time)
   check_text(pattern_dt_sep)
+  check_text(pattern_tz_offset)
   check_text(order_date)
   check_logical(quiet)
 
@@ -72,6 +74,8 @@ clean_metadata <- function(
   pattern_date <- pat_collapse(pattern_date)
   pattern_time <- pat_collapse(pattern_time)
   pattern_dt_sep <- pat_collapse(pattern_dt_sep)
+  pattern_tz_offset <- pat_collapse(pattern_tz_offset)
+
 
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
 
@@ -196,6 +200,10 @@ if (!quiet) inform("Extracting ARU info...")
         orders = paste(order_date, "HMS"),
         truncated = 1
       ),
+      # Extract offsets
+      tz_offset = stringr::str_extract(.data$file_left, .env$pattern_date_time)
+
+
       date = lubridate::as_date(.data$date_time)
     )
 
@@ -261,7 +269,8 @@ if (!quiet) inform("Extracting ARU info...")
     msg <- c(msg, report_missing(f_id, n, "ARU ids"))
     msg <- c(msg, report_missing(f_site, n, "sites"))
     if(!quiet & f_type) msg <- c(msg,
-      "i" = "Try `clean_logs() to detect aru_type "
+      "i" = "Try `clean_logs() to detect aru_type or
+          explore the `ARUtoolsExtra` package for more options."
     )
     inform(msg)
 
