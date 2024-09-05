@@ -34,15 +34,15 @@ stringr::str_extract(text, "\\\\d{3}")
 create_lookaround("\\\\d{3}", "cars", "before") |>
 stringr::str_extract(string=text)
 
-To exclude the first one we can write
-create_lookaround("\\\\d{3}", "cars", "before", negate=T) |>
+# To exclude the first one we can write
+create_lookaround("\\\\d{3}", "cars", "before", negate=TRUE) |>
 stringr::str_extract_all(string=text)
 
-To extract the second one we can write
+# To extract the second one we can write
  create_lookaround("\\\\d{3}", "ruin", "before") |>
 stringr::str_extract(string=text)
 
-or
+# or
 
 create_lookaround("\\\\d{3}", "cities", "after") |>
 stringr::str_extract(string=text)

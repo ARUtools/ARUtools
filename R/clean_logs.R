@@ -24,13 +24,14 @@
 meta_clean_logs <- function(meta){
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")
-
-   logs <- dplyr::filter(meta, type == "log")
+  by_ <-  c("file_name", "path", "date_time",
+         "manufacturer", "model", "aru_type")
+   logs <- dplyr::filter(meta, .data$type == "log")
 
    logs |> dplyr::pull(path) |>
-   clean_logs() |> dplyr::left_join(y = logs,
-     by = dplyr::join_by(file_name, path, date_time,
-                  manufacturer, model, aru_type) )
+   clean_logs() |>
+     dplyr::left_join(y = logs,
+                      by = by_)
 }
 
 

@@ -9,7 +9,7 @@ set_pattern(pattern_name, pattern)
 \arguments{
 \item{pattern_name}{string of variable to set}
 
-\item{pattern}{}
+\item{pattern}{Pattern to add into ARUtools environment}
 }
 \description{
 Set pattern into ARUtools environment
@@ -21,7 +21,7 @@ og_pat <- get_pattern("pattern_date_time")
 set_pattern("pattern_date_time", create_pattern_date())
 
 glue::glue("Default pattern: {og_pat}")
-glue::glue("Updated pattern: {get_pattern('pattern_date_time')}"
+glue::glue("Updated pattern: {get_pattern('pattern_date_time')}")
 
 set_pattern("pattern_date_time", og_pat)
 

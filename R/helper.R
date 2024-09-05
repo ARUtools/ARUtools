@@ -241,7 +241,7 @@ add_pattern_aru_type <- function(pattern, aru_type){
 #' Set pattern into ARUtools environment
 #'
 #' @param pattern_name string of variable to set
-#' @param pattern
+#' @param pattern Pattern to add into ARUtools environment
 #'
 #' @return NULL
 #' @export
@@ -253,7 +253,7 @@ add_pattern_aru_type <- function(pattern, aru_type){
 #' set_pattern("pattern_date_time", create_pattern_date())
 #'
 #' glue::glue("Default pattern: {og_pat}")
-#' glue::glue("Updated pattern: {get_pattern('pattern_date_time')}"
+#' glue::glue("Updated pattern: {get_pattern('pattern_date_time')}")
 #'
 #' set_pattern("pattern_date_time", og_pat)
 #'

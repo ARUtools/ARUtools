@@ -53,6 +53,9 @@ files/directories which match the pattern in \code{subset}.}
 \item{pattern_dt_sep}{Character. Regular expression to mark separators
 between dates and times. See \code{create_pattern_dt_sep()}.}
 
+\item{pattern_tz_offset}{Character. Regular expression to extract time zone
+offsets from file names. See. \code{create_pattern_tz_offset()}.}
+
 \item{order_date}{Character. Order that the date appears in. "ymd"
 (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.}
 

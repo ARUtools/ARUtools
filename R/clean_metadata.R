@@ -24,6 +24,8 @@
 #'   `create_pattern_time()`. Can be a vector of multiple patterns to match.
 #' @param pattern_dt_sep Character. Regular expression to mark separators
 #'   between dates and times. See `create_pattern_dt_sep()`.
+#' @param pattern_tz_offset Character. Regular expression to extract time zone
+#'     offsets from file names. See. `create_pattern_tz_offset()`.
 #' @param order_date Character. Order that the date appears in. "ymd"
 #'   (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.
 #'
