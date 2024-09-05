@@ -16,6 +16,11 @@
 #' @export
 #'
 #' @examples
+#'
+#'   file_vec <- fs::dir_ls(fs::path_package("extdata", package = "ARUtools"), recurse = TRUE,)
+#'   m <- clean_metadata(project_files = file_vec, file_type = 'json',pattern_site_id = "000\\d+" )
+#'
+#'   logs <- meta_clean_logs(m)
 meta_clean_logs <- function(meta){
   # Checks
   check_data(meta, type = "meta", ref = "clean_metadata()")

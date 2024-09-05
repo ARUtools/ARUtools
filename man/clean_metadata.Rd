@@ -15,6 +15,7 @@ clean_metadata(
   pattern_date = create_pattern_date(),
   pattern_time = create_pattern_time(),
   pattern_dt_sep = create_pattern_dt_sep(),
+  pattern_tz_offset = create_pattern_tz_offset(),
   order_date = "ymd",
   quiet = FALSE
 )

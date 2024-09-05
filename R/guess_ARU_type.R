@@ -13,7 +13,7 @@
 #'
 #' guess_ARU_type("/path/to/sm/S4A2342.wav")
 guess_ARU_type <- function(path){
-   model_guess <- ARUtools:::extract_replace(path, get_pattern("pattern_aru_type"))
+   model_guess <- extract_replace(path, get_pattern("pattern_aru_type"))
   company_guess <- dplyr::case_when(
     is.na(model_guess)~NA_character_,
     model_guess=="BAR-LT"~"Frontier Labs",

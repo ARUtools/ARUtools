@@ -7,6 +7,7 @@
 \alias{create_pattern_dt_sep}
 \alias{create_pattern_aru_id}
 \alias{create_pattern_site_id}
+\alias{create_pattern_tz_offset}
 \alias{test_pattern}
 \title{Create a pattern to match date}
 \usage{
@@ -52,6 +53,12 @@ create_pattern_site_id(
   look_behind = ""
 )
 
+create_pattern_tz_offset(
+  direction_from_UTC = "West",
+  n_digits_hrs = 2,
+  n_digits_min = 2
+)
+
 test_pattern(test, pattern)
 }
 \arguments{
@@ -88,6 +95,12 @@ model specific).}
 
 \item{s_digits}{Numeric vector. Number(s) of digits following the \code{suffix}.}
 
+\item{direction_from_UTC}{Character. Must be on of "West", "East" or "Both"}
+
+\item{n_digits_hrs}{Numeric vector. Number(s) of digits for hours in offset.}
+
+\item{n_digits_min}{Numeric vector. Number(s) of digits for minutes in offset.}
+
 \item{test}{Character vector. Examples of text to test.}
 
 \item{pattern}{Character. Regular expression pattern to test.}
@@ -121,6 +134,8 @@ pattern grabs what you want. This is just a simple wrapper around
 
 \item \code{create_pattern_site_id()}: Create a pattern to match a site id
 
+\item \code{create_pattern_tz_offset()}: Create a pattern to match a site id
+
 \item \code{test_pattern()}: Test patterns
 
 }}
@@ -139,6 +154,13 @@ create_pattern_dt_sep(c("T", "_", "-")) # 'T', '_', or '-' as separators
 create_pattern_aru_id()
 create_pattern_aru_id(prefix = "CWS")
 create_pattern_aru_id(n_digits = 12)
+
+
+create_pattern_site_id() # Default matches P00-0
+create_pattern_site_id(
+  prefix = "site", p_digits = 3, sep = "",
+  suffix = c("a", "b", "c"), s_digits = 0
+) # Matches site000a
 
 
 create_pattern_site_id() # Default matches P00-0
