@@ -249,3 +249,33 @@ test_that("create_lookaround()",
 
           }
 )
+
+
+test_that("create_pattern_tz_offset",{
+  # Checks
+  expect_error(create_pattern_tz_offset(direction_from_UTC = "+"),
+               "`direction_from_UTC` must be among")
+  expect_error(create_pattern_tz_offset(direction_from_UTC = 4),
+               "`direction_from_UTC` must be text")
+  expect_error(create_pattern_tz_offset(n_digits_hrs =  "string"),
+               "`n_digits_hrs` must be numeric")
+  expect_error(create_pattern_tz_offset(n_digits_hrs =  "string"),
+               "`n_digits_hrs` must be numeric")
+
+  expect_true(stringr::str_detect(
+    create_pattern_tz_offset(n_digits_min = 14),
+    "14\\}$"))
+  expect_true(stringr::str_detect(
+    create_pattern_tz_offset(n_digits_min = 81),
+    "81\\}"))
+  expect_true(stringr::str_detect(
+    create_pattern_tz_offset(direction_from_UTC = "West"),
+    "\\-"))
+  expect_true(stringr::str_detect(
+    create_pattern_tz_offset(direction_from_UTC = "East"),
+    "\\+"))
+  expect_true(stringr::str_detect(
+    create_pattern_tz_offset(direction_from_UTC = "Both"),
+    "\\[\\+\\,\\-\\]"))
+
+})

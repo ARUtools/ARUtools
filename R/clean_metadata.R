@@ -180,11 +180,12 @@ if (!quiet) inform("Extracting ARU info...")
 
   # Extract Date/time --------------------------
   if (!quiet) inform("Extracting Dates and Times...")
-
   meta <- meta |>
     dplyr::mutate(
       file_left = stringr::str_remove_all(.data$file_name, pattern_non_date),
       dir_left = stringr::str_remove_all(.data$dir, pattern_non_date),
+      # Extract offsets
+      tz_offset = stringr::str_extract(.data$file_left, .env$pattern_tz_offset),
 
       # Try file name
       date_time_chr = stringr::str_extract(.data$file_left, .env$pattern_date_time),
@@ -194,14 +195,27 @@ if (!quiet) inform("Extracting ARU info...")
         stringr::str_extract(.data$dir_left, .env$pattern_date_time),
         .data$date_time_chr
       ),
+      # date_time_chr = dplyr::if_else(
+      #   is.na(.data$tz_offset),
+      #   .data$date_time_chr,
+      #   paste(.data$date_time_chr, .data$tz_offset, sep = "")
+      # ),
       # Get date_times
+      # Not implementing at this time as does not work with mix of
+      # time zones
+      # date_time = lubridate::parse_date_time(
+      #   .data$date_time_chr,
+      #   orders = dplyr::if_else(is.na(.data$tz_offset),
+      #                          paste(order_date, "HMS"),
+      #                          paste(order_date, "HMS%z")),
+      #   truncated = 1
+      # ),
       date_time = lubridate::parse_date_time(
         .data$date_time_chr,
         orders = paste(order_date, "HMS"),
         truncated = 1
       ),
-      # Extract offsets
-      tz_offset = stringr::str_extract(.data$file_left, .env$pattern_date_time)
+
 
 
       date = lubridate::as_date(.data$date_time)
@@ -260,6 +274,7 @@ if (!quiet) inform("Extracting ARU info...")
   f_type <- sum(is.na(f$aru_type))
   f_id <- sum(is.na(f$aru_id))
   f_site <- sum(is.na(f$site_id))
+  f_tz <- sum(is.na(f$tz_offset))
 
   if (any(c(f_d, f_dt, f_type, f_id, f_site) > 0)) {
     msg <- c("Identified possible problems with metadata extraction:")
@@ -268,6 +283,9 @@ if (!quiet) inform("Extracting ARU info...")
     msg <- c(msg, report_missing(f_type, n, "ARU types"))
     msg <- c(msg, report_missing(f_id, n, "ARU ids"))
     msg <- c(msg, report_missing(f_site, n, "sites"))
+    # At this point, no need to include time zones in reports
+    # as not currently using them.
+    # msg <- c(msg, report_missing(f_tz, n, "time zones"))
     if(!quiet & f_type) msg <- c(msg,
       "i" = "Try `clean_logs() to detect aru_type or
           explore the `ARUtoolsExtra` package for more options."

@@ -9,7 +9,7 @@ test_that("clean_metadata()", {
   expect_named(m, c(
     "file_name", "type", "path",  "aru_id",
     'manufacturer', 'model',"aru_type",
-    "site_id",
+    "site_id", "tz_offset",
     "date_time", "date"
   ))
   expect_equal(nrow(m), length(example_files))

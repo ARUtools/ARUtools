@@ -58,7 +58,7 @@ test_that("check_problems() - basic meta", {
   expect_silent(chk <- check_problems(m))
   expect_equal(
     chk,
-    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date")]
+    m[c(3, 7, 10), c("path", "aru_id", "site_id","tz_offset", "date_time", "date")]
   )
   expect_equal(nrow(chk), 3)
 
@@ -93,7 +93,7 @@ test_that("check_problems() - meta with coords", {
   expect_silent(chk <- check_problems(m))
   expect_equal(
     chk,
-    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date", "longitude", "latitude")]
+    m[c(3, 7, 10), c("path", "aru_id", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude")]
   )
   expect_equal(nrow(chk), 3)
 

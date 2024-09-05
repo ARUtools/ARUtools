@@ -34,9 +34,14 @@ dates <- example_sites |>
     by = "1 day"
   )) |>
   mutate(
+    tz_offset = "-0400",
     date_time = date +
       rep(lubridate::minutes(c(300, 320, 325, 450, 600, 300, 205)), 2),
-    date_time = format(date_time, "%Y%m%dT%H%M%S")
+
+    date_time = format(date_time, "%Y%m%dT%H%M%S"),
+    date_time = dplyr::if_else(str_detect(ARU, "BARLT"),
+                               paste(date_time, tz_offset, sep=""),
+                               date_time)
   )
 
 

@@ -16,14 +16,14 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2sr", "t2ss", "doy", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+          "value": ["file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2sr", "t2ss", "doy", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
         }
       },
       "value": [
         {
           "type": "character",
           "attributes": {},
-          "value": ["P01_1_20200503T052000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P08_1_20200511T100000_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P08_1_20200511T100000_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P08_1_20200511T100000_ARU.wav", "P09_1_20200511T050000_ARU.wav"]
+          "value": ["P01_1_20200503T052000-0400_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P03_1_20200506T100000-0400_ARU.wav", "P06_1_20200509T052000-0400_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P08_1_20200511T100000-0400_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P01_1_20200503T052000-0400_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P03_1_20200506T100000-0400_ARU.wav", "P06_1_20200509T052000-0400_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P08_1_20200511T100000-0400_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P01_1_20200503T052000-0400_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P03_1_20200506T100000-0400_ARU.wav", "P06_1_20200509T052000-0400_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P08_1_20200511T100000-0400_ARU.wav", "P09_1_20200511T050000_ARU.wav"]
         },
         {
           "type": "character",
@@ -33,7 +33,7 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["a_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "a_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "a_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "a_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "a_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "a_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav", "a_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "j_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "j_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "j_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "j_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "j_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "j_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "j_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav", "j_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "o_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "o_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "o_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "o_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav", "o_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav"]
+          "value": ["a_BARLT10962_P01_1/P01_1_20200503T052000-0400_ARU.wav", "a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "a_BARLT10962_P03_1/P03_1_20200506T100000-0400_ARU.wav", "a_BARLT10962_P06_1/P06_1_20200509T052000-0400_ARU.wav", "a_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "a_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "a_BARLT10962_P08_1/P08_1_20200511T100000-0400_ARU.wav", "a_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "j_BARLT10962_P01_1/P01_1_20200503T052000-0400_ARU.wav", "j_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "j_BARLT10962_P03_1/P03_1_20200506T100000-0400_ARU.wav", "j_BARLT10962_P06_1/P06_1_20200509T052000-0400_ARU.wav", "j_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "j_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "j_BARLT10962_P08_1/P08_1_20200511T100000-0400_ARU.wav", "j_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000-0400_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "o_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_BARLT10962_P03_1/P03_1_20200506T100000-0400_ARU.wav", "o_BARLT10962_P06_1/P06_1_20200509T052000-0400_ARU.wav", "o_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "o_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "o_BARLT10962_P08_1/P08_1_20200511T100000-0400_ARU.wav", "o_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav"]
         },
         {
           "type": "character",
@@ -59,6 +59,11 @@
           "type": "character",
           "attributes": {},
           "value": ["P01_1", "P02_1", "P02_1", "P03_1", "P06_1", "P07_1", "P07_1", "P08_1", "P09_1", "P01_1", "P02_1", "P02_1", "P03_1", "P06_1", "P07_1", "P07_1", "P08_1", "P09_1", "P01_1", "P02_1", "P02_1", "P03_1", "P06_1", "P07_1", "P07_1", "P08_1", "P09_1"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["-0400", null, null, "-0400", "-0400", null, null, "-0400", null, "-0400", null, null, "-0400", "-0400", null, null, "-0400", null, "-0400", null, null, "-0400", "-0400", null, null, "-0400", null]
         },
         {
           "type": "double",
@@ -181,7 +186,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -204,7 +209,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -217,7 +222,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -274,7 +279,7 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["P09_1_20200511T050000_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P08_1_20200511T100000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P06_1_20200509T052000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P08_1_20200511T100000_ARU.wav"]
+              "value": ["P09_1_20200511T050000_ARU.wav", "P06_1_20200509T052000-0400_ARU.wav", "P08_1_20200511T100000-0400_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P06_1_20200509T052000-0400_ARU.wav", "P01_1_20200503T052000-0400_ARU.wav", "P09_1_20200511T050000_ARU.wav", "P07_1_20200510T073000_ARU.wav", "P03_1_20200506T100000-0400_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P07_1_20200509T052500_ARU.wav", "P08_1_20200511T100000-0400_ARU.wav"]
             },
             {
               "type": "character",
@@ -284,7 +289,7 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["a_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "a_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "o_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "o_BARLT10962_P06_1/P06_1_20200509T052000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "o_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "j_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "a_BARLT10962_P08_1/P08_1_20200511T100000_ARU.wav"]
+              "value": ["a_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "a_BARLT10962_P06_1/P06_1_20200509T052000-0400_ARU.wav", "o_BARLT10962_P08_1/P08_1_20200511T100000-0400_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "o_BARLT10962_P06_1/P06_1_20200509T052000-0400_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000-0400_ARU.wav", "o_S4A02222_P09_1/P09_1_20200511T050000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200510T073000_ARU.wav", "j_BARLT10962_P03_1/P03_1_20200506T100000-0400_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_S4A01234_P07_1/P07_1_20200509T052500_ARU.wav", "a_BARLT10962_P08_1/P08_1_20200511T100000-0400_ARU.wav"]
             },
             {
               "type": "character",
@@ -310,6 +315,11 @@
               "type": "character",
               "attributes": {},
               "value": ["P09_1", "P06_1", "P08_1", "P02_1", "P06_1", "P01_1", "P09_1", "P07_1", "P03_1", "P02_1", "P07_1", "P08_1"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": [null, "-0400", "-0400", null, "-0400", "-0400", null, null, "-0400", null, null, "-0400"]
             },
             {
               "type": "double",
@@ -598,7 +608,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -621,7 +631,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -634,7 +644,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -727,6 +737,11 @@
               "type": "character",
               "attributes": {},
               "value": ["P02_1", "P02_1"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": [null, null]
             },
             {
               "type": "double",
@@ -1029,7 +1044,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -1052,7 +1067,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -1065,7 +1080,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -1122,7 +1137,7 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["P01_1_20200503T052000_ARU.wav", "P01_1_20200503T052000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P03_1_20200506T100000_ARU.wav", "P03_1_20200506T100000_ARU.wav"]
+              "value": ["P01_1_20200503T052000-0400_ARU.wav", "P01_1_20200503T052000-0400_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200505T073000_ARU.wav", "P02_1_20200504T052500_ARU.wav", "P03_1_20200506T100000-0400_ARU.wav", "P03_1_20200506T100000-0400_ARU.wav"]
             },
             {
               "type": "character",
@@ -1132,7 +1147,7 @@
             {
               "type": "character",
               "attributes": {},
-              "value": ["a_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000_ARU.wav", "a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "j_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav", "o_BARLT10962_P03_1/P03_1_20200506T100000_ARU.wav"]
+              "value": ["a_BARLT10962_P01_1/P01_1_20200503T052000-0400_ARU.wav", "o_BARLT10962_P01_1/P01_1_20200503T052000-0400_ARU.wav", "a_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "j_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "j_S4A01234_P02_1/P02_1_20200505T073000_ARU.wav", "o_S4A01234_P02_1/P02_1_20200504T052500_ARU.wav", "a_BARLT10962_P03_1/P03_1_20200506T100000-0400_ARU.wav", "o_BARLT10962_P03_1/P03_1_20200506T100000-0400_ARU.wav"]
             },
             {
               "type": "character",
@@ -1158,6 +1173,11 @@
               "type": "character",
               "attributes": {},
               "value": ["P01_1", "P01_1", "P02_1", "P02_1", "P02_1", "P02_1", "P02_1", "P03_1", "P03_1"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": ["-0400", "-0400", null, null, null, null, null, "-0400", "-0400"]
             },
             {
               "type": "double",
@@ -1413,7 +1433,7 @@
             "names": {
               "type": "character",
               "attributes": {},
-              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
+              "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized", "geometry"]
             },
             "row.names": {
               "type": "integer",
@@ -1436,7 +1456,7 @@
                 "names": {
                   "type": "character",
                   "attributes": {},
-                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
+                  "value": ["siteID", "siteuse", "replsite", "lon_WGS84", "lat_WGS84", "stratum", "wgt", "ip", "caty", "aux", "file_name", "type", "path", "aru_id", "manufacturer", "model", "aru_type", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude", "tz", "t2ss", "psel_by", "psel_min", "psel_doy", "psel", "psel_scaled", "psel_std", "psel_normalized"]
                 },
                 "levels": {
                   "type": "character",
@@ -1449,7 +1469,7 @@
                   "value": ["factor"]
                 }
               },
-              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+              "value": ["NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
             }
           },
           "value": [
@@ -1542,6 +1562,11 @@
               "type": "character",
               "attributes": {},
               "value": ["P02_1"]
+            },
+            {
+              "type": "character",
+              "attributes": {},
+              "value": [null]
             },
             {
               "type": "double",

@@ -231,15 +231,36 @@ create_pattern_sep <- function(sep, optional = TRUE) {
 }
 
 
-
-pattern_tz_offset <- function(direction_from_UTC = "West",
+#' @param direction_from_UTC Character. Must be on of "West", "East" or "Both"
+#' @param n_digits_hrs Numeric vector. Number(s) of digits for hours in offset.
+#' @param n_digits_min Numeric vector. Number(s) of digits for minutes in offset.
+#'
+#' @export
+#'
+#' @examples
+#'
+#' create_pattern_site_id() # Default matches P00-0
+#' create_pattern_site_id(
+#'   prefix = "site", p_digits = 3, sep = "",
+#'   suffix = c("a", "b", "c"), s_digits = 0
+#' ) # Matches site000a
+#'
+#' @describeIn create_pattern Create a pattern to match a site id
+create_pattern_tz_offset <- function(direction_from_UTC = "West",
                               n_digits_hrs =2, n_digits_min =2){
   ## CHECKS
+  check_num(n_digits_hrs)
+  check_num(n_digits_min)
+  check_text(direction_from_UTC, opts = c("West", "East", "Both"))
 
   ## DIRECTIONS
-  dir <- case_when(direction_from_UTC)
+  dir <- dplyr::case_when(direction_from_UTC=="West"~"-",
+                   direction_from_UTC=="East"~"+",
+                   direction_from_UTC=="Both"~"[+,-]",
+                   TRUE~NA_character_)
 
-  ## COLLAPSE PATTERN
+  paste0(dir, "\\d{", n_digits_hrs, "}\\d{",
+         n_digits_min, "}")
 
 }
 
