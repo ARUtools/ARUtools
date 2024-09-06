@@ -60,3 +60,16 @@ test_that("clean_logs() multiple", {
   l$path <- l$path |> stringr::str_remove(fs::path_package("ARUtools"))
   expect_snapshot_value(l, style = "json2")
 })
+
+test_that("meta_clean_logs()",{
+  file_vec <- fs::dir_ls(fs::path_package("extdata", package = "ARUtools"),
+                               recurse = TRUE,
+                             )
+  expect_message(
+    m <- clean_metadata(project_files = file_vec, file_type = 'json',pattern_site_id = "000\\d+" )
+  )
+
+  expect_silent(logs <- meta_clean_logs(m))
+
+
+})

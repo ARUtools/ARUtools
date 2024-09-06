@@ -1,3 +1,41 @@
+#' Run `clean_logs()` on the output from `clean_metadata()`
+#'
+#' @param meta Data frame. `meta` data processed in `add_sites()`
+#'
+#' @return Data frame containing
+#'   - `file_name`s and `path`s of the log files
+#'   - `event`s and their `date_time`s
+#'   - `lat` and `lon` for "gps" events
+#'   - `rec_file`, `rec_size` and `rec_end` for "recording" events
+#'     (recording start is the `date_time` of the event)
+#'   - `schedule` information such as `schedule_date`, `schedule_name`,
+#'     `schedule_lat`, `schedule_lon`, `schedule_sr` (sunrise),
+#'     and `schedule_ss` (sunset)
+#'   - `meta`data information such as `meta_serial` and `meta_firmware`
+#'   - other columns from meta provided
+#' @export
+#'
+#' @examples
+#'
+#'   file_vec <- fs::dir_ls(fs::path_package("extdata", package = "ARUtools"), recurse = TRUE,)
+#'   m <- clean_metadata(project_files = file_vec, file_type = 'json',pattern_site_id = "000\\d+" )
+#'
+#'   logs <- meta_clean_logs(m)
+meta_clean_logs <- function(meta){
+  # Checks
+  check_data(meta, type = "meta", ref = "clean_metadata()")
+  by_ <-  c("file_name", "path", "date_time",
+         "manufacturer", "model", "aru_type")
+   logs <- dplyr::filter(meta, .data$type == "log")
+
+   logs |> dplyr::pull(path) |>
+   clean_logs() |>
+     dplyr::left_join(y = logs,
+                      by = by_)
+}
+
+
+
 #' Extract log data from BAR-LT log files
 #'
 #' Process BAR-LT log files into a data frame reflecting metadata, schedule
@@ -14,10 +52,6 @@
 #' @param log_files Character vector of log files to process.
 #' @param return Character. What kind of data to return, GPS fixes (`"gps"`),
 #'   recording events (`"recordings"`) or `"all"` (default).
-#' @param pattern_sr Character. Pattern to match the sunrise schedule in the log
-#'   files.
-#' @param pattern_ss Character. Pattern to match the sunset schedule in the log
-#'   files.
 #' @param progress Logical. Whether to use `purrr::map()` progress bars (default
 #'   `TRUE`).
 #'
@@ -49,45 +83,23 @@
 #' log_files <- fs::dir_ls("../ARUtools - Extra/aru_log_files/", recurse = TRUE, glob = "*logfile*")
 #'
 #' l <- clean_logs(log_files)
-clean_logs <- function(log_files, return = "all", pattern_sr = "(SR)", pattern_ss = "(SS)",
+clean_logs <- function(log_files, return = "all",
                        progress = TRUE) {
-  # Pattern to id the correct kind of log file
-  pattern_check <- "FRONTIER LABS Bioacoustic Audio Recorder"
 
-  # Define data to extract and patterns
-  pattern_data <- list(
-    meta_serial = "Serial Number: ",
-    meta_firmware = "Firmware: ",
-    schedule_name = "Name: ",
-    schedule_gps = "Backup GPS location: ",
-    schedule_sr = glue::glue(" +\\d{{1,2}}\\) \\\"{pattern_sr}\\\""),
-    schedule_ss = glue::glue(" +\\d{{1,2}}\\) \\\"{pattern_ss}\\\""),
-    gps_position = "GPS position lock acquired \\[",
-    recordings = pat_collapse(c(
-      "start" = "\\| New recording started: ",
-      "end" = "Recording stopped. "
-    ))
-  )
-
-  # Because log files suck and can sometimes have *both* dmy AND ymd formats in
-  # the same file.
-  pattern_date_time <- paste(
-    pat_collapse(c(
-      create_pattern_date(order = "dmy", sep = c("\\/")),
-      create_pattern_date()
-    )),
-    create_pattern_time()
-  )
+  type <- fs::path_ext(log_files)
+  check_ext(type, c("txt"))
 
   # Arrange events and format
   log <- purrr::map(
     log_files,
-    \(x) read_log_single(x, pattern_check, pattern_data, pattern_date_time),
+    \(x) read_log_single(x, get_pattern("pattern_check"),
+                         get_pattern("pattern_data"),
+                         get_pattern("pattern_date_time")),
     .progress = progress
   ) |>
     purrr::set_names(log_files) |>
     purrr::list_transpose() |>
-    purrr::map(\(x) purrr::list_rbind(x, names_to = "path"))
+    purrr::map(\(x) dplyr::bind_rows(x))
 
   meta <- extract_meta(log)
   schedule <- extract_schedule(log)
@@ -128,7 +140,8 @@ read_log_single <- function(log_file, pattern_check, pattern_data, pattern_date_
         date_time = lubridate::parse_date_time(.data[["date_time"]], orders = c("dmy HMS", "ymd HMS")),
         value = stringr::str_remove(.data[["value"]], pattern_date_time),
         value = stringr::str_remove_all(.data[["value"]], x),
-        value = stringr::str_squish(.data[["value"]])
+        value = stringr::str_squish(.data[["value"]]),
+        path = log_file
       )
   })
 }
@@ -138,7 +151,12 @@ extract_meta <- function(log) {
     purrr::list_rbind(names_to = "type") |>
     dplyr::select(-"date_time") |>
     dplyr::distinct() |>
-    tidyr::pivot_wider(names_from = "type", values_from = "value")
+    tidyr::pivot_wider(names_from = "type", values_from = "value") |>
+    dplyr::mutate(
+      manufacturer = "Frontier Labs",
+      model = "BAR-LT",
+      aru_type = "BARLT"
+    )
 }
 
 extract_schedule <- function(log) {

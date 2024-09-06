@@ -58,7 +58,7 @@ test_that("check_problems() - basic meta", {
   expect_silent(chk <- check_problems(m))
   expect_equal(
     chk,
-    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date")]
+    m[c(3, 7, 10), c("path", "aru_id", "site_id","tz_offset", "date_time", "date")]
   )
   expect_equal(nrow(chk), 3)
 
@@ -93,7 +93,7 @@ test_that("check_problems() - meta with coords", {
   expect_silent(chk <- check_problems(m))
   expect_equal(
     chk,
-    m[c(3, 7, 10), c("path", "aru_id", "site_id", "date_time", "date", "longitude", "latitude")]
+    m[c(3, 7, 10), c("path", "aru_id", "site_id", "tz_offset", "date_time", "date", "longitude", "latitude")]
   )
   expect_equal(nrow(chk), 3)
 
@@ -166,3 +166,83 @@ test_that("acoustic_indices() errors", {
 
   unlink("test_wave.wav")
 })
+
+
+test_that("patterns",
+          {
+            expect_equal(
+              .arutools$pattern_aru_type,
+              get_pattern("pattern_aru_type")
+            )
+            x <- c(.arutools$pattern_aru_type,"the aru")
+            names(x)[length(x)] <- "pattern"
+            expect_equal(
+              x,
+              {add_pattern_aru_type("pattern", "the aru")
+              get_pattern("pattern_aru_type")}
+            )
+            expect_error(add_pattern_aru_type(4, "cats"),
+                         '`pattern` must be text')
+            expect_error(add_pattern_aru_type("cats", 4),
+                         '`aru_type` must be text')
+
+
+            expect_equal(
+              .arutools$pattern_check,
+              get_pattern("pattern_check")
+            )
+            expect_equal(
+              .arutools$pattern_data,
+              get_pattern("pattern_data")
+            )
+            expect_equal(
+              .arutools$pattern_date_time,
+              get_pattern("pattern_date_time")
+            )
+            expect_equal(
+              .arutools$pattern_sr,
+              get_pattern("pattern_sr")
+            )
+            expect_equal(
+              .arutools$pattern_ss,
+              get_pattern("pattern_ss")
+            )
+
+            expect_error(
+              set_pattern(1, "test"),
+              "`pattern_name` must be text"
+            )
+            expect_error(
+              set_pattern("bad_var", "test"),
+              "`pattern_name` must be among"
+            )
+            expect_error(
+              set_pattern("pattern_data", "not a list"),
+              "pattern_data must be a list with the following values:"
+            )
+
+            expect_error(
+              set_pattern("pattern_data", list(meta_serial = "test")),
+              "pattern_data must be a list with the following values:"
+            )
+
+            og_pat <- get_pattern("pattern_date_time")
+            set_pattern("pattern_date_time", create_pattern_date())
+
+            expect_equal(
+              create_pattern_date(),
+              get_pattern("pattern_date_time")
+            )
+
+            set_pattern("pattern_date_time", og_pat)
+
+            expect_equal(
+              og_pat,
+              get_pattern("pattern_date_time")
+            )
+
+
+
+
+
+          })

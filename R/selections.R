@@ -347,7 +347,8 @@ sample_recordings <- function(meta_weights,
   # Checks
   check_data(meta_weights, type = "meta_weights", ref = "calc_sleection_weights()")
   check_cols(meta_weights, c(!!enquo(col_site_id), !!enquo(col_sel_weights)))
-  if (is.data.frame(n)) check_names(n, c(name_site_id, "n", "n_os"))
+  if (is.data.frame(n)) check_names(dplyr::rename_with(n, tolower),
+                                    c(name_site_id, "n", "n_os"))
   check_num(seed, not_null = FALSE)
 
   if (!is_named(os) && length(os) == 1 && (os < 0 || os > 1)) {
@@ -412,8 +413,12 @@ sample_recordings <- function(meta_weights,
       if (!all(n_sites %in% sites)) abort_strat()
 
       # Convert from data frame
-      n_os <- as.list(n$n_os) |>
+      # Set oversample to null if all zeros
+      if(sum(n$n_os)==0 || is_null(n$n_os)){
+        n_os <- NULL
+      } else{n_os <- as.list(n$n_os) |>
         stats::setNames(n_sites)
+      }
       n <- as.list(n$n) |>
         stats::setNames(n_sites)
     } else {
@@ -450,7 +455,11 @@ sample_recordings <- function(meta_weights,
 
   # Check sample sizes
   msg <- NULL
-  n_check <- unlist(n) + unlist(n_os)
+  if(is.null(n_os)){
+    n_check <- unlist(n)
+  } else{
+    n_check <- unlist(n) + unlist(n_os)
+  }
   if (length(n_check) == 1) {
     if (n_check > nrow(meta_weights)) {
       msg <- c("i" = paste0(n_check, " samples, but only ", nrow(meta_weights), " data"))

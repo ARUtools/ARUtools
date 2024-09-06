@@ -24,6 +24,8 @@
 #'   `create_pattern_time()`. Can be a vector of multiple patterns to match.
 #' @param pattern_dt_sep Character. Regular expression to mark separators
 #'   between dates and times. See `create_pattern_dt_sep()`.
+#' @param pattern_tz_offset Character. Regular expression to extract time zone
+#'     offsets from file names. See. `create_pattern_tz_offset()`.
 #' @param order_date Character. Order that the date appears in. "ymd"
 #'   (default), "mdy", or "dmy". Can be a vector of multiple patterns to match.
 #'
@@ -47,6 +49,7 @@ clean_metadata <- function(
     pattern_date = create_pattern_date(),
     pattern_time = create_pattern_time(),
     pattern_dt_sep = create_pattern_dt_sep(),
+    pattern_tz_offset = create_pattern_tz_offset(), #"[\\+,\\-]\\d{4}"
     order_date = "ymd",
     quiet = FALSE) {
   # Checks
@@ -60,6 +63,7 @@ clean_metadata <- function(
   check_text(pattern_date)
   check_text(pattern_time)
   check_text(pattern_dt_sep)
+  check_text(pattern_tz_offset)
   check_text(order_date)
   check_logical(quiet)
 
@@ -72,6 +76,8 @@ clean_metadata <- function(
   pattern_date <- pat_collapse(pattern_date)
   pattern_time <- pat_collapse(pattern_time)
   pattern_dt_sep <- pat_collapse(pattern_dt_sep)
+  pattern_tz_offset <- pat_collapse(pattern_tz_offset)
+
 
   pattern_date_time <- paste0(pattern_date, pattern_dt_sep, pattern_time)
 
@@ -91,9 +97,9 @@ clean_metadata <- function(
   } else if (is.null(project_files)) {
     abort("Must provide one of `project_dir` or `project_files`")
   }
-
+  f_ext <- fs::path_ext(project_files)
   # Check for files (either zero or all directories)
-  if (length(project_files) == 0 || all(fs::is_dir(project_files))) {
+  if (length(project_files) == 0 || all(f_ext == "") ) {#all(fs::is_dir(project_files))) {
     if (is.null(subset)) {
       msg <- "`project_dir`"
     } else {
@@ -109,7 +115,7 @@ clean_metadata <- function(
   }
 
   # Check for file types
-  n_ext <- sum(stringr::str_detect(project_files, file_type_pattern))
+  n_ext <- sum(stringr::str_detect(f_ext, file_type_pattern))
   if (n_ext == 0) {
     abort(c(glue::glue("Did not find any '{file_type}' files."),
       "i" = "Use `file_type` to change file extension for sound files",
@@ -117,9 +123,9 @@ clean_metadata <- function(
     ))
   }
 
-
   # Collect non-file-type files
   extra <- stringr::str_subset(project_files, file_type_pattern, negate = TRUE)
+  log <-  stringr::str_subset(extra, stringr::regex("logfile", ignore_case = TRUE))
   gps <- stringr::str_subset(extra, stringr::regex("gps|summary", ignore_case = TRUE))
   focal <- stringr::str_subset(project_files, file_type_pattern)
 
@@ -130,7 +136,7 @@ clean_metadata <- function(
     type = tolower(fs::path_ext(focal))
   )
 
-  if (length(gps) > 1) {
+  if (length(gps) > 0) {
     meta <- meta |>
       dplyr::add_row(
         dir = fs::path_dir(gps),
@@ -139,48 +145,53 @@ clean_metadata <- function(
       )
   }
 
-  pattern_aru_type <- c(
-    "barlt" = "BarLT",
-    "SMM" = "SongMeter",
-    "SM\\d" = "SongMeter",
-    "S\\dA" = "SongMeter"
-  )
+  if (length(log) > 0) {
+    meta <- meta |>
+      dplyr::add_row(
+        dir = fs::path_dir(log),
+        file_name = fs::path_file(log),
+        type = "log"
+      )
+  }
 
-  if (!quiet) inform("Extracting ARU info...")
+
+if (!quiet) inform("Extracting ARU info...")
 
   # Extract ARU metadata -----------------------
   meta <- meta |>
     dplyr::mutate(
       path = file.path(.data$dir, .data$file_name),
-      aru_type = extract_replace(.data$file_name, pattern_aru_type),
-      aru_type = dplyr::if_else(is.na(.data$aru_type),
-        extract_replace(.data$dir, pattern_aru_type),
-        .data$aru_type
-      ),
       aru_id = stringr::str_extract(.data$file_name, pattern_aru_id),
       aru_id = dplyr::if_else(is.na(.data$aru_id),
         stringr::str_extract(.data$dir, pattern_aru_id),
         .data$aru_id
+      ),
+      aru_id = dplyr::if_else(is.na(.data$aru_id),
+                              stringr::str_extract(.data$path, pattern_aru_id),
+                              .data$aru_id
       )
     )
+
+  meta <- dplyr::bind_cols(meta, guess_ARU_type(meta$path))
 
   meta <- dplyr::mutate(meta, site_id = stringr::str_extract(.data$dir, .env$pattern_site_id))
 
   pattern_non_date <- paste0(
     "(", pattern_site_id, ")|(",
     pattern_aru_id, ")|(",
-    paste0("(", pattern_aru_type, ")", collapse = "|"),
+    paste0("(", get_pattern("pattern_aru_type"), ")", collapse = "|"),
     ")"
   )
 
 
   # Extract Date/time --------------------------
   if (!quiet) inform("Extracting Dates and Times...")
-
   meta <- meta |>
     dplyr::mutate(
       file_left = stringr::str_remove_all(.data$file_name, pattern_non_date),
       dir_left = stringr::str_remove_all(.data$dir, pattern_non_date),
+      # Extract offsets
+      tz_offset = stringr::str_extract(.data$file_left, .env$pattern_tz_offset),
 
       # Try file name
       date_time_chr = stringr::str_extract(.data$file_left, .env$pattern_date_time),
@@ -190,12 +201,29 @@ clean_metadata <- function(
         stringr::str_extract(.data$dir_left, .env$pattern_date_time),
         .data$date_time_chr
       ),
+      # date_time_chr = dplyr::if_else(
+      #   is.na(.data$tz_offset),
+      #   .data$date_time_chr,
+      #   paste(.data$date_time_chr, .data$tz_offset, sep = "")
+      # ),
       # Get date_times
+      # Not implementing at this time as does not work with mix of
+      # time zones
+      # date_time = lubridate::parse_date_time(
+      #   .data$date_time_chr,
+      #   orders = dplyr::if_else(is.na(.data$tz_offset),
+      #                          paste(order_date, "HMS"),
+      #                          paste(order_date, "HMS%z")),
+      #   truncated = 1
+      # ),
       date_time = lubridate::parse_date_time(
         .data$date_time_chr,
         orders = paste(order_date, "HMS"),
         truncated = 1
       ),
+
+
+
       date = lubridate::as_date(.data$date_time)
     )
 
@@ -227,16 +255,20 @@ clean_metadata <- function(
 
   # Report on details -------------------------
   # Extra files
-  if (length(extra) > 1) {
+  if (length(extra[!extra %in% c(gps, log)]) > 0) {
     inform(
       c("!" = paste0(
-        "Omitted ", length(extra), " extra, non-",
+        "Omitted ", length(extra[!extra %in% c(gps, log)]), " extra, non-",
         file_type, "/GPS files"
       ))
     )
   }
 
-  if (length(gps) > 1) {
+  if (length(log) > 0) {
+    inform(c("!" = paste0("Detected ", length(log), " log files")))
+  }
+
+  if (length(gps) > 0) {
     inform(c("!" = paste0("Detected ", length(gps), " GPS logs")))
   }
 
@@ -248,6 +280,7 @@ clean_metadata <- function(
   f_type <- sum(is.na(f$aru_type))
   f_id <- sum(is.na(f$aru_id))
   f_site <- sum(is.na(f$site_id))
+  f_tz <- sum(is.na(f$tz_offset))
 
   if (any(c(f_d, f_dt, f_type, f_id, f_site) > 0)) {
     msg <- c("Identified possible problems with metadata extraction:")
@@ -256,7 +289,15 @@ clean_metadata <- function(
     msg <- c(msg, report_missing(f_type, n, "ARU types"))
     msg <- c(msg, report_missing(f_id, n, "ARU ids"))
     msg <- c(msg, report_missing(f_site, n, "sites"))
+    # At this point, no need to include time zones in reports
+    # as not currently using them.
+    # msg <- c(msg, report_missing(f_tz, n, "time zones"))
+    if(!quiet & f_type) msg <- c(msg,
+      "i" = "Try `clean_logs() to detect aru_type or
+          explore the `ARUtoolsExtra` package for more options."
+    )
     inform(msg)
+
   }
 
   # Arrange ----------------------------------

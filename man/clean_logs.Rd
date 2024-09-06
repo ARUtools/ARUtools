@@ -4,25 +4,13 @@
 \alias{clean_logs}
 \title{Extract log data from BAR-LT log files}
 \usage{
-clean_logs(
-  log_files,
-  return = "all",
-  pattern_sr = "(SR)",
-  pattern_ss = "(SS)",
-  progress = TRUE
-)
+clean_logs(log_files, return = "all", progress = TRUE)
 }
 \arguments{
 \item{log_files}{Character vector of log files to process.}
 
 \item{return}{Character. What kind of data to return, GPS fixes (\code{"gps"}),
 recording events (\code{"recordings"}) or \code{"all"} (default).}
-
-\item{pattern_sr}{Character. Pattern to match the sunrise schedule in the log
-files.}
-
-\item{pattern_ss}{Character. Pattern to match the sunset schedule in the log
-files.}
 
 \item{progress}{Logical. Whether to use \code{purrr::map()} progress bars (default
 \code{TRUE}).}

@@ -107,6 +107,7 @@ test_that("sample_recordings()", {
   expect_warning(r2 <- sample_recordings(m, n = 12, os = 0.2, seed = 1234))
   expect_silent(r3 <- sample_recordings(m_sf, n = 12, os = 0.2, col_site_id = NULL, seed = 1234))
 
+
   expect_equal(r1, r2)
   expect_equal(r1, r3, list_as_map = TRUE)
 
@@ -136,13 +137,30 @@ test_that("sample_recordings()", {
     ),
     seed = 1234
   ))
+  expect_silent(r8 <- sample_recordings(m_sf, n = 12, os = 0, col_site_id = NULL, seed = 1234))
+  expect_silent(r9 <- sample_recordings(m,
+                                        n = data.frame(
+                                          site_id = c("P01_1", "P02_1", "P03_1"),
+                                          n = c(2, 5, 2),
+                                          n_os = c(0, 0, 0)
+                                        ),
+                                        seed = 1234
+  ))
+
   expect_equal(r4, r5, list_as_map = TRUE)
   expect_equal(r4, r6)
   expect_equal(r4, r7)
+  expect_equal(r8$sites_over,  NULL)
+  expect_equal(r9$sites_over,  NULL)
+
 
   # Errors
   expect_error(
     sample_recordings(m, n = 30, os = 0.2, col_site_id = NULL),
+    "Cannot sample \\(n \\+ oversampling\\) more points than there are in the data"
+  )
+  expect_error(
+    sample_recordings(m, n = 30, os = 0, col_site_id = NULL),
     "Cannot sample \\(n \\+ oversampling\\) more points than there are in the data"
   )
   expect_error(
@@ -155,6 +173,10 @@ test_that("sample_recordings()", {
   )
   expect_error(
     sample_recordings(m, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 5), os = 0.2),
+    "Selected more samples than exist in some sites"
+  )
+  expect_error(
+    sample_recordings(m, n = c(P01_1 = 2, P02_1 = 5, P03_1 = 5), os = 0),
     "Selected more samples than exist in some sites"
   )
   expect_error(

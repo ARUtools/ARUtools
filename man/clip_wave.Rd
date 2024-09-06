@@ -15,8 +15,7 @@ clip_wave(
   col_start_time = start_time,
   overwrite = FALSE,
   create_dir = TRUE,
-  diff_limit = 30,
-  use_job = FALSE
+  diff_limit = 30
 )
 }
 \arguments{
@@ -51,8 +50,6 @@ formatted and clipped wave files.}
 
 \item{diff_limit}{Numeric. How much longer in seconds clip lengths can be
 compared to file lengths before triggering an error. Default \code{30}.}
-
-\item{use_job}{Logical. Use the 'job' package to copy files Default \code{FALSE}.}
 }
 \value{
 TRUE if successful and clipped wave files created

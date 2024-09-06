@@ -7,21 +7,40 @@
 \alias{create_pattern_dt_sep}
 \alias{create_pattern_aru_id}
 \alias{create_pattern_site_id}
+\alias{create_pattern_tz_offset}
 \alias{test_pattern}
 \title{Create a pattern to match date}
 \usage{
-create_pattern_date(order = "ymd", sep = c("_", "-", ""), yr_digits = 4)
+create_pattern_date(
+  order = "ymd",
+  sep = c("_", "-", ""),
+  yr_digits = 4,
+  look_ahead = "",
+  look_behind = ""
+)
 
-create_pattern_time(sep = c("_", "-", ":", ""), seconds = "yes")
+create_pattern_time(
+  sep = c("_", "-", ":", ""),
+  seconds = "yes",
+  look_ahead = "",
+  look_behind = ""
+)
 
-create_pattern_dt_sep(sep = "T", optional = FALSE)
+create_pattern_dt_sep(
+  sep = "T",
+  optional = FALSE,
+  look_ahead = "",
+  look_behind = ""
+)
 
 create_pattern_aru_id(
   arus = c("BARLT", "S\\\\d(A|U)", "SM\\\\d", "SMM", "SMA"),
   n_digits = c(4, 8),
   sep = c("_", "-", ""),
   prefix = "",
-  suffix = ""
+  suffix = "",
+  look_ahead = "",
+  look_behind = ""
 )
 
 create_pattern_site_id(
@@ -29,7 +48,15 @@ create_pattern_site_id(
   p_digits = 2,
   sep = c("_", "-"),
   suffix = "",
-  s_digits = 1
+  s_digits = 1,
+  look_ahead = "",
+  look_behind = ""
+)
+
+create_pattern_tz_offset(
+  direction_from_UTC = "West",
+  n_digits_hrs = 2,
+  n_digits_min = 2
 )
 
 test_pattern(test, pattern)
@@ -43,6 +70,10 @@ order.}
 Can be "" for no separator.}
 
 \item{yr_digits}{Numeric vector. Number of digits in Year, either 2 or 4.}
+
+\item{look_ahead}{Pattern to look ahead or after string Can be a regular expression or text.}
+
+\item{look_behind}{Pattern to look before behind string. Can be a regular expression or text.}
 
 \item{seconds}{Character. Whether seconds are included. Options are "yes",
 "no", "maybe".}
@@ -63,6 +94,12 @@ model specific).}
 \item{p_digits}{Numeric vector. Number(s) of digits following the \code{prefix}.}
 
 \item{s_digits}{Numeric vector. Number(s) of digits following the \code{suffix}.}
+
+\item{direction_from_UTC}{Character. Must be on of "West", "East" or "Both"}
+
+\item{n_digits_hrs}{Numeric vector. Number(s) of digits for hours in offset.}
+
+\item{n_digits_min}{Numeric vector. Number(s) of digits for minutes in offset.}
 
 \item{test}{Character vector. Examples of text to test.}
 
@@ -97,6 +134,8 @@ pattern grabs what you want. This is just a simple wrapper around
 
 \item \code{create_pattern_site_id()}: Create a pattern to match a site id
 
+\item \code{create_pattern_tz_offset()}: Create a pattern to match a site id
+
 \item \code{test_pattern()}: Test patterns
 
 }}
@@ -115,6 +154,13 @@ create_pattern_dt_sep(c("T", "_", "-")) # 'T', '_', or '-' as separators
 create_pattern_aru_id()
 create_pattern_aru_id(prefix = "CWS")
 create_pattern_aru_id(n_digits = 12)
+
+
+create_pattern_site_id() # Default matches P00-0
+create_pattern_site_id(
+  prefix = "site", p_digits = 3, sep = "",
+  suffix = c("a", "b", "c"), s_digits = 0
+) # Matches site000a
 
 
 create_pattern_site_id() # Default matches P00-0

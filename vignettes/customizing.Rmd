@@ -289,3 +289,73 @@ clean_metadata(project_files = f, file_type = "mp4")
 ```
 
 
+### Look arounds
+
+In some cases identifying what lies before or after a string of interest can help with extracting the pattern of interest. 
+Details of look arounds can be found on the ["stringr"](https://stringr.tidyverse.org/articles/regular-expressions.html#look-arounds)
+package website.
+
+
+The following code shows a set of files that contain repeated patterns that match both site and project folders. If we run 
+`clean_metadata()` it fails to detect dates and times. 
+```{r}
+f <- c(
+  "//BARLTs/DeploymentProjectXYZsites_202223/XYZBrantAirstrip/20230519_RemoteTrip2223/00015998_20230519T210900-0400_SS23.wav",
+  "//BARLTs/DeploymentProjectXYZsites_202223/XYZPermafrostPFSC-SP1/20230415_RemoteTrip2223/00015321_20230415T214700-0400_Owls23.wav",
+  "//BARLTs/DeploymentProjectXYZsites_202223/XYZfoxden30/20230623_RemoteTrip2223/00015370_20230623T062000-0400_SR23.wav",
+  "//BARLTs/DeploymentProjectXYZsites_202223/XYZfoxden107/20220922_RemoteTrip2223/00016130_20220922T000200-0400_NFC22.wav",
+  "//BARLTs/DeploymentProjectXYZsites_00202223/XYZfoxden107/20230711_RemoteTrip2223/00016130_20230711T093600-0400_SR23.wav"
+)
+
+m <- clean_metadata(
+  project_files = f,
+  pattern_site_id = create_pattern_site_id(prefix = "XYZ\\w+", p_digits = 0:3, sep = c("", "-"), s_digits = 0:1),
+  pattern_aru_id = create_pattern_aru_id(arus = "", n_digits = 8), quiet = T
+)
+```
+Even worse, it returns the wrong `site_id` values.
+
+```{r}
+m$site_id
+```
+
+
+To tackle the `site_id` issue we can add a look behind to clue into the directory
+before the `site_id` always ends with "202223/".
+
+
+```{r}
+m_site_id_fix <- clean_metadata(
+  project_files = f,
+  pattern_site_id = create_pattern_site_id(
+    prefix = "XYZ\\w+", p_digits = 0:3, sep = c("", "-"), s_digits = 0:1,
+    look_behind = "202223/"
+  ),
+  pattern_aru_id = create_pattern_aru_id(arus = "", n_digits = 8), quiet = T
+)
+
+m_site_id_fix$site_id
+```
+This corrects the `site_id` values but the generic "pattern_aru_id" means that the `clean_metadata()` fails
+to detect dates and time as the "pattern_aru_id" is excluded when looking for dates and times.
+
+```{r}
+m_fix <- clean_metadata(
+  project_files = f,
+  pattern_site_id = create_pattern_site_id(
+    prefix = "XYZ\\w+", p_digits = 0:3, sep = c("", "-"), s_digits = 0:1,
+    look_behind = "202223/"
+  ),
+  pattern_aru_id = create_pattern_aru_id(arus = "", n_digits = 8, 
+                                         sep = "", 
+                                         look_behind = "RemoteTrip2223/", 
+                                         look_ahead = "_"),
+  quiet = T
+)
+```
+
+
+In the end the look arounds helped us pull out stubborn `site_id` vaules
+and separate overlapping patterns of `aru_id` and dates and times.
+
+
