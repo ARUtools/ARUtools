@@ -97,9 +97,9 @@ clean_metadata <- function(
   } else if (is.null(project_files)) {
     abort("Must provide one of `project_dir` or `project_files`")
   }
-
+  f_ext <- fs::path_ext(project_files)
   # Check for files (either zero or all directories)
-  if (length(project_files) == 0 || all(fs::path_ext(project_files) == "") ) {#all(fs::is_dir(project_files))) {
+  if (length(project_files) == 0 || all(f_ext == "") ) {#all(fs::is_dir(project_files))) {
     if (is.null(subset)) {
       msg <- "`project_dir`"
     } else {
@@ -115,7 +115,7 @@ clean_metadata <- function(
   }
 
   # Check for file types
-  n_ext <- sum(stringr::str_detect(project_files, file_type_pattern))
+  n_ext <- sum(stringr::str_detect(f_ext, file_type_pattern))
   if (n_ext == 0) {
     abort(c(glue::glue("Did not find any '{file_type}' files."),
       "i" = "Use `file_type` to change file extension for sound files",
