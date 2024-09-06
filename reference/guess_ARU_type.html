@@ -70,12 +70,8 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="get_pattern.html">get_pattern</a></span><span class="op">(</span><span class="st">"pattern_aru_type"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                             barlt                               SMM </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          "BAR-LT"                 "Song Meter Mini" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           SM(\\d)                           S(\\d)A </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  "Song Meter \\1"                  "Song Meter \\1" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                            CWS\\d </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "Canadian Wildlife Detector \001" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             barlt               SMM           SM(\\d)           S(\\d)A </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          "BAR-LT" "Song Meter Mini"  "Song Meter \\1"  "Song Meter \\1" </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">guess_ARU_type</span><span class="op">(</span><span class="st">"/path/to/barlt/file.wav"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
