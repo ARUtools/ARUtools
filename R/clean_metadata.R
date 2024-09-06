@@ -99,7 +99,7 @@ clean_metadata <- function(
   }
 
   # Check for files (either zero or all directories)
-  if (length(project_files) == 0 || all(fs::is_dir(project_files))) {
+  if (length(project_files) == 0 || all(fs::path_ext(project_files) == "") ) {#all(fs::is_dir(project_files))) {
     if (is.null(subset)) {
       msg <- "`project_dir`"
     } else {
@@ -165,6 +165,10 @@ if (!quiet) inform("Extracting ARU info...")
       aru_id = dplyr::if_else(is.na(.data$aru_id),
         stringr::str_extract(.data$dir, pattern_aru_id),
         .data$aru_id
+      ),
+      aru_id = dplyr::if_else(is.na(.data$aru_id),
+                              stringr::str_extract(.data$path, pattern_aru_id),
+                              .data$aru_id
       )
     )
 
