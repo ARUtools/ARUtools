@@ -455,7 +455,11 @@ sample_recordings <- function(meta_weights,
 
   # Check sample sizes
   msg <- NULL
-  n_check <- unlist(n) + unlist(n_os)
+  if(is.null(n_os)){
+    n_check <- unlist(n)
+  } else{
+    n_check <- unlist(n) + unlist(n_os)
+  }
   if (length(n_check) == 1) {
     if (n_check > nrow(meta_weights)) {
       msg <- c("i" = paste0(n_check, " samples, but only ", nrow(meta_weights), " data"))

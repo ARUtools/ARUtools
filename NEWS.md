@@ -14,7 +14,6 @@
 
 ## Update
  
-
    * "job" package removed from `clip_wav()` ( #25 )
    * Updates to `clean_logs()` (#28, #34)
   
