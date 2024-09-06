@@ -16,10 +16,14 @@ Add an ARU to the list of identified ARUs
 }
 \examples{
 
-get_pattern("pattern_aru_type")
+org_pat <- get_pattern("pattern_aru_type")
+
+print(org_pat)
 
 add_pattern_aru_type("CWS\\\\d", "Canadian Wildlife Detector \1")
 
 get_pattern("pattern_aru_type")
+
+set_pattern("pattern_aru_type", org_pat)
 
 }

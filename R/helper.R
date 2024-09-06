@@ -221,11 +221,15 @@ get_pattern <- function(pattern_name){
 #'
 #' @examples
 #'
-#' get_pattern("pattern_aru_type")
+#' org_pat <- get_pattern("pattern_aru_type")
+#'
+#' print(org_pat)
 #'
 #' add_pattern_aru_type("CWS\\d", "Canadian Wildlife Detector \1")
 #'
 #' get_pattern("pattern_aru_type")
+#'
+#' set_pattern("pattern_aru_type", org_pat)
 #'
 add_pattern_aru_type <- function(pattern, aru_type){
   check_text(pattern)
