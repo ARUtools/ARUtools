@@ -251,7 +251,7 @@ run_with_seed_if_provided <- function(seed, code) {
 }
 
 nse_names <- function(col) {
-  names(exprs_auto_name(col)) |>
+    rlang::expr_text(col) |>
     stringr::str_split(",") |>
     unlist() |>
     stringr::str_remove_all("~|c\\(|list\\(|\\,|\\)") |>
