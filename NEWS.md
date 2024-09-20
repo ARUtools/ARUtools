@@ -1,5 +1,9 @@
 # ARUtools 0.7.1
 
+## Bugs 
+
+  * `clip_wave()` was failing due to error in rlang evaulation in `nse_names()`. (#44)
+
 # ARUtools 0.7.0
 
 ## New
