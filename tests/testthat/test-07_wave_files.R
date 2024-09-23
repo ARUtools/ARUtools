@@ -33,7 +33,7 @@ test_that("check_wave_path_in()", {
 test_that("check_wave_path_out()", {
   expect_error(
     check_wave_path_out(
-      subdirs = list("non_existant_dir"), path_in = ".",
+      subdirs = list("non_existant_dir"), filename_out = ".",
       dir_out = ".", create_dir = FALSE
     ),
     "Not all output directories exist"
@@ -112,17 +112,17 @@ test_that("clip_wave()", {
   )
 
   expect_silent(clip_wave(w, dir_out = test_path("clean"), col_subdir_out = treat))
-  expect_true(fs::file_exists(test_path("clean/test1/a/file1.wav")))
+  expect_true(fs::file_exists(test_path("clean/test1/a/wave1.wav")))
 
   # Check clip lengths
-  expect_equal(get_wav_length(test_path("clean/test1/a/file1.wav"), TRUE), w$clip_length[1])
-  expect_equal(get_wav_length(test_path("clean/test2/a/file2.wav"), TRUE), w$clip_length[2])
+  expect_equal(get_wav_length(test_path("clean/test1/a/wave1.wav"), TRUE), w$clip_length[1])
+  expect_equal(get_wav_length(test_path("clean/test2/a/wave2.wav"), TRUE), w$clip_length[2])
 
   # Max clip length possible, but less than 30s so no error
-  expect_equal(get_wav_length(test_path("clean/test1/b/file3.wav"), TRUE), get_wav_length(w$path[3], TRUE) - 1)
-  expect_equal(get_wav_length(test_path("clean/test2/b/file4.wav"), TRUE), w$clip_length[4])
-  expect_equal(get_wav_length(test_path("clean/test1/c/file5.wav"), TRUE), w$clip_length[5])
-  expect_equal(get_wav_length(test_path("clean/test2/c/file6.wav"), TRUE), w$clip_length[6])
+  expect_equal(get_wav_length(test_path("clean/test1/b/wave3.wav"), TRUE), get_wav_length(w$path[3], TRUE) - 1)
+  expect_equal(get_wav_length(test_path("clean/test2/b/wave4.wav"), TRUE), w$clip_length[4])
+  expect_equal(get_wav_length(test_path("clean/test1/c/wave5.wav"), TRUE), w$clip_length[5])
+  expect_equal(get_wav_length(test_path("clean/test2/c/wave6.wav"), TRUE), w$clip_length[6])
 
   # Clean up
   unlink(temp_wavs())
@@ -147,7 +147,7 @@ test_that("clip_wave() column names", {
     col_filename_out = new_file,
     col_subdir_out = subdir_out
   ))
-  expect_true(fs::file_exists(test_path("clean/test1/a/file1.wav")))
+  expect_true(fs::file_exists(test_path("clean/test1/a/wave1.wav")))
 
 
   # Clean up

@@ -137,7 +137,6 @@ clip_wave <- function(waves,
     !!enquo(col_filename_out), !!enquo(col_clip_length),
     !!enquo(col_start_time)
   ))
-
   wv <- waves |>
     dplyr::mutate(
       "path_out" = purrr::pmap_chr(dplyr::pick({{ col_subdir_out }}), fs::path)
@@ -145,6 +144,7 @@ clip_wave <- function(waves,
     dplyr::select(
       "path_in" = {{ col_path_in }},
       "path_out",
+      'filename_out' = {{ col_filename_out }},
       "clip_length" = {{ col_clip_length }},
       "start_time" = {{ col_start_time }}
     ) |>
@@ -157,7 +157,7 @@ clip_wave <- function(waves,
       # Get output paths
       path_out = check_wave_path_out(
         .data[["path_out"]],
-        .data[["path_in"]],
+        .data[['filename_out']],
         .env$dir_out,
         .env$create_dir
       ),
@@ -169,7 +169,9 @@ clip_wave <- function(waves,
         diff_limit = diff_limit
       ),
       overwrite = .env$overwrite
-    )
+    ) |>
+    dplyr::select(-filename_out)
+
 
     purrr::pmap(wv, clip_wave_single)
 
@@ -244,9 +246,9 @@ check_wave_path_in <- function(path_in, dir_in, call = caller_env()) {
   path_in
 }
 
-check_wave_path_out <- function(subdirs, path_in, dir_out, create_dir, call = caller_env()) {
+check_wave_path_out <- function(subdirs, filename_out, dir_out, create_dir, call = caller_env()) {
   dir_out <- fs::path(dir_out, purrr::pmap_chr(list(subdirs), fs::path))
-  path_out <- fs::path(dir_out, fs::path_file(path_in))
+  path_out <- fs::path(dir_out, fs::path_file(filename_out))
 
 
   if (create_dir) {
