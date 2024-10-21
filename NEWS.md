@@ -1,5 +1,10 @@
 # ARUtools (development version)
 
+## Bugs
+
+  * Base pipe placeholder in `calc_sun()` causing build to fail for R version 4.1. 
+     Placeholder has been removed
+
 # ARUtools 0.7.1
 
 ## Bugs 
