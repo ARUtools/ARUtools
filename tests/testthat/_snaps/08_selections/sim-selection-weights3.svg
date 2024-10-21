@@ -29,15 +29,6 @@
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
-  <clipPath id='cpNi45N3w3MTMuMDN8Mjk5LjAxfDU2OS4wMw=='>
-    <rect x='6.97' y='299.01' width='706.05' height='270.01' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpNi45N3w3MTMuMDN8Mjk5LjAxfDU2OS4wMw==)'>
-</g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-</g>
-<defs>
   <clipPath id='cpNjQuMjh8NjIwLjU2fDM1Ljk3fDI1OS43MA=='>
     <rect x='64.28' y='35.97' width='556.28' height='223.73' />
   </clipPath>
@@ -56,15 +47,6 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpNi45N3wzMjAuMzd8MjkuMDB8Mjk5LjAx)'>
-</g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-</g>
-<defs>
-  <clipPath id='cpMzIwLjM3fDcxMy4wM3wyOS4wMHwyOTkuMDE='>
-    <rect x='320.37' y='29.00' width='392.66' height='270.01' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMzIwLjM3fDcxMy4wM3wyOS4wMHwyOTkuMDE=)'>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
@@ -107,6 +89,15 @@
 <text transform='translate(23.58,147.84) rotate(-90)' text-anchor='middle' style='font-size: 14.00px; font-family: sans;' textLength='142.42px' lengthAdjust='spacingAndGlyphs'>Selection weight (date)</text>
 </g>
 <defs>
+  <clipPath id='cpMzIwLjM3fDcxMy4wM3wyOS4wMHwyOTkuMDE='>
+    <rect x='320.37' y='29.00' width='392.66' height='270.01' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMzIwLjM3fDcxMy4wM3wyOS4wMHwyOTkuMDE=)'>
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
+<defs>
   <clipPath id='cpMzcxLjQ1fDYyMC41NnwzNS45N3wyNTkuNzA='>
     <rect x='371.45' y='35.97' width='249.11' height='223.73' />
   </clipPath>
@@ -139,6 +130,15 @@
 <text x='579.04' y='273.68' text-anchor='middle' style='font-size: 11.20px; fill: #4D4D4D; font-family: sans;' textLength='18.69px' lengthAdjust='spacingAndGlyphs'>200</text>
 <text x='496.00' y='289.13' text-anchor='middle' style='font-size: 14.00px; font-family: sans;' textLength='111.29px' lengthAdjust='spacingAndGlyphs'>Time to sun event</text>
 <text transform='translate(336.98,147.84) rotate(-90)' text-anchor='middle' style='font-size: 14.00px; font-family: sans;' textLength='141.62px' lengthAdjust='spacingAndGlyphs'>Selection weight (time)</text>
+</g>
+<defs>
+  <clipPath id='cpNi45N3w3MTMuMDN8Mjk5LjAxfDU2OS4wMw=='>
+    <rect x='6.97' y='299.01' width='706.05' height='270.01' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNi45N3w3MTMuMDN8Mjk5LjAxfDU2OS4wMw==)'>
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
   <clipPath id='cpNjQuMjh8NjIwLjU2fDMwNS45OXw1MjkuNzE='>

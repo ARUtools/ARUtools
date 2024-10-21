@@ -135,7 +135,9 @@ calc_all_ss <- function(dates, tz) {
 #' @noRd
 calc_ss <- function(dates, tz, suffix = "") {
   dplyr::rename(dates, "lon" = "longitude", "lat" = "latitude") |>
-    suncalc::getSunlightTimes(data = _, keep = c("sunrise", "sunset"), tz = tz) |>
+    suncalc::getSunlightTimes(
+      date = NULL, lat = NULL, lon = NULL,
+      keep = c("sunrise", "sunset"), tz = tz) |>
     dplyr::mutate(
       sunrise = lubridate::force_tz(.data$sunrise, "UTC"),
       sunset = lubridate::force_tz(.data$sunset, "UTC")

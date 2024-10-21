@@ -18,7 +18,7 @@ License: MIT + file LICENSE
 URL: https://arutools.github.io/ARUtools/, https://github.com/ARUtools/ARUtools
 BugReports: https://github.com/ARUtools/ARUtools/issues
 Depends: 
-    R (>= 4.0)
+    R (>= 4.1.0)
 Imports: 
     dplyr,
     fs (>= 1.6.1),
