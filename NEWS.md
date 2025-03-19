@@ -1,7 +1,8 @@
-# ARUtools (development version)
+# ARUtools 0.7.2
 
 ## Bugs
 
+  * Remove sessioninfo dependency. sessioninfo::session_info() was throwing errors in tests
   * `stringr::str_detect()` could fail with NULL pattern from `osVersion` in `check_sox` (MichaelChirico:patch-1).
   * Base pipe placeholder in `calc_sun()` causing build to fail for R version 4.1. 
      Placeholder has been removed
