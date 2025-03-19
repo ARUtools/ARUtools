@@ -125,7 +125,7 @@ issues, please do submit an issue.
 
 There are also other good packages that may be of use to you:
 
--   [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) (R)
+-   [wildrtrax](https://abbiodiversity.github.io/wildrtrax/) (R)
 -   [seewave](https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html) (R)
 -   [warbleR](https://github.com/maRce10/warbleR) (R)
 -   [emu](https://github.com/QutEcoacoustics/emu) (command line)
