@@ -72,11 +72,7 @@ create_dirs <- function(plots, site_ids, base_dir = NULL, dir_list = FALSE,
 
     fs::dir_create(d)
 
-    if (is_installed("sessioninfo")) {
-      readr::write_lines(sessioninfo::session_info(), glue::glue("{base_dir}/session_info.md"))
-    } else {
-      readr::write_lines(utils::sessionInfo(), glue::glue("{base_dir}/session_info.md"))
-    }
+    readr::write_lines(utils::sessionInfo(), glue::glue("{base_dir}/session_info.md"))
   } else {
     msg <- "This is a dry run, no directories are created"
     if (!dir_list) msg <- c(msg, "i" = "Use `dir_list = TRUE` to return a list of directories to be created")

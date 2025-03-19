@@ -50,7 +50,6 @@ Suggests:
     readxl (>= 1.4.2),
     rmarkdown,
     rstudioapi,
-    sessioninfo,
     soundecology,
     testthat (>= 3.0.0),
     tuneR,
