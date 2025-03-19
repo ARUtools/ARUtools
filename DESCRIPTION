@@ -1,7 +1,7 @@
 Type: Package
 Package: ARUtools
 Title: Management and Processing of Autonomous Recording Unit (ARU) Data
-Version: 0.7.1.9001
+Version: 0.7.2
 Authors@R: c(
     person("David", "Hope", , "david.hope@ec.gc.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2140-4261")),
@@ -50,7 +50,6 @@ Suggests:
     readxl (>= 1.4.2),
     rmarkdown,
     rstudioapi,
-    sessioninfo,
     soundecology,
     testthat (>= 3.0.0),
     tuneR,

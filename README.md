@@ -99,7 +99,7 @@ from Hadley Wickham:
 With multiple projects, each with their own data issues, it became clear
 that this would either require copy/pasting a lot of code and likely
 break something or developing a series of functions that could be shared
-across projects (i.e. a package).
+across projects (i.e. a package).
 
 While that initial version of the code was usable by me and only me, if
 you’re using the package, it is because of the fantastic work of [Steffi
@@ -112,7 +112,7 @@ issues, please do submit an issue.
 
 There are also other good packages that may be of use to you:
 
-- [wildRtrax](https://abbiodiversity.github.io/wildRtrax/) (R)
+- [wildrtrax](https://abbiodiversity.github.io/wildrtrax/) (R)
 - [seewave](https://search.r-project.org/CRAN/refmans/seewave/html/audiomoth.html)
   (R)
 - [warbleR](https://github.com/maRce10/warbleR) (R)
