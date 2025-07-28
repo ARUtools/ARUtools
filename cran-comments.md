@@ -2,9 +2,8 @@
 
 0 errors | 0 warnings | 0 notes
 
-Update responding to CRAN package check errors in 
-r-devel-windows-x86_64, r-release-windows-x86_64,
-and r-oldrel-windows-x86_64. No errors found with this 
-version on win-builder. 
+Resubmitting as was archived due to import of archived package:
+"Archived on 2025-07-01 as requires archived package 'parzer'."
 
-
+'parzer' is now back up on CRAN (https://cran.r-project.org/web/packages/parzer/index.html) 
+so issue should be resolved.
