@@ -1,3 +1,7 @@
+# ARUtools 0.7.3
+
+New version number for CRAN re-submission.
+
 # ARUtools 0.7.2
 
 ## Bugs
