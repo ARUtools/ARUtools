@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Getting started with ARUtools • ARUtools</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -31,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ARUtools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -313,24 +312,24 @@ default setting.</p>
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 42</span></span>
 <span><span class="co">#&gt; Columns: 18</span></span>
-<span><span class="co">#&gt; $ file_name    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "P01_1_20200502T050000-0400_ARU.wav", "P01_1_20200503T052…</span></span>
-<span><span class="co">#&gt; $ type         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "wav", "wav", "wav", "wav", "wav", "wav", "wav", "wav", "…</span></span>
-<span><span class="co">#&gt; $ path         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "a_BARLT10962_P01_1/P01_1_20200502T050000-0400_ARU.wav", …</span></span>
-<span><span class="co">#&gt; $ aru_id       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BARLT10962", "BARLT10962", "S4A01234", "S4A01234", "BARL…</span></span>
-<span><span class="co">#&gt; $ manufacturer <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Frontier Labs", "Frontier Labs", "Wildlife Acoustics", "…</span></span>
-<span><span class="co">#&gt; $ model        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BAR-LT", "BAR-LT", "Song Meter 4", "Song Meter 4", "BAR-…</span></span>
-<span><span class="co">#&gt; $ aru_type     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BARLT", "BARLT", "SongMeter", "SongMeter", "BARLT", "BAR…</span></span>
-<span><span class="co">#&gt; $ site_id      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "P01_1", "P01_1", "P02_1", "P02_1", "P03_1", "P04_1", "P0…</span></span>
-<span><span class="co">#&gt; $ tz_offset    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "-0400", "-0400", <span style="color: #BB0000;">NA</span>, <span style="color: #BB0000;">NA</span>, "-0400", "-0400", "-0400", "-04…</span></span>
-<span><span class="co">#&gt; $ date_time    <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span> 2020-05-02 05:00:00, 2020-05-03 05:20:00, 2020-05-04 05:…</span></span>
-<span><span class="co">#&gt; $ date         <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2020-05-02, 2020-05-03, 2020-05-04, 2020-05-05, 2020-05-…</span></span>
-<span><span class="co">#&gt; $ longitude    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -85.03, -85.03, -87.45, -87.45, -90.38, -85.53, -85.53, -…</span></span>
-<span><span class="co">#&gt; $ latitude     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 50.010, 50.010, 52.680, 52.680, 48.990, 45.000, 45.000, 5…</span></span>
-<span><span class="co">#&gt; $ plot         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Plot1", "Plot1", "Plot1", "Plot1", "Plot2", "Plot2", "Pl…</span></span>
-<span><span class="co">#&gt; $ subplot      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "a", "a", "a", "a", "a", "a", "a", "b", "a", "a", "a", "a…</span></span>
-<span><span class="co">#&gt; $ tz           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "America/Toronto", "America/Toronto", "America/Toronto", …</span></span>
-<span><span class="co">#&gt; $ t2sr         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -74.933333, -53.216667, -47.250000, 79.616667, 207.133333…</span></span>
-<span><span class="co">#&gt; $ t2ss         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 479.9500, 498.4167, 483.4167, 606.6833, -685.8833, 486.18…</span></span></code></pre></div>
+<span><span class="co">#&gt; $ file_name    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "P01_1_20200502T050000-0400_ARU.wav"<span style="color: #949494;">, </span>"P01_1_20200503T052…</span></span>
+<span><span class="co">#&gt; $ type         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "wav"<span style="color: #949494;">, </span>"wav"<span style="color: #949494;">, </span>"wav"<span style="color: #949494;">, </span>"wav"<span style="color: #949494;">, </span>"wav"<span style="color: #949494;">, </span>"wav"<span style="color: #949494;">, </span>"wav"<span style="color: #949494;">, </span>"wav"<span style="color: #949494;">, </span>"…</span></span>
+<span><span class="co">#&gt; $ path         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "a_BARLT10962_P01_1/P01_1_20200502T050000-0400_ARU.wav"<span style="color: #949494;">, </span>…</span></span>
+<span><span class="co">#&gt; $ aru_id       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BARLT10962"<span style="color: #949494;">, </span>"BARLT10962"<span style="color: #949494;">, </span>"S4A01234"<span style="color: #949494;">, </span>"S4A01234"<span style="color: #949494;">, </span>"BARL…</span></span>
+<span><span class="co">#&gt; $ manufacturer <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Frontier Labs"<span style="color: #949494;">, </span>"Frontier Labs"<span style="color: #949494;">, </span>"Wildlife Acoustics"<span style="color: #949494;">, </span>"…</span></span>
+<span><span class="co">#&gt; $ model        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BAR-LT"<span style="color: #949494;">, </span>"BAR-LT"<span style="color: #949494;">, </span>"Song Meter 4"<span style="color: #949494;">, </span>"Song Meter 4"<span style="color: #949494;">, </span>"BAR-…</span></span>
+<span><span class="co">#&gt; $ aru_type     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BARLT"<span style="color: #949494;">, </span>"BARLT"<span style="color: #949494;">, </span>"SongMeter"<span style="color: #949494;">, </span>"SongMeter"<span style="color: #949494;">, </span>"BARLT"<span style="color: #949494;">, </span>"BAR…</span></span>
+<span><span class="co">#&gt; $ site_id      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "P01_1"<span style="color: #949494;">, </span>"P01_1"<span style="color: #949494;">, </span>"P02_1"<span style="color: #949494;">, </span>"P02_1"<span style="color: #949494;">, </span>"P03_1"<span style="color: #949494;">, </span>"P04_1"<span style="color: #949494;">, </span>"P0…</span></span>
+<span><span class="co">#&gt; $ tz_offset    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "-0400"<span style="color: #949494;">, </span>"-0400"<span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span><span style="color: #BB0000;">NA</span><span style="color: #949494;">, </span>"-0400"<span style="color: #949494;">, </span>"-0400"<span style="color: #949494;">, </span>"-0400"<span style="color: #949494;">, </span>"-04…</span></span>
+<span><span class="co">#&gt; $ date_time    <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span> 2020-05-02 05:00:00<span style="color: #949494;">, </span>2020-05-03 05:20:00<span style="color: #949494;">, </span>2020-05-04 05:…</span></span>
+<span><span class="co">#&gt; $ date         <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2020-05-02<span style="color: #949494;">, </span>2020-05-03<span style="color: #949494;">, </span>2020-05-04<span style="color: #949494;">, </span>2020-05-05<span style="color: #949494;">, </span>2020-05-…</span></span>
+<span><span class="co">#&gt; $ longitude    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -85.03<span style="color: #949494;">, </span>-85.03<span style="color: #949494;">, </span>-87.45<span style="color: #949494;">, </span>-87.45<span style="color: #949494;">, </span>-90.38<span style="color: #949494;">, </span>-85.53<span style="color: #949494;">, </span>-85.53<span style="color: #949494;">, </span>-…</span></span>
+<span><span class="co">#&gt; $ latitude     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 50.010<span style="color: #949494;">, </span>50.010<span style="color: #949494;">, </span>52.680<span style="color: #949494;">, </span>52.680<span style="color: #949494;">, </span>48.990<span style="color: #949494;">, </span>45.000<span style="color: #949494;">, </span>45.000<span style="color: #949494;">, </span>5…</span></span>
+<span><span class="co">#&gt; $ plot         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Plot1"<span style="color: #949494;">, </span>"Plot1"<span style="color: #949494;">, </span>"Plot1"<span style="color: #949494;">, </span>"Plot1"<span style="color: #949494;">, </span>"Plot2"<span style="color: #949494;">, </span>"Plot2"<span style="color: #949494;">, </span>"Pl…</span></span>
+<span><span class="co">#&gt; $ subplot      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"b"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a"<span style="color: #949494;">, </span>"a…</span></span>
+<span><span class="co">#&gt; $ tz           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "America/Toronto"<span style="color: #949494;">, </span>"America/Toronto"<span style="color: #949494;">, </span>"America/Toronto"<span style="color: #949494;">, </span>…</span></span>
+<span><span class="co">#&gt; $ t2sr         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -74.933333<span style="color: #949494;">, </span>-53.216667<span style="color: #949494;">, </span>-47.250000<span style="color: #949494;">, </span>79.616667<span style="color: #949494;">, </span>207.133333…</span></span>
+<span><span class="co">#&gt; $ t2ss         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 479.9500<span style="color: #949494;">, </span>498.4167<span style="color: #949494;">, </span>483.4167<span style="color: #949494;">, </span>606.6833<span style="color: #949494;">, </span>-685.8833<span style="color: #949494;">, </span>486.18…</span></span></code></pre></div>
 <p>Tada! Now we have a complete set of cleaned metadata associated with
 each recording.</p>
 <p>This is a very simple example and much of the pain in large projects
@@ -356,7 +355,7 @@ subsampling article <code><a href="../articles/SubSample.html">vignette("SubSamp
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
