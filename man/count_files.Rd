@@ -23,7 +23,7 @@ A data frame with number of files in a directory
 Helper function to explore the number of files in a directory, recursively.
 }
 \examples{
-\dontshow{if (dir.exists("PROJECT_DIR")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (dir.exists("PROJECT_DIR")) withAutoprint(\{ # examplesIf}
 count_files("PROJECT_DIR")
 \dontshow{\}) # examplesIf}
 }
