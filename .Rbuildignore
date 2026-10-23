@@ -25,3 +25,5 @@ inst\Gen_gex.R
 inst\.R$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^\.positai$
+^\.claude$

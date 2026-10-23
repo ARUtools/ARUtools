@@ -47,7 +47,7 @@ group (\code{dist_by}), the returned data frame will include a column \code{max_
 which represents the largest distance among points within that group.
 }
 \examples{
-\dontshow{if (dir.exists("my_project")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (dir.exists("my_project")) withAutoprint(\{ # examplesIf}
 m <- clean_metadata(project_dir = "my_project")
 g <- clean_gps(meta = m)
 \dontshow{\}) # examplesIf}

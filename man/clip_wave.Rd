@@ -59,7 +59,7 @@ Process multiple wave files by copying them with a new filename and
 clipping to a given length.
 }
 \examples{
-\dontshow{if (dir.exists("test1")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (dir.exists("test1")) withAutoprint(\{ # examplesIf}
 w <- data.frame(
   path = temp_wavs(n = 4),
   subdir_out = c("test1/a", "test2/a", "test3/c", "test4/d"),

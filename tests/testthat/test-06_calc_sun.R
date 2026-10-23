@@ -33,7 +33,7 @@ test_that("calc_ss()", {
   )
 
   # Handles different time zones
-  expect_silent(ss2 <- calc_ss(dts, tz = "America/Winnipeg"))
+  expect_silent(ss2 <- calc_ss(dts, tz =ifelse(getRversion()>="4.7","America/Thunder_Bay","America/Winnipeg")))
   expect_equal(ss, dplyr::mutate(ss2,
     sunrise = sunrise + lubridate::hours(1),
     sunset = sunset + lubridate::hours(1)
@@ -105,7 +105,7 @@ test_that("calc_sun()", {
   expect_equal(
     unique(s1$tz),
     c(
-      "America/Toronto", "America/Detroit", "America/Winnipeg",
+      "America/Toronto", "America/Detroit", ifelse(getRversion()>="4.7","America/Thunder_Bay","America/Winnipeg"),
       "America/Chicago"
     )
   )
@@ -128,7 +128,7 @@ test_that("calc_sun()", {
   )
 
   # Expect offsets compared to "local" timezones
-  i <- which(s1$tz %in% c("America/Winnipeg", "America/Chicago"))
+  i <- which(s1$tz %in% c(ifelse(getRversion()>="4.7","America/Thunder_Bay","America/Winnipeg"), "America/Chicago"))
   expect_equal(s1$t2sr[i], 60 + s2$t2sr[i]) # After sunrise
   expect_equal(s1$t2ss[i], s2$t2ss[i] + 60) # Before sunset
 
@@ -158,7 +158,8 @@ test_that("calc_sun() errors etc.", {
   expect_equal(
     unique(s1$tz),
     c(
-      "America/Toronto", "America/Detroit", "America/Winnipeg",
+      "America/Toronto", "America/Detroit",
+      ifelse(getRversion()>="4.7","America/Thunder_Bay","America/Winnipeg"),
       "America/Chicago"
     )
   )

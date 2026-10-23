@@ -136,6 +136,7 @@ test_that("check_date_joins()", {
 
 test_that("check_tz()", {
   expect_silent(check_tz("local"))
-  expect_silent(check_tz("America/Winnipeg"))
+  tz_ <- ifelse(getRversion()>="4.7","America/Thunder_Bay","America/Winnipeg")
+  expect_silent(check_tz(tz_))
   expect_error(check_tz("lsdjkf/skdjfl"))
 })
