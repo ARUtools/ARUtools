@@ -14,46 +14,77 @@ test_that("calc_ss()", {
   expect_named(ss, c("date", "longitude", "latitude", "sunrise", "sunset"))
   expect_equal(ss[, 1:3], dts)
 
-
   skip_on_os(os = "mac", arch = "aarch64")
   # Results in UTC but correct 'local' time
   expect_equal(
     ss$sunrise,
-    lubridate::as_datetime(c(
-      "2022-06-27 05:59:28",
-      "2021-08-10 06:50:07"
-    ), tz = "UTC")
+    lubridate::as_datetime(
+      c(
+        "2022-06-27 05:59:28",
+        "2021-08-10 06:50:07"
+      ),
+      tz = "UTC"
+    )
   )
   expect_equal(
     ss$sunset,
-    lubridate::as_datetime(c(
-      "2022-06-27 22:41:50",
-      "2021-08-10 21:47:13"
-    ), tz = "UTC")
+    lubridate::as_datetime(
+      c(
+        "2022-06-27 22:41:50",
+        "2021-08-10 21:47:13"
+      ),
+      tz = "UTC"
+    )
   )
 
   # Handles different time zones
-  expect_silent(ss2 <- calc_ss(dts, tz = "America/Winnipeg"))
-  expect_equal(ss, dplyr::mutate(ss2,
-    sunrise = sunrise + lubridate::hours(1),
-    sunset = sunset + lubridate::hours(1)
-  ))
+  expect_silent(
+    ss2 <- calc_ss(
+      dts,
+      tz = "America/Winnipeg"
+    )
+  )
+  expect_equal(
+    ss,
+    dplyr::mutate(
+      ss2,
+      sunrise = sunrise + lubridate::hours(1),
+      sunset = sunset + lubridate::hours(1)
+    )
+  )
 
   # Suffix
   expect_silent(ss <- calc_ss(dts, tz = "America/Toronto", suffix = "_test"))
-  expect_named(ss, c(
-    "date_test", "longitude", "latitude",
-    "sunrise_test", "sunset_test"
-  ))
+  expect_named(
+    ss,
+    c(
+      "date_test",
+      "longitude",
+      "latitude",
+      "sunrise_test",
+      "sunset_test"
+    )
+  )
 })
 
 test_that("calc_all_ss()", {
   expect_silent(ss <- calc_all_ss(dts, tz = "America/Toronto"))
-  expect_named(ss, c(
-    "date", "longitude", "latitude", "sunrise", "sunset",
-    "date_before", "sunrise_before", "sunset_before",
-    "date_after", "sunrise_after", "sunset_after"
-  ))
+  expect_named(
+    ss,
+    c(
+      "date",
+      "longitude",
+      "latitude",
+      "sunrise",
+      "sunset",
+      "date_before",
+      "sunrise_before",
+      "sunset_before",
+      "date_after",
+      "sunrise_after",
+      "sunset_after"
+    )
+  )
 
   # Expect dates sequential
   expect_true(all(ss$date == dts$date))
@@ -87,15 +118,26 @@ test_that("calc_ss_diff()", {
     dplyr::mutate(date_time = lubridate::as_datetime(paste0(date, " 06:30:00")))
 
   expect_silent(diff <- calc_ss_diff(ss))
-  expect_true(all(c(
-    "t2sr", "t2sr_day_of", "t2sr_before", "t2sr_after",
-    "t2ss", "t2ss_day_of", "t2ss_before", "t2ss_after", "doy"
-  ) %in%
-    names(diff)))
+  expect_true(all(
+    c(
+      "t2sr",
+      "t2sr_day_of",
+      "t2sr_before",
+      "t2sr_after",
+      "t2ss",
+      "t2ss_day_of",
+      "t2ss_before",
+      "t2ss_after",
+      "doy"
+    ) %in%
+      names(diff)
+  ))
   expect_equal(diff$t2sr, c(30.53333, -20.11667), tolerance = 0.0001)
   expect_equal(diff$t2ss, c(468.0833, 520.9000), tolerance = 0.0001)
   skip_on_os(os = "mac", arch = "aarch64")
-  expect_true(all(floor(abs(dplyr::select(diff, starts_with("t2")))) < (48 * 60)) )# at most two day away
+  expect_true(all(
+    floor(abs(dplyr::select(diff, starts_with("t2")))) < (48 * 60)
+  )) # at most two day away
 })
 
 test_that("calc_sun()", {
@@ -105,7 +147,9 @@ test_that("calc_sun()", {
   expect_equal(
     unique(s1$tz),
     c(
-      "America/Toronto", "America/Detroit", "America/Winnipeg",
+      "America/Toronto",
+      "America/Detroit",
+      "America/Winnipeg",
       "America/Chicago"
     )
   )
@@ -135,9 +179,9 @@ test_that("calc_sun()", {
   # Expect others to be the same
   expect_equal(s1$t2sr[-i], s2$t2sr[-i])
 
-
   # SF input - Works and returns sf output
-  example_clean_sf <- sf::st_as_sf(example_clean,
+  example_clean_sf <- sf::st_as_sf(
+    example_clean,
     coords = c("longitude", "latitude"),
     crs = 4326
   )
@@ -149,7 +193,10 @@ test_that("calc_sun()", {
 
 test_that("calc_sun() errors etc.", {
   # Timezone problems
-  e <- dplyr::mutate(example_clean, date_time = lubridate::force_tz(date_time, "America/Toronto"))
+  e <- dplyr::mutate(
+    example_clean,
+    date_time = lubridate::force_tz(date_time, "America/Toronto")
+  )
   expect_message(
     s1 <- calc_sun(e),
     "Removing timezone specification"
@@ -158,7 +205,9 @@ test_that("calc_sun() errors etc.", {
   expect_equal(
     unique(s1$tz),
     c(
-      "America/Toronto", "America/Detroit", "America/Winnipeg",
+      "America/Toronto",
+      "America/Detroit",
+      "America/Winnipeg",
       "America/Chicago"
     )
   )

@@ -48,7 +48,9 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
       )
     )
   } else if (overwrite) {
+    if(file.exists(path_out)){
     fs::file_delete(path_out)
+    }
   }
 
   # No clipping if clip length the same as the file
@@ -95,6 +97,8 @@ clip_wave_single <- function(path_in, path_out, clip_length, start_time = 0,
 #'   formatted and clipped wave files.
 #' @param diff_limit Numeric. How much longer in seconds clip lengths can be
 #'   compared to file lengths before triggering an error. Default `30`.
+#'
+#'
 #'
 #' @inheritParams common_docs
 #'
@@ -160,16 +164,26 @@ clip_wave <- function(waves,
         .data[['filename_out']],
         .env$dir_out,
         .env$create_dir
-      ),
-      # Check wave lengths
+      ) )
+
+  if("wave_length" %in% names(waves) && suppressWarnings({is.numeric(waves$wave_length)})){
+    wv$wave_length <- waves$wave_length
+    warn(c("!"="Skipping wave length check as `wave_length` exists.",
+           "*"= "If this is in error, remove the column in supplied data frame.",
+           "i" = "Skipping this check may lead to errors in file copy."
+           ) )
+  }else{
+    wv <- dplyr::mutate(wv, # Check wave lengths
       wave_length = check_wave_length(
         .data[["path_in"]],
         clip_length = .data[["clip_length"]],
         start_time = .data[["start_time"]],
         diff_limit = diff_limit
-      ),
-      overwrite = .env$overwrite
-    ) |>
+      ) )
+  }
+
+  wv <- dplyr::mutate(wv,
+               overwrite = .env$overwrite) |>
     dplyr::select(-filename_out)
 
 
@@ -232,8 +246,8 @@ check_wave_path_in <- function(path_in, dir_in, call = caller_env()) {
   }
 
   # Check file types
-  if (any(!fs::path_ext(path_in) %in% c("wav", "wave"))) {
-    r <- path_in[!fs::path_ext(path_in) %in% c("wav", "wave")]
+  if (any(!fs::path_ext(path_in) %in% c("wav", "wave", "WAV"))) {
+    r <- path_in[!fs::path_ext(path_in) %in% c("wav", "wave", "WAV")]
     if (length(r) > 5) r <- c(r[1:5], "...")
     r <- set_names(r, "*")
 

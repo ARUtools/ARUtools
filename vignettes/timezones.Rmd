@@ -122,8 +122,9 @@ Central, and the rest in Eastern.
 m1 <- filter(m, site_id %in% c("P06_1", "P09_1")) # Get P06_1 and P09_1
 m2 <- filter(m, !site_id %in% c("P06_1", "P09_1")) # Get all except the above
 
-# Calculate time to sunrise/sunset individually
-m1_cst <- calc_sun(m1, aru_tz = "America/Winnipeg")
+# Calculate time to sunrise/sunset individually (time zone name will change in R4.7)
+tz_west_on <- ifelse(getRversion()>="4.7","America/Thunder_Bay","America/Winnipeg")
+m1_cst <- calc_sun(m1, aru_tz = tz_west_on)
 m2_est <- calc_sun(m2, aru_tz = "America/Toronto")
 
 # Join them back in
